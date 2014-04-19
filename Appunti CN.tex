@@ -1,0 +1,119 @@
+\documentclass[pdftex, 11pt, a4paper, openright, twoside]{book}
+
+%--------------------------------------------------------------
+
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage[pdftex]{graphicx}
+\usepackage[italian]{minitoc}
+\usepackage[Lenny]{fncychap}
+\usepackage[nottoc, notlof]{tocbibind}
+\usepackage[numbers]{natbib}
+\usepackage[object=vectorian]{pgfornament}
+\usepackage[unicode]{hyperref}
+\usepackage{amsfonts, mathtools, placeins, floatflt, xfrac, multirow, indentfirst, fancyhdr, amssymb, latexsym, amsthm, eucal, float, tabularx, mdframed, bigdelim, blkarray, relsize, lettrine, mcode, xcolor, tikz, caption, geometry, perpage}
+
+%--------------------------------------------------------------
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\newcommand{\matindex}[1]{\mbox{\scriptsize#1}}
+\newcommand{\sectionline}{
+	\begin{center}
+		\resizebox{0.5\linewidth}{1ex}{
+			\begin{tikzpicture}
+				\node  (C) at (0,0) {};
+				\node (D) at (9,0) {};
+				\path (C) to [ornament=88] (D);
+			\end{tikzpicture}
+		}
+	\end{center}
+}
+\newcommand{\footnoteOP}[1]{
+	~\begin{minipage}[b]{4mm}
+		~\footnotemark\\
+		\(#1\)
+	\end{minipage}
+}
+
+\newtheorem{defi}{Definizione}[chapter]
+\newtheorem{teo}{Teorema}[chapter]
+\newtheorem{lem}{Lemma}[chapter]
+\newtheorem{cor}{Corollario}[chapter]
+\newtheorem{es}{Esercizio}[chapter]
+
+\newenvironment{sol}{
+	\proof[\underline{Soluzione}]\mbox{}\\*
+}{\endproof}
+
+\renewcommand{\qedsymbol}{}
+
+\captionsetup{format=hang,font=small}
+
+\MakePerPage{footnote}
+
+\graphicspath{{img/}}
+
+%--------------------------------------------------------------
+
+\lstloadlanguages{Matlab, Fortran}
+\renewcommand*{\lstlistingname}{Codice}
+\renewcommand*{\lstlistlistingname}{Elenco dei codici}
+\lstset{
+	language = Matlab,
+	frameround = fttt,
+	frame = TRBl,
+	numbers = left,
+	stepnumber = 2,
+	breaklines = true,
+	numberstyle=\tiny\color{gray},
+}
+
+%--------------------------------------------------------------
+
+\geometry{
+	a4paper,
+	ignoremp,
+	bindingoffset = 1cm, 
+	textwidth     = 13.5cm,
+	textheight    = 21.5cm,
+	lmargin       = 3.5cm,
+	tmargin       = 4cm
+}
+
+%--------------------------------------------------------------
+
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+
+%--------------------------------------------------------------
+
+\begin{document}
+
+	\pagenumbering{roman}
+
+	\input{chapters/title}
+	
+	\input{chapters/quote}
+
+	\dominitoc
+	\tableofcontents
+	\lstlistoflistings
+	
+	\input{chapters/chapter1}
+	\input{chapters/chapter2}
+	\input{chapters/chapter3}
+	\input{chapters/chapter4}
+	\input{chapters/chapter5}
+	\input{chapters/chapter6}
+	
+	\nocite{*}
+	\bibliographystyle{plainnat}
+	\bibliography{bibliography}
+
+\end{document}

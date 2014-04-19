@@ -1,0 +1,9 @@
+	program INTERO
+c---variabili intere da 2 byte
+	integer*2 numero, i
+	numero = 32765
+	do i = 1, 10
+		write(*,*) i, numero
+		numero = numero +1
+	end do
+	end

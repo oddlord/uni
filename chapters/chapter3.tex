@@ -1,0 +1,1971 @@
+\chapter{Sistemi lineari e nonlineari}
+	\label{chap:sistemiLinENonLin}
+	\minitoc \mtcskip
+	\lettrine{Q}{}uesto capitolo tratta della risoluzione di \textbf{sistemi di equazioni lineari}, o semplicemente \textbf{sistemi lineari}, ovvero sistemi del tipo
+	$$\begin{cases}
+		a_{11}x_1+a_{12}x_2+\dots+a_{1n}x_n=b_1\\
+		a_{21}x_1+a_{22}x_2+\dots+a_{2n}x_n=b_2\\
+		\vdots\\
+		a_{m1}x_1+a_{m2}x_2+\dots+a_{mn}x_n=b_m
+	\end{cases},$$
+	esprimibile anche nella forma matriciale
+	\begin{equation}\label{sistema}A\underline{x}=\underline{b},\end{equation}
+	\[
+		\begin{pmatrix}
+			a_{11} & \dots & a_{1n}\\
+			\vdots & & \vdots\\
+			\vdots & & \vdots\\
+			a_{m1} & \dots & a_{mn}
+		\end{pmatrix}
+		\begin{pmatrix}
+			x_1\\
+			\vdots\\
+			x_n
+		\end{pmatrix}
+		=
+		\begin{pmatrix}
+			b_1\\
+			\vdots\\
+			\vdots\\
+			b_m
+		\end{pmatrix}
+	\]
+	dove $A=(a_{ij})\in\mathbb{R}^{m\times n}$ è la \textit{matrice dei coefficienti}, $\underline{x}=(x_j)\in\mathbb{R}^n$ è il \textit{vettore delle incognite} e $\underline{b}=(b_i)\in\mathbb{R}^m$ è il \textit{vettore dei termini noti}. Chiaramente, $A$ e $\underline{b}$ rappresentano i dati del problema, mentre $\underline{x}$ rappresenta la soluzione da calcolare.\\
+	In questo capitolo supporremo che $m\geq n$ e che $rank(A)=n$, ovvero che la matrice $A$ abbia rango massimo (ricordando che il \textit{rango} di una matrice è il massimo numero di righe, o colonne, linearmente indipendenti). In particolare studiamo un primo caso, più semplice in cui $m=n$, ovvero la matrice A è quadrata e il sistema è composto da $n$ equazioni in $n$ incognite. Essendo allora la matrice $A$ \textit{quadrata} e di \textit{rango massimo}, si dice che $A$ è \textbf{nonsingolare}. Un'importante proprietà delle matrici nonsingolari è che esiste una ed una sola loro inversa, quindi esiste ed è unica la matrice inversa $A^{-1}$, ovvero esiste ed è unica la soluzione del sistema (\ref{sistema}):
+	$$\underline{x}=A^{-1}\underline{b}.$$
+	Questa, seppur semplice, soluzione risulta tuttavia, nella maggior parte dei casi, inefficiente rispetto ad altri metodi più intelligenti che vedremo in seguito.
+	\section{Sistemi lineari: casi semplici}
+		Se la matrice $A$ possiede particolari caratteristiche, allora si potrà risolvere il sistema (\ref{sistema}) in modo relativamente semplice. In particolare si hanno tre casi in cui la risoluzione risulta molto semplice: quando $A$ è \textit{diagonale}, \textit{triangolare} o \textit{ortogonale}. Successivamente si utilizzeranno opportuni \textit{metodi di fattorizzazione} per ricondurre tutti gli altri casi ad una combinazione dei tre casi semplici appena elencati.\\
+		\\
+		\textbf{\underline{Matrici diagonali}}\\
+		\\
+		Una matrice si dice \textbf{diagonale} se ha tutti gli elementi, esclusi quelli sulla \textit{diagonale principale}, nulli, ovvero una matrice del tipo
+		$$
+			A=
+			\begin{pmatrix}
+				a_{11} & 0 & \dots & 0\\
+				0 & a_{22} & \ddots & \vdots\\
+				\vdots & \ddots & \ddots & 0\\
+				0 & \dots & 0 & a_{nn}
+			\end{pmatrix}
+			.
+		$$
+		Quindi il sistema corrispondente sarà della forma
+		$$\begin{cases}
+			a_{11}x_1=b_1\\
+			a_{22}x_2=b_2\\
+			\vdots\\
+			a_{nn}x_n=b_n
+		\end{cases},$$
+		e gli elementi del vettore soluzione sono facilmente calcolati come
+		$$x_i=\dfrac{b_i}{a_{ii}},\quad i=1,\dots n.$$
+		Osserviamo che, essendo $A$ nonsingolare (e quindi di rango massimo $=n$), $a_{ii}\neq 0$ per $i=1\dots n$. Quindi le operazioni appena descritte sono \textit{ben definite}.\\
+		Il \underline{costo computazionale} per calcolare tutte le componenti della soluzione risulta essere \textbf{$n$ flop}, in quanto il metodo risolutivo consiste in $n$ divisioni. Anche l'\underline{occupazione di memoria} risulta essere \textbf{lineare}, in quanto gli elementi significativi di $A$, ovvero gli elementi sulla diagonale principale, possono essere memorizzati in un vettore di lunghezza $n$.\\
+		\\
+		\textbf{\underline{Matrici triangolari}}\\
+		\\
+		In questo tipo di matrice nonsingolare gli elementi significativi si trovano lungo la diagonale principale e in una porzione triangolare della matrice. Se gli elementi si trovano nella porzione triangolare strettamente inferiore, si parla di \textbf{matrice triangolare inferiore}, altrimenti di \textbf{matrice triangolare superiore}:
+		\begin{itemize}
+			\item $A$ triangolare inferiore: $a_{ij}=0$ se $i<j$,
+			$$
+				A=
+				\begin{pmatrix}
+					a_{11} & 0 & \dots & 0\\
+					\vdots & \ddots & \ddots & \vdots\\
+					\vdots & & \ddots & 0\\
+					a_{n1} & \dots & \dots & a_{nn}
+				\end{pmatrix};
+			$$
+			\item $A$ triangolare superiore: $a_{ij}=0$ se $i>j$,
+			$$
+				A=
+				\begin{pmatrix}
+					a_{11} & \dots & \dots & a_{1n}\\
+					0 & \ddots & & \vdots\\
+					\vdots & \ddots & \ddots & \vdots\\
+					0 & \dots & 0 & a_{nn}
+				\end{pmatrix}.
+			$$
+		\end{itemize}
+		Per quanto riguarda il caso in cui $A$ sia \textit{triangolare inferiore}, il sistema (\ref{sistema}) diventa
+		$$\left\{
+			\begin{aligned}
+				&a_{11}x_1 &= &\; b_1\\
+				&a_{21}x_1+a_{22}x_2 &=&\; b_2\\
+				&\;\vdots &\vdots\; &\; \vdots\\
+				&a_{n1}x_1+a_{n2}x_2+\dots+a_{nn}x_n &=& \; b_n
+			\end{aligned}
+		\right. ,$$
+		e gli elementi del vettore soluzione vengono calcolati tramite \textit{sostituzioni successive in avanti}, ovvero viene innanzitutto calcolato $x_1=\sfrac{b_1}{a_{11}}$, quindi viene calcolato $x_2$ utilizzando il valore di $x_1$, e così via:
+		\begin{align*}
+			x_1&=\dfrac{b_1}{a_{11}}\\
+			x_2&=\dfrac{b_3-a_{21}x_1}{a_{22}}\\
+			&\;\vdots\\
+			x_n&=\dfrac{b_n-\sum_{j=1}^{n-1}a_{nj}x_j}{a_{nn}}.
+		\end{align*}
+		Quindi in generale si calcola un generico $x_i$ come $x_i=\dfrac{b_i-\sum_{j=i}^{i-1}a_{ij}x_j}{a_{ii}}$, ovvero utilizzando i valori degli $i-1$ elementi della soluzione precedenti $x_i$, già calcolati.\\
+		Implementando in \textsc{Matlab} la risoluzione di sistemi lineari triangolari inferiori, si può scegliere di effettuare gli accessi agli elementi della matrice dei coefficienti per riga (Codice \ref{lst:triangolareInfRiga}) o per colonna (Codice \ref{lst:triangolareInfCol}).
+		\lstinputlisting[caption={Risoluzione di sistemi lineari triangolari inferiori con accesso per riga.}, label=lst:triangolareInfRiga]{code/triangolareInfRiga.m}
+		\lstinputlisting[caption={Risoluzione di sistemi lineari triangolari inferiori con accesso per colonna.}, label=lst:triangolareInfCol]{code/triangolareInfCol.m}
+		Nel caso, invece, in cui $A$ sia triangolare superiore, il sistema assume la forma
+		$$\left\{
+			\begin{aligned}
+				&&a_{11}x_1+a_{12}x_2+\dots+a_{1n}x_n &&= &\;b_1\\
+				&&a_{22}x_2+\dots+a_{2n}x_n &&=&\;b_2\\
+				&&\vdots\; &&\vdots\; &\;\vdots\\
+				&&a_{nn}x_n &&=&\;b_n
+			\end{aligned}
+		\right. ,$$
+		quindi si potrà applicare l'algoritmo visto per le matrici triangolari inferiori ma utilizzandolo al contrario (\textit{sostituzioni successive all'indietro}), ovvero partendo col calcolare $x_n=\sfrac{b_n}{a_{nn}}$, poi $x_{n-1}$, e così via:
+		\begin{align*}
+			&x_n=\dfrac{b_n}{a_{nn}}\\
+			&x_{n-1}=\dfrac{b_{n-1}-a_{n-1}x_n}{a_{n-1,n-1}}\\
+			&\;\vdots\\
+			&x_1=\dfrac{b_1-\sum_{j=n}^{2}a_{1j}x_j}{a_{11}}.
+		\end{align*}
+		La componente $i$-esima viene quindi calcolata come $x_i=\dfrac{b_i-\sum_{j=n}^{i+1}a_{ij}x_j}{a_{ii}}$.\\
+		Come per il caso precedente, possiamo definire un metodo risolutivo con accesso agli elementi della matrice $A$ per riga (Codice \ref{lst:triangolareSupRiga}) ed uno con accesso per colonna (Codice \ref{lst:triangolareSupCol}).
+		\lstinputlisting[caption={Risoluzione di sistemi lineari triangolari superiori con accesso per riga.}, label=lst:triangolareSupRiga]{code/triangolareSupRiga.m}
+		\lstinputlisting[caption={Risoluzione di sistemi lineari triangolari superiori con accesso per colonna.}, label=lst:triangolareSupCol]{code/triangolareSupCol.m}
+		In entrambi i casi, sono preferibili i metodi che risolvono il sistema triangolare accedendo agli elementi della matrice dei coefficienti per colonna (Codici \ref{lst:triangolareInfCol} e \ref{lst:triangolareSupCol}). Infatti \textsc{Matlab} memorizza le matrici per colonna, ovvero memorizza gli elementi di una stessa colonna in posizioni contigue di memoria. In generale, in \textsc{Matlab}, accedere agli elementi di una matrice per colonna risulta essere più efficiente rispetto all'accesso per riga.\\
+		\\
+		Essendo $A$ nonsingolare, sicuramente tutti gli elementi diagonali $a_{ii}$ risultano diversi da zero, ovvero $a_{ii}\neq 0, i=1,\dots n$, quindi le operazioni, in entrambi i casi, sono sempre \textit{ben definite}.\\
+		Per quanto riguarda l'\underline{occupazione di memoria}, in entrambi i casi si deve memorizzare soltanto la porzione triangolare della matrice $A$, ovvero
+		$$\sum_{i=1}^{n}i=\dfrac{n(n+1)}{2}\approx\dfrac{n^2}{2}$$
+		posizioni di memoria. Invece per il \underline{costo computazionale} si ha che al primo passo è necessario $1$ \texttt{flop}, al secondo $3$ \texttt{flop}, al terzo $5$ \texttt{flop}, \dots, al passo $n$-esimo $2n-1$ \texttt{flop}, per un totale di
+		$$\sum_{i=1}^{n}(2i-1)=n^2\quad\textbf{flop}.$$
+
+		\textbf{\underline{Matrici ortogonali}}\\
+		\\
+		Una matrice $A$ si dice \textbf{ortogonale} se risulta che la sua inversa e la sua trasposta coincidono, ovvero tale che $A^{-1}=A^{T}$. Quindi, essendo il calcolo della trasposta molto veloce, il sistema (\ref{sistema}) è immediatamente risolvibile come
+		$$\underline{x}=A^{-1}\underline{b}=A^{T}\underline{b}.$$
+		Allora il \underline{costo computazionale} corrisponde al costo di un \textit{prodotto matrice-vettore}, ovvero \textit{$2mn$ flop} nel caso generale, \textbf{$2n^2$ flop} essendo $A$ nonsingolare (e quindi quadrata). Invece, per quanto riguarda l'\underline{occupazione di memoria}, si ha che saranno necessarie circa \textbf{$n^2$} posizioni di memoria, in quanto tutti gli elementi della matrice $A$ possono essere elementi significativi.\\
+		\\
+		\textbf{\underline{Metodi di fattorizzazione}}\\
+		\\
+		Data la semplicità e l'efficienza della risoluzione dei tre casi appena esaminati, per poter risolvere tutti gli altri tipi di sistema lineare si ricorre ad opportuni \textbf{metodi di fattorizzazione} che riconducano la matrice $A$ ad un insieme di matrici nonsingolari che siano \textit{diagonali}, \textit{triangolari} od \textit{ortogonali}. In particolare si cerca di ottenere una fattorizzazione per la matrice $A$ del tipo
+		$$A=F_1F_2\dots F_k,$$
+		per un opportuno $k$, con i fattori $F_i\in\mathbb{R}^{n\times n}$, $i=1,\dots,k$, matrici nonsingolari ed appartenenti ad una delle categorie precedentemente esaminate (diagonale, triangolare, ortogonale).\\
+		Una volta ottenuta tale fattorizzazione, si dovranno quindi risolvere $k$ sistemi lineari ``semplici'', generando una successione di \textit{soluzioni intermedie}, $\underline{x_i}\in\mathbb{R}^n$, $i=1,\dots,k$, con $\underline{x}=\underline{x_k}$. Chiamando il fattore $F_2\dots F_k\underline{x}\equiv \underline{x_1}$, ovvero la prima soluzione intermedia, si ha che il primo sistema lineare da risolvere sarà
+		\begin{align*}
+			&A\underline{x}=\underline{b},\\
+			&F_1\underbrace{F_2\dots F_k\underline{x}}_{\underline{x_1}}=\underline{b},\\
+			&F_1\underline{x}_1=\underline{b}.
+		\end{align*}
+		Analogamente la seconda soluzione intermedia sarà $\underline{x_2}\equiv F_3\dots F_k\underline{x}$ e il secondo sistema lineare da risolvere risulta essere
+		\begin{align*}
+			&F_2\underbrace{F_3\dots F_k\underline{x}}_{\underline{x_2}}=\underline{x_1},\\
+			&F_2\underline{x_2}=\underline{x_1}.
+		\end{align*}
+		Reiterando sino a $k$, si ottiene la seguente successione di sistemi lineari i quali, risolti in ordine, portano alla soluzione $\underline{x}$ finale:
+		$$F_1\underline{x_1}=\underline{b},\quad F_2\underline{x_2}=\underline{x_1},\quad\dots\quad F_k\underline{x_k}=\underline{x_{k-1}},\quad \underline{x}\equiv \underline{x_k}.$$
+		\underline{Computazionalmente}, tutti questi sistemi lineari risultano essere, per costruzione, di uno dei tipi più semplici visti precedentemente e quindi facilmente risolvibili. Inoltre, per quanto riguarda l'\underline{occupazione di memoria}, si può utilizzare un solo vettore per tutte le soluzioni intermedie e per la soluzione finale in quanto per ogni sistema lineare da risolvere sarà necessario memorizzare una sola soluzione intermedia (tutte le precedenti non saranno più necessarie).
+	\section{Fattorizzazione \textit{LU} di una matrice}
+		\label{sez3.2}
+		\begin{defi}
+			Se la matrice $A$ del sistema (\ref{sistema}) può essere riscritta come
+			\begin{equation}\label{LU}A=LU,\end{equation}
+			con $L\in\mathbb{R}^{n\times n}$ \textit{triangolare inferiore a diagonale unitaria} ($L$ infatti sta per \textit{lower}) ed $U\in\mathbb{R}^{n\times n}$ \textit{triangolare superiore} ($U$ sta per \textit{upper}), allora $A$ si dice \textbf{fattorizzabile \textit{LU}}.
+		\end{defi}
+		\begin{teo}[Unicità della fattorizzazione LU]
+			Se $A$ è \textit{nonsingolare} e la fattorizzazione \textit{LU} (\ref{LU}) \textit{esiste}, allora tale fattorizzazione è anche \textbf{unica}.
+		\end{teo}
+		Supponiamo adesso di avere un vettore
+		$$\underline{v}=(v_1,\dots,v_n)^T\in\mathbb{R}^n,$$
+		del quale ne vogliamo azzerare tutte le componenti dalla $(k+1)$-esima in poi, lasciando invariate le prime $k$, mediante moltiplicazione a sinistra per una matrice $L\in\mathbb{R}^{n\times n}$ \textit{triangolare inferiore a diagonale unitaria}.
+		\begin{defi}
+			Se $v_k\neq 0$, allora è possibile definire il \textbf{vettore elementare di Gauss}:
+			$$\underline{g}=\dfrac{1}{v_k}(\underbrace{0,\dots,0}_k,v_{k+1},\dots,v_n)^T.$$
+		\end{defi}
+		\begin{defi}
+			Utilizzando il vettore elementare di Gauss, si può definire la corrispondente \textbf{matrice elementare di Gauss}:
+			$$L=I-\underline{g}\:\underline{e_k}^T,$$
+			ricordando che $\underline{e_k}$ è il \textbf{$k$-esimo versore della base canonica}, ovvero un vettore (di lunghezza opportuna) con tutte le sue componenti a $0$ tranne la $k$-esima che vale $1$:
+			$$\underline{e_k}=(\underbrace{0,\dots,0}_{k-1},1,\underbrace{0,\dots,0}_{n-k})^T\in\mathbb{R}^n.$$
+		\end{defi}
+		Quindi si ha che la matrice elementare di Gauss appena definita è della forma
+		\begin{align*}
+			L&=
+			\begin{pmatrix}
+				1 & & & & &\\
+				& 1 & & & &\\
+				& & \ddots & & &\\
+				& & & \ddots & &\\
+				& & & & 1 &\\
+				& & & & & 1
+			\end{pmatrix} -
+			\begin{array}{l}
+				\\[-37mm] \ldelim\{{3}{3mm}[$k$]
+			\end{array}
+			\begin{pmatrix}
+				0\\
+				\vdots\\
+				0\\
+				\dfrac{v_{k+1}}{v_k}\\
+				\vdots\\
+				\dfrac{v_n}{v_k}
+			\end{pmatrix}
+			(\underbrace{0,\dots,0}_{k-1},1,\underbrace{0,\dots,0}_{n-k})\\
+			\\
+			&=
+			\begin{pmatrix}
+				1 & & & & &\\
+				& 1 & & & &\\
+				& & \ddots & & &\\
+				& & & \ddots & &\\
+				& & & & 1 &\\
+				& & & & & 1
+			\end{pmatrix} -
+			\begin{blockarray}{ccccccl}
+				& & \matindex{k} & & & &\\
+				\begin{block}{(cccccc)l}
+					0 & \dots & \dots & \dots & \dots & 0 &\\
+					\vdots & \ddots & & & & \vdots &\\
+					\vdots & 0 & 0 & & & \vdots &\\
+					\vdots & \vdots & \frac{v_{k+1}}{v_k} & \ddots & & \vdots & \matindex{riga $k+1$}\\
+					\vdots & \vdots & \vdots & 0 & \ddots & \vdots &\\
+					0 & 0 & \frac{v_n}{v_k} & 0 & \dots & 0 &\\
+				\end{block}
+			\end{blockarray}
+			=\\
+			\\
+			&=
+			\begin{blockarray}{ccccccl}
+				& & \matindex{k} & & & &\\
+				\begin{block}{(cccccc)l}
+					1 & & & & & &\\
+					& \ddots & & & & &\\
+					& & 1 & & & &\\
+					& & -\frac{v_{k+1}}{v_k} & \ddots & && \matindex{riga $k+1$}\\
+					& & \vdots & & \ddots & &\\
+					& & -\frac{v_n}{v_k} & & & 1 &\\
+				\end{block}
+			\end{blockarray}.
+		\end{align*}
+		Allora risulta che
+		\[
+			L\underline{v}=
+			\begin{pmatrix}
+				v_1\\
+				\vdots\\
+				v_k\\
+				0\\
+				\vdots\\
+				0
+			\end{pmatrix},
+		\]
+		infatti si avrà che i primi $k$ elementi di $L\underline{v}$ saranno il risultato della moltiplicazione del solo elemento corrispondente per $1$; invece per gli elementi dal $(k+1)$-esimo in poi si ha la somma tra la frazione negativa presente in $L\underline{v}$ moltiplicata per $v_k$ (in quanto tali elementi si trovano tutti nella colonna $k$-esima) e l'elemento corrispondente moltiplicato per $1$ (come prima, essendo la diagonale unitaria). Quest'ultima somma, per costruzione, da sempre come risultato 0. Ad esempio per il $(k+1)$-esimo elemento si ha:
+		$$(L\underline{v})_{k+1}=-\dfrac{v_{k+1}}{v_k}v_k+1\cdot v_{k+1}=-v_{k+1}+v_{k+1}=0.$$
+		Quindi la matrice elementare di Gauss $L$ (triangolare inferiore a diagonale unitaria) ha appunto la caratteristica di annullare le componenti di $\underline{v}$ dalla $(k+1)$-esima in poi, lasciando invariate le prime $k$, se moltiplicata a sinistra per $\underline{v}$. Si noti che sia il vettore che la matrice elementari di Gauss sono definiti se e solo se $v_k\neq 0$.\\
+		L'inversa della matrice elementare di Gauss $L$, $L^{-1}$, si ottiene facilmente come
+		\begin{equation}
+			\label{L-1}
+			L^{-1}=I+\underline{g}\:\underline{e_k}^T.
+		\end{equation}
+		Infatti si ha che
+		$$L^{-1}L=(I+\underline{g}\:\underline{e_k}^T)(I-\underline{g}\:\underline{e_k}^T)=I-\underline{g}\:\underline{e_k}^T+\underline{g}\:\underline{e_k}^T-\underline{g}\:\underbrace{\underline{e_k}^T\:\underline{g}}_{=0}\:\underline{e_k}^T=I,$$
+		essendo $\underline{e_k}^T\:\underline{g}$ il $k$-esimo elemento del vettore elementare di Gauss, che è nullo per definizione di $\underline{g}$.\\
+		\\
+		Tornando adesso al problema della fattorizzazione della matrice $A$ del sistema (\ref{sistema}), l'idea di base è quella di trasformare la matrice $A$ in una matrice \textit{triangolare superiore}, moltiplicando $A$ a sinistra per opportune matrici elementari di Gauss. Tale metodo iterativo è detto \textbf{metodo di eliminazione di Gauss} e fattorizza la matrice $A$ $LU$ in $n-1$ passi.\\
+		Indichiamo con
+		\[
+			A\equiv A^{(1)}=
+			\begin{pmatrix}
+				a_{11}^{(1)} & \dots & a_{1n}^{(1)}\\
+				\vdots & & \vdots\\
+				a_{n1}^{(1)} & \dots & a_{nn}^{(1)}\\
+			\end{pmatrix}
+		\]
+		la matrice al primo passo, dove l'indice superiore indica il passo più recente in cui un certo elemento è stato modificato.\\
+		Il primo passo per rendere $A$ triangolare superiore è quello di rendere nulli tutti gli elementi della prima colonna dal secondo in poi, ovvero far assumere ad $A$, almeno per quanto riguarda la prima colonna, una struttura uguale a quella di una matrice triangolare superiore. Se risulta che
+		$$a_{11}^{(1)}\neq 0,$$
+		allora possiamo definire il vettore elementare di Gauss $\underline{g_1}$ e la corrispondente matrice $L_1$,
+		\[
+			\underline{g_1}\equiv\dfrac{1}{a_{11}^{(1)}}(0,a_{21}^{(1)},\dots,a_{n1}^{(1)})^T,\qquad L_1\equiv I-\underline{g_1}\:\underline{e_1}^T=
+			\begin{pmatrix}
+				1 & & &\\
+				-\frac{a_{21}^{(1)}}{a_{11}^{(1)}} & 1 & &\\
+				\vdots & & \ddots &\\
+				-\frac{a_{n1}^{(1)}}{a_{11}^{(1)}} & & & 1
+			\end{pmatrix},
+		\]
+		tali che
+		\[
+			L_1A=
+			\begin{pmatrix}
+				a_{11}^{(1)} & \dots & \dots & a_{1n}^{1}\\
+				0 & a_{22}^{2} & \dots & a_{2n}^{(2)}\\
+				\vdots & \vdots & & \vdots\\
+				0 & a_{n2}^{(2)} & \dots & a_{nn}^{2}
+			\end{pmatrix}
+			\equiv A^{(2)}.
+		\]
+		Osserviamo che, tramite questa procedura, nel passaggio da $A^{(1)}$ ad $A^{(2)}$ la prima riga della matrice è rimasta invariata.\\
+		Reiterando fino al passo $i$-esimo, avremo ottenuto, se $a_{jj}^{(j)}\neq 0$ per ogni $j<i$:
+		\[
+			L_{i-1}\dots L_2L_1A=
+			\begin{pmatrix}
+				a_{11}^{(1)} & \dots & \dots & \dots & \dots & a_{1n}^{(1)}\\
+				0 & \ddots & & & & \vdots\\
+				\vdots & \ddots & a_{i-1,i-1}^{(i-1)} & \dots & \dots & a_{i-1,n}^{(i-1)}\\
+				\vdots & & 0 & a_{ii}^{(i)} & \dots & a_{in}^{(i)}\\
+				\vdots & & \vdots & \vdots & & \vdots\\
+				0 & \dots & 0 & a_{ni}^{(i)} & \dots & a_{nn}^{(i)}\\
+			\end{pmatrix}
+			\equiv A^{(i)}.
+		\]
+		Se a sua volta risulta che
+		\begin{equation}
+			\label{diagDivZero}
+			a_{ii}^{(i)}\neq 0,
+		\end{equation}
+		allora possiamo definire l'$i$-esimo vettore elementare di Gauss e la relativa matrice:
+		\begin{align}
+			&\underline{g_i}\equiv\frac{1}{a_{ii}^{(i)}}(\underbrace{0,\dots,0}_{i},a_{i+1,i}^{(i)},\dots,a_{ni}^{(i)})^T,\notag\\
+			\label{Li}
+			&L_i\equiv I-\underline{g_i}\:\underline{e_i}^T=
+			\begin{blockarray}{c c c c c c l}
+				& & \matindex{$i$} & & &\\
+				\begin{block}{(c c c c c c)l}
+					1 & & & & & &\\
+					& \ddots & & & & &\\
+					& & 1 & & & &\\
+					& & -\frac{a_{i+1,i}^{(i)}}{a_{ii}^{(i)}} & \ddots & & & \matindex{riga $i+1$}\\
+					& & \vdots & & \ddots & &\\
+					& & -\frac{a_{ni}^{(i)}}{a_{ii}^{(i)}} & & & 1 &\\
+				\end{block}
+			\end{blockarray},
+		\end{align}
+		tali che
+		\[
+			L_iA^{(i)}=L_i\dots L_1A=
+			\begin{pmatrix}
+				a_{11}^{(1)} & \dots & \dots & \dots & \dots & a_{1n}^{(1)}\\
+				0 & \ddots & & & & \vdots\\
+				\vdots & \ddots & a_{ii}^{(i)} & \dots & \dots & a_{in}^{(i)}\\
+				\vdots & & 0 & a_{i+1,i+1}^{(i+1)} & \dots & a_{i+1,n}^{(i+1)}\\
+				\vdots & & \vdots & \vdots & & \vdots\\
+				0 & \dots & 0 & a_{n,i+1}^{(i+1)} & \dots & a_{nn}^{(i+1)}
+			\end{pmatrix}
+			\equiv A^{(i+1)}.
+		\]
+		Dal momento che le prime $i$ righe dell'$i$-esima matrice elementare di Gauss $L_i$ coincidono con le prime $i$ righe della matrice identità $I$, le prime $i$ righe della matrice non vengono modificate nel passaggio da $A^{(i)})$ ad $A^{(i+1)}$.\\
+		Se risulta che $a_{jj}^{(j)}\neq 0$ per ogni $j<n$, allora al passo $n-1$ avremo ottenuto
+		\begin{equation}
+			\label{U}
+			L_{n-1}\dots L_1A=
+			\begin{pmatrix}
+				a_{11}^{(1)} & \dots & \dots & a_{1n}^{(1)}\\
+				0 & \ddots & & \vdots\\
+				\vdots & \ddots & a_{n-1,n-1}^{(n-1)} & a_{n-1,n}^{(n-1)}\\
+				0 & \dots & 0 & a_{nn}^{(n)}
+			\end{pmatrix}
+			\equiv A^{(n)}\equiv U.
+		\end{equation}
+		Quindi la matrice $A$ di partenza è stata correttamente trasformata nella matrice $U$ \textit{triangolare superiore}. Denotando con il simbolo $L^{-1}$ la matrice
+		$$L_{n-1}\dots L_1,$$
+		risulta che
+		\begin{align*}
+			&L_{n-1}\dots L_1A=U\\
+			&L^{-1}A=U\\
+			&A=LU
+		\end{align*}
+		Risulta infatti che $L^{-1}$ è una matrice \textit{triangolare inferiore a diagonale unitaria}, in quanto prodotto di matrici triangolari inferiori a diagonale unitaria (vedi Esercizio \ref{es3.3}), e tale risulta anche la sua inversa $L$ (vedi Esercizio \ref{es3.4}). Denotando con $g_{ki}\equiv \underline{e_k}^T\:\underline{g_i}$, ovvero il $k$-esimo elemento dell'$i$-esimo vettore elementare di Gauss, ricordiamo che, per costruzione del generico $\underline{g_i}$:
+		$$g_{ki}=0,\qquad\text{per }k\leq i.$$
+		Allora la matrice $L$ ricercata sarà data da (vedi (\ref{L-1}))
+		\begin{align*}
+			L&=(L^{-1})^{-1}=(L_{n-1}\dots L_1)^{-1}=\\
+			&=L_1^{-1}\dots L_{n-1}^{-1}=\\
+			&=(I+\underline{g_1}\:\underline{e_1}^T)\dots(I+\underline{g_{n-1}}\:\underline{e_{n-1}}^T)=\\
+			&=I+\underline{g_1}\:\underline{e_1}^T+\dots+\underline{g_{n-1}}\:\underline{e_{n-1}}^T,
+		\end{align*}
+		dato che gli $\underline{e_i}^T$ con indice minore vengono sempre moltiplicati a sinistra per i $\underline{g_j}$ di indice maggiore, infatti i fattori $(\underline{g_i}\:\underline{e_i}^T\:\underline{g_j}\:\underline{e_j}^T)$ risulteranno tutti pari a zero, per quanto detto prima. Quindi la matrice $L$ risulta essere
+		\begin{equation}
+			\label{L}
+			L=
+			\begin{pmatrix}
+				1 & & &\\
+				g_{21} & 1 & &\\
+				\vdots & \ddots & \ddots &\\
+				g_{n1} & \dots & g_{n,n-1} & 1
+			\end{pmatrix},
+		\end{equation}
+		ovvero la matrice identità con gli elementi significativi dei vettori elementari di Gauss nella parte strettamente inferiore (nelle colonne corrispondenti).\\
+		Le matrici $L$ ed $U$ così ottenute formano la fattorizzazione $LU$ ricercata per la matrice $A$.\\
+		\\
+		Deriviamo adesso condizioni sufficienti affinché esista la fattorizzazione $LU$ di $A$.\\
+		Abbiamo visto che per poter eseguire il metodo di eliminazione di Gauss è necessario poter costruire, ad ogni passo, la matrice elementare d Gauss e quindi il vettore elementare di Gauss, il che equivale a richiedere che sia verificata la (\ref{diagDivZero}) ad ogni passo.
+		\begin{lem}
+			\label{lem3.1}
+			Se $A$ è nonsingolare, la fattorizzazione (\ref{LU}) è definita se e solo se $a_{ii}^{(i)}\neq 0$, $i=1,2,\dots,n$, ovvero se e solo se $U$ è nonsingolare.
+		\end{lem}
+		\begin{defi}
+			Si dice \textbf{sottomatrice principale di ordine $k$} di una generica matrice $A=(a_{ij})\in\mathbb{R}^{n\times n}$:
+			\[
+				A_k=
+				\begin{pmatrix}
+					a_{11} & \dots & a_{1k}\\
+					\vdots & & \vdots\\
+					a_{n1} & \dots & a_{nn}
+				\end{pmatrix},
+			\]
+			ovvero $A_k$ è la porzione di $A$ ottenuta dall'intersezione delle sue prime $k$ righe con le sue prime $k$ colonne.
+		\end{defi}
+		\begin{defi}
+			Il determinante della sottomatrice principale di ordine $k$ $A_k$, $det(A_k)$, è detto \textbf{minore principale di ordine $k$} della matrice $A$.
+		\end{defi}
+		Come casi estremi, il minore principale di ordine $1$ è $a_{11}$, mentre il minore principale di ordine $n$ coincide con $det(A)$ ($=n$ se $A$ è non singolare).
+		\begin{lem}
+			\label{lem3.2}
+			Una matrice triangolare è nonsingolare se e solo se tutti i suoi minori principali sono non nulli.
+		\end{lem}
+		\begin{lem}
+			\label{lem3.3}
+			Il minore di ordine $k$ di $A$ in (\ref{LU}) coincide con il minore di ordine $k$ di $U$ in (\ref{U}).
+		\end{lem}
+
+		Quindi, grazie ai Lemmi \ref{lem3.1}, \ref{lem3.2} e \ref{lem3.3}, possiamo enunciare il seguente Teorema:
+		\begin{teo}[Esistenza della fattorizzazione $LU$]
+			\label{teo3.2}
+			Se $A$ è nonsingolare, la fattorizzazione (\ref{LU}) esiste se e solo se tutti i minori principali di A sono non nulli.
+		\end{teo}
+		Si osservi che richiedere che tutti i minori principali di $A$ siano non nulli è molto più restrittivo che richiedere che $A$ sia nonsingolare, che equivale a richiedere che soltanto il minore principale di ordine massimo sia non nullo. Di seguito una matrice nonsingolare d'esempio che ha tutti i minori principali nulli tranne quello di ordine massimo:
+		\[
+			A=
+			\begin{pmatrix}
+				0 & \dots & \dots & 0 & 1\\
+				1 & 0 & \dots & \dots & 0\\
+				& 1 & \ddots & & \vdots\\
+				& & \ddots & \ddots & \vdots\\
+				& & & 1 & 0
+			\end{pmatrix}.
+		\]
+	\section{Costo computazionale}
+		Per quanto riguarda l'\underline{occupazione di memoria} del metodo di eliminazione di Gauss si ha che al passo $i$-esimo, vengono azzerate le componenti dalla $i+1$ alla $n$ della colonna $i$ della matrice $A^{(i)}$. Queste componenti sono esattamente $n-i$, come il numero di elementi significativi (le ultime $n-1$ componenti) dell'$i$-esimo vettore elementare di Gauss. Quindi queste ultime $n-i$ posizioni della colonna $i$ di $A$, anziché azzerate, possono essere riscritte con gli elementi significativi di $\underline{g_i}$, che sono proprio gli elementi che, esattamente in colonna $i$, andranno a formare la matrice $L$. Quindi, con questo approccio, alla fine del metodo avremo riscritto la matrice $A$ con
+		\begin{itemize}
+			\item le componenti significative della matrice $U$ nella parte \textit{strettamente triangolare superiore} (vedi (\ref{U}));
+			\item le componenti significative della matrice $L$ (escludendo quindi la diagonale unitaria, vedi (\ref{L})) nella porzione \textit{strettamente triangolare inferiore}.
+		\end{itemize}
+		Si conclude quindi che, dal punto di vista di occupazione di memoria, il metodo di eliminazione di Gauss non richiede spazio addizionale.\\
+		\\
+		Analizzando invece il \underline{costo computazionale} del metodo di eliminazione di Gauss, risulta che al passo $i$-esimo dovremo calcolare l'$i$-esimo vettore elementare di Gauss $\underline{g_i}$ e successivamente il prodotto $L_iA^{(i)}$, che è dato da
+		$$L_iA^{(i)}=(I-\underline{g_i}\:\underline{e_i}^T)A^{(i)}=A^{(i)}-\underline{g_i}(\underline{e_i}^TA^{(i)})\equiv A^{(i+1)}.$$
+		Considerando che
+		\begin{itemize}
+			\item le prime $i$ componenti del vettore $\underline{g_i}$ sono nulle,
+			\item il vettore $\underline{e_i}^TA^{(i)}$ rappresenta l'$i$-esima riga della matrice $A^{(i)}$, le cui prime $i-1$ componenti sono nulle,
+			\item è noto a priori (e quindi inutile calcolarle) che le ultime $n-i$ componenti della colonna $i$ della matrice $A^{(i+1)}$ sono nulle (dalla $i+1$ alla $n$),
+		\end{itemize}
+		risulta che soltanto la sottomatrice quadrata delimitata da $(i+1,i+1)$ e $(n,n)$ dovrà essere calcolata e modificata. Il costo computazionale si dimostra quindi essere (vedi Esercizio \ref{es3.6}), per una matrice quadrata $n\times n$,
+		\begin{equation}
+			\label{costoLU}
+			\approx\frac{2}{3}n^3\quad\textbf{flop}.
+		\end{equation}
+		Con questi accorgimenti, possiamo infine definire il metodo di fattorizzazione $LU$ (Codice \ref{lst:fattorizzaLU}) ed il metodo per la risoluzione di un sistema lineare tramite fattorizzazione $LU$ della matrice dei coefficienti (Codice \ref{lst:risolviSistemaLU}).
+		\lstinputlisting[caption={Fattorizzazione $LU$ di una matrice}, label=lst:fattorizzaLU]{code/fattorizzaLU.m}
+		\lstinputlisting[caption={Risoluzione di un sistema lineare tramite fattorizzazione $LU$ della matrice dei coefficienti}, label=lst:risolviSistemaLU]{code/risolviSistemaLU.m}
+
+	\section{Matrici a diagonale dominante}
+		Studiamo adesso una particolare tipologia di matrici per le quali la nonsingolarità deriva da una sua proprietà algebrica e che hanno tutte le loro sottomatrici principali che godono della medesima proprietà.
+		\begin{defi}
+			Data a matrice $A=(a_{ij})\in\mathbb{R}^{n\times n}$, si dice che $A$ è:
+			\begin{itemize}
+				\item \textbf{diagonale dominante per righe} se
+				$$|a_{ii}|>\sum_{j\neq i}|a_{ij}|,\qquad i=1,\dots,n,$$
+				ovvero se ogni elemento diagonale è strettamente maggiore della somma degli altri elementi sulla stessa riga (in valore assoluto);
+				\item \textbf{diagonale dominante per colonne} se
+				$$|a_{ii}|>\sum_{j\neq i}|a_{ji}|,\qquad i=1,\dots,n,$$
+				ovvero se ogni elemento diagonale è strettamente maggiore della somma degli altri elementi sulla stessa colonna (in valore assoluto).
+			\end{itemize}
+		\end{defi}
+		\begin{lem}
+			\label{lem3.4}
+			Se una matrice $A$ è \textit{diagonale dominante per righe} (rispettivamente, \textit{per colonne}), allora tali sono tutte le sue sottomatrici principali.
+		\end{lem}
+		\begin{lem}
+			\label{lem3.5}
+			Una matrice $A$ è \textit{diagonale dominante per righe} (rispettivamente, \textit{per colonne}) se e solo se $A^T$ è \textit{diagonale dominante per colonne} (rispettivamente, \textit{per righe}).
+		\end{lem}
+
+		\begin{lem}
+			\label{lem3.6}
+			Se una matrice $A\in\mathbb{R}^{n\times n}$ è \textit{diagonale dominante per righe} (rispettivamente, \textit{per colonne}), allora è nonsingolare.
+		\end{lem}
+		Combinando i Lemmi \ref{lem3.6} e \ref{lem3.4} risulta che se una matrice è dominante per righe/colonne, allora tutte le sue sottomatrici principali sono nonsingolari (ovvero con determinante non nullo). Quindi si ricava facilmente il seguente Teorema:
+		\begin{teo}
+			Se $A$ è \textit{diagonale dominante}, per righe e/o colonne, allora è fattorizzabile $LU$.
+		\end{teo}
+	\section{Matrici sdp: fattorizzazione $LDL^T$}
+		Un'altra tipologia di matrici sempre fattorizzabili $LU$ sono le matrici \textit{simmetriche} e \textit{definite positive} (più brevemente, \textit{sdp}).
+		\begin{defi}
+			Una matrice $A\in\mathbb{R}^{n\times n}$ è \textbf{sdp} se è \textit{simmetrica} (ovvero $A=A^T$) e, per ogni $\underline{x}\in\mathbb{R}^n$, $\underline{x}\neq 0$, risulta
+			$$\underline{x}^TA\underline{x}>0.$$
+		\end{defi}
+		
+		Per verificare se una matrice $A$ simmetrica è definita positiva si può utilizzare il seguente metodo:
+		
+		\begin{teo}[Teorema di Jacobi]
+			\label{teo:jacobi}
+			Sia $A$ una matrice simmetrica di rango $n$ in cui tutti i minori principali, $\delta_1, \delta_2, \dots, \delta_n$, sono non nulli. Allora $A$ è congruente ad una matrice diagonale $B$ del tipo
+			\[ B = \begin{pmatrix}
+					\delta_1 & & &\\
+					& \sfrac{\delta_2}{\delta_1} & &\\
+					& & \ddots &\\
+					& & & \sfrac{\delta_n}{\delta_{n-1}}
+				\end{pmatrix}.
+			\]
+		\end{teo}
+		Grazie al Teorema \ref{teo:jacobi}, basta studiare la positività degli elementi della diagonale della matrice $B$ congruente:
+		\begin{itemize}
+			\item se tutti positivi: $A$ è \textbf{definita positiva};
+			\item se tutti negativi: $A$ è \textbf{definita negativa};
+			\item altrimenti: $A$ è \textbf{non definita}.
+		\end{itemize}
+		
+		Un altro metodo per studiare se una matrice è definita positiva consiste nell'applicare il Criterio di Sylvester.
+		
+		\begin{teo}[Criterio di Sylvester]
+			\label{teo:sylvester}
+			Sia $A\in\mathbb{R}^{n\times n}$ una matrice simmetrica reale. Per $i=1,\dots,n$, sia $d_i$ il minore principale di ordine $i$ di $A$. Allora $A$ è definita positiva se e solo se
+			$$d_i > 0,\qquad i=1,\dots,n.$$
+		\end{teo}
+		Dal Criterio di Sylvester si può dedurre che:
+		\begin{cor}
+			\label{cor:sylvester}
+			Sia $A\in\mathbb{R}^{n\times n}$ una matrice simmetrica reale. Per $i=1,\dots,n$, sia $d_i$ il minore principale di ordine $i$ di $A$. Allora $A$ è definita negativa se e solo se
+			$$(-1)^id_i > 0,\qquad i=1,\dots,n.$$
+		\end{cor}
+		
+		\begin{lem}
+			Tutte le sottomatrici principali di una matrice \textit{sdp} sono a loro volta \textit{sdp}.
+		\end{lem}
+		\begin{lem}
+			Una matrice \textit{sdp} è nonsingolare.
+		\end{lem}
+		\begin{teo}
+			Gli elementi diagonali di una matrice \textit{sdp} sono positivi.
+		\end{teo}
+		\begin{teo}
+			\label{teo3.6}
+			$A$ è \textit{sdp} se e solo se
+			\begin{equation}\label{LDLT}A=LDL^T,\end{equation}
+			con
+			\begin{itemize}
+				\item $L$ \textit{triangolare inferiore} a \textit{diagonale unitaria},
+				\item $D$ \textit{diagonale} con \textit{elementi diagonali positivi}.
+			\end{itemize}
+		\end{teo}
+
+		Per la simmetria delle matrici ai due membri della (\ref{LDLT}), è sufficiente eguagliare gli elementi $(i,j)$ di ciascun membro, per $i\geq j$, ovvero per la sola parte triangolare inferiore della matrice. Se $A=(a_{ij})$ e
+		\begin{align*}
+			&L=
+				\begin{pmatrix}
+					1 & & &\\
+					l_{21} & \ddots & &\\
+					\vdots & \ddots & \ddots &\\
+					l_{n1} & \dots & l_{n,n-1} & 1
+				\end{pmatrix}=
+				\begin{pmatrix}
+					l_{11} & &\\
+					\vdots & \ddots &\\
+					l_{n1} & \dots & l_{nn}
+				\end{pmatrix},
+				\quad l_{jj}=1,\; j=1,\dots,n,\\
+			\\
+			&D=
+				\begin{pmatrix}
+					d_1 & &\\
+					& \ddots &\\
+					& &d_n
+				\end{pmatrix},
+		\end{align*}
+		allora, eguagliando gli elementi di uguale indice, per $i\geq j$, si ottiene:
+		\begin{align*}
+			a_{ij} &= \underline{e_i}^TA\underline{e_j} \footnoteOP{=} \underline{e_i}^T(LDL^T)\underline{e_j} = (\underline{e_i}^TL)D(\underline{e_j}^TL)^T =\footnotemark\\
+			&=(l_{i1},\dots,l_{ii},0,\dots,0)
+				\begin{pmatrix}
+					d_1 & &\\
+					& \ddots &\\
+					& & d_n
+				\end{pmatrix}
+				\begin{pmatrix}
+					l_{j1}\\
+					\vdots\\
+					l_{jj}\\
+					0\\
+					\vdots\\
+					0
+				\end{pmatrix}=\\
+			&=(l_{i1}d_1,\dots,l_{ii}d_i,0,\dots,0)
+				\begin{pmatrix}
+					l_{j1}\\
+					\vdots\\
+					l_{jj}\\
+					0\\
+					\vdots\\
+					0
+				\end{pmatrix}=\\
+			&=\sum_{k=1}^{j}l_{ik}l_{jk}d_k \footnoteOP{=} \sum_{k=1}^{j-1}l_{ik}l_{jk}d_k +l_{ij}l_{jj}d_j=\footnotemark\\
+			&=\sum_{k=1}^{j-1}l_{ik}l_{jk}d_k +l_{ij}d_j.\footnotemark
+		\end{align*}
+		%-------- FOOTNOTES --------
+		\addtocounter{footnote}{-4}
+		\footnotetext{Con $\underline{e_i}^T$ viene selezionata la riga $i$-esima di $A$, mentre con $\underline{e_j}$ viene selezionata la colonna $j$-esima. Insieme selezionano l'elemento $(i,j)$.}
+		\stepcounter{footnote}
+		\footnotetext{$(\underline{e_i}^TL)$ seleziona la riga $i$-esima di $L$; $(\underline{e_j}^TL)^T$ seleziona la riga $j$-esima trasposta di $L$ (ovvero la colonna $j$-esima di $L^T$).}
+		\stepcounter{footnote}
+		\footnotetext{La sommatoria arriva fino a $j$ in quanto, essendo $i\geq j$, gli elementi con indice maggiore di $j$ verranno azzerati (poiché le ultime $n-j$ componenti del vettore colonna sulla destra sono nulle).}
+		\stepcounter{footnote}
+		\footnotetext{Viene portato fuori dalla sommatoria l'ultimo prodotto (di indice $j$.}
+		\stepcounter{footnote}
+		\footnotetext{Essendo $l_{jj}=1$ in quanto elemento diagonale di $L$.}
+		%-------- end FOOTNOTES --------
+		
+		Distinguendo quindi i due casi $i=j$ ed $i>j$, si possono ricavare (vedi Esercizio \ref{es3.14}) le seguenti espressioni per $d_j$ ed $l_{ij}$, valide per $j=1,\dots,n$:
+		\begin{itemize}
+			\item $i=j$: diagonale
+			\begin{equation}\label{dj}d_j=a_{jj}-\sum_{k=1}^{j-1}l_{jk}^2d_k.\end{equation}
+			\item $i>j$: porzione strettamente triangolare inferiore
+			\begin{equation}\label{lij}l_{ij}=\frac{a_{ij}-\sum_{k=1}^{j-1}l_{ik}l_{jk}d_k}{d_j},\qquad i=j+1,\dots,n.\end{equation}
+		\end{itemize}
+		Si osservi che la matrice $A$, essendo \textit{simmetrica}, può essere memorizzata in forma compressa, memorizzandone soltanto la porzione triangolare inferiore (o superiore). Inoltre si nota dalle espressioni poc'anzi ricavate, che il valore di $a_{ij}$ non è più utilizzato una volta calcolato $l_{ij}$ (analogamente, $d_j$ se $i=j$). Quindi la porzione strettamente triangolare inferiore della matrice $A$ può essere riscritta con gli elementi significativi della matrice $L$ (la diagonale è formata sempre da tutti $1$, quindi è inutile la sua memorizzazione) e la sua diagonale con gli elementi della matrice $D$. Se ne deduce che, dal punto di vista di \underline{occupazione di memoria}, la fattorizzazione $LDL^T$ non richiede spazio aggiuntivo (risparmiando ulteriore spazio nel caso in cui $A$ venga memorizzata in formato compresso).\\
+		\\
+		Per quanto riguarda, invece, il \underline{costo computazionale} di tale fattorizzazione, si può dimostrare (vedi Esercizio \ref{es3.15}) che vale circa
+		\begin{equation}
+			\label{costoLDLT}
+			\approx\frac{1}{3}n^3\textbf{ flop},
+		\end{equation}
+		ovvero circa la metà rispetto alla fattorizzazione $LU$ con il metodo di eliminazione di Gauss.\\
+		\\
+		Di seguito, le implementazioni in \textsc{Matlab} della fattorizzazione $LDL^T$ e della risoluzione di sistemi lineari tramite fattorizzazione $LDL^T$ della matrice dei coefficienti:
+		\lstinputlisting[caption={Fattorizzazione $LDL^T$ di una matrice.}, label=lst:fattorizzaLDLt]{code/fattorizzaLDLt.m}
+		\lstinputlisting[caption={Risoluzione di un sistema lineare tramite fattorizzazione $LDL^T$ della matrice dei coefficienti.}, label=lst:risolviSistemaLDLt]{code/risolviSistemaLDLt.m}
+
+	\section{\textit{Pivoting}}
+		Studiamo adesso il caso in cui non tutte le ipotesi del Teorema \ref{teo3.2} sono verificate. In particolare studiamo il caso in cui la matrice $A$ è nonsingolare, ma esiste almeno un minore principale di $A$ nullo. L'obiettivo di questo capitolo è quello di definire un nuovo metodo affinché la fattorizzazione sia possibile anche sotto la sola ipotesi di nonsingolarità.\\
+		Supponiamo quindi di trovarsi al primo passo del metodo di eliminazione di Gauss e che non sia verificata la condizione (\ref{diagDivZero}), ovvero che $a_{ii}^{(i)}=0$. Tuttavia, essendo $A$ nonsingolare, esisterà sicuramente nella sua prima colonna un elemento non nullo:
+		$$|a_{k_11}^{(1)}|\equiv \max_{k\geq 1}|a_{k1}^{(1)}|>0,$$
+		con $k_1$ che indica l'indice della riga dell'elemento massimo nella prima colonna (in valore assoluto) e $a_{k_11}$ l'elemento stesso.\\
+		\begin{defi}
+			La matrice identità di ordine $n$ con le righe (e quindi, essendo simmetrica, anche le colonne) $i$ e $k_i$, con $k_i\geq i$, scambiate tra loro
+			\begin{equation}
+				\label{matrElemPerm}
+				P_i\equiv
+				\begin{blockarray}{c c c c c l}
+					\begin{block}{(c|c c c|c)l}
+						I_{i-1} & & & & &\\
+						\cline{1-5}
+						& 0 & \underline{0}^T & 1 & &\matindex{riga i}\\
+						& \underline{0} & I_{k_i-i-1} & \underline{0} & &\\
+						& 1 & \underline{0}^T & 0 & &\matindex{riga $k_i$}\\
+						\cline{1-5}
+						& & & & I_{n-k_i} &\\
+					\end{block}
+				\end{blockarray},
+			\end{equation}
+			è detta \textbf{matrice elementare di permutazione}.
+		\end{defi}
+		Si osserva che la matrice $P_i$ è \textit{simmetrica} e \textit{ortogonale}, ovvero
+		$$P_i=P_i^T=P_i^{-1}.$$
+		Inoltre un'importante caratteristica della matrice elementare di permutazione è quella di scambiare tra loro le righe $i$ e $k_i$ se moltiplicata a sinistra per un vettore $\underline{v}=(v_1,\dots,v_n)^T\in\mathbb{R}^n$
+		\[
+			P_i
+			\begin{pmatrix}
+				v_1\\
+				\vdots\\
+				v_i\\
+				\vdots\\
+				v_{k_1}\\
+				\vdots\\
+				v_n
+			\end{pmatrix}=
+			\begin{pmatrix}
+				v_1\\
+				\vdots\\
+				v_{k_i}\\
+				\vdots\\
+				v_i\\
+				\vdots\\
+				v_n
+			\end{pmatrix},
+		\]
+		o per una matrice $A$
+		\[
+			P_i
+			\begin{pmatrix}
+				a_{11} & \dots & & \dots & & \dots & a_{1n}\\
+				\vdots & & & & & & \vdots\\
+				a_{i1} & \dots & & \dots & & \dots & a_{in}\\
+				\vdots & & & & & & \vdots\\
+				a_{k_i1} & \dots & & \dots & & \dots & a_{k_in}\\
+				\vdots & & & & & & \vdots\\
+				a_{n1} & \dots & & \dots & & \dots & a_{nn}\\
+			\end{pmatrix}=
+			\begin{pmatrix}
+				a_{11} & \dots & & \dots & & \dots & a_{1n}\\
+				\vdots & & & & & & \vdots\\
+				a_{k_i1} & \dots & & \dots & & \dots & a_{k_in}\\
+				\vdots & & & & & & \vdots\\
+				a_{i1} & \dots & & \dots & & \dots & a_{in}\\
+				\vdots & & & & & & \vdots\\
+				a_{n1} & \dots & & \dots & & \dots & a_{nn}\\
+			\end{pmatrix}.
+		\]
+		Quindi la matrice elementare di permutazione relativa alla prima riga sarà
+		\[
+			P_1\equiv
+			\begin{blockarray}{c c c c l}
+				\begin{block}{(c c c|c)l}
+					0 & \underline{0}^T & 1 & &\\
+					\underline{0} & I_{k_1-2} & \underline{0} & &\\
+					1 & \underline{0}^T & 0 & & \matindex{riga $k_1$}\\
+					\cline{1-4}
+					& & & I_{n-k_1} &\\
+				\end{block}
+			\end{blockarray}.
+		\]
+		Moltiplicandola a sinistra per la matrice al primo step $A^{(1)}$, otterremo quindi la stessa matrice $A^{(1)}$ ma con le righe $1$ e $k_1$ permutate tra loro:
+		\[
+			P_1A^{(1)}=
+			\begin{blockarray}{c c c c c l}
+				\begin{block}{(c c c c c)l}
+					a_{k_11}^{(1)} & \dots & \dots & \dots & a_{k_1n}^{(1)} & \matindex{riga $1$}\\
+					\vdots & & & & \vdots &\\
+					a_{11}^{(1)} & \dots & \dots & \dots & a_{1n}^{(1)} & \matindex{riga $k_1$}\\
+					\vdots & & & & \vdots &\\
+					a_{n1}^{(1)} & \dots & \dots & \dots & a_{nn}^{(1)} &\\
+				\end{block}
+			\end{blockarray}.
+		\]
+		Quindi risulta chiaro che adesso è possibile applicare il primo passo del metodo di eliminazione di Gauss, definendo il primo vettore elementare di Gauss
+		\begin{align*}
+			&\matindex{$k_1$}\\
+			\underline{g_1}=\frac{1}{a_{k_11}^{(1)}}(0,a_{21}^{(1)},\dots,&a_{11}^{(1)},\dots,a_{n1}^{(1)})^T,
+		\end{align*}
+		e la prima matrice elementare di Gauss
+		\[
+			L_1=I-\underline{g_1}\:\underline{e_1}^T=
+			\begin{blockarray}{c c c c c c l}
+				\begin{block}{(c c c c c c)l}
+					1 & & & & & &\\
+					-\frac{a_{21}^{(1)}}{a_{k_11}^{(1)}} & \ddots & & & & &\\
+					\vdots & & \ddots & & & &\\
+					-\frac{a_{11}^{(1)}}{a_{k_11}^{(1)}} & & & \ddots & & & \matindex{riga $k_1$}\\
+					\vdots & & & & \ddots & &\\
+					-\frac{a_{n1}^{(1)}}{a_{k_11}^{(1)}} & & & & & 1 &\\
+				\end{block}
+			\end{blockarray}.
+		\]
+		Segue che, combinando la permutazione di $P_1$ e l'eliminazione di Gauss di $L_1$ otteniamo la matrice al secondo step, ovvero la matrice con la prima colonna strutturalmente uguale a quella di una matrice \textit{triangolare superiore}:
+		\[
+			L_1P_1A^{(1)}=
+			\begin{pmatrix}
+				a_{k_11}^{(1)} & \dots & \dots & a_{k_1n}^{(1)}\\
+				0 & a_{22}^{(2)} & \dots & a_{2n}^{(2)}\\
+				\vdots & \vdots & & \vdots\\
+				0 & a_{n2}^{(2)} & \dots & a_{nn}^{(2)}
+			\end{pmatrix}
+			\equiv A^{(2)}.
+		\]
+		Analogamente a quanto visto in Sezione \ref{sez3.2}, la procedura viene reiterata, ottenendo, al generico passo $i$-esimo, la matrice
+		\[
+			L_{i-1}P_{i-1}\dots L_1P_1A=
+			\begin{pmatrix}
+				a_{k_11}^{(1)} & \dots & \dots & \dots & \dots & a_{k_1n}^{(1)}\\
+				0 & \ddots & & & & \vdots\\
+				\vdots & \ddots & a_{k_{i-1},i-1}^{(i-1)} & \dots & \dots & a_{k_{i-1},n}^{(i-1)}\\
+				\vdots & & 0 & a_{ii}^{(i)} & \dots & a_{in}^{i}\\
+				\vdots & & \vdots & & &\\
+				0 & \dots & 0 & a_{ni}^{(i)} & \dots & a_{nn}^{(i)}
+			\end{pmatrix}
+			\equiv A^{(i)}.
+		\]
+		Definiamo allora l'$i$-esimo elemento \textbf{pivot} (o \textbf{di perno})
+		\begin{equation}\label{pivot}|a_{k_ii}^{(i)}|\equiv\max_{k\geq i}|a_{ki}^{(i)}|,\end{equation}
+		per il quale si avrà, essendo $A$ nonsingolare per ipotesi, $a_{k_ii}^{(i)}\neq 0$ (vedi Esercizio \ref{es3.19}) Si definisce quindi, a partire dall'$i$-esimo pivot (\ref{pivot}), l'$i$-esima matrice elementare di permutazione $P_i$ (vedi (\ref{matrElemPerm})).
+		Quindi, moltiplicando $P_i$ a sinistra per $A^{(i)}$ si ottiene la permutazione delle righe $i$ e $k_i$ della matrice $A^{(i)}$ (ovviamente, soltanto nelle colonne dalla $i$ alla $n$ si potrà osservare un effettivo cambiamento).\\
+		Possiamo a questo punto definire l'$i$-esimo vettore elementare di Gauss
+		\begin{align}
+			&\matindex{$k_i$}\notag\\
+			\label{gi}
+			\underline{g_i}=\frac{1}{a_{k_ii}^{(i)}}(\underbrace{0,\dots,0}_{i},a_{i+1,i}^{(i)},\dots,&a_{ii}^{(i)},\dots,a_{ni}^{(i)})^T,
+		\end{align}
+		e l'$i$-esima matrice elementare di Gauss
+		\[
+			L_i=I-\underline{g_i}\:\underline{e_i}^T=
+			\begin{blockarray}{c c c c c c c c l}
+				& & \matindex{$i$} & & & & &\\
+				\begin{block}{(c c c c c c c c)l}
+					1 & & & & & & & &\\
+					& \ddots & & & & & & &\\
+					& & 1 & & & & & &\\
+					& & -\frac{a_{i+1,i}^{(i)}}{a_{k_ii}^{(i)}} & \ddots & & & & & \matindex{riga $i+1$}\\
+					& & \vdots & & \ddots & & & &\\
+					& & -\frac{a_{ii}^{(i)}}{a_{k_ii}^{(i)}} & & & \ddots & & &\\
+					& & \vdots & & & & \ddots & &\\
+					& & -\frac{a_{ni}^{(i)}}{a_{k_ii}^{(i)}} & & & & & 1 &\\
+				\end{block}
+			\end{blockarray},
+		\]
+		tali che
+		\[
+			L_iP_iA^{(i)}=L_iP_i\dots L_1P_1A=
+			\begin{pmatrix}
+				a_{k_11}^{(1)} & \dots & \dots & \dots & \dots & a_{k_1n}^{(1)}\\
+				0 & \ddots & & & & \vdots\\
+				\vdots & \ddots & a_{k_ii}^{(i)} & \dots & \dots & a_{k_in}^{(i)}\\
+				\vdots & & 0 & a_{i+1,i+1}^{(i+1)} & \dots & a_{i+1,n}^{(i+1)}\\
+				\vdots & & \vdots & \vdots & & \vdots\\
+				0 & \dots & 0 & a_{n,i+1}^{(i+1)} & \dots & a_{nn}^{(i+1)}
+			\end{pmatrix}
+			\equiv A^{(i+1)}.
+		\]
+		Procedendo in questo modo, se $A$ è nonsingolare, sarà sempre possibile effettuare il passo di eliminazione di Gauss sulla matrice permutata, fino al passo $n-1$, ottenendo
+		\begin{equation}
+			\label{UPivot}
+			L_{n-1}P_{n-1}\dots L_1P_1A=
+			\begin{pmatrix}
+				a_{k_11}^{(1)} & \dots & \dots & a_{1n}^{(1)}\\
+				& \ddots & & \vdots\\
+				& & a_{k_{n-1},n-1}^{(n-1)} & a_{k_{n-1},n}^{(n-1)}\\
+				& & & a_{nn}^{(n)}
+			\end{pmatrix}
+			=A^{(n)}\equiv U.
+		\end{equation}
+		Considerando che le matrici elementari di permutazione $P_i$ sono \textit{simmetriche} ($P_i=P_i^T$) ed \textit{ortogonali} ($P_i^T=P_i^{-1}$), e che quindi $P_i=P_i^{-1}$, allora possiamo riscrivere la (\ref{UPivot}) come
+		\begin{equation}\label{UPivot2}\hat{L}_{n-1}\dots\hat{L}_1PA=U,\end{equation}
+		con
+		\begin{align*}
+			&\hat{L}_{n-1}\equiv L_{n-1}\\
+			&\hat{L}_i\equiv P_{n-1}\dots P_{i+1}L_iP_{i+1}\dots P_{n-1},\quad i=1,\dots,n-2,\\
+			&P\equiv P_{n-1}\dots P_1.
+		\end{align*}
+		Le due espressioni risultano equivalenti, infatti, se prendiamo ad esempio $n=4$, risulta:
+		\begin{align*}
+			\hat{L}_3\;\hat{L}_2\;\hat{L}_1\;PA &= L_3\;P_3L_2\underbrace{P_3\;P_3}_{I}P_2L_1P_2\underbrace{P_3\;P_3}_{I}P_2P_1A=\\
+			&=L_3\;P_3L_2\;P_2L_1\underbrace{P_2\;P_2}_{I}P_1A=\\
+			&=L_3\;P_3L_2\;P_2L_1\;P_1A=\\
+			&=U.
+		\end{align*}
+		Osserviamo che $P$ è una \textbf{matrice di permutazione} (non più \textit{elementare} in quanto non interessa soltanto due righe), ovvero una matrice \textit{ortogonale} che, moltiplicata a sinistra per un vettore (rispettivamente, per una matrice) ne permuta le componenti (rispettivamente, le righe). Inoltre sappiamo, per costruzione della generica matrice elementare di permutazione (vedi (\ref{matrElemPerm})), che la riga $i$ di $P_j$, con $i<j$, corrisponde alla riga $i$ della matrice identità, ovvero $\underline{e_i}^T$, in quanto la matrice $P_j$ è la matrice identità con due righe (una di indice $j>i$, l'altra con indice maggiore di $j$) permutate tra loro. Quindi risulta che $\underline{e_i}^TP_j=\underline{e_i}^T$, per $i<j$.\\
+		Si ha allora che
+		\begin{align}
+			\hat{L}_i&=P_{n-1}\dots P_{i+1}L_iP_{i+1}\dots P_{n-1}=\notag\\
+			&=P_{n-1}\dots P_{i+1}(I-\underline{g_i}\:\underline{e_i}^T)P_{i+1}\dots P_{n-1}=\notag\\
+			&=P_{n-1}\dots P_{i+1}IP_{i+1}\dots P_{n-1} - (P_{n-1}\dots P_{i+1}\underline{g_i}\:\underline{e_i}^TP_{i+1}\dots P_{n-1})=\notag\\
+			&=I-\underbrace{(P_{n-1}\dots P_{i+1}\underline{g_i})}_{\underline{\hat{g}_i}}(\underline{e_i}^TP_{i+1}\dots P_{n-1})\equiv\notag\\
+			\label{gHat}
+			&\equiv I-\underline{\hat{g}_i}\:\underline{e_i}^T,
+		\end{align}
+		dove $\underline{\hat{g}_i}$ ha la stessa struttura del vettore $\underline{g_i}$ ma con le ultime $n-i$ componenti permutate tra loro (senza quindi mai scambiare una componente nulla con una non nulla). Quindi la struttura della matrice $\hat{L}_i$ è analoga a quella dell'$i$-esima matrice elementare di Gauss (\ref{Li}) (triangolare inferiore a diagonale unitaria). Quindi, come già visto nella Sezione \ref{sez3.2}, la matrice $\hat{L}_{n-1}\dots\hat{L}_1\equiv L^{-1}$ è una matrice triangolare inferiore a diagonale unitaria e tale risulta essere la sua inversa $L$.\\
+		Pertanto si ottiene, dalla (\ref{UPivot2}) e dalle considerazioni appena fatte, la seguente \textbf{fattorizzazione $LU$ con pivoting parziale}:
+		\begin{equation}\label{PALU}PA=LU.\end{equation}
+		La tecnica di \textit{pivoting} utilizzata per questa fattorizzazione è detta \textit{parziale} in quanto le permutazioni effettuate sono sempre tra sole righe di una matrice (quando si implementano permutazioni che scambiano sia righe che colonne allora si parla di \textbf{pivoting totale}).
+		\begin{teo}
+			Se $A$ è una matrice nonsingolare, allora esiste una matrice di permutazione $P$ tale che $PA$ è fattorizzabile $LU$.
+		\end{teo}
+		Per poter risolvere, quindi, il sistema (\ref{sistema}) tramite fattorizzazione $LU$ con pivoting parziale si ha:
+		\begin{align*}
+			&A\underline{x}=\underline{b},\\
+			&PA\underline{x}=P\underline{b},\\
+			&L\underbrace{U\underline{x}}_{\underline{y}}=P\underline{b},\\
+			&L\underline{y}=P\underline{b},\quad U\underline{x}=\underline{y}.
+		\end{align*}
+		Quindi, una volta ottenuta la fattorizzazione (\ref{PALU}), si moltiplica il vettore dei termini noti $\underline{b}$ per la matrice di permutazione $P$ e successivamente si risolvono i due sistemi triangolari $L\underline{y}=P\underline{b}$ e $U\underline{x}=\underline{y}$ (nell'ordine specificato).\\
+		\\
+		Riguardo all'\underline{occupazione di memoria} della fattorizzazione (\ref{PALU}) si vede che i vettori di Gauss (\ref{gi}) devono essere soggetti a tutte le permutazioni successive alla loro definizione (ovvero, per il vettore $\underline{g_i}$, dalla $i+1$ alla $n-1$, vedi (\ref{gHat})) e possono quindi essere convenientemente memorizzati (limitandosi alle sole componenti significative) nella porzione strettamente triangolare inferiore (altrimenti formata di soli elementi nulli) della matrice $A$. Quindi la matrice $A$ può essere riscritta con le componenti significative delle matrici $L$ ed $U$, analogamente a quanto visto in Sezione \ref{sez3.2}.\\
+		Inoltre le informazioni della matrice di permutazione $P$ possono essere memorizzate all'interno di un vettore $\underline{p}$ come segue:
+		$$\underline{p}=(k_1,k_2,\dots,k_n)^T.$$
+		\\
+		Per quanto riguarda invece il \underline{costo computazionale}, si ha che per calcolare i \textit{pivot} (\ref{pivot}) ai passi $i=1,2,\dots,n-1$, sono necessari
+		$$\sum_{i=1}^{n-1}(n-i)\approx\frac{n^2}{2}\quad\text{confronti}.$$
+		Questo costo è chiaramente trascurabile rispetto al numero di \texttt{flop} eseguite per ottenere la fattorizzazione, quindi il costo complessivo rimane identico a quello della fattorizzazione $LU$ senza pivoting, ovvero
+		$$\approx\frac{2}{3}n^3\quad\textbf{flop}.$$
+		Il metodo di fattorizzazione $LU$ con \textit{pivoting} parziale può essere implementato in \textsc{Matlab} come segue:
+		\lstinputlisting[caption={Fattorizzazione $LU$ con \textit{pivoting} parziale di una matrice.}, label=lst:fattorizzaLUpivoting]{code/fattorizzaLUpivoting.m}
+		\lstinputlisting[caption={Risoluzione di un sistema lineare tramite fattorizzazione $LU$ con \textit{pivoting} parziale della matrice dei coefficienti.}, label=lst:risolviSistemaLUpivoting]{code/risolviSistemaLUpivoting.m}
+
+	\section{Condizionamento del problema}
+		\label{sezCondProblFatt}
+		Studieremo adesso come perturbazioni sui dati in ingresso al sistema lineare (\ref{sistema}) si ripercuotono sulla soluzione. In particolare studieremo il sistema lineare perturbato
+		\begin{equation}\label{sisPert}(A + \Delta A)(\underline{x} + \underline{\Delta x})=\underline{b}+\underline{\Delta b},\end{equation}
+		dove $\Delta A$ e $\underline{\Delta b}$ rappresentano le perturbazioni sui dati in ingresso (rispettivamente, sulla matrice dei coefficienti e sul vettore dei termini noti) e $\underline{\Delta x}$ invece la perturbazione sulla soluzione finale.\\
+		Supponiamo, per semplicità di esposizione, che le perturbazioni appena descritte dipendano da un \textit{parametro scalare di perturbazione} $\varepsilon\approx 0$,
+		\begin{align}
+			\label{AF}
+			&A(\varepsilon)=A+\varepsilon F,\quad F\in\mathbb{R}^{n\times n},\quad\Rightarrow\quad\Delta A=\varepsilon F,\\
+			\label{bf}
+			&\underline{b(\varepsilon)}=\underline{b}+\varepsilon\underline{f},\quad\underline{f}\in\mathbb{R}^n,\quad\Rightarrow\quad\underline{\Delta b}=\varepsilon\underline{f}.
+		\end{align}
+		Quindi il sistema perturbato (\ref{sisPert}) diviene
+		\begin{equation}\label{sisPert2}A(\varepsilon)\underline{x(\varepsilon)}=\underline{b(\varepsilon)},\end{equation}
+		dove $\underline{x(\varepsilon)}$ rappresenta la soluzione del sistema perturbato in funzione del parametro $\varepsilon$.
+		Ovviamente se l'errore risulta essere nullo ($\varepsilon=0$), allora i dati in ingresso risultano essere esatti
+		\begin{equation}\label{AbEsatti}A(0)=A,\qquad \underline{b(0)}=\underline{b},\end{equation}
+		e, di conseguenza, anche la soluzione del sistema
+		\begin{equation}\label{xEsatto}\underline{x(0)}=\underline{x}.\end{equation}
+		Sviluppando in $\varepsilon=0$ si ottiene, per $\varepsilon$ sufficientemente piccolo:
+		\begin{align*}
+			\underline{x(\varepsilon)}&=P_{1,x}(\varepsilon;0)+R_1(\varepsilon;0)=\\
+			&=\underline{x(0)}+(\varepsilon-0)\underline{\dot{x}(0)}+O((\varepsilon-0)^2)=\\
+			&=\underline{x} + \varepsilon\underline{\dot{x}(0)} + O(\varepsilon^2)\approx\\
+			&\approx\underline{x}+\varepsilon\underline{\dot{x}(0)},
+		\end{align*}
+		ovvero
+		\begin{align}
+			&\underline{x(\varepsilon)}\equiv\underline{x}+\underline{\Delta x},\notag\\
+			\label{deltaX-Xpunto}
+			&\begin{aligned}
+				\underline{\Delta x} &= \underline{x(\varepsilon)}-\underline{x}\approx\\
+				&\approx\underline{x}+\varepsilon\underline{\dot{x}(0)}-\underline{x}\approx\\
+				&\approx\varepsilon\underline{\dot{x}(0)}.
+			\end{aligned}
+		\end{align}
+		Inoltre, sviluppando anche il sistema (\ref{sisPert2}) in $\varepsilon=0$, otteniamo (considerando le (\ref{AbEsatti}) e (\ref{xEsatto})):
+		\begin{align}
+			&A(\varepsilon)\underline{x(\varepsilon)}=\underline{b(\varepsilon)},\notag\\
+			&P_{1,Ax}(\varepsilon;0)+R_1(\varepsilon;0)=P_{1,b}(\varepsilon;0)+R_1(\varepsilon;0),\notag\\
+			&\underbrace{A(0)\underline{x(0)}}_{\underline{b(0)}=\underline{b}}+(\varepsilon-0)[\dot{A}(0)\underbrace{\underline{x(0)}}_{\underline{x}}+\underbrace{A(0)}_{A}\underline{\dot{x}(0)}]=\underbrace{\underline{b(0)}}_{\underline{b}}+(\varepsilon-0)\underline{\dot{b}(0)},\notag\\
+			&\underline{b}+\varepsilon[\dot{A}(0)\underline{x(0)}+A\underline{\dot{x}(0)}]=\underline{b}+\varepsilon\underline{\dot{b}(0)},\notag\\
+			\label{bDot}
+			&\dot{A}(0)\underline{x(0)}+A\underline{\dot{x}(0)}=\underline{\dot{b}(0)}.
+		\end{align}
+		Grazie a considerazioni del tutto analoghe alla (\ref{deltaX-Xpunto}), si ha che
+		$$\Delta A\approx\varepsilon\dot{A}(0),\qquad\underline{\Delta b}\approx\varepsilon\underline{\dot{b}(0)},$$
+		ovvero (grazie alle (\ref{AF}) e (\ref{bf}):
+		$$F\approx\dot{A}(0),\qquad \underline{f}\approx\underline{\dot{b}(0)}.$$
+		Allora si ottiene, per la (\ref{bDot}) e le considerazioni appena fatte, che
+		\begin{align}
+			&A\underline{\dot{x}(0)}=\underline{\dot{b}(0)}-\dot{A}(0)\underline{x},\notag\\
+			&\underline{\dot{x}(0)}=A^{-1}(\underline{\dot{b}(0)}-\dot{A}(0)\underline{x}),\notag\\
+			\label{xDot}
+			&\underline{\dot{x}(0)}\approx A^{-1}(\underline{f}-F\underline{x}).
+		\end{align}
+		Sostituendo la (\ref{xDot}) nella (\ref{bDot}), considerando nuovamente le (\ref{AF}) e (\ref{bf}) e ricordando le proprietà della funzione norma
+		\begin{itemize}
+			\item $||\underline{x}+\underline{y}||\leq ||\underline{x}||+||\underline{y}||,$
+			\item $||A\underline{x}||\leq ||A||\cdots ||\underline{x}||,$
+		\end{itemize}
+		si ottiene che:
+		\begin{align*}
+			\frac{||\underline{\Delta x}||}{||\underline{x}||} &\approx \frac{||A^{-1}(\underline{f}-F\underline{x})||}{||\underline{x}||} \equiv \frac{||A^{-1}(\underline{\Delta b}-\Delta A\underline{x})||}{||\underline{x}||} \leq\\
+			&\leq \frac{||A^{-1}||(||\underline{\Delta b}||-||\Delta A||\cdot||\underline{x}||)}{||\underline{x}||} =\\
+			&=||A^{-1}||\left(\frac{||\underline{\Delta b}||}{||\underline{x}||}+||\Delta A||\right) =\\
+			&=||A||\cdot||A^{-1}||\left(\frac{||\underline{\Delta b}||}{||A||\cdot||\underline{x}||}+\frac{||\Delta A||}{||A||}\right) \leq\\
+			&\leq ||A||\cdot||A^{-1}||\left(\frac{||\underline{\Delta b}||}{||\underline{b}||}+\frac{||\Delta A||}{||A||}\right).
+		\end{align*}
+		Se, a questo punto, si considera che
+		\begin{itemize}
+			\item la quantità $\frac{||\underline{\Delta x}||}{||\underline{x}||}$ può essere interpretata, in un certo senso, come una sorta di \textit{errore relativo} sulla soluzione e, in modo analogo,
+			\item $\frac{||\Delta A||}{||A||}$ e $\frac{||\underline{\Delta b}||}{||\underline{b}||}$ come \textit{errori relativi} sui dati di ingresso,
+		\end{itemize}
+		si ottiene che la quantità
+		$$k(A)\equiv ||A||\cdot||A^{-1}||,$$
+		definisce il \textit{numero di condizionamento del problema}.
+		\begin{defi}
+			La quantità
+			$$k(A)\equiv ||A||\cdot||A^{-1}||,$$
+			è denominata \textbf{numero di condizionamento della matrice $A$}.
+		\end{defi}
+		Si osservi che, per qualsiasi norma indotta su matrice, si ha che
+		$$k(A) = ||A||\cdot||A^{-1}|| \geq ||AA^{-1}||=||I||=1.$$
+		Se
+		\begin{itemize}
+			\item $k(A)$ è una quantità ``piccola'', la matrice $A$ si dice \textbf{ben condizionata};
+			\item $k(A)\gg 1$, allora la matrice si dice \textbf{malcondizionata}.
+		\end{itemize}
+
+	\section{Sistemi lineari sovradeterminati}
+		\label{sezSistemiSovradet}
+		Un \textbf{sistema lineare sovradeterminato} è un sistema di equazioni lineari con più equazioni ($m$) che incognite ($n$), con la matrice $A$ dei coefficienti di rango massimo ($=n$). Formalmente si vuole quindi risolvere il seguente sistema:
+		\begin{equation}
+			\label{sistemaSovr}
+			A\underline{x}=\underline{b},\qquad A\in\mathbb{R}^{m\times n},\qquad m>n\equiv rank(A).
+		\end{equation}
+		Si osserva che, in generale, il sistema (\ref{sistemaSovr}) non ammette soluzione. Infatti affinché ammetta soluzione deve risultare che $\underline{b}\in ran(A)$, con $ran(A)$ che indica il \textit{range} di $A$. Tuttavia $\underline{b}\in\mathbb{R}^m$, mentre $dim(ran(A))\equiv rank(A)=n<m$. L'unico caso in cui potrebbe ammettere soluzione è che la matrice dei coefficienti $A$ presenti almeno $m-n$ righe eliminabili dal sistema in quanto linearmente dipendenti da altre.\\
+		Ricercheremo allora come soluzione il vettore $\underline{x}\in\mathbb{R}^n$ tale che il \textbf{vettore residuo}, $\underline{r}\in\mathbb{R}^m$,
+		\[
+			\underline{r}=
+			\begin{pmatrix}
+				r_1\\
+				\vdots\\
+				r_m
+			\end{pmatrix}
+			\equiv A\underline{x}-\underline{b},
+		\]
+		sia minimizzato. Più precisamente ricercheremo il vettore \underline{x} che minimizzi la quantità
+		\begin{equation}
+			\label{normaR}
+			\sum_{i=1}^{m}|r_i|^2=||\underline{r}||_2^2=||A\underline{x}-\underline{b}||_2^2,
+		\end{equation}
+		dove la quantità
+		$$||\underline{r}||_2\equiv\sqrt{\sum_{i=1}^{m}|r_i|^2}=\sqrt{\underline{r}^*\underline{r}},$$
+		indica la \textbf{norma 2} sul vettore $r$ (o \textbf{norma Euclidea}) ed $\underline{r}^*$ l'\textbf{aggiunto} di $\underline{r}$ definito come $(\underline{\bar{r}})^T$, definendo anche $\underline{\bar{r}}\equiv(\bar{r}_i)$ come il \textbf{coniugato} di r (dove il coniugato di un \textit{numero complesso} $z=x+iy$ è definito come $\bar{z}=x-iy$). Quindi, se $\underline{r}$ è a \textit{valori reali}, risulta che $\underline{\bar{r}}=\underline{r}$ e $\underline{r}^*=\underline{r}^T$, ottenendo di conseguenza la seguente norma Euclidea:
+		$$||\underline{r}||_2\equiv\sqrt{\underline{r}^T\underline{r}}.$$
+		Si parla quindi di soluzione del sistema (\ref{sistemaSovr}) nel senso dei \textbf{minimi quadrati}.\\
+		Si osservi come risolvere il sistema (\ref{sistemaSovr}) nel senso dei \textit{minimi quadrati} significhi minimizzare la norma di $r$ in modo che il sistema lineare $A\underline{x}=\underline{b}+\underline{r}$ ammetta soluzione, ovvero tale $\underline{b}+\underline{r}\in ran(A)$.\\
+		Per risolvere questo tipo di problema si utilizza la \textbf{fattorizzazione $QR$}, descritta di seguito.
+		\begin{teo}[Fattorizzazione QR]
+			\label{teoFattQR}
+			Sia $A$ la matrice dei coefficienti del sistema (\ref{sistemaSovr}), esistono
+			\begin{itemize}
+				\item $Q\in\mathbb{R}^{m\times m}$, matrice \textit{ortogonale} ($Q^{-1}=Q^T$),
+				\item $\hat{R}\in\mathbb{R}^{n\times n}$, matrice \textit{triangolare superiore} e \textit{nonsingolare} (quadrata e di rango massimo),
+			\end{itemize}
+			tali che
+				\begin{equation}
+					\label{QR}
+					A=QR\equiv Q
+					\begin{pmatrix}
+						\hat{R}\\
+						O
+					\end{pmatrix},
+				\end{equation}
+			dove $O$ indica la matrice nulla di dimensioni opportune (in questo caso $O\in\mathbb{R}^{(m-n)\times n}$).
+		\end{teo}
+		Tornando alla minimizzazione della (\ref{normaR}) si ha allora che
+		\begin{align*}
+			||\underline{r}||_2^2 &= ||A\underline{x}-\underline{b}||_2^2 = ||QR\underline{x}-\underline{b}||_2^2 = ||Q(\underline{x}-Q^{-1}\underline{b})||_2^2 =\\
+			&= ||Q(\underline{x}-\underbrace{Q^T\underline{b}}_{\underline{g}})||_2^2 \footnoteOP{\equiv} ||Q(R\underline{x}-\underline{g})||_2^2 = ||R\underline{x}-\underline{g}||_2^2 =\footnotemark\\
+			&= \left|\left|\begin{pmatrix}
+					\hat{R}\\
+					O
+				\end{pmatrix}x-
+				\begin{pmatrix}
+					\underline{g_1}\\
+					\underline{g_2}
+				\end{pmatrix}\right|\right|_2^2 \footnoteOP{=} \left|\left|\begin{pmatrix}
+					\hat{R}\underline{x}-\underline{g_1}\\
+					-\underline{g_2}
+				\end{pmatrix}\right|\right|_2^2 =\\
+			&= ||\hat{R}\underline{x}-\underline{g_1}||_2^2 + ||\underline{g_2}||_2^2.\footnotemark
+		\end{align*}
+		%-------- FOOTNOTES --------
+		\addtocounter{footnote}{-3}
+		\footnotetext{Essendo $Q$, per definizione, ortogonale, risulta $Q^{-1}=Q^T$.}
+		\stepcounter{footnote}
+		\footnotetext{In quanto moltiplicare un vettore a sinistra per una matrice ortogonale non cambia la sua norma Euclidea: infatti, applicando la definizione di norma Euclidea su vettori reali si ha
+			$$||Qx||_2=\sqrt{(Qx)^T(Qx)}=\sqrt{x^TQ^TQx}=\sqrt{x^Tx}=||x||_2,$$
+			ricordando che, essendo $Q$ ortogonale, $Q^TQ=Q^{-1}Q=I$.
+		}
+		\stepcounter{footnote}
+		\footnotetext{Considerando la partizione $\underline{g}=
+			\begin{pmatrix}
+				\underline{g_1}\\
+				\underline{g_2}
+			\end{pmatrix}$, con $\underline{g_1}\in\mathbb{R}^n$, $\underline{g_2}\in\mathbb{R}^{m-n}$.
+		}
+		\stepcounter{footnote}
+		\footnotetext{In quanto essendo per definizione la norma Euclidea al quadrato la somma delle componenti di un vettore in valore assoluto elevate al quadrato, la norma Euclidea su un vettore può essere vista come somma delle norme Euclidee su le sue parti. Inoltre utilizzando nella definizione di norma il valore assoluto, si ha che $||-\underline{g_2}||_2=||\underline{g_2}||_2$.}
+		%-------- end FOOTNOTES --------
+		
+		Detto questo, si vede che la minima norma possibile per $\underline{r}$ è
+		$$||\underline{r}||_2^2=||\underline{g_2}||_2^2,$$
+		in quanto soltanto il primo termine dipende dal vettore $\underline{x}$ e la minima norma Euclidea possibile è $0$. Quindi si tratta di scegliere $\underline{x}$ come soluzione del sistema lineare
+		\begin{equation}\label{sistemaResiduo}\hat{R}\underline{x}=\underline{g_1}.\end{equation}
+		Si può osservare che:
+		\begin{itemize}
+			\item il sistema lineare (\ref{sistemaResiduo}) ammette \textit{un'unica soluzione}, essendo $\hat{R}$ nonsingolare per definizione. Questa soluzione è ovviamente la soluzione ai minimi quadrati del sistema lineare sovradeterminato (\ref{sistemaSovr});
+			\item la matrice $\hat{R}$ è triangolare superiore, quindi il sistema lineare (\ref{sistemaResiduo}) è facilmente risolvibile;
+			\item il fattore $Q$ non è esplicitamente richiesto, una volta effettuato il prodotto $Q^T\underline{b}$ per ottenere il vettore $\underline{g}$.
+		\end{itemize}
+		
+		\subsection{Esistenza della fattorizzazione $QR$}
+			Si consideri il seguente problema: dato un vettore $\underline{z}in\mathbb{R}^m$
+			$$\underline{z}=(z_1,\dots,z_m)^T,\qquad\underline{z}neq 0,$$
+			si determini una matrice \textit{ortogonale} $H$ tale che
+			\begin{equation}\label{Hz}H\underline{z}=\alpha\underline{e_1},\end{equation}
+			con $\alpha\in\mathbb{R}$. Si osserva che
+			$$\underline{z}^TH^T=(H\underline{z})^T=(\alpha\underline{e_1})^T=\alpha\underline{e_1}^T.$$
+			Avendo quindi
+			$$||\underline{z}||_2^2=\underline{z}^T\underline{z}=\underline{z}^T\underbrace{H^TH}_{I}\underline{z}=\alpha^2\underbrace{\underline{e_1}^T\underline{e_1}}_{1}=\alpha^2,$$
+			segue che
+			\begin{equation}\label{alfa}\alpha = \pm ||\underline{z}||_2.\end{equation}
+			Consideriamo allora la matrice $H$ della forma
+			\begin{equation}\label{H}H=I-\frac{2}{\underline{v}^T\underline{v}}\underline{v}\:\underline{v}^T\qquad\underline{v}\neq 0,\end{equation}
+			dove il vettore $\underline{v}\in\mathbb{R}^m$ sarà scelto in modo da soddisfare la (\ref{Hz}). Si osserva che la matrice $H$ così definita è \textit{simmetrica} per costruzione ($I$ è simmetrica, $\frac{2}{\underline{v}^T\underline{v}}$ è uno scalare e $\underline{v}\:\underline{v}^T$ è una matrice simmetrica in quando risultato del prodotto di un vettore per il suo trasposto). Inoltre $H$ risulta essere anche \textit{ortogonale}, infatti:
+			\begin{align*}
+				H^TH &= H^2 \footnoteOP{=} I^2 -\frac{4}{\underline{v}^T\underline{v}}\underline{v}\:\underline{v}^T+\frac{4}{(\underline{v}^T\underline{v})^2}(\underline{v}\:\underline{v}^T)^2 =\\
+				&= I -\frac{4}{\underline{v}^T\underline{v}}\underline{v}\:\underline{v}^T+\frac{4}{(\underline{v}^T\underline{v})^2}\underline{v}(\underbrace{\underline{v}^T\underline{v}}_{\text{scalare}})\underline{v}^T =\\
+				&= I -\frac{4}{\underline{v}^T\underline{v}}\underline{v}\:\underline{v}^T+\frac{4(\underline{v}^T\underline{v})}{(\underline{v}^T\underline{v})^2}\underline{v}\underline{v}^T =\\
+				&= I -\frac{4}{\underline{v}^T\underline{v}}\underline{v}\:\underline{v}^T+\frac{4}{\underline{v}^T\underline{v}}\underline{v}\:\underline{v}^T =\\
+				&= I= H^{-1}H.
+			\end{align*}
+			%-------- FOOTNOTES --------
+			\addtocounter{footnote}{0}
+			\footnotetext{Essendo $H$ \textit{simmetrica}, $H^T=H$.}
+			%-------- end FOOTNOTES --------
+			
+			Dimostriamo adesso che scegliendo il vettore $\underline{v}$ come
+			\begin{equation}\label{v}\underline{v}=\underline{z}-\alpha\underline{e_1}\end{equation}
+			viene soddisfatta la (\ref{Hz}):
+			\begin{align*}
+				H\underline{z} &= (I-\frac{2}{\underline{v}^T\underline{v}}\underline{v}\:\underline{v}^T)\underline{z}=\\
+				&= \underline{z} - \frac{2}{\underline{v}^T\underline{v}}\underline{v}(\underbrace{\underline{v}^T\underline{z}}_{\text{scalare}})=\\
+				&= \underline{z} - \frac{2}{\underline{v}^T\underline{v}}[(\underline{z}-\alpha\underline{e_1})^T\underline{z}]\underline{v}=\\
+				&= \underline{z} - \frac{2}{\underline{v}^T\underline{v}}[(\underline{z}^T-\alpha\underline{e_1}^T)\underline{z}]\underline{v}=\\
+				&= \underline{z} - \frac{2}{\underline{v}^T\underline{v}}(\underline{z}^T\underline{z}-\alpha\underline{e_1}^T\underline{z})\underline{v}=\\
+				&= \underline{z} - \frac{2}{\underline{v}^T\underline{v}}(\underline{z}^T\underline{z}-\alpha z_1)(\underline{z}-\alpha\underline{e_1})=\\
+				&= \underline{z} - \frac{2}{\underline{v}^T\underline{v}}(\underline{z}^T\underline{z}-\alpha z_1)\underline{z}+\frac{2}{\underline{v}^T\underline{v}}(\underline{z}^T\underline{z}-\alpha z_1)\alpha\underline{e_1}=\\
+				&= \left[1 - \frac{2}{\underline{v}^T\underline{v}}(\underline{z}^T\underline{z}-\alpha z_1)\right]\underline{z}+\frac{2}{\underline{v}^T\underline{v}}(\underline{z}^T\underline{z}-\alpha z_1)\alpha\underline{e_1} \equiv\\
+				&\equiv (*).
+			\end{align*}
+			Per la (\ref{alfa}) si ha quindi che
+			\begin{align*}
+				\frac{2}{\underline{v}^T\underline{v}}(\underline{z}^T\underline{z}-\alpha z_1) &= \frac{2(||\underline{z}||_2^2-\alpha z_1)}{(\underline{z}-\alpha\underline{e_1})^T(\underline{z}-\alpha\underline{e_1})}=\\
+				&= \frac{2||\underline{z}||_2^2-2\alpha z_1}{(\underline{z}^T-\alpha\underline{e_1}^T)(\underline{z}-\alpha\underline{e_1})}=\\
+				&= \frac{2||\underline{z}||_2^2-2\alpha z_1}{\underline{z}^T\underline{z}-\alpha\underbrace{\underline{z}^T\underline{e_1}}_{z_1}-\alpha\underbrace{\underline{e_1}^T\underline{z}}_{z_1}+\alpha^2\underbrace{\underline{e_1}^T\underline{e_1}}_{1}}=\\
+				&= \frac{2||\underline{z}||_2^2-2\alpha z_1}{\underbrace{\underline{z}^T\underline{z}}_{||\underline{z}||_2^2}-2\alpha z_1+\underbrace{\alpha^2}_{||\underline{z}||_2^2}}=\\
+				&= \frac{2||\underline{z}||_2^2-2\alpha z_1}{2||\underline{z}||_2^2-2\alpha z_1}=\\
+				&= 1,
+			\end{align*}
+			ottenendo, infine, la tesi:
+			\begin{align*}
+				(*) &= (1-1)\underline{z}+1\cdot\alpha\underline{e_1}=\\
+				&= \alpha\underline{e_1}.
+			\end{align*}
+			\begin{defi}
+				La matrice $H$ definita dalle (\ref{alfa}), (\ref{H}) e (\ref{v}), soddisfacente la (\ref{Hz}), è detta \textbf{matrice elementare di Householder}, mentre il vettore $v$ definito dalla (\ref{v}) prende il nome di \textbf{vettore di Householder}.
+			\end{defi}
+			Osserviamo che la prima componente del vettore $\underline{v}$ è calcolata come $v_1=z_1-\alpha$, mentre le successive coincidono con le componenti analoghe in $\underline{z}$. Quindi, mentre in aritmetica esatta la scelta del segno di $\alpha$ è indifferente, in \textit{aritmetica finita} è preferibile scegliere il segno di $\alpha$ in modo che i termini $z_1$ e $-\alpha$ siano di segno concorde, ovvero in modo che $z_1$ ed $\alpha$ abbiano segno opposto, affinché la somma algebrica $z_1-\alpha$ risulti sempre \textit{ben condizionata} (vedi Sezione \ref{sez1.4}). Una conseguenza di questa scelta è che, essendo per ipotesi $\underline{z}\neq 0$, la prima componente di $\underline{v}$ risulta sempre $v_1\neq 0$.\\
+			\\
+			Le matrici di Householder godono di una proprietà di \textit{invarianza per scalamento} del corrispondente vettore di Householder (ovvero la matrice $H$ non cambia se il vettore $\underline{v}$ viene scalato):
+			\begin{teo}
+				\label{teoScalamento}
+				Sia $H$ la matrice elementare di Householder della forma (\ref{H}) definita dal vettore $v$.\\
+				Allora, per ogni $\beta\neq 0$, la matrice di Householder definita dal vettore $\beta\underline{v}$ (ovvero il vettore $\underline{v}$ scalato di un fattore $\beta$) coincide con $H$.
+			\end{teo}
+			\textbf{\underline{Dimostrazione del Teorema \ref{teoFattQR}}}\\
+			\\
+			Utilizziamo una notazione, come per la fattorizzazione $LU$ e la fattorizzazione con \textit{Pivoting}, in cui l'indice tra parentesi in altro indica il passo più recente in cui l'elemento (o la matrice) corrispondente è stato modificato.\\
+			Poniamo innanzitutto
+			\[
+				A=
+				\begin{pmatrix}
+					a_{11}^{(0)} & \dots & a_{1n}^{(0)}\\
+					\vdots & & \vdots\\
+					\vdots & & \vdots\\
+					a_{m1}^{(0)} & \dots & a_{mn}^{(0)}
+				\end{pmatrix}
+			\]
+			Considerando il primo vettore colonna di $A^{(0)}$, possiamo definire la matrice elementare di Householder $H_1$ che, moltiplicata a sinistra per tale vettore colonna, ne annulla tutte le componenti tranne la prima, che verrà sostituita da più o meno (a seconda dei segni) la norma Euclidea del vettore stesso. Ovvero definiamo la matrice $H_1\in\mathbb{R}^{m\times m}$ tale che
+			\[
+				H_1
+				\begin{pmatrix}
+					a_{11}^{(0)}\\
+					\vdots\\
+					\vdots\\
+					a_{m1}^{(0)}
+				\end{pmatrix}
+				=
+				\begin{pmatrix}
+					a_{11}^{(1)}\\
+					0\\
+					\vdots\\
+					0
+				\end{pmatrix}
+				\in\mathbb{R}^m,
+			\]
+			dove $a_{11}^{(1)}$ è calcolato come
+			\[
+				a_{11}^{(1)} = \pm
+				\left|\left|\begin{pmatrix}
+					a_{11}^{(0)}\\
+					\vdots\\
+					\vdots\\
+					a_{m1}^{(0)}
+				\end{pmatrix}\right|\right|_2.
+			\]
+			Osserviamo che, avendo $A$ rango massimo per ipotesi, sicuramente
+			$$a_{11}^{(1)}\neq 0,$$
+			in quanto altrimenti la prima colonna della matrice sarebbe nulla (essendo calcolato come la norma Euclidea sulla prima colonna).\\
+			Quindi moltiplicando $H_1$ a sinistra per la matrice $A^{(0)}$ si ottiene
+			\[
+				H_1A^{(0)}=
+				\begin{pmatrix}
+					a_{11}^{(1)} & a_{12}^{(1)} & \dots & a_{1n}^{(1)}\\
+					0 & a_{22}^{(1)} & \dots & a_{2n}^{(1)}\\
+					\vdots & \vdots & & \vdots\\
+					\vdots & \vdots & & \vdots\\
+					0 & a_{m2}^{(1)} & \dots & a_{mn}^{(1)}
+				\end{pmatrix}
+				\equiv A^{(1)}.
+			\]
+			Considerando adesso la porzione della seconda colonna che va dall'elemento diagonale $a_{22}^{(1)}$ in poi, definiamo la matrice elementare di Householder $H^{(2)}\in\mathbb{R}^{m-1\times m-1}$ tale che
+			\[
+				H^{(2)}
+				\begin{pmatrix}
+					a_{22}^{(1)}\\
+					\vdots\\
+					\vdots\\
+					a_{m2}^{(1)}
+				\end{pmatrix}
+				=
+				\begin{pmatrix}
+					a_{22}^{(2)}\\
+					0\\
+					\vdots\\
+					0
+				\end{pmatrix}
+				\in\mathbb{R}^{m-1}.
+			\]
+			Definendo quindi la matrice
+			\[
+				H_2\equiv
+				\left(\begin{array}{c|c}
+					1 &\\
+					\hline
+					& H^{(2)}
+				\end{array}\right)
+				\in\mathbb{R}^{m\times m},
+			\]
+			che risulta ancora ortogonale e, lasciando invariata la prima riga (in quanto la sua prima riga coincide con quella della matrice identità), si comporta come una matrice elementare di Householder con la sottomatrice delimitata da $a_{22}^{(1)}$ e $a_{mn}^{(1)}$, ovvero otteniamo che
+			\[
+				H_2A^{(1)}=H_2H_1A=
+				\begin{pmatrix}
+					a_{11}^{(1)} & a_{12}^{(1)} & a_{13}^{(1)} & \dots & a_{1n}^{(1)}\\
+					0 & a_{22}^{(2)} & a_{23}^{(2)} & \dots & a_{2n}^{(2)}\\
+					0 & 0 & a_{33}^{(2)} & \dots & a_{3n}^{(2)}\\
+					\vdots & \vdots & \vdots & & \vdots\\
+					0 & 0 & a_{m3}^{(2)} & \dots & a_{mn}^{(2)}
+				\end{pmatrix}
+				\equiv A^{(2)}
+			\]
+			Anche in questo caso osserviamo che sicuramente
+			$$a_{22}^{(2)}\neq 0,$$
+			se $A$ ha rango massimo.\\
+			Reiterando il processo, dopo $n$ passi avremo ottenuto che
+			\[
+				A^{(n)}\equiv H_n\dots H_1A=
+				\begin{pmatrix}
+					a_{11}^{(1)} & \dots & a_{1n}^{(1)}\\
+					0 & \ddots & \vdots\\
+					\vdots & \ddots & a_{nn}^{(n)}\\
+					\vdots & & 0\\
+					\vdots & & \vdots\\
+					0 & \dots & 0
+				\end{pmatrix}
+				\equiv R
+			\]
+			Ponendo infine
+			$$H_n\dots H_1\equiv Q^T,$$
+			si ottiene infine la fattorizzazione (\ref{QR}), infatti
+			\begin{align*}
+				&Q^TA=R,\\
+				&A=QR.
+			\end{align*}
+		\subsection{Il metodo di Householder}
+			La dimostrazione appena svolta del Teorema (\ref{teoFattQR}) descrive il \textbf{metodo di fattorizzazione $QR$} di \textbf{Householder}.\\
+			Utilizzando la proprietà di scalamento dei vettori di Householder (vedi Teorema \ref{teoScalamento}), possiamo scalarli in modo che la loro prima componente sia pari ad $1$, e quindi nota. Quindi, per quanto riguarda l'\underline{occupazione di memoria}, la matrice $A$ può essere riscritta con l'informazione della sua fattorizzazione $QR$ e in particolare con la porzione \textit{triangolare superiore} di $\hat{R}$ e la parte significativa (ovvero escluso il primo elemento, il cui posto viene occupato dalla diagonale di $\hat{R}$) dei vettori di Householder generati ad ogni passo (non è necessario memorizzare le matrici di Householder, in quanto esse sono velocemente calcolabili a partire dai soli vettori).\\
+			Il corrispondente \underline{costo computazionale} si dimostra invece essere pari a
+			\begin{equation}\label{costoQR}\approx\frac{2}{3}n^2(3m-n)\quad\textbf{flop}.\end{equation}
+			Osserviamo, infine, che il metodo di fattorizzazione $QR$ di Householder può essere impiegato anche per la fattorizzazione di matrici nonsingolari, ovvero in cui $m=n$. Tuttavia si vede che in questo caso il costo risulta essere pari a
+			\begin{align*}
+				\approx\frac{2}{3}n^2(3n-n)&=\frac{2}{3}n^2\cdot 2n=\\
+				&=\frac{4}{3}n^3\quad\textbf{flop},
+			\end{align*}
+			ovvero circa il \textit{doppio} rispetto al costo della fattorizzazione $LU$ (con o senza \textit{pivoting}). Quindi in presenza di matrici nonsingolari la fattorizzazione $LU$ è sempre da preferirsi.\\
+			\\
+			I Codici \ref{lst:fattorizzaQR} e \ref{lst:risolviSistemaQR} implementano, rispettivamente, il metodo di Householder per la fattorizzazione $QR$ di una matrice ed il metodo per la risoluzione di un sistema lineare sovradeterminato tramite fattorizzazione $QR$ della matrice dei coefficienti.
+			\lstinputlisting[caption={Fattorizzazione $QR$ di Householder di una matrice.}, label=lst:fattorizzaQR]{code/fattorizzaQR.m}
+			\lstinputlisting[caption={Risoluzione di un sistema lineare sovradeterminato tramite fattorizzazione $QR$ della matrice dei coefficienti.}, label=lst:risolviSistemaQR]{code/risolviSistemaQR.m}
+
+	\section{Cenni sulla risoluzione di sistemi nonlineari}
+		Per la risoluzione di sistemi nonlineari, ovvero del tipo
+		\begin{equation}\label{sistemaNonLin}F(\underline{x})=\underline{0},\qquad F:\Omega\subseteq\mathbb{R}^n\rightarrow\mathbb{R}^n,\end{equation}
+		con $F$ costituita dalle \textit{funzioni componenti}
+		\[
+			F(\underline{x})=
+			\begin{pmatrix}
+				f_1(\underline{x})\\
+				\vdots\\
+				f_n(\underline{x})
+			\end{pmatrix},
+			\quad f_i:\Omega\subseteq\mathbb{R}^n\rightarrow\mathbb{R},
+		\]
+		ed $\underline{x}$ il vettore delle incognite che risolvano il sistema (\ref{sistemaNonLin})
+		\[
+			x=
+			\begin{pmatrix}
+				x_1\\
+				\dots\\
+				x_n
+			\end{pmatrix}
+			\in\mathbb{R}^n,
+		\]
+		si utilizza il \textbf{metodo di Newton}, ovvero un \textit{metodo iterativo} definito da
+		\begin{equation}\label{newtNonLin}\underline{x}^{k+1}=\underline{x}^k-J_F(\underline{x}^k)^{-1}F(\underline{x}^k),\quad k=0,1,\dots,\end{equation}
+		partendo da un'approssimazione $\underline{x}^0$ assegnata. $J_F(\underline{x})$ indica la \textbf{matrice Jacobiana}, ovvero la matrice delle derivate parziali:
+		\[
+			J_F(\underline{x})=
+			\begin{pmatrix}
+				\frac{\partial f_1}{\partial x_1}(\underline{x}) & \dots & \frac{\partial f_1}{\partial x_n}(\underline{x})\\
+				\vdots & & \vdots\\
+				\frac{\partial f_n}{\partial x_1}(\underline{x}) & \dots & \frac{\partial f_n}{\partial x_n}(\underline{x})
+			\end{pmatrix}.
+		\]
+		Si osserva che l'iterazione (\ref{newtNonLin}) è definita se $J_F(\underline{x}^k)$ è \textit{nonsingolare}, condizione che riterremo sempre sempre sempre soddisfatta in un opportuno intorno della soluzione $\underline{x}^*$. Inoltre si dimostra che, se $F$ ha derivate continue e l'approssimazione iniziale $\underline{x}^0$ appartiene ad un opportuno intorno della soluzione $\underline{x}^*$, il metodo di Newton \textbf{converge quadraticamente} (godee quindi di proprietà di \textit{convergenza locale}).\\
+		In pratica, ogni passo dell'iterazione (\ref{newtNonLin}) corrisponde a risolvere il seguente sistema lineare:
+		\begin{equation}
+			\label{newtNonLinSist}
+			\begin{cases}
+				J_F(\underline{x}^k)\underline{d}^k=-F(\underline{x}^k)\\
+				\underline{x}^{k+1}=\underline{x}^k+\underline{d}^k
+			\end{cases},
+		\end{equation}
+		dove il vettore temporaneo delle incognite $\underline{d}^k$ viene utilizzato per poter spezzare l'iterazione (\ref{newtNonLin}) in due equazioni. Quindi la risoluzione del sistema nonlineare (\ref{sistemaNonLin}) si riconduce alla risoluzione di una successione di sistemi lineari. Ovviamente, per ogni sistema lineare della successione sarà necessario fattorizzare $LU$ la matrice Jacobiana.\\
+		Per ridurre il costo computazionale ad ogni passo, si può implementare una modifica equivalente al metodo delle corde visto in Sezione \ref{sezMetodiQuasiNewton}, ovvero utilizzando un'approssimazione dello Jacobiano corrispondente alla matrice Jacobiana calcolata sull'approssimazione iniziale $\underline{x}^0$:
+		\begin{equation}
+			\label{cordeNonLin}
+			\begin{cases}
+				J_F(\underline{x}^0)\underline{d}^k=-F(\underline{x}^k)\\
+				\underline{x}^{k+1}=\underline{x}^k+\underline{d}^k
+			\end{cases},
+		\end{equation}
+		dovendo quindi fattorizzare la matrice $J_F(\underline{y}^0)$ una sola volta. Si dimostra che in questo caso la convergenza del metodo è soltanto \textbf{lineare}.\\
+		Di seguito, proponiamo un'implementazione in \textsc{Matlab} del metodo delle corde per la risoluzione di sistemi nonlineari:
+		\lstinputlisting[caption={Metodo delle corde per la risoluzione di sistemi nonlineari.}]{code/CordeNonLin.m}
+	
+	\section*{Esercizi}
+		\addcontentsline{toc}{section}{Esercizi}
+		\markboth{\textsc{\uppercase{Capitolo }\ref{chap:sistemiLinENonLin}\uppercase{. Sistemi lineari e nonlineari}}}{\textsc{\uppercase{Esercizi}}}
+		\begin{es} %3.1
+			Scrivere gli Algoritmi per la risoluzione di sistemi triangolari inferiori e superiori, con accesso agli elementi per riga e per colonna, in modo da controllare che la matrice dei coefficienti sia nonsingolare.
+		\end{es}
+		\begin{sol}
+			Sappiamo che una matrice è \textit{nonsingolare} se e solo se il suo determinante è diverso da zero. Sappiamo inoltre (è facilmente verificabile) che il determinante di una matrice triangolare, inferiore o superiore, coincide con il prodotto dei suoi elementi diagonali, in quanto gli elementi strettamente triangolari (inferiori o superiori) non contribuiscono al calcolo del determinante (in quanto durante il calcolo si annullano con gli altri elementi nelle rispettive posizioni simmetriche).\\
+			Per controllare allora che una matrice triangolare sia \textit{nonsingolare} si può o controllare a priori che tutti gli elementi diagonali siano diversi da zero, oppure controllare elemento per elemento durante il calcolo della soluzione del sistema, senza aggiungere complessità computazionale. Nelle soluzioni proposte (vedi Codici \ref{lst:triangolareInfRiga}, \ref{lst:triangolareInfCol}, \ref{lst:triangolareSupRiga} e \ref{lst:triangolareSupCol}, pp. \pageref{lst:triangolareInfRiga}-\pageref{lst:triangolareSupCol}) si è optato per il controllo elemento per elemento durante il normale calcolo della soluzione.
+		\end{sol}
+		\sectionline
+		\begin{es} %3.2
+			\label{es3.2}
+			Dimostrare che la somma ed il prodotto di matrici triangolari inferiori (superiori), è una matrice triangolare inferiore (superiore)
+		\end{es}
+		\begin{sol}
+			Supponiamo che le matrici operande siano $A,B\in\mathbb{R}^{n\times n}$ triangolari inferiori (superiori) con $a_{ij}=b_{ij}=0$ per $i<j$ ($i>j$).\\
+			\\
+			\textbf{\underline{Somma}}\\
+			Sia $C=A+B$, ovvero $c_{ij}=a_{ij}+b_{ij}$ per $1\leq i,j\leq n$. Risulta allora, per $i<j$ ($i>j$)
+			$$c_{ij}=a_{ij}+b_{ij}=0+0=0,$$
+			ovvero $C$ è una matrice triangolare inferiore (superiore).\\
+			\\
+			\textbf{\underline{Prodotto}}\\
+			Sia $C=AB$, ovvero $c_{ij}=\sum_{k=1}^{n}a_{ik}b_{kj}$ per $1\leq i,j\leq n$. Si osserva che, per matrici triangolari inferiori, $a_ik=0$ se $k>i$, quindi gli ultimi $n-i$ termini della sommatoria saranno sicuramente nulli. Inoltre si può osservare che anche $b_{kj}=0$ se $k<j$, quindi i primi $j-1$ termini della sommatoria risulteranno anch'essi nulli. Deduciamo allora che per calcolare il valore di $c_{ij}$ basta considerare soltanto i termini della sommatoria che vanno da $j$ ad $i$, ovvero $c_{ij}=\sum_{k=j}^{i}a_{ik}b_{kj}$. Risulta allora chiaro che, se $i<j$, la sommatoria non sarà composta di alcun termine e quindi $c_{ij}=0$, ovvero $C$ è una matrice triangolare inferiore.\\
+			Se la matrice è triangolare superiore il discorso è analogo a quello appena fatto: $a_{ik}=0$ se $k<i$, $b_{kj}=0$ se $k>j$, quindi $c_{ij}=\sum_{k=i}^{j}a_{ik}b_{kj}$, ovvero $c_{ij}=0$ se $i>j$, cioè $C$ risulta triangolare superiore.
+		\end{sol}
+		\sectionline
+		\begin{es} %3.3
+			\label{es3.3}
+			Dimostrare che il prodotto di due matrici triangolari inferiori (superiori) a diagonale unitaria è a sua volta una matrice triangolare inferiore (superiore) a diagonale unitaria
+		\end{es}
+		\begin{sol}
+			Dall'Esercizio \ref{es3.2} risulta che per $A,B\in\mathbb{R}^{n\times n}$ triangolari inferiori (rispettivamente, superiori) si ha $C=AB$ con $c_{ij}=\sum_{k=j}^{i}a_{ik}b_{kj}$ (rispettivamente, $c_{ij}=\sum_{k=i}^{j}a_{ik}b_{kj}$). Se inoltre $A$ e $B$ hanno diagonale unitaria, allora gli elementi diagonali ($j=i$) della matrice $C$ saranno calcolati come $$c_{ii}=\sum_{k=i}^{i}a_{ik}b_{ki}=a_{ii}b_{ii}=1\cdots 1=1.$$
+			Quindi $C$ risulta essere triangolare inferiore (superiore), per quando dimostrato nell'Esercizio \ref{es3.2}, e a diagonale unitaria.
+		\end{sol}
+		\sectionline
+		\begin{es} %3.4
+			\label{es3.4}
+			Dimostrare che la matrice inversa di una matrice triangolare inferiore (superiore) è a sua volta triangolare inferiore (superiore). Dimostrare inoltre che, se la matrice ha diagonale unitaria, tale è anche la diagonale della sua inversa.
+		\end{es}
+		\begin{sol}
+			\normalfont Sia $A=\in\mathbb{R}^{n\times n}$ una matrice triangolare inferiore non singolare ($a_{i,i}\neq 0$, $i=1,\ldots, n$), si procede per induzione su $n$:
+			\begin{itemize}
+				\item $n=1$: $A=a_{1,1}$, la matrice è uno scalare e la proprietà è banalmente verificata.
+				\item $n-1\Rightarrow n$: $A=\left(\begin{array}{c|c}A_{n-1}&\underline{0}\\\hline\underline{a}^T & a_{n,n}\end{array}\right)$
+			, utilizzando l'ipotesi induttiva per $A_{n-1}$ si ha $A^{-1}=\left(\begin{array}{c|c}A_{n-1}^{-1}&\underline{0}\\\hline\underline{v}^T & w\end{array}\right)$; si verifica che $AA^{-1}=I$: \begin{equation*}\begin{split}AA^{-1}&=\left(\begin{array}{c|c}A_{n-1}&\underline{0}\\\hline\underline{a}^T & a_{n,n}\end{array}\right)\left(\begin{array}{c|c}A_{n-1}^{-1}&\underline{0}\\\hline\underline{v}^T & w\end{array}\right)=\\=&\left(\begin{array}{c|c}A_{n-1}A_{n-1}^{-1}+\underline{0}\:\underline{v}^T&A_{n-1}\underline{0}+\underline{0}w\\\hline \underline{a}^TA_{n-1}^{-1}+a_{n,n}\underline{v}^T & \underline{a}^T\underline{0}+a_{n,n}w\end{array}\right)=\\=&\left(\begin{array}{c|c}I&\underline{0}\\\hline \underline{a}^TA_{n-1}^{-1}+a_{n,n}\underline{v}^T & a_{n,n}w\end{array}\right)=I\Rightarrow\\\Rightarrow &\left\{\begin{array}{l}\underline{a}^TA_{n-1}^{-1}+a_{n,n}\underline{v}=\underline{0}\\ a_{n,n}w=1\end{array}\right.\Rightarrow\left\{\begin{array}{l}\underline{v}^T=-\frac{\underline{a}^TA_{n-1}^{-1}}{a_{n,n}}\\ w=\frac{1}{a_{n,n}}\end{array}.\right.\end{split}\end{equation*}
+			\end{itemize}
+			Se la matrice ha diagonale unitaria ($a_{i,i}=1$, $i=1,\ldots, n$), è tale anche la sua inversa poiché $w=\frac{1}{a_{n,n}}=1$. Analoghe considerazioni valgono per le matrici triangolari superiori.
+		\end{sol}
+		\sectionline
+		\begin{es} %3.5
+			Dimostrare i Lemmi \ref{lem3.2} e \ref{lem3.3}.
+		\end{es}
+		\begin{sol}
+			\normalfont 
+			\underline{Lemma 3.2}\\
+			Una matrice triangolare è non singolare se e solo se tutti i suoi minori principali sono non nulli.\\Sia $A$ una matrice triangolare, risulta $det(A)=\prod_{i=1}^na_{i,i}$.
+			\begin{itemize}
+			\item[$\Rightarrow$] $A$ è non singolare, quindi $det(A)\neq 0$ ovvero $\prod_{i=1}^na_{i,i}\neq 0$ cioè $a_{i,i}\neq 0$ per $i=1,\ldots, n$. Il minore di ordine $k$ è $det(A_k)=\prod_{i=1}^ka_{i,i}\neq 0$ poiché $a_{i,i}\neq 0$ per $i=1,\ldots, k$ per $k=1,\ldots, k$.
+			\item[$\Leftarrow$] Tutti i minori principali di $A$ sono non nulli, quindi anche $det(A)=det(A_n)\neq 0$ quindi la matrice $A$ è non singolare.
+			\end{itemize}
+			\underline{Lemma 3.3}\\
+			Nella fattorizzazione $LU$, il minore di ordine $k$ in $A$ coincide con il minore di ordine $k$ in $U$ ovvero $det(A_k)=det(U_k)$.\\La matrice $A_k$ si ottiene estraendo da $A$ le prime $k$ righe e le prime $k$ colonne, quindi $A_k=\begin{pmatrix} I_k&O\end{pmatrix}A\begin{pmatrix} I_k\\O^T\end{pmatrix}$ con $I_k\in\mathbb{R}^{k\times k}$ e $O\in\mathbb{R}^{k\times n-k}$. Ricordando $A=LU$, risulta $A_k=\begin{pmatrix} I_k&O\end{pmatrix}LU\begin{pmatrix} I_k\\O^T\end{pmatrix}=\left[\begin{pmatrix} I_k&O\end{pmatrix}L\right]\left[U\begin{pmatrix} I_k\\O^T\end{pmatrix}\right]=\begin{pmatrix} L_k&O\end{pmatrix}\begin{pmatrix} U_k\\O^T\end{pmatrix}=L_kU_k$; per le proprietà del determinate, si ha $det(A_K)=det(L_kU_K)=det(L_k)det(U_K)=det(U_K)$ perché $det(L_k)=1$ in quanto $L$ è una matrice triangolare inferiore a diagonale unitaria.
+		\end{sol}
+		\sectionline
+		\begin{es} %3.6
+			\label{es3.6}
+			Dimostrare che il numero di \texttt{flop} richiesti dall'Algoritmo di fattorizzazione $LU$ è dato da (\ref{costoLU}) (considerare che $\sum_{i=1}^{n-1}i^2=\frac{n(n-1)(2n-1)}{6}$).
+		\end{es}
+		\begin{sol}
+			\normalfont L'algoritmo esegue $n-i$ passi; al passo $i$-esimo si eseguono $n-i$ divisioni per calcolare il vettore di Gauss e 2 operazioni (una sottrazione e una moltiplicazione) sulla sottomatrice di $(n-i)^2$ elementi. Il costo è quindi $\sum_{i=1}^{n-1}\left(n-i+2(n-i)^2\right)=\sum_{i=1}^{n-1}\left(k+k^2\right)$; considerando solo i termini quadratici, risultano circa $\sum_{i=1}^{n-1}\left(k^2\right)=2\dfrac{n(n-1)(2n-1)}{6}\approx\dfrac{2}{3}n^3$ flops
+		\end{sol}
+		\sectionline
+		\begin{es} %3.7
+			Scrivere una \lstinline{function} \textsc{Matlab} che implementi efficientemente l'Algoritmo di fattorizzazione $LU$ di una matrice.
+		\end{es}
+		\begin{sol}
+			Per l'implementazione in \textsc{Matlab} della fattorizzazione $LU$ si veda il Codice \ref{lst:fattorizzaLU} a pagina \pageref{lst:fattorizzaLU}. Nella soluzione proposta la matrice $A$ viene riscritta con le informazioni dei fattori $L$ ed $U$ e restituita come output.
+		\end{sol}
+		\sectionline
+		\begin{es} %3.8
+			Scrivere una \lstinline{function} \textsc{Matlab} che, avendo in ingresso la matrice $A$ riscritta dall'algoritmo di fattorizzazione $LU$ ed un vettore $\underline{x}$ contenente i termini noti del sistema lineare (\ref{sistema}), ne calcoli efficientemente la soluzione.
+		\end{es}
+		\begin{sol}
+			Per l'implementazione in \textsc{Matlab} della risoluzione di un sistema lineare tramite fattorizzazione $LU$ della matrice dei coefficienti si veda il Codice \ref{lst:risolviSistemaLU} a pagina \pageref{lst:risolviSistemaLU}. Nella soluzione proposta si è deciso di passare come input la matrice dei coefficienti ancora da fattorizzare. Quindi la \lstinline{function risolviSistemaLU} fattorizza la matrice $A$ e quindi risolve in ordine i due sistemi lineari triangolari, riscrivendo il vettore dei termini noti $b$ con le soluzioni, prima intermedie, poi finali. Inoltre, a scapito di eleganza e leggibilità del codice, si è deciso di non estrarre da $A$ i fattori $L$ ed $U$ in modo esplicito, così da non occupare inutilmente posizioni di memoria che si erano risparmiate riscrivendo $A$ con $L$ ed $U$.
+		\end{sol}
+		\sectionline
+		\begin{es} %3.9
+			Dimostrare i Lemmi \ref{lem3.4} e \ref{lem3.5}.
+		\end{es}
+		\begin{sol}
+			\normalfont 
+			\underline{Lemma 3.4}\\
+			Supponiamo $A\in\mathbb{R}^{n\times n}$ a diagonale dominante per righe e consideriamo $A^k$ la sottomatrice principale di ordine $k$ di $A$ per $k=1,\ldots, n$. Risulta $\left|a_{i,i}^k\right|>\sum_{j=1, j\neq i}^{k}{\left|a_{i,j}\right|}$ in quanto si considerano solo le prime $k$ colonne della matrice $A$ e quindi $A^k$ è a diagonale dominante per righe. Analogamente per le matrici a diagonale dominante per colonne: in questo caso si sommano solo i termini delle prime $k$ righe. \\
+			\\\underline{Lemma 3.5}\\
+			Nel trasporre la matrice, gli elementi diagonali non subiscono modifiche mentre l'elemento $a_{i,j}$ diviene l'elemento $a_{j,i}$ per $i=1,\ldots, n$, $j=1,\ldots, n$, $i\neq j$. Dunque se in $A$ $\left|a_{i,i}\right|>\sum_{i\neq j}\left|a_{i,j}\right|$, in $A^T$ $\left|a_{i,i}\right|>\sum_{i\neq j}\left|a_{j,i}\right|$ per $i=1,\ldots, n$ ovvero se la matrice è a digaonale dominante per righe la sua trasposta è a diagonale dominante per colonne e, viceversa, se è la diagonale dominante per colonne la sua trasposta lo è per righe.
+		\end{sol}
+		\sectionline
+		\begin{es} %3.10
+			Dimostrare la parte del Teorema \ref{teo3.6} in cui la (\ref{LDLT}) implica che $A$ è \textit{sdp}.
+		\end{es}
+		\begin{sol}
+			\normalfont
+			Una matrice $A$ è sdp se e solo se $A=LDL^T$.
+			\begin{itemize}
+			\item $A=LDL^T\Rightarrow A$ è sdp: 
+			\begin{itemize}
+				\item $A$ è simmetrica: $A^T=(LDL^T)^T=(L^T)^TD^TL^T=LDL^T=A$ poichè $D^T=D$ in quanto diagonale.
+				\item $A$ è definita positiva: $\forall\underline{x}\in\mathbb{R}$, $\neq\underline{0}$: $\underline{x}^TA\underline{x}=\underline{x}^TLDL^T\underline{x}=(\underline{x}^TL)D(L^T\underline{x})=(L^T\underline{x})^TD(L^T\underline{x})=\underline{y}^TD\underline{y}$ con $\underline{y}\neq\underline{0}$ poichè $L$ non singolare e $\underline{x}\neq\underline{0}$. Risulta $\underline{x}^TA\underline{x}=\underline{y}^TD\underline{y}=\sum_{i=1}^n{d_iy_i^2}>0$ in quanto $D$ ha elementi diagonali positivi.
+			\end{itemize}
+			\end{itemize}
+		\end{sol}
+		\sectionline
+		\begin{es} %3.11
+			Dimostrare che, se $A$ è \textit{nonsingolare}, le matrici $A^TA$ e $AA^T$ sono \textit{sdp}
+		\end{es}
+		\begin{sol}
+			\normalfont
+			\begin{itemize}
+				\item $A^TA$ è sdp:
+			\begin{itemize}
+				\item simmetrica: $A^TA=(A^TA)^T=A^T(A^T)^T=A^TA$;
+				\item definita positiva: $\forall\underline{x}\neq\underline{0}$ risulta $\underline{x}^TA^TA\underline{x}=(\underline{x}^TA^T)(A\underline{x})=(A\underline{x})^T(A\underline{x})=\underline{y}^T\underline{y}=||\underline{y}||_2^2>0$ in quanto $\underline{y}\neq\underline{0}$ poichè $A$ non singolare ed $\underline{x}\neq\underline{0}$.
+			\end{itemize}
+				\item $AA^T$ è sdp:
+			\begin{itemize}
+				\item simmetrica: $AA^T=(AA^T)^T=(A^T)^TA^T=AA^T$;
+				\item definita positiva: $\forall\underline{x}\neq\underline{0}$ risulta $\underline{x}^TAA^T\underline{x}=(\underline{x}^TA)(A^T\underline{x})=(A^T\underline{x})^T(A^T\underline{x})=\underline{y}^T\underline{y}=||\underline{y}||_2^2>0$ in quanto $\underline{y}\neq\underline{0}$ poichè $A$ non singolare ed $\underline{x}\neq\underline{0}$.
+			\end{itemize}
+			\end{itemize}
+		\end{sol}
+		\sectionline
+		\begin{es} %3.12
+			Dimostrare che se $A\in\mathbb{R}^{m\times n}$, con $m\geq n=rank(A)$, allora la matrice $A^TA$ è \textit{sdp}
+		\end{es}
+		\begin{sol}
+			\normalfont
+			\begin{itemize}
+				\item simmetrica: $A^TA=(A^TA)^T=A^T(A^T)^T=A^TA$;
+				\item definita positiva: $\forall\underline{x}\neq\underline{0}$, $\underline{x}^TA^TA\underline{x}=(\underline{x}^TA^T)(A\underline{x})=(A\underline{x})^T(A\underline{x})=\underline{y}^T\underline{y}=||\underline{y}||_2^2\geq 0$; al più è $0$ se $\underline{y}=\underline{0}$ ma ciò non può verificarsi perchè il rango di $A$ è massimo ovvero $dim(null(A))=0$ e quindi $\underline{y}\notin null(A)$ a meno di $\underline{x}=\underline{0}$.
+			\end{itemize}
+		\end{sol}
+		\sectionline
+		\begin{es} %3.13
+			Data una matrice $A\in\mathbb{R}^{n\times n}$, dimostrare che essa può essere scritta come
+			$$A=\frac{1}{2}(A+A^T)+\frac{1}{2}(A-A^T)\equiv A_s+A_a,$$
+			dove $A_s=A_s^T$ è detta \textbf{parte simmetrica} di $A$, mentre $A_a = -A_a^T$ è detta \textbf{parte antisimmetrica} di $A$. Dimostrare inoltre che, dato un generico vettore $\underline{x}\in\mathbb{R}^n$, risulta
+			$$\underline{x}^TA\underline{x}=\underline{x}^TA_s\underline{x}.$$
+		\end{es}
+		\begin{sol}
+			\normalfont
+			Per la proprietà distrubutiva e la somma di matrici, banalmente, si ha $A=\frac{1}{2}(A+A^T)+\frac{1}{2}(A-A^T)=\frac{1}{2}A+\frac{1}{2}A^T+\frac{1}{2}A-\frac{1}{2}A^T$. Si prova che
+			\begin{itemize}
+				\item $A_s=A_s^T$: $\frac{1}{2}(A+A^T)=\left[\frac{1}{2}(A+A^T)\right]^T=\frac{1}{2}(A+A^T)^T=\frac{1}{2}(A^T+(A^T)^T)=\frac{1}{2}(A^T+A)=\frac{1}{2}(A+A^T)$
+				\item $A_a=-A_a^T$: $\frac{1}{2}(A-A^T)=-\left[\frac{1}{2}(A-A^T)\right]^T=-\frac{1}{2}(A-A^T)^T=-\frac{1}{2}(A^T-(A^T)^T)=-\frac{1}{2}(A^T-A)=\frac{1}{2}(A-A^T)$
+			\end{itemize}
+			Il fatto che $\underline{x}^TA\underline{x}=\underline{x}^TA_s\underline{x}$ implica $\underline{x}^TA_a\underline{x}=0$ in quanto $\underline{x}^TA\underline{x}=\underline{x}^TA_s\underline{x}+\underline{x}^TA_a\underline{x}$. Si calcola $\underline{x}^TA_a\underline{x}=\underline{x}^T\left(\frac{1}{2}(A-A^T)\right)\underline{x}=\frac{1}{2}\left(\underline{x}^TA\underline{x}-\underline{x}^TA^T\underline{x}\right)=\frac{1}{2}\left(\underline{x}^TA\underline{x}-\left(A\underline{x}\right)^T\underline{x}\right)=\frac{1}{2}\left(\underline{x}^T\underline{y}-\underline{x}^T\underline{y}\right)$; siccome il prodotto di due vettori è commutativo, $\underline{x}^T\underline{y}=\underline{x}^T\underline{y}$ e quindi $\underline{x}^TA_a\underline{x}=0$.
+		\end{sol}
+		\sectionline
+		\begin{es} %3.14
+			\label{es3.14}
+			Dimostrare la consistenza delle formule (\ref{dj}) e (\ref{lij}). (Suggerimento: ragionare per induzione; infatti, per $j=1$ esse sono definite).
+		\end{es}
+		\begin{sol}
+			\normalfont Si procede per induzione su $j$:
+			\begin{itemize}
+				\item $j=1$:
+					\begin{itemize}
+						\item $d_1=a_{1,1}-\sum_{k=1}^0 l^2_{1,k}d_k=a_{1,1}$, ben definita;
+						\item $l_{i,1}=\frac{a_{i,1}-\sum_{k=1}^0 l_{i,k}d_kl_{1,k}}{d_1}=\frac{a_{i,1}}{d_1}$ per $i=j+1,\ldots, n$, ben definita in quanto l'elemento $d_1$ è già stato calcolato; si completa la prima colonna di $L$.
+					\end{itemize}
+				\item $j-1\Rightarrow j$:
+					\begin{itemize}
+						\item $d_j=a_{j,j}-\sum_{k=1}^{j-1}l^2_{j,k}d_k$, ben definita in quanto vengono utilizzati i primi $j-1$ elementi della riga $j$-esima di $L$ che sono stati calcolati sotto l'ipotesi induttiva;
+						\item $l_{i,j}=\dfrac{a_{i,j}-\sum_{k=1}^{j-1}l_{i,k}d_kl_{j,k}}{d_j}$ per $i=j+1,\ldots, n$, si utilizzano i termini $d_1,\ldots,d_{j-1}$ e $l_{j,1},\ldots,l_{j,j+1}$ calcolati sotto l'ipotesi induttiva.
+					\end{itemize}
+			\end{itemize}
+		\end{sol}
+		\sectionline
+		\begin{es} %3.15
+			\label{es3.15}
+			Dimostrare che il numero di \texttt{flop} richiesti dall'Algoritmo di fattorizzazione $LDL^T$ è dato da (\ref{costoLDLT}) (vedi anche l'Esercizio \ref{es3.6}).
+		\end{es}
+		\begin{sol}
+			\normalfont Il contributo maggiore al costo computazionale è dato dal calcolo di $L$: l'algoritmo esegue esegue $j-1$ somme di $2$ prodotti, una sottrazione ed una divisione per un costo di $2(j-1)+2=2j$ \texttt{flop}. Poiché $L$ è triangolare si dovrà eseguire tale calcolo $n-j$ volte per ciascuna colonna; il costo totale dell'algoritmo è quindi di $\sum_{j=1}^n{2j(n-j)}=2n\sum_{j=1}^n{j}-2\sum_{j=1}^n{j^2}=2n\frac{n(n+1)}{2}-2\frac{n(n+1)(2n+1)}{6}\approx n^3-\frac{2}{3}n^3=\frac{1}{3}n^3$ \texttt{flop}.
+		\end{sol}
+		\sectionline
+		\begin{es} %3.16
+			\label{es3.16}
+			Scrivere una \lstinline{function} \textsc{Matlab} che implementi efficientemente l'algoritmo di fattorizzazione $LDL^T$ per matrici \textit{sdp}.
+		\end{es}
+		\begin{sol}
+			Per l'implementazione dell'Algoritmo di fattorizzazione $LDL^T$ di una matrice \textit{sdp} si consulti il Codice \ref{lst:fattorizzaLDLt} a pagina \pageref{lst:fattorizzaLDLt}.
+		\end{sol}
+		\sectionline
+		\begin{es} %3.17
+			Scrivere una \lstinline{function} \textsc{Matlab} che, avendo in ingresso la matrice $A$ prodotta dalla precedente \lstinline{function}, contenente la fattorizzazione $LDL^T$ della matrice \textit{sdp} originaria, ed un vettore di termini noti, $\underline{x}$, calcoli efficientemente la soluzione del corrispondente sistema lineare.
+		\end{es}
+		\begin{sol}
+			Per l'implementazione in \textsc{Matlab} della risoluzione di un sistema lineare tramite fattorizzazione $LDL^T$ della matrice \textit{sdp} dei coefficienti si veda il \ref{lst:risolviSistemaLDLt} a pagina \pageref{lst:risolviSistemaLDLt}. Nella soluzione proposta si è deciso di passare come input la matrice dei coefficienti ancora da fattorizzare. Quindi la \lstinline{function risolviSistemaLDLt} fattorizza la matrice $A$ e quindi risolve in ordine i tre sistemi lineari triangolari, riscrivendo il vettore dei termini noti $b$ con le soluzioni, prima intermedie, poi finali. Inoltre, a scapito di eleganza e leggibilità del codice, si è deciso di non estrarre da $A$ i fattori $L$ e $D$ in modo esplicito, così da non occupare inutilmente posizioni di memoria che si erano risparmiate riscrivendo $A$ con $L$ e $D$.
+		\end{sol}
+		\sectionline
+		\begin{es} %3.18
+			\label{es:3.18}
+			Utilizzare la \lstinline{function} dell'Esercizio \ref{es3.16} per verificare che la matrice
+			\[
+				A=
+				\begin{pmatrix}
+					1 & 1 & 1 & 1\\
+					1 & 2 & 2 & 2\\
+					1 & 2 & 1 & 1\\
+					1 & 2 & 1 & 2
+				\end{pmatrix}
+			\]
+			non è \textit{sdp}.
+		\end{es}
+		\begin{sol}
+			Eseguendo il codice relativo, dove sostanzialmente viene richiamata la \lstinline{function fattorizzaLDLt} con argomento la matrice $A$ specificata, vediamo che, durante l'esecuzione dell'algoritmo di fattorizzazione, viene generato un messaggio d'errore, il quale informa che la matrice non è \textit{sdp}, seppur simmetrica.
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es3.18} (pagina \pageref{lst:es3.18})
+			\end{flushright}
+		\end{sol}
+		\sectionline
+		\begin{es} %3.19
+			\label{es3.19}
+			Dimostrare che, al passo $i$-esimo di eliminazione di Gauss con pivoting parziale, si ha (vedi (\ref{pivot})) $a_{k_ii}^{(i)}\neq 0$, se $A$ è \textit{nonsingolare}.
+		\end{es}
+		\begin{sol}
+			\normalfont Al passo $j$-esimo, l'elemento $a_{k,i}^{(j)}$ è dato da $\max_{k\geq 1}|a_{k,j}^{(j)}|$; se $a_{k,i}^{(j)}=0$ allora tutti gli elementi della colonna $j$-esima sarebbero zero contraddicendo il fatto che la matrice $A$ sia nonsingolare.
+		\end{sol}
+		\sectionline
+		\begin{es} %3.20
+			Con riferimento alla seguente matrice
+			\[
+				A=
+				\begin{pmatrix}
+					0 & \dots & \dots & 0 & 1\\
+					2 & 0 & \dots & \dots & 0\\
+					& 3 & \ddots & & \vdots\\
+					& & \ddots & \ddots & \vdots\\
+					& & & n & 0
+				\end{pmatrix},
+			\]
+			quale è la matrice di permutazione $P$ che rende $PA$ fattorizzabile $LU$? Chi sono, in tal caso, i fattori $L$ e $U$?
+		\end{es}
+		\begin{sol}
+			\normalfont La matrice ha tutti i minori principali nulli, eccetto l'ultimo. La matrice di permutazione che rende $A$ fattorizzabile $LU$ è $$P=\begin{pmatrix}0&\ldots&\ldots&0&1\\1&0&\ldots&\ldots&0\\&1&0&\ldots&0\\&&\ddots&0&0\\&&&\ddots&1\end{pmatrix}$$ infatti, $$PA=\begin{pmatrix}1&&&&\\&2&&&\\&&\ddots&&\\&&&\ddots&\\&&&&n\end{pmatrix}=LU$$ con i fattori $L=I_n$ e $U\equiv PA$.
+		\end{sol}
+		\sectionline
+		\begin{es} %3.21
+			\label{es3.21}
+			Scrivere una \lstinline{function} \textsc{Matlab} che implementi efficientemente l'algoritmo di fattorizzazione $LU$ con pivoting parziale.
+		\end{es}
+		\begin{sol}
+			Consultare il Codice \ref{lst:fattorizzaLUpivoting} a pagina \pageref{lst:fattorizzaLUpivoting}, per la \lstinline{function fattorizzaLUpivoting} relativa alla fattorizzazione $LU$ di una matrice nonsingloare con pivoting parziale. Nella soluzione proposta, l'output generato dall'Algoritmo è composto dalla matrice di partenza riscritta con le informazioni dei fattori $L$ ed $U$ ed il vettore contente le informazioni della matrice di permutazione.
+		\end{sol}
+		\sectionline
+		\begin{es} %3.22
+			\label{es3.22}
+			Scrivere una \lstinline{function} \textsc{Matlab} che, avendo in ingresso la matrice $A$ prodotta dalla precedente \lstinline{function}, contenente la fattorizzazione $LU$ della matrice permutata, il vettore $\underline{p}$ contenente l'informazione relativa alla corrispondente matrice di permutazione, ed un vettore di termini noti, $\underline{x}$, calcoli efficientemente la soluzione del corrispondente sistema lineare.
+		\end{es}
+		\begin{sol}
+			Per l'implementazione in \textsc{Matlab} della risoluzione di un sistema lineare tramite fattorizzazione $LU$ con pivoting parziale della matrice nonsingolare dei coefficienti si veda il Codice \ref{lst:risolviSistemaLUpivoting} a pagina \pageref{lst:risolviSistemaLUpivoting}. Nella soluzione proposta si è deciso di passare come input la matrice dei coefficienti ancora da fattorizzare. Quindi la \lstinline{function risolviSistemaLUpivoting} fattorizza la matrice $A$, costruisce la matrice di permutazione a partire dal vettore $p$ e quindi risolve in ordine i due sistemi lineari triangolari, riscrivendo il vettore dei termini noti $b$ con le soluzioni, prima intermedie, poi finali. Inoltre, a scapito di eleganza e leggibilità del codice, si è deciso di non estrarre da $A$ i fattori $L$ ed $U$ in modo esplicito, così da non occupare inutilmente posizioni di memoria che si erano risparmiate riscrivendo $A$ con $L$ ed $U$.
+		\end{sol}
+		\sectionline
+		\begin{es} %3.23
+			\label{es:3.23}
+			Costruire alcuni esempi di applicazione delle \lstinline{function} degli Esercizi \ref{es3.21} e \ref{es3.22}.
+		\end{es}
+		\begin{sol}
+			Gli esempi costruiti per testare la \lstinline{function risolviSistemaLUpivoting} sono i seguenti:
+			\begin{itemize}
+				\item \underline{Esempio 1}:
+					\begin{align*}
+						&
+							\begin{pmatrix}
+								0 & 0 & 0 & 1\\
+								2 & 0 & 0 & 0\\
+								0 & 3 & 0 & 0\\
+								0 & 0 & 4 & 0
+							\end{pmatrix}
+							\underline{x}=
+							\begin{pmatrix}
+								4\\
+								58\\
+								2\\
+								7
+							\end{pmatrix}\\
+						&
+							\underline{x}=
+							\begin{pmatrix}
+								29.0000\\
+								0.6667\\
+								1.7500\\
+								4.0000\\
+							\end{pmatrix}
+					\end{align*}
+					errore commesso: $0$.
+				\item \underline{Esempio 2}:
+					\begin{align*}
+						&
+							\begin{pmatrix}
+								-23 & 5 & -21 & 8\\
+								0 & 0 & 5 & 7\\
+								1 & 54 & 7 & 9\\
+								0 & -8 & 12 & 4
+							\end{pmatrix}
+							\underline{x}=
+							\begin{pmatrix}
+								10\\
+								-4\\
+								76\\
+								23
+							\end{pmatrix}\\
+						&
+							\underline{x}=
+							\begin{pmatrix}
+								-5.0867\\
+								1.5532\\
+								4.1247\\
+								-3.5176\\
+							\end{pmatrix}
+					\end{align*}
+					errore commesso: $\approx 10^{-14}$.
+			\end{itemize}
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es3.23} (pagina \pageref{lst:es3.23})
+			\end{flushright}
+		\end{sol}
+		\sectionline
+		\begin{es} %3.24
+			\label{es:3.24}
+			Le seguenti istruzioni \textsc{Matlab} sono equivalenti a risolvere il dato sistema $2\times 2$ con l'utilizzo del pivoting e non, rispettivamente. Spiegarne il differente risultato ottenuto. Concludere che l'utilizzo del pivoting migliora, in generale, la prognosi degli errori in aritmetica finita.
+			\lstinputlisting[frame=none, stepnumber=0, nolol=true]{code/matlab3_24.m}
+		\end{es}
+		\begin{sol}
+			\normalfont 
+			Nella riga \texttt{2} si risolve il sistema $A\underline{x}=\underline{b}$ con pivoting, in particolare: 
+			$$P=\begin{pmatrix}0&1\\1&0\end{pmatrix}\mbox{, }PA=\begin{pmatrix}1&0\\\varepsilon&1\end{pmatrix}=LU\mbox{ con } L\equiv PA\mbox{ e }U\equiv I_2$$ $$\mbox{da cui }\begin{pmatrix}1&0\\\varepsilon&1\end{pmatrix}\begin{pmatrix}x\\y\end{pmatrix}=\begin{pmatrix}\frac{1}{4}\\1\end{pmatrix}\Rightarrow\begin{pmatrix}x\\y\end{pmatrix}=\begin{pmatrix}\frac{1}{4}\\1-\frac{1}{4}\varepsilon\end{pmatrix}\approx\begin{pmatrix}\frac{1}{4}\\1\end{pmatrix}.$$
+			Nella riga \texttt{5} si risolve il sistema mediante fattorizzazione $LU$:
+			$$A=LU=\begin{pmatrix}1&0\\\frac{1}{\varepsilon}&1\end{pmatrix}\begin{pmatrix}\varepsilon&1\\0&-\frac{1}{\varepsilon}\end{pmatrix}\mbox{ da cui }$$
+			$$\begin{pmatrix}1&0\\\frac{1}{\varepsilon}&1\end{pmatrix}\begin{pmatrix}z\\w\end{pmatrix}=\begin{pmatrix}1\\\frac{1}{4}\end{pmatrix}\Rightarrow\begin{pmatrix}z\\w\end{pmatrix}=\begin{pmatrix}1\\\frac{1}{4}-\frac{1}{\varepsilon}\end{pmatrix}\approx\begin{pmatrix}1\\-\frac{1}{\varepsilon}\end{pmatrix}\mbox{ e}$$
+			$$\begin{pmatrix}\varepsilon&1\\0&-\frac{1}{\varepsilon}\end{pmatrix}\begin{pmatrix}x\\y\end{pmatrix}=\begin{pmatrix}1\\-\frac{1}{\varepsilon}\end{pmatrix}\Rightarrow\begin{pmatrix}x\\y\end{pmatrix}=\begin{pmatrix}\frac{1-1}{\varepsilon}\\1\end{pmatrix}\approx\begin{pmatrix}0\\1\end{pmatrix}.$$
+			Le approssimazioni sono dovute al calcolo in aritmetica finita; in ogni caso, l'utilizzo del pivoting produce un risultato più coerente con quello analitico che risulta essere $$\begin{pmatrix}x\\y\end{pmatrix}=\begin{pmatrix}\frac{1}{4}\\1-\frac{1}{4}\varepsilon\end{pmatrix}.$$
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es3.24} (pagina \pageref{lst:es3.24})
+			\end{flushright}
+		\end{sol}
+		\sectionline
+		\begin{es} %3.25
+			\label{es:3.25}
+			Si consideri la seguente matrice \textit{bidiagonale inferiore}
+			\[
+				A=
+				\begin{pmatrix}
+					1 & & &\\
+					100 & 1 & &\\
+					& \ddots & \ddots &\\
+					& & 100 & 1
+				\end{pmatrix}_{10\times 10}.
+			\]
+			Calcolare $k_{\infty}(A)$. Confrontate il risultato con quello fornito dalla \lstinline{function cond} di \textsc{Matlab}. Dimostrare, e verificare, che $k_{\infty}(A)=k_1(A)$.
+		\end{es}
+		\begin{sol}
+			\normalfont
+			La matrice $A$ è una matrice bidiagonale di Toeplitz, la sua inversa è $$A^{-1}=\begin{pmatrix}1&&&&\\-10^2&\ddots&&&\\10^4&\ddots&\ddots&&\\\vdots&\ddots&\ddots&\ddots&\\(-1)^{n-1}10^{2n-2}&\ldots&10^4&-10^2&1\end{pmatrix}_{10\times 10}.$$Risulta $$||A||_{\infty}=\max_{i=1,\ldots,n}{\sum_{j=1}^n{|a_{i,j}|}}=101,$$ $$||A^{-1}||_{\infty}=\max_{i=1,\ldots,n}{\sum_{j=1}^n{|a_{i,j}|}}=\sum_{j=1}^n{|a_{n,j}|}=\sum_{s=0}^{n-1}{10^{2s}}=\frac{10^{2n}-1}{10^2-1}=\frac{10^{2n}-1}{99}$$$$\mbox{quindi }\kappa_{\infty}(A)=||A||_{\infty}||A^{-1}||_{\infty}=101\frac{10^{2n}-1}{99}>10^{2n},$$ nel caso $n=10$, si ha $\kappa_{\infty}(A)>10^{20}$ quindi il problema è malcondizionato. Su tale matrice, la \lstinline{function cond} restituisce \lstinline{Inf}.\\
+			La norma $\infty$ su una matrice è la somma massima delle righe, la norma $1$ è la somma massima delle colonne; nella matrice $A$ tutte le colonne, come tutte le righe, hanno somma $101$ quindi $||A||_{\infty}=||A||_1=101$. Nella matrice $A^{-1}$, la norma $\infty$ considera l'$n$-esima riga mentre la norma $1$ la prima colonna, in ogni caso, $||A||_{\infty}=||A||_1=\frac{10^{20}-1}{99}$. Quindi $\kappa_{\infty}(A)=\kappa_1(A)>10^{20}$.
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es3.25} (pagina \pageref{lst:es3.25})
+			\end{flushright}
+		\end{sol}
+		\sectionline
+		\begin{es} %3.26
+			\label{es:3.26}
+			Si consideri i seguenti vettori di $\mathbb{R}^{10}$,
+			\[
+				\underline{b}=
+				\begin{pmatrix}
+					1\\
+					101\\
+					\vdots\\
+					101
+				\end{pmatrix},
+				\quad \underline{c}=0.1\cdot
+				\begin{pmatrix}
+					1\\
+					101\\
+					\vdots\\
+					101
+				\end{pmatrix},
+			\]
+			ed i seguenti sistemi lineari
+			$$A\underline{x}=\underline{b},\qquad A\underline{y}=\underline{c},$$
+			in cui $A$ è la matrice definita nel precedente Esercizio \ref{es:3.25}. Verificare che le soluzioni di questi sistemi lineari sono, rispettivamente, date da:
+			\[
+				\underline{x}=
+				\begin{pmatrix}
+					1\\
+					\vdots\\
+					1
+				\end{pmatrix},
+				\qquad \underline{y}=
+				\begin{pmatrix}
+					0.1\\
+					\vdots\\
+					0.1
+				\end{pmatrix}.
+			\]
+			Confrontare questi vettori con quelli calcolato dalle seguenti due serie di istruzioni \textsc{Matlab},
+			\lstinputlisting[frame=none, stepnumber=0, nolol=true]{code/matlab3_26.m}
+			che implementano, rispettivamente, le risoluzioni dei due sistemi lineari. Spiegare i risultati ottenuti, alla luce di quanto visto in Sezione \ref{sezCondProblFatt}.
+		\end{es}
+		\begin{sol}
+			\normalfont Come mostrato nell'Esercizio 3.25, la matrice $A$ risulta malcondizionata con $\kappa(A)\approx 10^{20}$; considerando il vettore $\underline{c}$ come una perturbazione di $\underline{b}$ si ha $$\Delta\underline{b}=\underline{c}-\underline{b}=\begin{pmatrix}-0.9\\-90.9\\\vdots\\-90.9\end{pmatrix},$$ segue $\frac{||\Delta\underline{b}||}{||\underline{b}||}\approx\frac{\sqrt{0.9+9\cdot 90.9^2}}{\sqrt{1+9\cdot 101^2}}\approx 1$. Quindi $$\frac{||\Delta\underline{x}||}{||\underline{x}||}\leq\kappa(A)\left(\frac{||\Delta\underline{b}||}{||\underline{b}||}+\frac{||\Delta A||}{||A||}\right)=\kappa(A)\frac{||\Delta\underline{b}||}{||\underline{b}||}\approx 10^{20}$$ ovvero a fronte di una perturbazione del vettore $\underline{b}$ di $0.1$, si ha un errore sul risultato dell'ordine di $10^{20}$.
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es3.26} (pagina \pageref{lst:es3.26})
+			\end{flushright}
+		\end{sol}
+		\sectionline
+		\begin{es} %3.27
+			Dimostrare che il numero di \texttt{flop} richiesti dall'Algoritmo di fattorizzazione $QR$ di Householder è dato da (\ref{costoQR}) (vedi anche l'Esercizio \ref{es3.6}).
+		\end{es}
+		\begin{sol}
+			\normalfont
+			Ad ogni iterazione si eseguono:
+			\begin{itemize}
+				\item riga \texttt{12}, norma su $m-i+1$ elementi
+					\begin{itemize}
+						\item $m-i+1$ quadrati,
+						\item $m-i$ somme,
+						\item $1$ radice quadrata;
+					\end{itemize}
+				\item riga \texttt{15}, calcolo di \lstinline{v1}
+					\begin{itemize}
+						\item $1$ sottrazione;
+					\end{itemize}
+				\item riga \texttt{17}, calcolo del vettore di Householder
+					\begin{itemize}
+						\item $m-(i+1)+1=m-i$ divisioni;
+					\end{itemize}
+				\item riga \texttt{18}, calcolo di \lstinline{beta}
+					\begin{itemize}
+						\item $1$ divisione;
+					\end{itemize}
+				\item riga \texttt{19}, modifica della restante porzione della matrice
+					\begin{itemize}
+						\item $(m-i+1)(n-(i+1)-1)=(m-i+1)(n-1)$ sottrazioni,
+						\item $1+m-(i+1)+1=m-i+1$ moltiplicazioni,
+						\item $(1+(m-(i+1)+1)+(m-i+1))(n-(i+1)+1)=2(n-i)(m-i+1)$ moltiplicazioni,
+						\item $(m-i+1)(n-i)$ moltiplicazioni.
+					\end{itemize}
+			\end{itemize}
+			In totale, risultano $$4(m-i+1)(n-i+1)=4[mn+m+n+1+i^2-(m+n+2)i]$$ \texttt{flop} ad iterazione; l'algoritmo esegue $n$ iterazioni, il costo totale è di:
+			\begin{equation*}\begin{split}
+			&\sum_{i=0}^{n}{4[mn+m+n+1+i^2-(m+n+2)i]}=\\
+			&=4\left[\sum_{i=0}^{n}{(mn+m+n+1)}+\sum_{i=0}^{n}{i^2}-(m+n+2)\sum_{i=0}^{n}{i}\right]=\\
+			&=4\left[n(mn+m+n+1)+\frac{n(n+1)(2n+1)}{6}-(m+n+2)\frac{n(n+1)}{2}\right]\approx\\
+			&\approx 4\left[mn^2+\frac{n^3}{3}-(m+n)\frac{n^2}{2}\right]=\\
+			&=2mn^2-\frac{2}{3}n^3=\frac{2}{3}n^2(3m-n)\mbox{ \texttt{flop}.}\end{split}\end{equation*}
+		\end{sol}
+		\sectionline
+		\begin{es} %3.28
+			Definendo il vettore (vedi (\ref{v})) $\underline{\hat{v}}=\frac{\underline{v}}{v_1}$, verificare che \lstinline{beta}, come definito nel seguente algoritmo per la fattorizzazione $QR$ di Householder, corrisponde alla quantità $\frac{2}{\underline{\hat{v}}^T\underline{\hat{v}}}$:
+			\lstinputlisting[frame=none, stepnumber=0, nolol=true]{code/matlab3_28.m}.
+		\end{es}
+		\begin{sol}
+			\normalfont
+			Dall'algoritmo risulta $$\mbox{\lstinline{beta}}=-\frac{\mbox{\lstinline{v1}}}{\mbox{\lstinline{alpha}}}=-\frac{a_{1,1}-\alpha}{\alpha}$$ che è equivalente a\begin{equation*}\begin{split}
+			\frac{2}{\underline{\hat{v}}^T\underline{\hat{v}}}&=\frac{2}{\frac{\underline{v}}{v_1}\frac{\underline{v}^T}{v_1}}=\frac{2v_1^2} {\underline{v}^T\underline{v}}=\frac{2v_1^2}{(\underline{z}^T-\alpha\underline{e}_1^T)(\underline{z}-\alpha\underline{e}_1)}=\\=&\frac{2v_1^2}{\underline{z}^T\underline{z}-\underline{z}^T\alpha\underline{e}_1-\underline{z}\alpha\underline{e}_1^T+\alpha ^2\underline{e}_1^T\underline{e}_1}=\frac{2v_1^2}{||\underline{z}||_2^2-\alpha a_{1,1}-\alpha a_{1,1}+\alpha^2}=\\=&\frac{v_1^2}{\alpha^2-\alpha a_{1,1}}=\frac{(\alpha a_{1,1})^2}{\alpha(\alpha-a_{1,1})}=-\frac{a_{1,1}-\alpha}{\alpha}
+			\end{split}\end{equation*}
+		\end{sol}
+		\sectionline
+		\begin{es} %3.29
+			\label{es3.29}
+			Scrivere una \lstinline{function} \textsc{Matlab} che implementi efficientemente l'algoritmo di fattorizzazione $QR$, mediante il metodo di Householder (vedi l'Algoritmo descritto nell'Esercizio precedente).
+		\end{es}
+		\begin{sol}
+			Nella soluzione proposta (Codice \ref{lst:fattorizzaQR} a pagina \pageref{lst:fattorizzaQR}), la matrice $A$ viene riscritta con le informazioni della matrice $R$ e della matrice $Q$: in particolare, la porzione triangolare superiore di $\hat{R}$ e la parte significativa dei vettori di Householder grazie ai quali si può successivamente ricostruire la matrice $Q$.
+		\end{sol}
+		\sectionline
+		\begin{es} %3.30
+			\label{es3.30}
+			Scrivere una \lstinline{function} \textsc{Matlab} che, avendo in ingresso la matrice $A$ prodotta dalla \lstinline{function} del precedente Esercizio, contenente la fattorizzazione $QR$ della matrice originaria, e un corrispondente vettore di termini noti $\underline{b}$, calcoli efficientemente la soluzione del sistema lineare sovradeterminato (\ref{sistemaSovr}).
+		\end{es}
+		\begin{sol}
+			Nel Codice \ref{lst:risolviSistemaQR} a pagina \pageref{lst:risolviSistemaQR}, la matrice $A$ in input viene innanzitutto fattorizzata $QR$, quindi viene ricostruita la matrice $Q^T$ a partire dalle informazioni presenti nella matrice $A$ riscritta sui vettori di Householder. Viene allora moltiplicata $Q^T$ per il vettore $\underline{b}$ ($=\underline{g}$), per risolvere infine il sistema lineare $\hat{R}\underline{x}=\underline{g_1}$, dove $\hat{R}$ viene estratto come parte triangolare superiore di $A$ e $\underline{g_1}$ è il vettore formato dalle prime $n$ componenti di $\underline{g}$.
+		\end{sol}
+		\sectionline
+		\begin{es} %3.31
+			\label{es:3.31}
+			Utilizzare le \lstinline{function} degli Esercizi \ref{es3.29} e \ref{es3.30} per calcolare la soluzione ai minimi quadrati di (\ref{sistemaSovr}), ed il corrispondente residuo, nel caso in cui
+			\[
+				A=
+				\begin{pmatrix}
+					3 & 2 & 1\\
+					1 & 2 & 3\\
+					1 & 2 & 1\\
+					2 & 1 & 2
+				\end{pmatrix},
+				\qquad \underline{b}=
+				\begin{pmatrix}
+					10\\
+					10\\
+					10\\
+					10
+				\end{pmatrix}.
+			\]
+		\end{es}
+		\begin{sol}
+			Eseguando la \lstinline{function risolviSistemaQR} con $A$ e $\underline{b}$ come input, si ottiene che il risultato ai minimi quadrati del sistema $A\underline{x}=\underline{b}$ è
+			\[
+				\underline{x}=
+				\begin{pmatrix}
+					1.4\\
+					2.8\\
+					1.4
+				\end{pmatrix}.
+			\]
+			Inoltre si ricava che il vettore residuo minimo ottenuto, e la relativa norma Euclidea, sono:
+			\[
+				\underline{r}\equiv A\underline{x}-\underline{b}=
+				\begin{pmatrix}
+					1.2\\
+					1.2\\
+					-1.6\\
+					-1.6
+				\end{pmatrix},
+				\qquad ||\underline{r}||_2^2=8.
+			\]
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es3.31} (pagina \pageref{lst:es3.31})
+			\end{flushright}
+		\end{sol}
+		\sectionline
+		\begin{es}[Retta ai minimi quadrati] %3.32
+			\label{es:3.32}
+			Calcolare i coefficienti della equazione della retta
+			$$r(x)=a_1x+a_2,$$
+			che meglio approssima i dati prodotti dalle seguenti istruzioni \textsc{Matlab}:
+			\lstinputlisting[frame=none, stepnumber=0, nolol=true]{code/matlab3_32a.m}
+			Riformulare il problema come minimizzazione della norma Euclidea di un corrispondente vettore residuo. Calcolare la soluzione utilizzando le \lstinline{function} sviluppate negli Esercizi \ref{es3.29} e \ref{es3.30}, e confrontarla con quella ottenuta dalle seguenti istruuzioni \textsc{Matlab}:
+			\lstinputlisting[frame=none, stepnumber=0, nolol=true]{code/matlab3_32b.m}
+			Confrontare i risultati che si ottengono per i seguenti valori del parametro \lstinline{gamma}:
+			$$0.5,0.1,0.05,0.01,0.005,0.001.$$
+			Quale è la soluzione che si ottiene nel limite \lstinline{gamma} $\rightarrow 0$?
+		\end{es}
+		\begin{sol}
+			\normalfont Poichè $-1<sin(\pi x)<1$ e $\gamma<1$ si ha $$y(x)=10x+5+\sin(\pi x)\gamma\approx 10x+5=r(x)$$ quindi $$\underline{a}=\begin{pmatrix}a_1\\a_2\end{pmatrix}=\begin{pmatrix}10\\5\end{pmatrix}.$$\\
+			Il problema può essere formulato come minimizzazione del vettore residuo $r(x)-y(x)$, si utilizza il metodo di Householder per risolvere il sistema: $$\begin{pmatrix}x_1&1\\ x_2&1\\\vdots&\vdots\\ x_{101}&1\end{pmatrix}\begin{pmatrix}a_1\\ a_2\end{pmatrix}=\begin{pmatrix}y(x_1)\\ y(x_2)\\\vdots\\ y(x_{101})\end{pmatrix}.$$ Nella tabella sono riportati i valori di $\underline{a}$ e il resiuduo $r$ al variare di $\gamma$:
+			\begin{center}\begin{tabular}{c||c|c}
+						$\gamma$ & $\underline{a}$ & $r$\\\hline
+						$0.5$ & $\begin{pmatrix}9.9816\\5.0919\end{pmatrix}$ & $3.4943$\\
+						$0.1$ & $\begin{pmatrix}9.9636\\5.0184\end{pmatrix}$ & $0.6989$\\
+						$0.05$ & $\begin{pmatrix}9.9982\\5.0092\end{pmatrix}$ & $0.3494$\\
+						$0.01$ & $\begin{pmatrix}9.9996\\5.0018\end{pmatrix}$ & $0.0699$\\
+						$0.005$ & $\begin{pmatrix}9.9998\\5.0009\end{pmatrix}$ & $0.0349$\\
+						$0.001$ & $\begin{pmatrix}10.0000\\5.0002\end{pmatrix}$ & $0.0070$\\
+			\end{tabular}\end{center}
+			Si nota che, per $\gamma\rightarrow 0$, $r\rightarrow 0$ infatti, $\sin(\pi x)\gamma\rightarrow 0$ e dunque anche $y(x)\rightarrow 10x+5=r(x)$ con $\underline{a}=\begin{pmatrix}5\\2\end{pmatrix}$.
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es3.32} (pagina \pageref{lst:es3.32})
+			\end{flushright}
+		\end{sol}
+		\sectionline
+		\begin{es} %3.33
+			\label{es:3.33}
+			Determinare il punto di minimo della funzione $f(x_1,x_2)=x_1^4+x_1(x_1+x_2)+(1-x_2)^2$, utilizzando il metodo di Newton (\ref{newtNonLinSist}) per calcolarne il punto stazionario.
+		\end{es}
+		\begin{sol}
+			\normalfont
+			Un punto stazionario $(\hat{x_1}, \hat{x_2})$ è tale per cui $f'(\hat{x_1},\hat{x_2})=0$. Si ottiene quindi il sistema non lineare:
+			$$F(\underline{y})=\underline{0}\mbox{ con }F=\begin{pmatrix}\frac{\partial f}{\partial x_1}\\\frac{\partial f}{\partial x_2}\end{pmatrix}=\begin{pmatrix}4x_1^3+2x_1+x_2\\x_1+2x_2+2\end{pmatrix}.$$
+			Applicando il metodo di Newton si va a risolvere: $$J_F(\underline{y}^{(k)})\underline{d}^{(k)}=-F(\underline{y}^{(k)}),\quad \underline{y}^{(k+1)}=\underline{y}^{(k)}+\underline{d}^{(k)}\mbox{  con  }J_F=\begin{pmatrix}12x_1^2+2&1\\1&2\end{pmatrix}.$$
+			Inseriti i valori iniziali $x_1^{(0)},x_2^{(0)}$, il numero massimo d'iteazioni e la tolleranza (\texttt{8-11}), per ogni iterazione, si va a valutare lo jacobiano (\texttt{19}) e a risolvere il sistema mediante fattorizzazione $LU$ con pivoting (\texttt{20-21}). Al termine delle iterazioni, si mostra il punto di minimo ed il valore ivi assunto dalla funzione (\texttt{24-25}). Risulta $$\min{f(x_1,x_2)}\approx -0.2573\mbox{ in }(0.4398, -1.2199).$$
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es3.33} (pagina \pageref{lst:es3.33})
+			\end{flushright}
+		\end{sol}
+		\sectionline
+		\begin{es} %3.34
+			\label{es:3.34}
+			Uno dei metodi di base per la risoluzione di equazioni differenziali ordinarie, $y'(t)=f(t,y(t))$, $t\in[t_0,T]$, $y(t_0)=y_0$ (problema di Cauchy di prim'ordine), è il metodo di Eulero implicito,
+			$$y_n=y_{n-1}+hf_n,\qquad n=1,2,\dots,N\equiv\frac{T-t_0}{h},$$
+			in cui $y_n\approx y(t_n)$, $f_n=f(t_n,y_n)$, $t_n=t_0+nh$. Utilizzare questo metodo nel caso in cui $t_0=0$, $T=10$, $N=100$, $y_0=(1,2)^T$ e, se $y=(x_1,x_2)^T$, $f(t,y)=(-10^3x_1+\sin x_1\cos x_2, -2x_2+\sin x_1 \cos x_2)^T$. Utilizzare il metodo (\ref{cordeNonLin}) per la risoluzione dei sistemi nonlineari richiesti.
+		\end{es}
+		\begin{sol}
+			\normalfont
+			Definita $y'(t)=f(t,y(t))$, $y_0\equiv y(t_0)$, si approssima $y'(t)$ con il seguente rapporto incrementale all'indietro:
+			$$y'(t_i)=\dfrac{y(t_i)-y(t_{i-1})}{h}\equiv y_i$$
+			da cui segue
+			$$\frac{y_i-y_{i-1}}{h}=f(t_i,y_i)\quad\Rightarrow\quad\frac{y_i-y_{i-1}}{h}=f_i\quad\Rightarrow\quad y_i-y_{i-1}-hf_i=0.$$
+			Nell'esercizio si ha\\
+			$$y_0=\begin{pmatrix}1\\2\end{pmatrix}$$\\
+			e\\
+			$$F_i=\begin{pmatrix}
+			x_1^{(i)}-x_1^{(i-1)}-h(-10^3x_1+\sin{x_1}\cos{x_2})\\
+			x_2^{(i)}-x_2^{(i-1)}-h(-2x_2+\sin{x_1}\cos{x_2})\end{pmatrix}$$\\
+			Dove $x_1^{(i-1)}$ e $x_2^{(i-1)}$ ovvero il valore di $y$ al passo $(i-1)$-esimo sono costanti note.
+			Ad ognuno degli $N$ passi eseguiamo l'equivalente del metodo delle corde per i sistemi non lineari\\
+			$$J_F(z_0)d_k=-F(z_k), \quad z_{k+1}=z_k+d_k,\quad k=1,2,\ldots;$$\\
+			calcoliamo lo Jacobiano con $h=0.1$:\\
+			$$J_F=\begin{pmatrix}
+			1+h(10^3-\cos{x_1}\cos{x_2})& h\sin{x_1}\sin{x_2}\\
+			-h(\cos{x_1}\cos{x_2})& 1+h(2+\sin{x_1}\sin{x_2})
+			\end{pmatrix}\qquad\Rightarrow$$\\
+			$$J_F\equiv\begin{pmatrix}
+			101-\alpha & \beta\\
+			-\alpha & 1.2+\beta\end{pmatrix}\quad\mbox{ dove }\quad\alpha=\dfrac{\cos{1}\cos{2}}{10}\mbox{ e }\beta=\dfrac{\sin{1}\sin{2}}{10}.$$\\
+			Ad ogni iterazione si invoca la \lstinline{function CordeNonLin} per ottenere l'approssimazione (entro una tolleranza $\varepsilon$ prefissata) di $y_i$ a partire dal vettore $y_{i-1}$ ove calcoliamo lo Jacobiano. Risulta $y_{100}=\begin{pmatrix}1\\2\end{pmatrix}$ per $\varepsilon=10^{-5}$.
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es3.34} (pagina \pageref{lst:es3.34})
+			\end{flushright}
+		\end{sol}
+	\section*{Codice degli esercizi}
+		\addcontentsline{toc}{section}{Codice degli esercizi}
+		\markboth{\textsc{\uppercase{Capitolo }\ref{chap:sistemiLinENonLin}\uppercase{. Sistemi lineari e nonlineari}}}{\textsc{\uppercase{Codice degli esercizi}}}
+		\lstinputlisting[caption={Esercizio \ref{es:3.18}.}, label=lst:es3.18]{code/es3_18.m}
+		\sectionline
+		\lstinputlisting[caption={Esercizio \ref{es:3.23}.}, label=lst:es3.23]{code/es3_23.m}
+		\sectionline
+		\lstinputlisting[caption={Esercizio \ref{es:3.24}.}, label=lst:es3.24]{code/es3_24.m}
+		\sectionline
+		\lstinputlisting[caption={Esercizio \ref{es:3.25}.}, label=lst:es3.25]{code/es3_25.m}
+		\sectionline
+		\lstinputlisting[caption={Esercizio \ref{es:3.26}.}, label=lst:es3.26]{code/es3_26.m}
+		\sectionline
+		\lstinputlisting[caption={Esercizio \ref{es:3.31}.}, label=lst:es3.31]{code/es3_31.m}
+		\sectionline
+		\lstinputlisting[caption={Esercizio \ref{es:3.32}.}, label=lst:es3.32]{code/es3_32.m}
+		\sectionline
+		\lstinputlisting[caption={Esercizio \ref{es:3.33}.}, label=lst:es3.33]{code/es3_33.m}
+		\sectionline
+		\lstinputlisting[caption={Esercizio \ref{es:3.34}.}, label=lst:es3.34]{code/es3_34.m}

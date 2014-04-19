@@ -1,0 +1,626 @@
+\chapter{Radici di una equazione}
+	\label{chap:radici}
+	\minitoc \mtcskip
+	\lettrine{I}{}n questo capitolo studieremo il problema del calcolo degli \textit{zeri} reali di una funzione, ovvero risolvere l'equazione
+	\begin{equation}
+		\label{eqRad}
+		f(x)=0,\qquad x\in\mathbb{R},\quad f:\mathbb{R}\rightarrow\mathbb{R},
+	\end{equation}
+	determinandone le \textit{radici} reali.\\
+	In generale, questo tipo di problema, o ammette un numero \textit{finito} di soluzioni, o non ammette \textit{alcuna} soluzione, oppure ammette un numero \textit{infinito} di soluzioni.\\
+	Di seguito supporremo che la funzione ammetta almeno una radice reale, presupposto sempre verificato nel caso in cui la funzione risulti continua in un intervallo $[a,b]$ con $f(a)f(b)<0$, per il Teorema di Bolzano (o Teorema degli Zeri).
+	\section{Il metodo di bisezione}
+		Il metodo di bisezione, per il calcolo di un'approssimazione di una radice di una funzione, si basa sul \textit{Teorema di Bolzano} poc'anzi accennato. Si suppone quindi che la funzione $f(x)$ considerata sia continua in un intervallo $[a,b]$ e che $f(a)f(b)<0$: in questo caso si dice che l'intervallo $[a,b]$ costituisce un \textbf{intervallo di confidenza} per la radice dell'equazione (\ref{eqRad}).\\
+		Se denotiamo con $x^*$ la radice ricercata, il miglior risultato che possiamo ottenere in un primo momento è di stimare che
+		$$x^*\approx x_1\equiv \dfrac{a+b}{2},$$
+		che corrisponde al punto medio dell'intervallo $[a,b]$. In questo modo si ha che l'errore commesso sarà maggiorato dalla semi-ampiezza dell'intervallo di confidenza, ovvero
+		$$|x^* - x_1| \leq \dfrac{b-a}{2}.$$
+		A questo punto, per quanto riguarda il punto appena calcolato $x_1$, ci possiamo trovare in tre situazioni distinte e mutuamente esclusive:
+		\begin{itemize}
+			\item $f(x_1)=0$: in questo caso (assai raro) si ha che il punto trovato è effettivamente uno zero della funzione e costituisce, quindi, una soluzione al problema;
+			\item $f(a)f(x_1)<0$: il procedimento precedente viene ripetuto sul nuovo intervallo di confidenza $[a,x_1]$;
+			\item $f(x_1)f(b)<0$: viene ripetuto il procedimento precedente sull'intervallo $[x_1, b]$.
+		\end{itemize}
+		Quindi si ha che, se non viene trovata la radice cercata, allora l'intervallo di confidenza viene dimezzato, reiterando il procedimento: per questo motivo questo metodo prende il nome di \textbf{Metodo di Bisezione}.\\
+		Come qualsiasi metodo iterativo è necessario definire un opportuno criterio d'arresto: in un primo momento si potrebbe pensare di terminare l'esecuzione quando viene trovato un punto $x_i$ tale che $f(x_i)=0$, ma tale criterio d'arresto risulta molto inefficace in quanto molto probabilmente quella condizione, specialmente in aritmetica finita, non si verificherà mai.
+	\section{Criteri di arresto e condizionamento}
+		Spesso si ha che non interessa determinare esattamente la radice della (\ref{eqRad}), ma una sua approssimazione entro una certa tolleranza $tol_x$, ovvero determinare un punto $\tilde{x}$ tale che
+		$$|x^* - \tilde{x}|\leq tol_x.$$
+		Tuttavia, non conoscendo il valore della radice $x^*$, si deve utilizzare $tol_x$ come criterio d'arresto facendo una stima sul numero minimo di passi d'iterazione da eseguire per ottenere un errore sicuramente minore o uguale a $tol_x$.\\
+		Ricordiamo che l'errore commesso al primo passo è maggiorato dalla semi-ampiezza dell'intervallo di confidenza, ovvero che
+		$$|x^*-x_1|\leq\dfrac{b-a}{2}.$$
+		Analogamente si ha che al passo $i$-esimo $x_i=\dfrac{a_i+b_1}{2}$, con $[a_i, b_i]$ intervallo di confidenza al passo $i$-esimo, e l'errore commesso è maggiorato da
+		$$|x^*-x_i|\leq\dfrac{b_i-a_i}{2}=\dfrac{b_{i-1}-a_{i-1}}{2^2}=\dots=\dfrac{b-a}{2^i}.$$
+		Quindi il numero di passi da eseguire per ottenere un errore sicuramente minore o uguale a $tol_x$ è dato da
+		$$\dfrac{b-a}{2^{i}}\leq tol_x$$
+		$$2^{i}\geq\dfrac{b-a}{tol_x}$$
+		$$i\geq\lceil\log_2\dfrac{b-a}{tol_x}\rceil=\lceil\log_2(b-a)-\log_2tol_x\rceil$$
+		$$i_{max}\equiv \lceil\log_2(b-a)-\log_2tol_x\rceil.$$
+		Inserendo quindi un limite superiore al numero di passi che si può effettuare si ha che l'algoritmo che descrive il metodo di bisezione terminerà sempre (cosa che non veniva garantita con il semplice controllo $f(x_i)=0$). Tuttavia rimane il fatto che il controllo $f(x_i)=0$ spesso risulta, specialmente in aritmetica finita, inefficace. Si può pensare allora di sfruttare una certa tolleranza anche sul valore che la funzione assume in un determinato punto, ricordando che, essendo $f(x)$ continua ed essendo $f(x^*)=0$, in un opportuno intorno di $x^*$ si avrà che i valori della funzione risulteranno ``piccoli''.\\
+		Pertanto si sostituirà il controllo $f(x_i)=0$ con un controllo del tipo $|f(x_i)|\leq tol_f$, dove $tol_f$ rappresenta la tolleranza sul valore della funzione scelta in modo tale che $|x_i-x^*|\leq tol_x$.
+		Supponendo $f(x)\in C^{(1)}$, si sviluppa la funzione in $x^*$ (trascurando l'errore di ordine quadratico commesso)
+		\begin{align*}
+			f(x)&=P_1(x;x^*)+O((x-x^*)^2)=\\
+			&=f(x^*)+(x-x^*)f'(x^*)+O((x-x^*)^2)\approx\\
+			&\approx f'(x^*)(x-x^*),
+		\end{align*}
+		da cui segue che
+		$$x-x^*\approx \dfrac{f(x)}{f'(x^*)}$$
+		\begin{equation}\label{errBisez}|x-x^*|\approx \dfrac{|f(x)|}{|f'(x^*)|}.\end{equation}
+		Quindi, per avere $|x-x*|\approx tol_x$, occorre utilizzare una tolleranza sulla $f(x)$ che vale circa
+		$$tol_f\approx |f'(x^*)|\cdot tol_x.$$
+		Quindi si ha che
+		\begin{itemize}
+			\item $tol_f\ll tol_x$, se $f'(x^*)\approx 0$;
+			\item $tol_f\gg tol_x$, se $f'(x^*)\gg 1.$
+		\end{itemize}
+		Ovvero si ha che, fissata $tol_x$, tanto più grande sarà la derivata $|f'(x^*)|$, tanto più grande sarà l'intorno di $tol_f$ e quindi meno stringente $tol_f$ stessa; viceversa fissata $tol_f$, tanto più grande sarà $|f'(x^*)|$, tanto più piccolo sarà l'intervallo di confidenza definito dall'intorno di $tol_x$.\\
+		Se al passo $i$-esimo si ha l'intervallo di confidenza $[a_i,b_i]$, un'approssimazione della derivata $f'(x^*)$ è data da
+		$$f'(x^*)\approx \dfrac{f(b_i)-f(a_i)}{b_i-a_i}.$$
+		Vediamo di seguito un'implementazione in \textsc{Matlab} del metodo di bisezione, utilizzando i criteri d'arresto appena enunciati:
+		\lstinputlisting[caption={Metodo di bisezione.}]{code/bisezione.m}
+		Un altro importante aspetto dell'analisi dei criteri d'arresto per il metodo di bisezione è il condizionamento della radice $x^*$. Se si interpreta nella (\ref{errBisez}) il valore $f(x)$ della funzione come perturbazione del valore nullo e $|x-x^*|$ l'errore commesso sulla soluzione finale del problema, allora tale perturbazione sui dati di ingresso risulta amplificata di un fattore
+		$$k=\dfrac{1}{f'(x^*)}$$
+		durante l'esecuzione del metodo.\\
+		Se ne deduce che $k$ può essere definito come \textbf{numero di condizionamento della radice} $x^*$.
+		\begin{defi}
+			Una radice $x^*$ ha \textbf{molteplicità esatta} $m\geq 1$, se
+			$$f(x^*)=f'(x^*)=\dots =f^{(m-1)}(x^*)=0,\quad f^{(m)}(x^*)\neq 0.$$
+			Se $m=1$ la radice si dice \textbf{semplice}; altrimenti, se $m\geq 2$, si dice \textbf{multipla}.
+		\end{defi}
+		Quindi si ha che il problema delle radici multiple è sempre malcondizionato in quanto, essendo $f'(x^*)=0$, risulta che $k$ assume un valore virtualmente infinito.\\
+		Si ha, infine, che se $f(x)$ è sviluppabile in serie di Taylor in $x^*$ (radice di $f(x)$ di molteplicità $m$), allora tale funzione si può scrivere come
+		$$f(x)= (x-x^*)^m g(x),$$
+		con $g(x)$ funzione ancora sviluppabile in serie di Taylor in $x^*$ e tale che $g(x^*)\neq 0$.
+	\section{Ordine di convergenza}
+		Supponendo di utilizzare un generico metodo iterativo per l'approssimazione di una radice $x^*$ dell'equazione (\ref{eqRad}), denotiamo con $x_i$ l'approssimazione fornita dal metodo al passo $i$-esimo e $e_i$ l'errore commesso corrispondente
+		$$e_i\equiv x_i - x^*.$$
+		Quindi, come visto nella Sezione \ref{sez1.2}, tale metodo si dirà \textit{convergente} se
+		$$\lim_{i\to\infty}e_i=0.$$
+		Ovviamente la convergenza è un requisito fondamentale per un metodo numerico iterativo, ma è interessante studiare anche la ``velocità'' con la quale il metodo converge verso la soluzione.\\
+		Ad esempio, come già osservato nelle sezioni precedenti, per il metodo di bisezione risulta che ad ogni passo d'iterazione l'errore viene dimezzato, infatti si può dimostrare che
+		$$\lim_{i\to\infty}\dfrac{|e_{i+1}|}{|e_i|}=\dfrac{1}{2}.$$
+		\begin{defi}
+			Se per un certo metodo iterativo si ha che $p$ è il più grande valore reale per cui vale
+			\begin{equation}\label{ordConv}\lim_{i\to\infty}\dfrac{|e_{i+1}|}{|e_i|^p}=p<\infty,\end{equation}
+			allora si dice che il metodo ha \textbf{ordine di convergenza} $p$ con \textbf{costante asintotica dell'errore} pari a $c$.\\
+			Nel caso di $p=1$ si parla di \textbf{convergenza lineare}, nel caso $p=2$ di \textbf{convergenza quadratica}, ecc.
+		\end{defi}
+		Quindi si ha che il metodo di bisezione ha ordine di convergenza lineare ($p=1$) con costante asintotica dell'errore $c=\sfrac{1}{2}$.\\
+		L'ordine di convergenza $p$ può assumere anche valori non interi, anche se deve necessariamente risultare $p\geq 1$ affinché il metodo converga.\\
+		Si nota che, per $p=1$ ed $i$ sufficientemente grande, vale
+		$$|e_{i+1}|\approx c|e_i|,$$
+		$$|e_{i+k}|\approx c^k|e_i|,$$
+		pertanto un metodo iterativo con $p=1$ converge se e solo se $0\leq c<1$.\\
+		In generale si ha che tanto più elevato è il l'ordine di convergenza di un metodo iterativo, tanto più velocemente esso convergerà verso una radice $x^*$.
+	\section{Il metodo di Newton}
+		Supponiamo di disporre di un'approssimazione iniziale $x_0$ della radice $x^*$. La retta tangente al grafico nel punto $(x_0, f(x_0))$ è data dall'equazione
+		$$y=f(x_0)+f'(x_0)(x-x_0).$$
+		La nuova approssimazione $x_1$ della radice $x^*$ è data dall'intersezione tra la suddetta retta tangente e la retta delle ascisse, ovvero
+		$$0=f(x_0)+f'(x_0)(x_1-x_0)$$
+		$$x_1f'(x_0)=x_0f'(x_0)-f(x_0)$$
+		$$x_1=x_0-\dfrac{f(x_0)}{f'(x_0)},$$
+		che è definita se $f'(x_0)\neq 0$.\\
+		Quindi al passo $(i+1)$-esimo si ha che l'espressione funzionale del \textbf{metodo di Newton} è
+		\begin{equation}\label{newton}x_{i+1}=x_i-\dfrac{f(x_i)}{f'(x_i)},\qquad i=0,1,2,\dots\end{equation}
+		Quindi il metodo di Newton consiste nella risoluzione successiva di equazioni lineari: ovviamente nel caso in cui la $f(x)$ sia una funzione lineare, il metodo fornisce il risultato in un solo passo.\\
+		Rispetto al metodo di bisezione, che richiedeva come requisito la sola continuità della funzione, il metodo di Newton ne richiede anche la derivabilità. Inoltre, ad ogni passo, oltre alla valutazione della $f(x_i)$ si deve calcolare anche la derivata prima $f'(x_i)$.\\
+		Questi svantaggi del metodo di Newton rispetto al metodo di bisezione vengono tuttavia ripagati dall'ordine di convergenza del metodo di Newton: infatti vale
+		\begin{teo}
+			Se $f(x)$ è sufficientemente regolare (cioè $f\in C^{(1)}$), il metodo di Newton converge quadraticamente verso radici semplici.
+		\end{teo}
+		\begin{teo}
+			\label{teo2.2}
+			Se $f(x)$ è sufficientemente regolare, il metodo di Newton converge linearmente verso una radice di molteplicità $m>1$, con costante asintotica dell'errore pari a $(m-1)/m$.
+		\end{teo}
+
+	\section{Convergenza locale}
+		Studiamo adesso quali sono le condizioni \textit{necessarie} affinché un metodo iterativo converga.\\
+		Si è visto che per il metodo di bisezione basta assumere che la $f(x)$ sia continua in un intervallo $[a,b]$, con $f(a)f(b)<0$, per poter affermare che il metodo converge \textit{sempre} verso una radice: in questo caso si parla di \textbf{convergenza globale}.\\
+		In generale la convergenza globale è una prerogativa del metodo di bisezione. Per tutti gli altri metodi si cerca invece di garantire la convergenza in un opportuno \textit{intorno} della radice: in questo caso si parla di \textbf{convergenza locale}.
+		Come visto in Sezione \ref{sez1.2}, se denotiamo con $\Phi(x)$ la funzione d'iterazione del metodo, allora il metodo iterativo può essere formalizzato come
+		$$x_{i+1}=\Phi(x_i),\qquad i=0,1,2,\dots .$$
+		Ovviamente (si veda l'Esercizio \ref{es:1.3}) deve valere che lo zero $x^*$ è un \textit{punto fisso} della funzione d'iterazione, ovvero che
+		$$\Phi(x^*)=x^*.$$
+		Le proprietà di convergenza vengono studiate attraverso lo studio della stabilità del punto fisso.
+		\begin{teo}[Teorema del punto fisso]
+			Sia $\Phi(x)$ la funzione d'iterazione che definisce il metodo numerico. Si supponga che esistano $\delta >0$ e $0\leq L<1$ tali che, definendo l'intervallo $I=(x^*-\delta, x^*+\delta)$,
+			$$|\Phi(x)-\Phi(y)|\leq L|x-y|,\qquad \forall x,y\in I.$$
+			Allora
+			\begin{itemize}
+				\item $x^*$ è l'unico punto fisso di $\Phi(x)$ in $I$;
+				\item se $x_0\in I$, allora $x_i\in I$, $i=0,1,2,\dots$;
+				\item $\lim_{i\to\infty}x_i=x^*$.
+			\end{itemize}
+		\end{teo}
+		Supponendo $f\in C^{(2)}$ si può utilizzare il Teorema del punto fisso per dimostrare che il metodo di Newton converge localmente.
+	\section{Ancora sul criterio d'arresto}
+		Cerchiamo adesso di valutare un criterio d'arresto efficace per il metodo di Newton.\\
+		A causa della convergenza locale del metodo di Newton non è possibile stabilire a priori il numero minimo di passi entro il quale si otterrà un'approssimazione della radice con l'accuratezza richiesta. Tuttavia si ha che per metodi con ordine di convergenza $p>1$ (come il metodo di Newton), in prossimità della radice $x^*$
+		$$|x_{i+1}-x_i|=|x_{i+1} -x^*+x^*-x_i|=|e_i-e_{i+1}|\approx |e_i|,$$
+		essendo, in prossimità della radice, $e_{i+1}$ trascurabile rispetto a $e_i$. Quindi un criterio d'arresto efficace potrebbe essere
+		$$|x_{i+1}-x_i| \leq tol_x.$$
+		Nel caso del metodo di Newton, per la (\ref{newton}), il criterio d'arresto risulta
+		$$|f(x_i)|\leq |f'(x_i)|\cdot tol_x.$$
+		Di seguito, il codice del metodo di Newton, tenendo conto del criterio d'arresto appena illustrato, in \textsc{Matlab}:
+		\lstinputlisting[caption={Metodo di Newton.}]{code/newton.m}
+		Spesso si assegna anche una tolleranza relativa $Rtol_x$, in tal caso si ha che (considerando le approssimazioni $x^*\approx x_{i+1}$ e $|e_i|\approx |x_{i+1}-x_i|$)
+		$$\dfrac{|e_i|}{tol_x+Rtol_x\cdot |x^*|}\leq 1.$$
+		\\
+		Inoltre spesso si considera la scelta $Rtol_x=tol_x$ per la tolleranza relativa: in questo caso il criterio d'arresto diventa
+		$$\dfrac{1}{tol_x}\cdot\dfrac{|x_{i+1}-x_i|}{1+|x_{i+1}|}\leq 1$$
+		$$\dfrac{|x_{i+1}-x_i|}{1+|x_{i+1}|}\leq tol_x.$$
+		In questo modo viene controllato l'errore assoluto quando $x_{i+1}\approx 0$, e l'errore relativo quando $|x_{i+1}|\gg 1$.\\
+		\\
+		Per quanto riguarda metodi con ordine di convergenza lineare si ha che
+		$$|x_{i+1}-x_i|=|e_i-e_{i+1})|\approx |e_i|(1-c),$$
+		con $c$ costante asintotica dell'errore e approssimando $\dfrac{e_{i+1}}{e_i}\approx c$ (vedi (\ref{ordConv})). Quindi si ha che
+		$$|e_{i+1}|\approx c|e_i|\approx c\cdot\dfrac{1}{1-c}|x_{i+1}-x_i|,$$
+		e quindi, in questo caso, un criterio d'arresto appropriato risulta essere
+		$$|x_{i+1}-x_i|\leq \dfrac{1-c}{c}tol_x.$$
+		Per stimare la costante asintotica dell'errore $c$ si consideri che
+		$$|x_1-x_0|\approx (1-c)|e_0,\qquad |x_2-x_1|\approx (1-c)|e_1|\approx (1-c)c|e_0|,$$
+		da cui si ottiene una prima stima di $c$:
+		$$c\approx \dfrac{|x_2-x_1|}{|x_1-x_0|}.$$
+		Questa stima richiede che siano eseguite almeno due iterazioni del metodo, ma può essere tenuta costantemente aggiornata ad ogni passo considerando le tre iterazioni più recenti.
+		
+	\section{Il caso di radici multiple}
+		Si è visto che nel caso di radici multiple il problema del calcolo di un'approssimazione della radice diventa malcondizionato e che il metodo di Newton ha ordine di convergenza lineare (anziché quadratico). Con opportuni accorgimenti sarà possibile ripristinare la convergenza quadratica.\\
+		Si distinguono quindi due casi:\\
+		\\
+		\textbf{\underline{La molteplicità della radice è nota}}\\
+		\\
+		Supponiamo per semplicità che la funzione presa in analisi sia della forma
+		$$f(x)=(x-x^*)^m.$$
+		Applicando il metodo di Newton per determinare la radice si ottiene
+		$$x_{i+1}=x_i-\dfrac{(x_i-x^*)^m}{m(x_i-x^*)^{m-1}}=x_i-\dfrac{x_i-x^*}{m},\quad i=0,1,2,\dots .$$
+		Moltiplicando per $m$ il \textit{termine di correzione} a $x_i$ si ottiene
+		$$x_{i+1}=x_i-m\dfrac{x_i-x^*}{m}=x_i-x_i+x^*=x^*,$$
+		ottenendo così la soluzione esatta in solo passo.\\
+		Più in generale si può dimostrare che, conoscendo la molteplicità $m$ della radice da approssimare, lo schema iterativo
+		\begin{equation}\label{newtonMod}x_{i+1}=x_i-m\dfrac{f(x_i)}{f'(x_i)},\qquad i=0,1,2,\dots,\end{equation}
+		ripristina la convergenza quadratica al metodo di Newton.
+		\lstinputlisting[caption={Metodo di Newton modificato.}]{code/newtonMod.m}
+		\textbf{\underline{La molteplicità della radice è incognita}}\\
+		\\
+		Per il Teorema \ref{teo2.2} sappiamo che, nel caso di radici multiple, il metodo di Newton converge soltanto linearmente. Quindi, per la (\ref{ordConv}) si ha che
+		$$\dfrac{e_i}{e_{i-1}}\approx c,\qquad\dfrac{e_{i+1}}{e_i}\approx c$$
+		$$e_i\approx ce_{i-1},\qquad e_{i+1}\approx ce_i.$$
+		Combinando queste due si può eliminare la costante asintotica dell'errore $c$, ottenendo
+		$$e_{i+1}e_{i-1}\approx e_i^2$$
+		$$(x_{i+1}-x^*)(x_{i-1}-x^*)\approx(x_i-x^*)^2.$$
+		Supponendo esatta l'uguaglianza si ottiene la seguente approssimazione della radice
+		$$x_{i-1}x_{i+1}-x_{i+1}x^*-x_{i-1}x^*+x^{*^2}\approx x_i^2-2x_ix^*+x^{*^2}$$
+		$$(x_{i-1}-2x_i+x_{i+1})x^*\approx x_{i-1}x_{i+1}-x_i^2$$
+		\begin{equation}\label{aitken}x^*\approx x_i^*\equiv\dfrac{x_{i-1}x_{i+1}-x_i^2}{x_{i-1}-2x_i+x_{i+1}}.\end{equation}
+		La procedura viene reiterata a partire dall'approssimazione ottenuta $x_i^*$.\\
+		Quindi questa procedura, denominata \textbf{metodo di accelerazione di Aitken}, è divisa, per ogni passo d'iterazione, in due parti:
+		\begin{enumerate}
+			\item una prima parte nella quale vengono eseguiti due passi del metodo di Newton, calcolando $x_i$ ed $x_{i+1}$ (l'approssimazione $x_{i-1}$ è quella calcolata alla fine del passo precedente);
+			\item una seconda parte di \textit{accelerazione} dove viene calcolata l'approssimazione fornita dalla (\ref{aitken}), che fornisce un'approssimazione più accurata della radice, la quale costituirà il punto di partenza per l'iterazione successiva.
+		\end{enumerate}
+		Si può dimostrare che la successione delle approssimazioni ottenute mediante l'accelerazione di Aitken converge quadraticamente verso la radice $x^*$. L'unico svantaggio è che ogni iterazione, rispetto al metodo di Newton, ha un costo doppio.\\
+		Proponiamo, di seguito, un'implementazione in \textsc{Matlab} del metodo di Aitken:
+		\lstinputlisting[caption={Metodo di Aitken.}]{code/aitken.m}
+	\section{Metodi quasi-Newton}
+		\label{sezMetodiQuasiNewton}
+		I metodi quasi-Newton sono varianti del metodo di Newton che non richiedono il calcolo della derivata prima (che computazionalmente rappresenta il costo maggiore per iterazione).\\
+		Lo schema generale sarà
+		$$x_{i+1}=x_i-\dfrac{f(x_i)}{\varphi_i},\qquad i=0,1,2,\dots,\quad\varphi_i\approx f'(x_i),$$
+		dove $\varphi_i$ è un'approssimazione che sostituisce la derivata prima $f'(x_i)$. A seconda dell'approssimazione $\varphi_i$ utilizzata si avranno diversi metodi quasi-Newton che, essendo varianti del metodo di Newton, godono della proprietà di convergenza locale.\\
+		\\
+		\textbf{\underline{Metodo delle corde}}\\
+		\\
+		Il \textbf{metodo delle corde} parte dal presupposto che la funzione $f(x)$ sia sufficientemente regolare e che l'approssimazione iniziale $x_0$ sia prossima alla radice. Quando si verifica ciò, intuitivamente, si ha che la derivata della $f(x)$ varia molto poco in prossimità della radice. Quindi si può convenientemente utilizzare l'approssimazione
+		$$f'(x_i)\approx f'(x_0)\equiv\varphi_i.$$
+		In questo modo si ottiene l'iterazione
+		$$x_{i+1}=x_i-\dfrac{f(x_i)}{f'(x_0)},\qquad i=0,1,2,\dots.$$
+		Ad ogni iterazione si deve quindi calcolare soltanto la $f(x_i)$, pertanto il costo per iterazione è uguale a quello del metodo di bisezione e, come quest'ultimo, si può dimostrare che il metodo delle corde ha ordine di convergenza lineare.\\
+		Il principale vantaggio del metodo delle corde è il basso costo computazionale rispetto ad altri metodi.
+		\lstinputlisting[caption={Metodo delle corde.}]{code/corde.m}
+		\textbf{\underline{Metodo delle secanti}}\\
+		\\
+		Supponiamo di essere al passo $i$-esimo d'iterazione ed aver già calcolato $x_{i-1}$, $x_i$, $f(x_{i-1})$ ed $f(x_i)$. Si considera la seguente approssimazione della derivata prima di $f(x_i)$:
+		$$f(x_i)\approx \dfrac{f(x_i)-f(x_{i-1})}{x_i-x_{i-1}}\equiv\varphi_i,$$
+		che corrisponde geometricamente alla retta secante (da qui il nome, \textbf{metodo delle secanti}) il grafico passante per i punti $(x_{i-1}, f(x_{i-1}))$ ed $(x_i, f(x_i))$.\\
+		Quindi l'iterazione corrispondente sarà
+		\begin{align*}
+			x_{i+1}&=x_i-f(x)\dfrac{x_i-x_{i-1}}{f(x_i)-f(x_{i-1})}=\\
+			&=\dfrac{f(x_i)x_i-f(x_{i-1}x_i-f(x_i)x_i+f(x_i)x_{i-1})}{f(x_i)-f(x_{i-1})}=\\
+			&=\dfrac{f(x_i)x_{i-1}-f(x_{i-1})x_i}{f(x_i)-f(x_{i-1})},\qquad i=0,1,2,\dots,
+		\end{align*}
+		con $x_0$ ed $x_1$ approssimazioni iniziali assegnate (spesso $x_1$ viene calcolata applicando un passo del metodo di Newton con $x_0$ come punto iniziale).\\
+		Si può dimostrare che l'ordine di convergenza del metodo delle secanti è
+		$$p=\dfrac{1+\sqrt{5}}{2}\approx 1.618,$$
+		per radici semplici: quest'ordine di convergenza, più grande di quello lineare e più piccolo di quello quadratico, viene detto \textit{superlineare} ed il valore $\dfrac{1+\sqrt{5}}{2}$ è detto \textit{sezione aurea}. Per radici multiple, invece, la convergenza è lineare.\\
+		Il costo per iterazione corrisponde alla sola valutazione della $f(x_i)$, quindi risulta identico a quello del metodo delle corde e del metodo di bisezione, sebbene il metodo delle secanti converga più velocemente di questi ultimi due.\\
+		Di seguito, l'implementazione in \textsc{Matlab} del metodo delle secanti:
+		\lstinputlisting[caption={Metodo delle secanti.}]{code/secanti.m}
+		Riassumendo:
+		\begin{center}
+			\begin{tabular}{c|c|c|c l|c l|}
+				\multirow{2}{*}{\textbf{Metodo}} & \multicolumn{2}{|c|}{\textbf{Richiede il calcolo della}} & \multicolumn{4}{|c|}{\textbf{Ordine di convergenza}}\\
+				& $f(x)$ & $f'(x)$ & \multicolumn{2}{|c|}{\textbf{radici semplici}}& \multicolumn{2}{|c|}{\textbf{radici multiple}}\\
+				\hline
+				Bisezione & \includegraphics[scale=0.025]{green_tick.png} & \includegraphics[scale=0.03]{red_x.png} & 1 & lineare & 1 & lineare\\
+				\hline
+				Newton & \includegraphics[scale=0.025]{green_tick.png} & \includegraphics[scale=0.025]{green_tick.png} & 2 & quadratico & 1 & lineare\\
+				\hline
+				Aitken & \includegraphics[scale=0.025]{green_tick.png} & \includegraphics[scale=0.025]{green_tick.png} & 2 & quadratico & 2 & quadratico\\
+				\hline
+				Corde & \includegraphics[scale=0.025]{green_tick.png} & \includegraphics[scale=0.03]{red_x.png} & 1 & lineare & 1 & lineare\\
+				\hline
+				Secanti & \includegraphics[scale=0.025]{green_tick.png} & \includegraphics[scale=0.03]{red_x.png} & $\dfrac{1+\sqrt{5}}{2}\approx 1.618$ & superlineare & 1 & lineare\\
+				\hline
+			\end{tabular}
+		\end{center}
+		\begin{center}
+			\begin{tabular}{c|c|}
+				\textbf{Metodo} & \textbf{Funzione d'iterazione}\\
+				\hline
+				Bisezione & $x_{i+1}=\dfrac{a_i+b_i}{2}$\\
+				\hline
+				Newton & $x_{i+1}=x_i-\dfrac{f(x_i)}{f'(x_i)}$\\
+				\hline
+				Aitken & $x_i^*=\dfrac{x_{i-1}x_{i+1}-x_i^2}{x_{i-1}-2x_i+x_{i+1}}$\\
+				\hline
+				Corde & $x_{i+1}=x_i-\dfrac{f(x_i)}{f'(x_0)}$\\
+				\hline
+				Secanti & $x_{i+1}=\dfrac{f(x_i)x_{i-1}-f(x_{i-1})x_i}{f(x_i)-f(x_{i-1})}$\\
+				\hline
+			\end{tabular}
+		\end{center}
+		
+	\section*{Esercizi}
+		\addcontentsline{toc}{section}{Esercizi}
+		\markboth{\textsc{\uppercase{Capitolo }\ref{chap:radici}\uppercase{. Radici di una equazione}}}{\textsc{\uppercase{Esercizi}}}
+		\begin{es} %2.1
+			\label{es:2.1}
+			Definire una procedura iterativa basata sul metodo di Newton per determinare $\sqrt{\alpha}$, per un assegnato $\alpha>0$. Costruire una tabella delle approssimazioni relative al caso $\alpha=x_0=2$ (comparare con la tabella dell'Esercizio \ref{es:1.4}).
+		\end{es}
+		\begin{sol}
+			Essendo $\sqrt{\alpha}$ la radice ricercata, dobbiamo innanzitutto trovare una funzione $f(x)$ che abbia uno zero in $x=\sqrt{\alpha}$. La funzione più semplice di questo tipo è $f(x)=x-\sqrt{\alpha}$, ma ovviamente, dato che si sta tentando di approssimare $\sqrt{\alpha}$ stessa, non è verosimile utilizzare il valore esatto per il calcolo dell'approssimazione. Quindi si utilizza la funzione $f(x)=x^2-\alpha$, che ha radici semplici in $x=\sqrt{\alpha}$ e in $x=-\sqrt{\alpha}$, ovvero $f(\pm\sqrt{\alpha})=0$. La derivata prima di questa funzione è $f'(x)=2x$.\\
+			L'iterazione del metodo di Newton utilizzando questa funzione diventa
+			\begin{align*}
+				x_{i+1}&=x_i-\dfrac{f(x_i)}{f'(x_i)}=x_i-\dfrac{x_i^2-\alpha}{2x_i}=\\
+				&=\dfrac{2x_i^2-x_i^2+\alpha}{2x_i}=\dfrac{x_i^2+\alpha}{2x_i}=\\
+				&=\dfrac{1}{2}\left(x_i+\dfrac{\alpha}{x_i}\right),\quad i=0,1,2,\dots.
+			\end{align*}
+			Di seguito, l'implementazione in \textsc{Matlab} di questa particolare istanza del metodo di Newton:
+			\lstinputlisting[caption={Metodo di Newton per il calcolo di $\sqrt{\alpha}$.}]{code/newtonSqrt.m}
+			Eseguendo questa procedura con $\alpha=2$ ed approssimazione iniziale $x_0=2$ otteniamo la seguente successione di approssimazioni:
+			\begin{center}
+				\begin{tabular}{c|l}
+					i & $x_i$\\
+					\hline
+					0 & $2$\\
+					1 & $1.5$\\
+					2 & $1.416666666666667\dots$\\
+					3 & $1.414215686274510\dots$\\
+					4 & $1.414213562374690\dots$\\
+					5 & $1.414213562373095\dots$\\
+					6 & $1.414213562373095\dots$\\
+				\end{tabular}
+			\end{center}
+			Si vede quindi, comparando le approssimazioni con quelle viste nella tabella dell'Esercizio \ref{es:1.4}, che già alla quarta iterazione (cioè per $i=4$) l'errore di convergenza è dell'ordine di $10^{-12}$.
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es2.1} (pagina \pageref{lst:es2.1})
+			\end{flushright}
+		\end{sol}
+		\sectionline
+		\begin{es} %2.2
+			Generalizzare il risultato del precedente esercizio, derivando una procedura iterativa basata sul metodo di Newton per determinare $\sqrt[n]{\alpha}$, per un assegnato $\alpha>0$.
+		\end{es}
+		\begin{sol}
+			Per argomentazioni molto simili a quelle viste nel precedente esercizio, non sceglieremo una funzione che utilizzi esplicitamente la radice ricercata. Utilizzeremo invece la funzione $f(x)=x^n-\alpha$, che si annulla sempre per $x=\sqrt[n]{\alpha}$. La derivata di questa funzione vale $f'(x)=nx^{n-1}$.\\
+			Andando a sostituire nella formula generica del metodo di Newton otteniamo
+			\begin{align*}
+				x_{i+1}&=x_i-\dfrac{f(x_i)}{f'(x_i)}=x_i-\dfrac{x_i^n-\alpha}{nx_i^{n-1}}=\\
+				&=\dfrac{nx_i^n-x_i^n+\alpha}{nx_i^{n-1}}=\dfrac{(n-1)x_i^n+\alpha}{nx_i^{n-1}}=\\
+				&=\dfrac{1}{n}\left((n-1)x_i+\dfrac{\alpha}{x_i^{n-1}}\right),\quad i=0,1,2,\dots,
+			\end{align*}
+			che rappresenta l'espressione funzionale cercata.\\
+			Una possibile implementazione in \textsc{Matlab} di questo metodo iterativo può essere la seguente:
+			\lstinputlisting[caption={Metodo di Newton per il calcolo di $^n\sqrt{\alpha}$.}]{code/newtonNrt.m}
+		\end{sol}
+		\sectionline
+		\begin{es} %2.3
+			\label{es:2.3}
+			In analogia con quanto visto nell'Esercizio \ref{es:2.1}, definire una procedura iterativa basata sul metodo delle secanti per determinare $\sqrt{\alpha}$. Confrontare con l'Esercizio \ref{es:1.4}.
+		\end{es}
+		\begin{sol}
+			Come precedentemente visto nell'Esercizio \ref{es:2.1} si utilizzerà la funzione $f(x)=x^2-\alpha$, che si annulla in $x=\pm\sqrt{\alpha}$.\\
+			Con questa funzione, l'iterazione del metodo delle secanti risulta essere
+			\begin{align*}
+				x_{i+1}&=\dfrac{f(x_i)x_{i-1}-f(x_{i-1})x_i}{f(x_i)-f(x_{i-1})}=\\
+				&=\dfrac{(x_i^2-\alpha)x_{i-1}-(x_{i-1}^2-\alpha)x_i}{x_i^2-\alpha -x_{i-1}^2+\alpha}=\\
+				&=\dfrac{x_i^2x_{i-1}-\alpha x_{i-1}-x_{i-1}^2x_i+\alpha x_i}{x_i^2-x_{i-1}^2}=\\
+				&=\dfrac{x_ix_{i-1}(x_i-x_{i-1})+\alpha(x_i-x_{i-1})}{(x_i-x_{i-1})(x_i+x_{i-1})}=\\
+				&=\dfrac{(x_i-x_{i-1})(x_ix_{i-1}+\alpha)}{(x_i-x_{i-1})(x_i+x_{i-1})}=\\
+				&=\dfrac{x_ix_{i-1}+\alpha}{x_i+x_{i-1}},\quad i=0,1,2,\dots.
+			\end{align*}
+			Possiamo allora definire la seguente implementazione in \textsc{Matlab} del metodo delle secanti per il calcolo di $\sqrt{\alpha}$:
+			\lstinputlisting[caption={Metodo delle secanti per il calcolo di $\sqrt{\alpha}$.}]{code/secantiSqrt.m}
+			Eseguendo il metodo con $\alpha=2$ ed $x_0=2$, si hanno le seguenti approssimazioni (applicando un passo del metodo di Newton per calcolare $x_1$):
+			\begin{center}
+				\begin{tabular}{c|l}
+					i & $x_i$\\
+					\hline
+					0 & $2$\\
+					1 & $1.5$\\
+					2 & $1.428571428571429\dots$\\
+					3 & $1.414634146341463\dots$\\
+					4 & $1.414215686274510\dots$\\
+					5 & $1.414213562688869\dots$\\
+					6 & $1.414213562373095\dots$\\
+					7 & $1.414213562373095\dots$\\
+				\end{tabular}
+			\end{center}
+			Comparando questi valori con quelli visti nella tabella presentata nell'Esercizio \ref{es:1.4} si può vedere che dalla sesta iterazione in poi si ha un errore commesso di convergenza sull'approssimazione minore di $10^{-12}$. Inoltre si può notare come la convergenza superlineare sia leggermente più lenta rispetto alla convergenza quadratica del metodo di Newton visto nell'Esercizio \ref{es:2.1}.
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es2.3} (pagina \pageref{lst:es2.3})
+			\end{flushright}
+		\end{sol}
+		\sectionline
+		\begin{es} %2.4
+			\label{es:2.4}
+			Discutere la convergenza del metodo di Newton, applicato per determinare le radici dell'equazione
+			$$x^3-5x=0,$$
+			in funzione della scelta del punto iniziale $x_0$.
+		\end{es}
+		\begin{sol}
+			La funzione in questione è $f(x)=x^3-5x$ e la sua derivata prima è $f'(x)=3x^2-5$. Quindi, applicando il metodo di Newton, si ottiene il seguente metodo iterativo:
+			$$\Phi(x)=x-\dfrac{f(x)}{f'(x)}=x-\dfrac{x^3-5x}{3x^2-5}=\dfrac{3x^3-5x-x^3+5x}{3x^2-5}=\dfrac{2x^3}{3x^2-5},$$
+			il quale risulta definito per ogni $x$ escluso per $x=\pm\sqrt{\dfrac{5}{3}}$, dove si annulla il denominatore. Quindi sicuramente non converge per $x=\pm\sqrt{\dfrac{5}{3}}$.\\
+			Vediamo adesso se ci sono punti che presentano un comportamento ciclico del tipo $\Phi(x)=-x$:
+			$$\Phi(x)=\dfrac{2x^3}{3x^2-5}=-x$$
+			$$2x^3=5x-3x^3$$
+			$$x(5x^2-5)=0$$
+			$$x(x-1)(x+1)=0$$
+			$$x=0 \vee x=\pm 1.$$
+			Per $x=0$ il metodo converge, in quanto $0$ è radice dell'equazione; per $x=1$ invece viene prodotta la successione $-1,1-1,1,\dots$ (per $x=-1$ si ha la stessa successione ma con i segni invertiti). Quindi il metodo non converge scegliendo $x=\pm 1$ come punto iniziale.\\
+			In sintesi, facendo alcuni test sulla convergenza del metodo, si deduce che il metodo converge nei seguenti intervalli:
+			$$\left(-\infty,-\sqrt{\dfrac{5}{3}}\right)\quad\longrightarrow\quad -\sqrt{5}$$
+			$$\left(-\sqrt{\dfrac{5}{3}}, -1\right)\quad\longrightarrow\quad \sqrt{5}$$
+			$$\left(-1,1\right)\quad\longrightarrow\quad 0$$
+			$$\left(1,\sqrt{\dfrac{5}{3}}\right)\quad\longrightarrow\quad -\sqrt{5}$$
+			$$\left(\sqrt{\dfrac{5}{3}},+\infty\right)\quad\longrightarrow\quad \sqrt{5}.$$
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es2.4} (pagina \pageref{lst:es2.4})
+			\end{flushright}
+		\end{sol}
+		\sectionline
+		\begin{es} %2.5
+			\label{es:2.5}
+			Comparare il metodo di Newton (\ref{newton}), il metodo di Newton modificato (\ref{newtonMod}) ed il metodo di accelerazione di Aitken (\ref{aitken}), per approssimare gli zeri delle funzioni
+			$$f_1(x)=(x-1)^{10},\qquad f_2(x)=(x-1)^{10}e^x,$$
+			per valori decrescenti della tolleranza $tol_x$. Utilizzare, in tutti i casi, il punto iniziale $x_0=10$.
+		\end{es}
+		\begin{sol}
+			Per quanto riguarda la prima funzione $f_1(x)=(x-1)^10$ si ha che l'unico zero presente è $x^*=1$ di molteplicità $m=10$, infatti $f_1(1)=f_1'(1)=\dots=f_1^{(9)}(1)=0$ e $f_1^{10}(1)=10!\neq 0$.\\
+			Nella seguente tabella si sono riportati i risultati ottenuti dall'esecuzione dei metodi di Newton, di Newton modificato e di Aitken per l'approssimazione di tale radice per valori decrescenti della tolleranza $tol_x$ ($\tilde{x}$ indica l'approssimazione calcolata dal metodo) ed $x_0=10$ come approssimazione iniziale:
+			\begin{center}
+				\begin{tabular}{|c|l l|l l|l l|}
+					\hline
+					\multicolumn{7}{|c|}{$f_1(x)=(x-1)^{10}$}\\
+					\hline
+					$tol_x$ & \multicolumn{2}{|c|}{Newton} & \multicolumn{2}{|c|}{Newton modificato} & \multicolumn{2}{|c|}{Aitken}\\
+					\hline
+					$10^{-1}$ & $\tilde{x}=1.8863$ & $i=22$ & $\tilde{x}=1$ & $i=1$ & $\tilde{x}=1$ & $i=2$\\
+					\hline
+					$10^{-2}$ & $\tilde{x}=1.0873$ & $i=44$ & $\tilde{x}=1$ & $i=1$ & $\tilde{x}=1$ & $i=2$\\
+					\hline
+					$10^{-3}$ & $\tilde{x}=1.0086$ & $i=66$ & $\tilde{x}=1$ & $i=1$ & $\tilde{x}=1$ & $i=2$\\
+					\hline
+					$10^{-4}$ & $\tilde{x}=1.0008$ & $i=88$ & $\tilde{x}=1$ & $i=1$ & $\tilde{x}=1$ & $i=2$\\
+					\hline
+					$10^{-5}$ & $\tilde{x}=1.0001$ & $i=110$ & $\tilde{x}=1$ & $i=1$ & $\tilde{x}=1$ & $i=2$\\
+					\hline
+					$10^{-6}$ & $\tilde{x}=1$ & $i=132$ & $\tilde{x}=1$ & $i=1$ & $\tilde{x}=1$ & $i=2$\\
+					\hline
+					$10^{-7}$ & $\tilde{x}=1$ & $i=153$ & $\tilde{x}=1$ & $i=1$ & $\tilde{x}=1$ & $i=2$\\
+					\hline
+					$10^{-8}$ & $\tilde{x}=1$ & $i=175$ & $\tilde{x}=1$ & $i=1$ & $\tilde{x}=1$ & $i=2$\\
+					\hline
+					$10^{-9}$ & $\tilde{x}=1$ & $i=197$ & $\tilde{x}=1$ & $i=1$ & $\tilde{x}=1$ & $i=2$\\
+					\hline
+					$10^{-10}$ & $\tilde{x}=1$ & $i=219$ & $\tilde{x}=1$ & $i=1$ & $\tilde{x}=1$ & $i=2$\\
+					\hline
+					$10^{-11}$ & $\tilde{x}=1$ & $i=241$ & $\tilde{x}=1$ & $i=1$ & $\tilde{x}=1$ & $i=2$\\
+					\hline
+					$10^{-12}$ & $\tilde{x}=1$ & $i=263$ & $\tilde{x}=1$ & $i=1$ & $\tilde{x}=1$ & $i=2$\\
+					\hline
+					$10^{-13}$ & $\tilde{x}=1$ & $i=285$ & $\tilde{x}=1$ & $i=1$ & $\tilde{x}=1$ & $i=2$\\
+					\hline
+					$10^{-14}$ & $\tilde{x}=1$ & $i=306$ & $\tilde{x}=1$ & $i=1$ & $\tilde{x}=1$ & $i=2$\\
+					\hline
+					$10^{-15}$ & $\tilde{x}=1$ & $i=329$ & $\tilde{x}=1$ & $i=1$ & $\tilde{x}=1$ & $i=2$\\
+					\hline
+				\end{tabular}
+			\end{center}
+			Osservando i risultati ottenuti si può vedere come il metodo di Newton perda la convergenza quadratica il presenza di radici multiple ed inoltre che, in questi casi, i metodi di Newton modificato e di accelerazione di Aitken rispondono molto bene alla presenza di radici multiple.\\
+			\\
+			Per quanto riguarda la seconda funzione $f_2(x)=(x-1)^{10}e^x$ si ha, come per la prima, che l'unico zero è $x^*=1$ di molteplicità $m=10$.\\
+			Di seguito i risultati ottenuti:
+			\begin{center}
+				\begin{tabular}{|c|l l|l l|l l|}
+					\hline
+					\multicolumn{7}{|c|}{$f_2(x)=(x-1)^{10}e^x$}\\
+					\hline
+					$tol_x$ & \multicolumn{2}{|c|}{Newton} & \multicolumn{2}{|c|}{Newton modificato} & \multicolumn{2}{|c|}{Aitken}\\
+					\hline
+					$10^{-1}$ & $\tilde{x}=1.9216$ & $i=30$ & $\tilde{x}=1$ & $i=5$ & $\tilde{x}=0.9994$ & $i=5$\\
+					\hline
+					$10^{-2}$ & $\tilde{x}=1.0896$ & $i=53$ & $\tilde{x}=1$ & $i=5$ & $\tilde{x}=1$ & $i=6$\\
+					\hline
+					$10^{-3}$ & $\tilde{x}=1.0089$ & $i=75$ & $\tilde{x}=1$ & $i=6$ & $\tilde{x}=1$ & $i=6$\\
+					\hline
+					$10^{-4}$ & $\tilde{x}=1.0009$ & $i=97$ & $\tilde{x}=1$ & $i=6$ & $\tilde{x}=1$ & $i=7$\\
+					\hline
+					$10^{-5}$ & $\tilde{x}=1.0001$ & $i=119$ & $\tilde{x}=1$ & $i=6$ & $\tilde{x}=1$ & $i=7$\\
+					\hline
+					$10^{-6}$ & $\tilde{x}=1$ & $i=141$ & $\tilde{x}=1$ & $i=6$ & $\tilde{x}=1$ & $i=7$\\
+					\hline
+					$10^{-7}$ & $\tilde{x}=1$ & $i=163$ & $\tilde{x}=1$ & $i=7$ & $\tilde{x}=1$ & $i=7$\\
+					\hline
+					$10^{-8}$ & $\tilde{x}=1$ & $i=185$ & $\tilde{x}=1$ & $i=7$ & $\tilde{x}=1$ & $i=7$\\
+					\hline
+					$10^{-9}$ & $\tilde{x}=1$ & $i=207$ & $\tilde{x}=1$ & $i=7$ & $\tilde{x}=1$ & $i=7$\\
+					\hline
+					$10^{-10}$ & $\tilde{x}=1$ & $i=228$ & $\tilde{x}=1$ & $i=7$ & $\tilde{x}=1$ & $i=7$\\
+					\hline
+					$10^{-11}$ & $\tilde{x}=1$ & $i=250$ & $\tilde{x}=1$ & $i=7$ & $\tilde{x}=1$ & $i=7$\\
+					\hline
+					$10^{-12}$ & $\tilde{x}=1$ & $i=272$ & $\tilde{x}=1$ & $i=7$ & $\tilde{x}=1$ & $i=7$\\
+					\hline
+					$10^{-13}$ & $\tilde{x}=1$ & $i=294$ & $\tilde{x}=1$ & $i=7$ & $\tilde{x}=1$ & $i=7$\\
+					\hline
+					$10^{-14}$ & $\tilde{x}=1$ & $i=316$ & $\tilde{x}=1$ & $i=7$ & $\tilde{x}=1$ & $i=7$\\
+					\hline
+					$10^{-15}$ & $\tilde{x}=1$ & $i=337$ & $\tilde{x}=1$ & $i=7$ & $\tilde{x}=1$ & $i=7$\\
+					\hline
+				\end{tabular}
+			\end{center}
+			I risultati sono molto simili ai precedenti. Si nota soltanto che il fattore $e^x$ ha leggermente rallentato i metodi di Newton modificato e di Aitken.
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es2.5} (pagina \pageref{lst:es2.5})
+			\end{flushright}
+		\end{sol}
+		\sectionline
+		\begin{es} %2.6
+			È possibile, nel caso delle funzioni del precedente esercizio, utilizzare il metodo di bisezione per determinarne lo zero?
+		\end{es}
+		\begin{sol}
+			No non è possibile in quanto non si verifica una delle ipotesi del Teorema degli Zeri, ovvero che esistano due punti $a$ e $b$ tali che $f(a)f(b)<0$ per poter formare un intervallo di confidenza. Infatti entrambe le funzioni risultano essere positive $\forall x\in\mathbb{R}$: il fattore $(x-1)^{10}$ è sempre positivo in quanto è elevato ad una potenza pari, mentre il fattore $e^x$ è sempre positivo per definizione.
+		\end{sol}
+		\sectionline
+		\begin{es} %2.7
+			\label{es:2.7}
+			Costruire una tabella in cui si comparano, a partire dallo stesso punto iniziale $x_0=0$, e per valori decrescenti della tolleranza $tol_x$, il numero di iterazioni richieste per la convergenza dei metodi di Newton, corde e secanti, utilizzati per determinare lo zero della funzione
+			$$f(x)=x-\cos x$$.
+		\end{es}
+		\begin{sol}
+			L'equazione $f(x)=0$ presenta una sola radice semplice in $x^*\approx 0.739085$.\\
+			Di seguito la tabella con i dati ottenuti dall'esecuzione dei tre metodi con tolleranza decrescente ed approssimazione iniziale $x_0=0$:
+			\begin{center}
+				\begin{tabular}{|c|l l|l l|l l|}
+					\hline
+					\multicolumn{7}{|c|}{$f(x)=x-\cos(x)$}\\
+					\hline
+					$tol_x$ & \multicolumn{2}{|c|}{Newton} & \multicolumn{2}{|c|}{Corde} & \multicolumn{2}{|c|}{Secanti}\\
+					\hline
+					$10^{-1}$ & $\tilde{x}=0.7391$ & $i=3$ & $\tilde{x}=0.7014$ & $i=6$ & $\tilde{x}=0.7363$ & $i=3$\\
+					\hline
+					$10^{-2}$ & $\tilde{x}=0.7391$ & $i=4$ & $\tilde{x}=0.7356$ & $i=12$ & $\tilde{x}=0.7391$ & $i=4$\\
+					\hline
+					$10^{-3}$ & $\tilde{x}=0.7391$ & $i=4$ & $\tilde{x}=0.7388$ & $i=18$ & $\tilde{x}=0.7391$ & $i=5$\\
+					\hline
+					$10^{-4}$ & $\tilde{x}=0.7391$ & $i=4$ & $\tilde{x}=0.7391$ & $i=24$ & $\tilde{x}=0.7391$ & $i=5$\\
+					\hline
+					$10^{-5}$ & $\tilde{x}=0.7391$ & $i=5$ & $\tilde{x}=0.7391$ & $i=30$ & $\tilde{x}=0.7391$ & $i=6$\\
+					\hline
+					$10^{-6}$ & $\tilde{x}=0.7391$ & $i=5$ & $\tilde{x}=0.7391$ & $i=35$ & $\tilde{x}=0.7391$ & $i=6$\\
+					\hline
+					$10^{-7}$ & $\tilde{x}=0.7391$ & $i=5$ & $\tilde{x}=0.7391$ & $i=41$ & $\tilde{x}=0.7391$ & $i=6$\\
+					\hline
+					$10^{-8}$ & $\tilde{x}=0.7391$ & $i=5$ & $\tilde{x}=0.7391$ & $i=47$ & $\tilde{x}=0.7391$ & $i=7$\\
+					\hline
+					$10^{-9}$ & $\tilde{x}=0.7391$ & $i=5$ & $\tilde{x}=0.7391$ & $i=53$ & $\tilde{x}=0.7391$ & $i=7$\\
+					\hline
+					$10^{-10}$ & $\tilde{x}=0.7391$ & $i=6$ & $\tilde{x}=0.7391$ & $i=59$ & $\tilde{x}=0.7391$ & $i=7$\\
+					\hline
+					$10^{-11}$ & $\tilde{x}=0.7391$ & $i=6$ & $\tilde{x}=0.7391$ & $i=65$ & $\tilde{x}=0.7391$ & $i=7$\\
+					\hline
+					$10^{-12}$ & $\tilde{x}=0.7391$ & $i=6$ & $\tilde{x}=0.7391$ & $i=70$ & $\tilde{x}=0.7391$ & $i=7$\\
+					\hline
+					$10^{-13}$ & $\tilde{x}=0.7391$ & $i=6$ & $\tilde{x}=0.7391$ & $i=76$ & $\tilde{x}=0.7391$ & $i=8$\\
+					\hline
+					$10^{-14}$ & $\tilde{x}=0.7391$ & $i=6$ & $\tilde{x}=0.7391$ & $i=82$ & $\tilde{x}=0.7391$ & $i=8$\\
+					\hline
+					$10^{-15}$ & $\tilde{x}=0.7391$ & $i=6$ & $\tilde{x}=0.7391$ & $i=88$ & $\tilde{x}=0.7391$ & $i=8$\\
+					\hline
+				\end{tabular}
+			\end{center}
+			Si vede da questi risultati che i metodi di Newton e delle secanti convergono molto velocemente alla soluzione, mentre il metodo delle corde, seppur convergendo, richiede molti più passi d'iterazione. Tuttavia, osservando il tempo d'esecuzione impiegato dai tre metodi per eseguire un singolo step, si deduce che i metodi quasi-Newton (corde e secanti) hanno un tempo di esecuzione medio per step inferiore a quello del metodo di Newton: infatti, in media, un passo d'iterazione del metodo delle secanti dura circa $\sfrac{1}{2}$ rispetto a quello di Newton e quello delle corde $\sfrac{1}{4}$. Quindi, in questo caso, il metodo più efficiente sembra essere quello delle secanti, che combina un'alta convergenza con un basso tempo di esecuzione.
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es2.7} (pagina \pageref{lst:es2.7})
+			\end{flushright}
+		\end{sol}
+		\sectionline
+		\begin{es} %2.8
+			\label{es:2.8}
+			Completare i confronti del precedente esercizio inserendo quelli con il metodo di bisezione, con intervallo di confidenza iniziale $[0,1]$.
+		\end{es}
+		\begin{sol}
+			Vediamo i risultati dell'esecuzione del metodo di bisezione utilizzando come intervallo di confidenza iniziale $[0,1]$:
+			\begin{center}
+				\begin{tabular}{|c|l|l|}
+					\hline
+					\multicolumn{3}{|c|}{$f(x)=x-\cos(x)$}\\
+					\hline
+					$tol_x$ & Approssimazione & Iterazioni\\
+					\hline
+					$10^{-1}$ & $\tilde{x}=0.75$ & $i=1$\\
+					\hline
+					$10^{-2}$ & $\tilde{x}=0.7344$ & $i=5$\\
+					\hline
+					$10^{-3}$ & $\tilde{x}=0.7383$ & $i=8$\\
+					\hline
+					$10^{-4}$ & $\tilde{x}=0.7390$ & $i=11$\\
+					\hline
+					$10^{-5}$ & $\tilde{x}=0.7391$ & $i=15$\\
+					\hline
+					$10^{-6}$ & $\tilde{x}=0.7391$ & $i=18$\\
+					\hline
+					$10^{-7}$ & $\tilde{x}=0.7391$ & $i=19$\\
+					\hline
+					$10^{-8}$ & $\tilde{x}=0.7391$ & $i=23$\\
+					\hline
+					$10^{-9}$ & $\tilde{x}=0.7391$ & $i=27$\\
+					\hline
+					$10^{-10}$ & $\tilde{x}=0.7391$ & $i=29$\\
+					\hline
+					$10^{-11}$ & $\tilde{x}=0.7391$ & $i=34$\\
+					\hline
+					$10^{-12}$ & $\tilde{x}=0.7391$ & $i=38$\\
+					\hline
+					$10^{-13}$ & $\tilde{x}=0.7391$ & $i=40$\\
+					\hline
+					$10^{-14}$ & $\tilde{x}=0.7391$ & $i=43$\\
+					\hline
+					$10^{-15}$ & $\tilde{x}=0.7391$ & $i=48$\\
+					\hline
+				\end{tabular}
+			\end{center}
+			Si deduce da questi risultati che il metodo di bisezione, in questo caso, converge più lentamente dei metodi di Newton e delle secanti ma, allo stesso tempo, più velocemente del metodo delle corde. Tuttavia, rispetto ai metodi di Newton e delle secanti, il metodo di bisezione presenta un minor tempo medio di esecuzione per step, ovvero un minor costo computazionale.
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es2.8} (pagina \pageref{lst:es2.8})
+			\end{flushright}
+		\end{sol}
+		\sectionline
+		\begin{es} %2.9
+			Quali controlli introdurreste, negli algoritmi del metodo di Newton, del metodo di accelerazione di Aitken e del metodo delle secanti, al fine di rendere più ``robuste'' le corrispondenti iterazioni?
+		\end{es}
+		\begin{sol}
+			Oltre al controllo sul numero massimo di iterazioni eseguite e sull'errore commesso (rispetto ad una tolleranza fissata) si può inserire un controllo sulle divisioni per zero: su $f'(x_i)$ per i metodi di Newton e di Aitken, su $(x_{i+1}-2x_i+x_{i-1})$ per il metodo di Aitken e su $(f(x_i)-f(x_{i-1}))$ per il metodo delle secanti.
+		\end{sol}
+	\section*{Codice degli esercizi}
+		\addcontentsline{toc}{section}{Codice degli esercizi}
+		\markboth{\textsc{\uppercase{Capitolo }\ref{chap:radici}\uppercase{. Radici di una equazione}}}{\textsc{\uppercase{Codice degli esercizi}}}
+		\lstinputlisting[caption={Esercizio \ref{es:2.1}.}, label=lst:es2.1]{code/es2_1.m}
+		\sectionline
+		\lstinputlisting[caption={Esercizio \ref{es:2.3}.}, label=lst:es2.3]{code/es2_3.m}
+		\sectionline
+		\lstinputlisting[caption={Esercizio \ref{es:2.4}.}, label=lst:es2.4]{code/es2_4.m}
+		\sectionline
+		\lstinputlisting[caption={Esercizio \ref{es:2.5}.}, label=lst:es2.5]{code/es2_5.m}
+		\sectionline
+		\lstinputlisting[caption={Esercizio \ref{es:2.7}.}, label=lst:es2.7]{code/es2_7.m}
+		\sectionline
+		\lstinputlisting[caption={Esercizio \ref{es:2.8}.}, label=lst:es2.8]{code/es2_8.m}

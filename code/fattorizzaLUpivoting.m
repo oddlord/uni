@@ -1,0 +1,33 @@
+% [A, p] = fattorizzaLUpivoting(A)
+% Fattorizzazione LU con pivoting parziale di una matrice nonsingolare.
+%
+% Input:
+%   -A: la matrice da fattorizzare LU con pivoting parziale.
+% Output:
+%   -A: la matrice riscritta con l'informazione dei fattori L ed U;
+%   -p: vettore contente l'informazione della matrice di permutazione
+%   P.
+%
+% Autore: Tommaso Papini,
+% Ultima modifica: 4 Novembre 2012, 11:15 CET
+
+function [A, p] = fattorizzaLUpivoting(A)
+    [m,n]=size(A);
+    if m~=n
+        error('La matrice non è quadrata!');
+    end
+    p=[1:n];
+    for i=1:(n-1)
+        [aki, ki] = max(abs(A(i:n, i)));
+        if aki==0
+            error('La matrice è singolare!');
+        end
+        ki = ki +i -1;
+        if ki>i
+            A([i, ki], :) = A([ki, i], :);
+            p([i, ki]) = p([ki, i]);
+        end
+        A((i+1):n, i) = A((i+1):n, i)/A(i, i);
+        A((i+1):n, (i+1):n) = A((i+1):n, (i+1):n) -A((i+1):n, i)*A(i, (i+1):n);
+    end
+end

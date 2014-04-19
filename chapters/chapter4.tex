@@ -1,0 +1,1339 @@
+\chapter{Approssimazione di funzioni}
+	\label{chapterApprossimazioniFunzioni}
+	\minitoc \mtcskip
+	\lettrine{Q}{}uesto capitolo tratta dell'approssimazione di funzioni tramite polinomi. Spesso infatti è necessario approssimare, all'interno di un calcolatore, la forma funzionale di una certa funzione $f:[a,b]\subset\mathbb{R}\rightarrow\mathbb{R}$ in quanto la sua forma funzionale potrebbe essere troppo complessa o addirittura non nota.\\
+	In generale, assumeremo di essere a conoscenza di un insieme di $n+1$ ascisse distinte,
+	\begin{equation}
+		\label{ascisse}
+		a\leq x_0<x_1<\dots<x_n\leq b,
+	\end{equation}
+	dette \textbf{ascisse di interpolazione}, e dei valori assunti dalla funzione in tali punti.
+	\section{Interpolazione polinomiale}
+		Siano note le coppie
+		$$(x_i,f_i),\quad i=0,1,\dots,n,\quad f_i\equiv f(x_i),$$
+		ricerchiamo un \textbf{polinomio interpolante} la funzione $f(x)$ sulle ascisse (\ref{ascisse}), detto $p(x)\in\Pi_n$, che assuma gli stessi valori di $f$ sulle ascisse di interpolazione (\ref{ascisse}), ovvero tale che
+		\begin{equation}
+			\label{condizioniInterp}
+			p(x_i)=f_i,\qquad i=0,1,\dots,n.
+		\end{equation}
+		\begin{teo}
+			Date le ascisse (\ref{ascisse}), esiste ed è unico il polinomio $p(x)\in\Pi_n$ interpolante $f$ sulle ascisse (\ref{ascisse}).
+		\end{teo}
+		Per determinare tale polinomio interpolante, essendo unico, si tratterà di determinare gli $n+1$ coefficienti dei monomi presenti nel polinomio, che equivale a risolvere il seguente sistema lineare:
+		\begin{equation}
+			\label{sistemaVandermonde}
+			V\underline{a}=\underline{f},
+		\end{equation}
+		\[
+			\begin{pmatrix}
+				x_0^0 & x_0^1 & \dots & x_0^n\\
+				x_1^0 & x_1^1 & \dots & x_1^n\\
+				\vdots & \vdots &  & \vdots\\
+				x_n^0 & x_n^1 & \dots & x_n^n\\
+			\end{pmatrix}
+			\begin{pmatrix}
+				a_0\\
+				a_1\\
+				\vdots\\
+				a_n
+			\end{pmatrix}
+			=
+			\begin{pmatrix}
+				f_0\\
+				f_1\\
+				\vdots\\
+				f_n
+			\end{pmatrix}.
+		\]
+		Infatti un generico polinomio avrà la forma
+		\begin{equation}
+			\label{genericoPolinomio}
+			p(x)=\sum_{k=0}^{n}a_kx^k,
+		\end{equation}
+		e la matrice $V$, che è la trasposta della \textbf{matrice di Vandermonde}, risulta essere nonsingolare. Tuttavia, una delle proprietà note della matrice di Vandermonde, è che essa diviene rapidamente \textit{malcondizionata} al crescere di $n$, ovvero del numero di ascisse di interpolazione. Quindi esamineremo metodi alternativi per la determinazione del polinomio $p(x)$ interpolante $f(x)$.
+
+	\section{Forma di Lagrange e forma di Newton}
+		\label{sezFormaLagrangeNewton}
+		Il problema (\ref{sistemaVandermonde}) deriva dall'aver scelto, come base per lo spazio vettoriale dei polinomi $\Pi_n$, la regolare \textbf{base delle potenze}, $\{x^0, x^1,\dots,x^n\}$. Per riformulare il problema, ottenendo proprietà più favorevoli, è necessario quindi cambiare base per $\Pi_n$.\\
+		\\
+		\textbf{\underline{Base di Lagrange}:}\\
+		La \textit{base di Lagrange} è costituita da i seguenti polinomi:
+		\begin{equation}
+			\label{lagrange}
+			L_{k,n}(x)=\mathlarger\prod_{
+			\begin{subarray}{c}
+				j=0\\
+				j\neq k
+			\end{subarray}
+			}^{n}\frac{x-x_j}{x_k-x_j},\qquad k=0,1,\dots,n,
+		\end{equation}
+		dove $L_{k,n}(x)$ indica il $k$-esimo polinomio della base di Lagrange di grado $n$ calcolato in $x$. Osserviamo che, essendo le ascisse (\ref{ascisse}) tutte distinte tra loro, i polinomi (\ref{lagrange}) risultano essere ben definiti.
+		\begin{lem}
+			\label{lem4.1}
+			Dati i polinomi di Lagrange (\ref{lagrange}) definiti sulle ascisse (\ref{ascisse}),
+			\[
+				L_{k,n}(x_i)=
+				\begin{cases}
+					1,&\quad\text{se }k=i,\\
+					0,&\quad\text{se }k\neq i.
+				\end{cases}
+			\]
+			Inoltre risulta che:
+			\begin{itemize}
+				\item essi hanno \textit{grado esatto $n$} ed il \textbf{coefficiente principale} (ovvero il coefficiente del termine di grado massimo) di $L_{k,n}(x)$ è
+					\begin{equation}
+						\label{coeffPrincipaleLagrange}
+						c_{k,n}=\frac{1}{\prod_{
+						\begin{subarray}{c}
+							j=0\\
+							j\neq k
+						\end{subarray}}^{n}(x_k-x_j)}, \qquad k=0,1,\dots,n;
+					\end{equation}
+				\item essi sono \textit{linearmente indipendenti} tra loro, costituendo quindi una \textit{base} per $\Pi_n$.
+			\end{itemize}
+		\end{lem}
+
+		\begin{teo}[Forma di Lagrange]
+			Il polinomio
+			\begin{equation}
+				\label{formaLagrange}
+				p(x)=\sum_{k=0}^{n}f_kL_{k,n}(x)
+			\end{equation}
+			appartiene a $\Pi_n$ e soddisfa i vincoli di interpolazione (\ref{condizioniInterp}), ovvero interpola $f(x)$ sulle ascisse (\ref{ascisse}).
+		\end{teo}
+		Quindi la forma di Lagrange (\ref{formaLagrange}) consente di ottenere in modo immediato il polinomio interpolante di grado richiesto (infatti i coefficienti del polinomio interpolante, rispetto alla base di Lagrange, risultano essere esattamente i valori $\{f_i\}$). Tuttavia questa apparente semplicità formale non si presta a soddisfare un requisito, spesso richiesto in questo tipo di problema, che è quello di generare il polinomio interpolante in maniera \textit{incrementale}. In particolare vorremmo poter ottenere, dal polinomio $p_r(x)$, già calcolato sulle ascisse $x_0,x_1,\dots x_r$, il polinomio $p_{r+1}(x)$ di grado successivo, calcolato sulle ascisse precedenti più un'ulteriore ascissa $x_{r+1}$, in maniera relativamente semplice.\\
+		Definiamo, allora, a questo scopo, un'ulteriore base di $\Pi_n$.\\
+		\\
+		\textbf{\underline{Base di Newton}:}\\
+		La \textit{base di Newton} è definita da i seguenti polinomi:
+		\begin{align}
+			&w_0(x)\equiv 1,\notag\\
+			\label{baseNewton}
+			&w_{k+1}(x) = (x-x_k)w_k(x),\qquad k=0,1,2,\dots.
+		\end{align}
+		Si verifica facilmente che (vedi -->ref{es4.4}) la base di Newton gode delle seguenti proprietà:
+		\begin{lem}
+			\label{lem4.2}
+			Con riferimento ai polinomi (\ref{baseNewton}) della base di Newton, per ogni $k=0,1,2,\dots$, si ha che:
+			\begin{itemize}
+				\item $w_k(x)\in\Pi_k'$, dove $\Pi_k'$ indica lo \textit{spazio vettoriale} dei \textbf{polinomi monici} di grado $k$ (un polinomio si dice \textbf{monico} se il suo \textit{coefficiente principale} è pari a $1$),
+				\item $w_{k+1}(x)=\prod_{j=0}^{k}(x-x_j)$,
+				\item $w_{k+1}(x_j)=0$, per $i\leq k$,
+				\item $w_0(x),\dots,w_k(x)$ costituiscono una base per $\Pi_k$.
+			\end{itemize}
+		\end{lem}
+
+		\begin{teo}[Forma di Newton]
+			La famiglia dei polinomi di Newton interpolanti $\{p_r(x)\}_{r=0}^{n}$ tali che:
+			$$p_r(x)\in\Pi_r,\qquad p_r(x_i)=f_i,\qquad i=0,\dots,r,$$
+			è generata ricorsivamente come segue:
+			\begin{align}
+				&p_0(x)=f_0w_0(x),\notag\\
+				\label{polinomiNewton}
+				&p_r(x)=p_{r-1}(x)+f[x_0,x_1,\dots,x_r]w_r(x),\qquad r=1,\dots,n,
+			\end{align}
+			dove il fattore $f[x_0,x_1,\dots,x_r]$ è detto \textbf{differenza divisa} di ordine $r$ della funzione $f(x)$ sulle ascisse $x_0,x_1,\dots,x_r$, e vale
+			\begin{equation}
+				\label{differenzeDivise}
+				f[x_0,x_1,\dots,x_r]=\sum_{k=0}^{r}\frac{f_k}{
+				\prod_{
+				\begin{subarray}{c}
+					j=0\\
+					j\neq k
+				\end{subarray}}^{r}(x_k-x_j)}.
+			\end{equation}
+		\end{teo}
+		\lstinputlisting[caption={Calcolo di una differenza divisa.}]{code/differenzaDivisa.m}
+		Data la natura iterativa della generazione dei polinomi (\ref{polinomiNewton}) di Newton possiamo utilizzare la seguente forma della forma di Newton soddisfacente le (\ref{condizioniInterp}):
+		\begin{equation}
+			\label{polinomioNewtonCompatto}
+			p(x)\equiv p_n(x)=\sum_{r=0}^{n}f[x_0,\dots,x_r]w_r(x),
+		\end{equation}
+		infatti $f[x_0]=f_0$.\\
+		Possiamo quindi calcolare la forma di Newton del polinomio interpolante tramite il seguente Codice:
+		\lstinputlisting[caption={Forma di Newton del polinomio interpolante.}]{code/formaNewton.m}
+		Si osservi che il denominatore del $k$-esimo polinomio della base di Lagrange di grado $n$ (\ref{lagrange}) e del corrispondente coefficiente principale (\ref{coeffPrincipaleLagrange}) è dato da $w_{n+1}'(x)$, mentre il denominatore di ogni termine delle differenze divise (\ref{differenzeDivise}) è dato da $w_{r+1}'(x_k)$. Ad esempio, per $n$ (o $k$) uguale a $4$ abbiamo
+		\begin{align*}
+			&w_4(x)=(x-x_3)(x-x_2)(x-x_1)(x-x_0),\\
+			&w_4'(x)
+				\begin{aligned}[t]
+					&=\partial[(x-x_3)(x-x_2)]\cdot(x-x_1)(x-x_0)+(x-x_3)(x-x_2)\cdot\partial[(x-x_1)(x-x_2)]=\\
+					&=(2x-x_3-x_2)(x-x_1)(x-x_0)+(x-x_3)(x-x_2)(2x-x_1-x_0),
+				\end{aligned}
+		\end{align*}
+		e per, ad esempio, $k=1$ otteniamo
+		\begin{align*}
+			w_4'(x_1)&=(2x_1-x_3-x_2)(x_1-x_1)(x_1-x_0)+(x_1-x_3)(x_1-x_2)(2x_1-x_1-x_0)=\\
+			&=(x_1-x_3)(x_1-x_2)(x_1-x_0).
+		\end{align*}
+		Quindi risulta che le differenze divise (\ref{differenzeDivise}) costituiscono i coefficienti del polinomio interpolante (\ref{condizioniInterp}) rispetto alla base di Newton (ma non, ad esempio, rispetto alla base delle potenze!).
+		\begin{teo}
+			\label{teoProprietàDiffDiv}
+			Le differenze divise (\ref{differenzeDivise}) godono delle seguenti proprietà:
+			\begin{enumerate}
+				\item siano $\alpha,\beta\in\mathbb{R}$ e $f(x),g(x)$ due funzioni in una variabile reale, allora
+					$$(\alpha\cdot f+\beta\cdot g)[x_0,\dots,x_r]=\alpha\cdot f[x_0,\dots,x_r]+\beta\cdot g[x_0,\dots,x_r];$$
+				\item per ogni $\{i_0,\dots,i_r\}$ permutazione di $\{0,\dots,r\}$,
+					$$f[x_{i_0},\dots,x_{i_r}]=f[x_0,\dots,x_r],$$
+					ovvero non conta l'ordine con cui compaiono le ascisse nella differenza divisa;
+				\item sia $f(x)=\sum_{i=0}^{k}a_ix^i\in\Pi_k$, allora,
+					\begin{equation}
+						\label{diffDiviseTaylor}
+						f[x_0,\dots,x_r]=
+						\begin{cases}
+							a_k, &\quad\text{se }r=b,\\
+							0, &\quad\text{se }r>b;
+						\end{cases}
+					\end{equation}
+				\item più in generale, se $f(x)\in C^{(r)}$, allora
+					\begin{equation}
+						\label{diffDivXi}
+						f[x_0,\dots,x_r]=\frac{f^{(r)}(\xi)}{r!},\qquad\xi\in[\min_{i}x_i,\max_{i}x_i];
+					\end{equation}
+				\item
+					\begin{equation}
+						\label{diffDivOrdineInferiore}
+						f[x_0,x_1,\dots,x_{r-1},x_r]=\frac{f[x_1,\dots,x_r]-[x_0,\dots,x_{r-1}]}{x_r-x_0}.
+					\end{equation}
+			\end{enumerate}
+		\end{teo}
+
+		Si può osservare che, per la (\ref{diffDiviseTaylor}), se $x_0=\dots=x_n$, il polinomio (\ref{polinomioNewtonCompatto}) coincide con il polinomio di Taylor di $f(x)$ di punto iniziale $x_0$.\\
+		Grazie alla proprietà (\ref{diffDivOrdineInferiore}), possiamo costruire una differenza divisa di ordine $r$ se conosciamo due differenze divise di ordine $r-1$ che differiscano di una sola ascissa. Ricordando allora che
+		$$f[x_i]=f_i,\qquad i=0,1,\dots,n,$$
+		possiamo costruire, in modo iterativo, la seguente tabella triangolare inferiore:
+		\begin{center}
+			\begin{tabular}{c|c c c c c}
+				& $0$ & $1$ & \dots & $n-1$ & $n$\\
+				\hline
+				$x_0$ & \fbox{$f[x_0]$} & & & &\\
+				$x_1$ & $f[x_1]$ & \fbox{$f[x_0,x_1]$} & & &\\
+				$x_2$ & $f[x_2]$ & $f[x_1,x_2]$ & $\ddots$ & &\\
+				$\vdots$ & $\vdots$ & $\vdots$ & & &\\
+				$x_{n-1}$ & $f[x_{n-1}]$ & $f[x_{n-2},x_{n-1}]$ & \dots & \fbox{$f[x_0,\dots,x_{n-1}]$} &\\
+				$x_n$ & $f[x_n]$ & $f[x_{n-1},x_n]$ & \dots & $f[x_1,\dots,x_n]$ & \fbox{$f[x_0,x_1,\dots,x_n]$}
+			\end{tabular}
+		\end{center}
+		La diagonale principale (elementi messi in evidenza) contiene i coefficienti del polinomio interpolante nella forma di Newton (\ref{polinomioNewtonCompatto}). Le colonne di tale tabella devono essere calcolate da sinistra verso destra: la prima coincide con i valori assunti dalla funzione nelle ascisse di interpolazione ed è, quindi, data; ogni elemento delle colonne successive alla prima viene calcolato applicando la (\ref{diffDivOrdineInferiore}) con l'elemento nella colonna immediatamente precedente (sulla stessa riga) e l'elemento nella colonna e nella riga immediatamente precedenti. Inoltre si nota che gli elementi di una determinata colonna non sono più utilizzati una volta calcolati gli elementi della colonna successiva (sulla stessa riga), e quindi per il calcolo delle differenze divise può essere utilizzato un unico vettore che viene riscritto di volta in volta fino ad ottenere l'ultima differenza divisa.\\
+		Con questi accorgimenti, possiamo definire la seguente implementazione in \textsc{Matlab} per il calcolo delle differenze divise:
+		\lstinputlisting[caption={Calcolo delle differenze divise.}, label=lst:differenzeDivise]{code/differenzeDivise.m}
+
+		\subsection{Interpolazione di Hermite}
+			Supponiamo adesso di avere le ascisse di interpolazione numerate nel modo seguente:
+			$$a\leq x_0<x_{\frac{1}{2}}<x_1<x_{1+\frac{1}{2}<\dots x_n<x_{n+\frac{1}{2}\leq b}},$$
+			in modo tale che le condizioni di interpolazione per il polinomio interpolante $p(x)\in\Pi_{2n+1}$ diventano:
+			$$p(x_i)=f_i,\qquad p(x_{i+\frac{1}{2}}=f_{i+\frac{1}{2}},\qquad i=0,1,\dots,n).$$
+			Facciamo allora tendere le ascisse di indice con indice frazionario verso quelle immediatamente precedenti di indice intero:
+			$$x_{i+\frac{1}{2}}\rightarrow x_i,\qquad i=0,1,\dots,n.$$
+			Quindi, assumendo (fino alla fine della sezione) che $f(x)\in C^{(1)}$, otteniamo che
+			\begin{align*}
+				\frac{f(x_{i+\frac{1}{2}})-f(x_i)}{x_{i+\frac{1}{2}-x_i}}&=f[x_i,x_{i+\frac{1}{2}}] \footnoteOP{\rightarrow} f[x_i,x_i] =\\
+				&=\frac{f'(\xi)}{1!} \footnoteOP{\equiv} f'(x_i),\quad i=0,1,\dots,n.
+			\end{align*}
+			%-------- FOOTNOTES --------
+			\addtocounter{footnote}{-1}
+			\footnotetext{Per la (\ref{diffDivOrdineInferiore}).}
+			\stepcounter{footnote}
+			\footnotetext{Con $\xi\in[\max\{x_i\},\min\{x_i\}]$, per la (\ref{diffDivXi}).}
+			%-------- end FOOTNOTES --------
+			
+			Quindi abbiamo che le ascisse di interpolazione divengono
+			\begin{equation}
+				\label{ascisseHermite}
+				a\leq x_0=x_0<x_1=x_1<\dots<x_n=x_n\leq b,
+			\end{equation}
+			così che il polinomio interpolante (\ref{polinomioNewtonCompatto}) risulta ancora ben definito e si vede che soddisfa i seguenti vincoli di interpolazione:
+			\begin{itemize}
+				\item $p(x_i)=f(x_i),$
+				\item $p'(x_i)=f'(x_i),\quad i=0,1,\dots,n$.
+			\end{itemize}
+			Questo polinomio allora, detto \textbf{polinomio interpolante di Hermite}, risulta interpolare sia la funzione che la sua derivata nelle ascisse di interpolazione distinte in (\ref{ascisseHermite}).\\
+			Notare che, per $n=0$, il polinomio di Hermite coincide con il polinomio di Taylor di primo grado e punto iniziale $x_0$:
+			$$p(x)=f[x_0]+f[x_0,x_0](x-x_0)=f(x_0)+f'(x_0)(x-x_0).$$
+			In generale, per un generico $n$, il polinomio di Hermite avrà una forma del tipo:
+			\begin{align*}
+				p(x) &= f[x_0]+\\
+				&+ f[x_0,x_0](x-x_0)+\\
+				&+f[x_0,x_0,x_1](x-x_0)^2+\\
+				&+f[x_0,x_0,x_1,x_1](x-x_0)^2(x-x_1)+\\
+				&+f[x_0,x_0,x_1,x_1,x_2](x-x_0)^2(x-x_1)^2+\\
+				&\vdots\\
+				&+f[x_0,x_0,x_1,x_1,\dots,x_n,x_n](x-x_0)^2\dots(x-x_{n-1})^2(x-x_n).
+			\end{align*}
+			I coefficienti del polinomio di Hermite vengono calcolati tramite una versione ottimizzata del Codice \ref{lst:differenzeDivise}. Il Codice \ref{lst:differenzeDiviseHermite} prende in input il vettore
+			$$f(x_0), f'(x_0), f(x_1), f'(x_1),\dots,f(x_n),f'(x_n),$$
+			che viene riscritto con le differenze divise. Si osservi che le derivate della funzione sulle ascisse di interpolazione non devono essere riscritte al primo ciclo, essendo $f[x_i,x_i]=f'(x_i)$, per $i=0,1,\dots,n$.
+			\lstinputlisting[caption={Calcolo delle differenze divise per il polinomio di Hermite.}, label=lst:differenzeDiviseHermite]{code/differenzeDiviseHermite.m}
+			\lstinputlisting[caption={Calcolo del polinomio interpolante di Hermite.}]{code/hermite.m}
+			
+	\section{Errore nell'interpolazione}
+		\label{sezErrInterp}
+		Studiamo adesso di quanto si sbaglia utilizzando il polinomio interpolante al posto della funzione originale.
+		\begin{defi}
+			Sia $p(x)\in\Pi_n$ il polinomio interpolante soddisfacente le condizioni d'interpolazione (\ref{condizioniInterp}). Si dice \textbf{errore di interpolazione} la quantità
+			\begin{equation}
+				\label{erroreInterpolazione}
+				e(x)=f(x)-p(x),
+			\end{equation}
+			ovvero l'errore commesso nell'approssimare $f(x)$ mediante il suo polinomio interpolante $p(x)$.
+		\end{defi}
+		Ovviamente, per le condizioni (\ref{condizioniInterp}), risulta che
+		$$e(x_i)=0,\qquad i=0,1,\dots,n,$$
+		ovvero l'errore è nullo sulle ascisse di interpolazione.
+		\begin{teo}
+			Sia $p(x)$ il polinomio il polinomio (\ref{polinomioNewtonCompatto}) soddisfacente le (\ref{condizioniInterp}). Il corrispondente \textit{errore di interpolazione} (\ref{erroreInterpolazione}) vale
+			\begin{equation}
+				\label{espressioneErroreInterpolazione}
+				e(x)=f[x_0,x_1,\dots,x_n,x]w_{n+1}(x),
+			\end{equation}
+			ovvero il termine ``mancante'' in $p(x)$ se si fosse interpolato su un'ulteriore ascissa corrispondente ad $x$.
+		\end{teo}
+		\begin{cor}
+			Se $f(x)\in C^{(n+1)}$, allora
+			$$e(x)=\frac{f^{(n+1)}(\xi_x)}{(n+1)!}w_{n+1}(x),\qquad\xi_x\in[\min\{x_0,x\},\max\{x_n,x\}].$$
+			L'ascissa minima risulta essere $x_0$ o $x$, in quanto le ascisse (\ref{ascisse}) sono ordinate in senso crescente. Analogamente per la massima.
+		\end{cor}
+		Quindi la struttura dell'errore d'interpolazione ci dice che esso è composto sostanzialmente da due parti:
+		\begin{itemize}
+			\item l'una, $\frac{f^{(n+1)}(\xi_x)}{(n+1)!}$, dipende dalle proprietà di regolarità della funzione $f(x)$,
+			\item l'altra, $w_{n+1}(x)$, che dipende esclusivamente dalla scelta delle ascisse di interpolazione.
+		\end{itemize}
+		Risulta che $w_{n+1}(x)$ oscilla per $x\in[x_0,x_n]$, annullandosi nelle ascisse di interpolazione (\ref{ascisse}). Al contrario, $|w_{n+1}(x)|$ cresce con la stessa velocità di $x^{n+1}$ al di fuori dell'intervallo di interpolazione, ovvero per $x<x_0$ o $x>x_n$. Se ne conclude che il polinomio $p(x)$ può essere convenientemente utilizzato per approssimare $f(x)$ soltanto all'interno dell'intervallo $[x_0,x_n]$. Per questo si parla di \textbf{interpolazione} polinomiale anziché di \textit{estrapolazione} (che invece si occupa dell'utilizzo di $p(x)$ al di fuori di tale intervallo). Inoltre si osserva che, aumentando opportunamente il numero delle ascisse di interpolazione, l'errore di interpolazione commesso nell'intervallo $[a,b]$ decresce.
+
+	\section{Condizionamento del problema}
+		Come tutti i problemi fin'ora affrontati, dedichiamoci adesso allo studio del \textit{condizionamento del problema} della valutazione del polinomio interpolante. Consideriamo quindi, come unici dati di ingresso, i valori $\{f_i\}$ assunti dalla funzione $f(x)$ sulle ascisse di interpolazione (\ref{ascisse}). L'analisi del condizionamento verrà condotta sugli errori assoluti.\\
+		Abbiamo quindi che il polinomio interpolante \textit{esatto}, in forma di Lagrange, è dato da
+		$$p(x)=\sum_{k=0}^{n}f_kL_{k,n}(x),$$
+		mentre il polinomio interpolante costruito a partire dai \textit{dati perturbati} è
+		$$\tilde{p}(x)=\sum_{k=0}^{n}\tilde{f}_kL_{k,n}(x),$$
+		dove $\tilde{f}_i\equiv\tilde{f}(x_i)$, essendo $\tilde{f}(x)$ una perturbazione di $f(x)$.
+		Si ottiene quindi
+		\begin{align*}
+			|p(x)-\tilde{p}(x)| &= |\sum_{k=0}^{n}f_kL_{k,n}(x) - \sum_{k=0}^{n}\tilde{f}_kL_{k,n}(x)|= |\sum_{k=0}^{n}(f_k-\tilde{f}_k)L_{k,n}(x)|=\\
+			&= |\sum_{k=0}^{n}(f_k-\tilde{f}_k)\cdot L_{k,n}(x)|\leq \sum_{k=0}^{n}|(f_k-\tilde{f}_k)|\cdot|L_{k,n}(x)|\leq\footnotemark\\
+			&\leq \left(\sum_{k=0}^{n}|L_{k,n}(x)|\right)\max_{k}|f_k-\tilde{f}_k| \footnoteOP{\equiv} \lambda_n(x)\max_{k}|f_k-\tilde{f}_k|,
+		\end{align*}
+		%-------- FOOTNOTES --------
+		\addtocounter{footnote}{-1}
+		\footnotetext{Per la \textit{disuguaglianza triangolare}, il valore assoluto della somma è minore o uguale alla somma dei valori assoluti.}
+		\stepcounter{footnote}
+		\footnotetext{Viene maggiorata la differenza tra i vari $f_k$ ed $\tilde{f}_k$ e raccolta come fattore comune per tutti i polinomi $|L_{k,n}(x)|$.}
+		%-------- end FOOTNOTES --------
+		
+		dove la funzione $\lambda_n(x)\equiv\left(\sum_{k=0}^{n}|L_{k,n}(x)|\right)$ è detta \textbf{funzione di Lebesgue}, che si vede dipende soltanto dalla scelta delle ascisse di interpolazione (in quanto i polinomi $|L_{k,n}(x)|$ che la compongono dipendono soltanto dalle ascisse (\ref{ascisse})). Considerando, come avevamo già concluso nella Sezione \ref{sezErrInterp}, il caso in cui $x\in[a,b]$ (vedi (\ref{ascisse})), definiamo la norma in $C^{(0)}$ come
+		\begin{equation}
+			\label{normaC0}
+			||f||=\max_{a\leq x\leq b}|f(x)|.
+		\end{equation}
+		Volendo quindi stimare una maggiorazione per la quantità $|p(x)-\tilde{p}(x)|$, avremo che
+		\begin{equation}
+			\label{costanteLebesgue}
+			||p-\tilde{p}||\leq ||\lambda_n||\cdot||f-\tilde{f}||\equiv\Lambda_n||f-\tilde{f}||,
+		\end{equation}
+		dove la quantità $\Lambda_n$ è detta \textbf{costante di Lebesgue}, la quale dipende esclusivamente dalla scelta delle ascisse di interpolazione e dall'intervallo $[a,b]$ considerato.\\
+		Osserviamo che, essendo nella (\ref{costanteLebesgue}) la quantità $||f-\tilde{f}||$ una maggiorazione dell'errore assoluto presente sui dati in ingresso e, analogamente, la quantità $||p-\tilde{p}||$ una maggiorazione dell'errore assoluto commesso sul risultato, si ha che la \textit{costante di Lebesgue}, $\Lambda_n$, rappresenta il \textbf{numero di condizionamento} del problema di valutazione del polinomio interpolante. A questo proposito è noto che:
+		\begin{itemize}
+			\item $\Lambda_n\geq O(\log n)\rightarrow\infty$ per $\rightarrow\infty$. Pertanto il problema diviene progressivamente \textit{malcondizionato} al crescere del numero di ascisse di interpolazione $n$, ed inoltre $\Lambda_n$ crescerà almeno con velocità \textit{logaritmica};
+			\item la scelta di ascisse di interpolazione equidistanti
+			\begin{equation}
+				\label{ascisseEquidistanti}
+				x_i=a+i\cdot h,\qquad i=0,1,\dots,n,\qquad h=\frac{b-a}{n},
+			\end{equation}
+			per quanto possa sembrare logica, genera una successione $\{\Lambda_n\}$ che \textit{diverge} con velocità approssimativamente \textit{esponenziale}, per $n\rightarrow\infty$. Non rappresenta quindi la scelta ottimale, specialmente per valori elevati di $n$.
+		\end{itemize}
+		\lstinputlisting[caption={Calcolo delle ascisse di interpolazione equidistanti.}]{code/ascisseEquidistanti.m}
+		Studiamo adesso che relazione intercorre tra l'errore dell'interpolazione ed il condizionamento del problema.
+		\begin{defi}
+			Data una funzione $f(x)$ continua in $[a,b]$, il polinomio $p^*(x)\in\Pi_n$ tale che
+			\begin{equation}
+				\label{poliMigliorAppr}
+				||f-p^*||=\min_{p\in\Pi_n}||f-p||,
+			\end{equation}
+			si dice \textbf{polinomio di miglior approssimazione} di grado $n$ di $f(x)$ sull'intervallo $[a,b]$.
+		\end{defi}
+		\begin{teo}
+			Assegnata una funzione $f(x)$ continua in $[a,b]$, esiste il polinomio $p^*(x)\in\Pi_n$ di miglior approssimazione (vedi (\ref{poliMigliorAppr})) di $f(x)$ su $[a,b]$.
+		\end{teo}
+		\begin{teo}
+			Sia $p^*(x)$ il polinomio di miglior approssimazione di grado $n$ di $f(x)$. Allora per l'errore di interpolazione (\ref{erroreInterpolazione}) vale
+			\begin{equation}
+				\label{errore+migliorAppr}
+				||e||\leq (1+\Lambda_n)||f-p^*||.
+			\end{equation}
+		\end{teo}
+		Quindi non è detto che, al crescere di $n$, l'errore decresca, in quanto la costante di Lebesgue diverge esponenzialmente.\\
+		Introduciamo il concetto di \textbf{modulo di continuità} di una funzione:
+		$$\omega(f;h)\equiv\sup\{|f(x)-f(y)|:x,y\in[a,b],|x-y|\leq h\},$$
+		dove $h>0$ è un parametro assegnato. Si osserva che:
+		\begin{itemize}
+			\item se $f\in C^{0}$, allora $\omega(f;h)\rightarrow 0$, per $h\rightarrow 0$: infatti diminuendo sempre di più l'intervallo $h$, ed essendo la funzione continua, i valori della $f$ si avvicinano sempre di più;
+			\item se $f(x)$ è \textit{Lipschitziana} con costante $L$, allora $\omega(f;h)\leq Lh$. Ad esempio, se $f(x)\in C^{(1)}$, $L=\max_{a\leq x\leq b}|f'(x)|\equiv||f'||$.
+		\end{itemize}
+		\begin{teo}[Jackson]
+			Per il polinomio di miglio approssimazione (\ref{poliMigliorAppr}) di una funzione $f(x)\in C^{(0)}$ si ha:
+			\begin{equation}
+				\label{erroreMigliorAppr}
+				||f-p^*||\leq \alpha\cdot\omega\left(f;\frac{b-a}{n}\right),
+			\end{equation}
+			in cui la costante $\alpha$ è indipendente da $n$.
+		\end{teo}
+		Segue infine, per la (\ref{errore+migliorAppr}) e la (\ref{erroreMigliorAppr}), che, per una generica $f(x)$:
+		$$||e||\leq \alpha(1+\Lambda_n)\omega\left(f;\frac{b-a}{n}\right).$$
+		Quindi, concludendo e riassumendo questa Sezione e la precedente, è opportuno effettuare una scelta delle ascisse di interpolazione in modo tale che:
+		\begin{enumerate}
+			\item la costante di Lebesgue $\Lambda_n$ abbia una crescita moderata, preferibilmente logaritmica (che abbiamo visto essere quella ottimale), rispetto al grado $n$ del polinomio interpolante;
+			\item sia minimizzata la quantità $||w_{n+1}||$, come avevamo già dedotto in conclusione della Sezione \ref{sezErrInterp}.
+		\end{enumerate}
+
+	\section{Ascisse di Chebyshev}
+		Quindi risulta chiaro che si tratta di scegliere le ascisse in modo da minimizzare la norma $||w_{n+1}||$. Ma la norma, per definizione, è il massimo di una funzione su un certo intervallo (vedi (\ref{normaC0})), ovvero si tratta di minimizzare un valore massimo: si deve allora cercare la soluzione del seguente \textbf{problema del minimassimo} (o \textbf{minmax}):
+		$$\min_{a\leq x_0<\dots<x_n\leq b}||w_{n+1}||\equiv\min_{a\leq x_0<\dots<x_n\leq b}\;\max_{a\leq x \leq b}|w_{n+1}(x)|.$$
+		Senza perdere di generalità (vedi Esercizio \ref{es4.12}) assumiamo che
+		$$[a,b]\equiv[-1,1].$$
+
+		Definiamo allora la famiglia dei \textbf{polinomi di Chebyshev di prima specie}:
+		\begin{align}
+			&T_0(x)\equiv 1,\notag\\
+			\label{chebyshevISpecie}
+			&T_1(x)\equiv x,\\
+			&T_{k+1}(x)\equiv 2xT_k(x)-T_{k-1}(x),\qquad k=1,2,\dots.\notag
+		\end{align}
+		Si possono dimostrare (per induzione) le seguenti proprietà dei polinomi di Chebyshev:
+		\begin{enumerate}
+			\item $T_k(x)$ è un polinomio di grado esatto $k$;
+			\item il coefficiente principale di $T_k(x)$ è $2^{k-1}$, per $k=1,2,\dots$;
+			\item la famiglia dei polinomi $\{\hat{T}_k\}$, dove
+				$$\hat{T}_0(x)=T_0(x),\quad \hat{T}_k(x)=2^{1-k}T_k(x)=\frac{T_k(x)}{2^{k-1}},\quad k=1,2,\dots,$$
+				è una famiglia di \textit{polinomi monici} (dal coefficiente principale uguale a $1$) di grado $k$, per $k=0,1,\dots$;
+			\item possiamo parametrizzare i punti dell'intervallo $[-1,1]$ rispetto a $\theta$, ponendo
+				$$x=\cos\theta,\qquad \theta\in[0,\pi].$$
+				Inoltre, considerando che
+				$$\cos(k\theta + \theta)+\cos(k\theta-\theta)=2\cos(k\theta)\cos(\theta)$$
+				si ottiene
+				$$T_k(x)\equiv T_k(\cos\theta)=\cos(k\theta),\qquad k=0,1,\dots.$$
+		\end{enumerate}
+		Sfruttando queste proprietà si ottiene:
+		\begin{teo}
+			\label{proprietàPolinomiChebyshev}
+			Gli zeri di $T_k(x)$, tra loro distinti, sono dati da
+			$$x_i^{(k)}=\cos\left(\frac{(2i+1)\pi}{2k}\right),\qquad i=0,1,\dots,k-1.$$
+			Si può vedere che , per $x\in[-1,1]$, i valori estremi del polinomio $T_k(x)$ sono assunti nei punti
+			$$\xi_i^{(k)}=\cos\left(\frac{i}{k}\pi\right),\qquad i=0,1,\dots,k,$$
+			nei quali il polinomio assume i valori
+			$$T_k(\xi_i^{(k)})=(-1)^i,\qquad i=0,1,\dots,k,$$
+			quindi risulta che $||T_k||=1$ (cioè il valore massimo del polinomio è $1$, essendo un coseno).
+			Inoltre, per $k=1,2,\dots,$
+			\begin{equation}
+				\label{minimaNormaPolMonici}
+				||\hat{T}_k||=2^{1-k}=\min_{\varphi\in\Pi'_k}||\varphi||,
+			\end{equation}
+			ovvero il polinomio monico $\hat{T}_k$ ha norma minima tra tutti i polinomi monici di grado $k$.
+		\end{teo}
+
+		Si ottiene allora che, scegliendo come ascisse di interpolazione sull'intervallo $[-1,1]$ come
+		\begin{equation}
+			\label{ascisseChebyshev}
+			x_{n-i}=\cos\left(\frac{2i+1}{2(n+1)}\pi\right),\qquad i=0,1,\dots,n,
+		\end{equation}
+		(dove l'indice $n-i$ serve a generare le ascisse in modo che siano ordinate in senso crescente rispetto al loro indice) si ha
+		$$w_{n+1}(x)=\prod_{i=0}^{n}(x-x_i)\equiv\hat{T}_{n+1}(x),$$
+		che rappresenta quindi la soluzione al problema del minimassimo, per la (\ref{minimaNormaPolMonici}).\\
+		Per convertire queste ascisse nelle ascisse di interpolazione sull'intervallo $[a,b]$ basta effettuare la trasformazione (vedi Esercizio \ref{es4.12}):
+		\begin{equation}
+			\label{ascisseChebyshevAB}
+			x_i|_{[a,b]}=\frac{a+b}{2}+\frac{b-a}{2}x_i|_{[-1,1]},\qquad i=0\dots,n.
+		\end{equation}
+		Il seguente Codice \textsc{Matlab} calcola le ascisse di Chebyshev secondo quanto appena visto:
+		\lstinputlisting[caption={Calcolo delle ascisse di Chebyshev.}]{code/ascisseChebyshev.m}
+		Scegliendo le ascisse \ref{ascisseChebyshevAB} di interpolazione, dette \textbf{ascisse di Chebishev}, si ottiene (per funzioni sufficientemente regolari)
+		\begin{align*}
+			||e||&\leq\frac{||f^{(n+1)}||}{(n+1)!}||w_{n+1}||=\\
+			&= \frac{||f^{(n+1)}||}{(n+1)!}||\hat{T}_{n+1}||=\\
+			&= \frac{||f^{(n+1)}||}{(n+1)!}2^{1-n-1}=\\
+			&=\frac{||f^{(n+1)}||}{(n+1)!2^n},
+		\end{align*}
+		e la corrispondente costante di Lebesgue si vede valere
+		$$\Lambda_n\approx\frac{2}{\pi}\log n,$$
+		che risulta quindi avere una \textit{crescita ottimale}, per $n\rightarrow\infty$.\\
+		\\
+		Riassumendo, abbiamo concluso che scegliendo come ascisse di interpolazione le \textit{ascisse di Chebyshev} (\ref{ascisseChebyshev}) si ottengono i polinomi monici $\hat{T}_k$, $k=0,1,\dots,n$, che formano una \textit{base di Newton} sulla quale poter costruire il polinomio interpolante (come visto in Sezione \ref{sezFormaLagrangeNewton}), e tale che la norma del polinomio della base di grado $n+1$ (il primo polinomio ``mancante'' dalla base) sia minima (pari a $2^{-n}$).\\
+		Si osserva che utilizzando le \textit{ascisse di Chebyshev} (\ref{ascisseChebyshev}) si perde la caratteristica della forma di Newton di poter generare polinomi interpolanti in modo incrementale in quanto le ascisse in questione dipendono dal grado $n$ del polinomio interpolante (compare la $n$ al denominatore) e quindi volendo determinare il polinomio interpolante di grado $n+1$ saremmo costretti a ricalcolare tutte le ascisse.
+
+	\section{Interpolazione mediante funzioni \textit{spline}}
+		Abbiamo visto che, al crescere del grado $n$ del polinomio interpolante, è necessario effettuare una scelta delle ascisse che non faccia crescere troppo velocemente la costante di Lebesgue $\Lambda_n$, che comunque crescerà almeno con velocità logaritmica rispetto ad $n$. Tuttavia se $n$ rimane basso, il \textit{modulo di continuità}
+		$$w\left(f;\frac{b-a}{n}\right)$$
+		non può tendere a $0$, con l'intervallo $[a,b]$ fissato.\\
+		Allora:
+		\begin{enumerate}
+			\item consideriamo una partizione dell'intervallo originario,
+				\begin{equation}
+					\label{partizione}
+					\Delta=\{a=x_0<x_1<\dots<x_n=b\},
+				\end{equation}
+				con
+				\begin{equation}
+					\label{hSpline}
+					h=\max_{i=1,\dots,n}(x_i-x_{i-1})\rightarrow 0,\qquad n\rightarrow\infty;
+				\end{equation}
+			\item su ciascun sottointervallo $[x_{i-1},x_i]$ della partizione $\Delta$ consideriamo un polinomio di grado $m$ fissato interpolante la funzione $f(x)$ nei suoi estremi.
+		\end{enumerate}
+		In questo modo il problema del condizionamento passa in secondo piano in quanto il grado $m$ dei polinomi interpolanti rimane fissato mentre, al contempo (se $f\in C^{(0)}$),
+		$$w(f;h)\rightarrow 0,\qquad n\rightarrow\infty.$$
+		Questo nuovo tipo di funzione interpolante si dice \textbf{funzione polinomiale a tratti}, in quanto è rappresentabile da un polinomio in ogni sottointervallo, ma non nel suo insieme. Più in particolare:
+		\begin{defi}
+			La funzione $s_m(x)$ si dice \textbf{spline di grado $m$} sulla partizione $\Delta$ se
+			\begin{enumerate}
+				\item $s_m(x)\in C^{(m-1)}$ sull'intervallo $[a,b]$ e
+				\item $s_m|_{[x_{i-1},x_i]}(x)\in\Pi_m$, per $i=1,\dots,n$.
+			\end{enumerate}
+		\end{defi}
+		Se risulta che
+		\begin{equation}
+			\label{condizioniInterpSpline}
+			s_m(x_i)=f_i,\qquad i=0,1,\dots,n,
+		\end{equation}
+		allora si dice che la \textit{spline} \textbf{interpola} la funzione $f(x)$ nei nodi della partizione $\Delta$.
+		\begin{teo}
+			\label{teoGradoSplineS'}
+			Se $s_m(x)$ è una spline di grado $m$ sulla partizione (\ref{partizione}), allora $s'_m(x)$ è una spline di grado $m-1$ sulla stessa partizione.
+		\end{teo}
+		\begin{teo}
+			L'insieme delle funzioni spline di grado $m$ definite sulla partizione (\ref{partizione}) è uno spazio vettoriale di dimensione $m+n$.
+		\end{teo}
+		Quest'ultimo teorema ci dice che sono necessarie $m+n$ condizioni indipendenti per poter individuare \textit{univocamente} la spline interpolante la funzione $f(x)$ sulla partizione $\Delta$ assegnata. Essendo allora le \textit{condizioni di interpolazione} (\ref{condizioniInterpSpline}) soltanto $n+1$, utilizzandolo soltanto queste condizioni possiamo individuare univocamente una spline di grado $1$, o \textbf{spline lineare}, che coincide con la spezzata congiungente i punti $\{(x_i,f_i)\}_{i=0,\dots,n}$:
+		\begin{equation}
+			\label{splineLineare}
+			s_1|_{[x_{i-1},x_i]}(x)=\frac{(x-x_{i-1})f_i+(x_i-x)f_{i-1}}{x_i-x_{i-1}}.
+		\end{equation}
+		Risulta quindi necessario, per spline interpolanti di ordine superiore al primo, introdurre ulteriori condizioni (in particolare, $m-1$ condizioni aggiuntive rispetto alle condizioni di interpolazione (\ref{condizioniInterpSpline})) per definire la spline interpolante in maniera univoca.
+	\section{\textit{Spline} cubiche}
+		Le \textbf{spline cubiche} sono spline interpolanti di grado $3$. È quindi necessario imporre $2$ condizioni aggiuntive, oltre alle (\ref{condizioniInterpSpline}), per poter definire univocamente tale spline interpolante. In particolare, a seconda di quali condizioni sceglieremo di imporre, si avranno diversi tipi di \textit{spline cubica}.\\
+		\\
+		\textbf{\underline{\textit{Spline} naturale}:}\\
+		La \textit{spline} naturale consiste nel fissare le seguenti condizioni aggiuntive:
+		$$s''_3(a)=0,\qquad s''_3(b)=0,$$
+		ovvero viene imposto che la derivata seconda della spline negli estremi della partizione $\Delta$ si annulli.\\
+		\\
+		\textbf{\underline{\textit{Spline} completa}:}\\
+		Supponendo di conoscere i valori della derivata prima $f'(x)$ della funzione negli estremi della partizione, nel caso della \textit{spline} completa si impongono le seguenti condizioni.
+		$$s'_3(a)=f'(a),\qquad s'_3(b)=f'(b).$$
+		\\
+		\textbf{\underline{\textit{Spline} periodica}:}\\
+		Se la funzione da interpolare è periodica e l'intervallo $[a,b]$ contiene un numero intero di periodi della funzione, allora conviene utilizzare la \textit{spline} peridica, che consiste nell'imporre le condizioni
+		$$s'_3(a)=s'_3(b),\qquad s''_3(a)=s''_3(b).$$
+		\\
+		\textbf{\underline{Condizioni \textit{not-a-knot}}:}\\
+		In questo caso, per far sì che le condizioni di interpolazione (\ref{condizioniInterpSpline}) siano sufficienti a determinare la \textit{spline} cubica, si impone che lo stesso polinomio di terzo grado costituisca la restrizione della \textit{spline} sull'intervallo $[x_0,x_1]\cup[x_1,x_2]$ e, allo stesso modo, lo stesso polinomio di $\Pi_3$ costituisca la restrizione della \textit{spline} sull'intervallo $[x_{n-2},x_{n-1}]\cup[x_{n-1},x_n]$. In poche parole si impone che nel primo e secondo sottointervallo e nel penultimo ed ultimo sottointervallo, il polinomio interpolante la funzione sia lo stesso, ovvero che
+		$$s_3|_{[x_0,x_2]}\in\Pi_3,\qquad s_3|_{[x_{n-2},x_n]}\in\Pi_3.$$
+		In particolare i punti $(x_1,f_1)$ ed $(x_{n-1},f_{n-1})$ non saranno più nodi, da cui il nome \textbf{not-a-knot} (''non un nodo'').\\
+		Essendo, per definizione di spline, $s_3\in C^{(2)}$, per avere lo stesso polinomio nei due sottointervalli successivi manca da imporre che la derivata terza nel punto comune ai due sottointervalli sia uguale, quindi le due condizioni aggiuntive sono:
+		$$s'''_3|_{[x_0,x_1]}(x_1)=s'''_3|_{[x_1,x_2]}(x_1),\quad s'''_3|_{[x_{n-2},x_{n-1}]}(x_{n-1})=s'''_3|_{[x_{n-1},x_n]}(x_{n-1}).$$
+		Grazie al Teorema \ref{teoGradoSplineS'}, $s'''_3|_{[x_{i-1},x_i]}(x)\in\Pi_0$ (ovvero è una retta), quindi queste due condizioni sono esprimibili con i relativi rapporti incrementali, ovvero come:
+		\begin{align*}
+			\frac{s''_3(x_1)-s''_3(x_0)}{x_1-x_0} &= \frac{s''_3(x_2)-s''_3(x_1)}{x_2-x_1},\\
+			\frac{s''_3(x_{n-1})-s''_3(x_{n-2})}{x_{n-1}-x_{n-2}} &= \frac{s''_3(x_n)-s''_3(x_{n-1})}{x_n-x_{n-1}}.
+		\end{align*}
+		Si può osservare che le \textit{spline} cubiche consentono di approssimare efficientemente funzioni regolari senza preoccuparsi più di tanto della scelta dei nodi della partizione (anche una scelta uniforme dei nodi va più che bene). Infatti si può dimostrare che, se $f(x)\in C^{(4)}$, allora (vedi (\ref{hSpline}))
+		$$||f^{(k)}-s_3^{(k)}||=O(h^{4-k}),\qquad k=0,1,2,$$
+		ovvero $s_3(x)$ approssima efficientemente la funzione $f(x)$ e le sue prime due derivate, per $h\rightarrow 0$, ovvero all'aumentare dei nodi di interpolazione. Questo risultato vale per le \textit{spline} complete, periodiche e \textit{not-a-knot} ed essenzialmente anche per le \textit{spline} naturali.
+	\section{Calcolo di una \textit{spline} cubica}
+		Vediamo in questa Sezione come sia possibile calcolare una \textit{spline} naturale ed una \textit{not-a-knot} (per gli altri due casi si utilizzano calcoli molto simili).\\
+		Con riferimento alla partizione (\ref{partizione}) denotando
+		\begin{equation}
+			\label{mi}
+			m_i\equiv s''_3(x_i),\qquad i=0,1,\dots,n,
+		\end{equation}
+		le condizioni per le \textit{spline} naturali diventano
+		\begin{equation}
+			\label{condizioniCalcoloSplineNat}
+			m_0=m_n=0.
+		\end{equation}
+		Mentre, ponendo
+		$$h_i=x_i-x_{i-1},\qquad i=1,2,\dots,n,$$
+		si ha che le condizioni per le \textit{spline not-a-knot} diventano
+		\begin{align}
+			\frac{s''_3(x_1)-s''_3(x_0)}{x_1-x_0}=\frac{s''_3(x_2)-s''_3(x_1)}{x_2-x_1}, &\quad \frac{s''_3(x_{n-1})-s''_3(x_{n-2})}{x_{n-1}-x_{n-2}}=\frac{s''_3(x_n)-s''_3(x_{n-1})}{x_n-x_{n-1}},\notag\\
+			\notag\\
+			\frac{m_1-m_0}{h_1}=\frac{m_2-m_1}{h_2}, &\quad \frac{m_{n-1}-m_{n-2}}{h_{n-1}}=\frac{m_n-m_{n-1}}{h_n},\notag\\
+			\notag\\
+			m_1h_2-m_0h_2=m_2h_1-m_1h_1, &\quad m_{n-1}h_n-m_{n-2}h_n=m_nh_{n-1}-m_{n-1}h_{n-1},\notag\\
+			\notag\\
+			\label{condizioniCalcoloSplineNaK}
+			h_1m_2+h_2m_0=(h_1+h_2)m_1, &\quad h_{n-1}m_n+h_nm_{n-2}=(h_{n-1}+h_n)m_{n-1}.
+		\end{align}
+		Per il Teorema \ref{teoGradoSplineS'}, essendo $s_3(x)$ una \textit{spline} cubica, allora $s'_3(x)$ è una spline di grado $2$, mentre $s''_3(x)$ è una spline lineare. Per la (\ref{splineLineare}) sappiamo che la \textit{spline} lineare coincide con la spezzata che congiunge i nodi di interpolazione, segue quindi che:
+		\begin{align*}
+			s''_3|_{[x_{i-1},x_i]} &= \frac{(x-x_{i-1})s''_3(x_i) + (x_i-x)s''_3(x_{i-1})}{x_i-x_{i-1}}\\
+			&= \frac{(x-x_{i-1})m_i + (x_i-x)m_{i-1}}{h_i}.
+		\end{align*}
+		Integrando si ottiene:
+		\begin{equation}
+			\label{derivataPrimaSpline}
+			s'_3(x)|_{[x_{i-1},x_i]}=\frac{(x-x_{i-1})^2m_i - (x_i-x)^2m_{i-1}}{2h_i}+q_i,
+		\end{equation}
+		con $q_i$ opportuna costante d'integrazione. Integrando ulteriormente si ottiene:
+		\begin{equation}
+			\label{espressioneSpline}
+			s_3(x)|_{[x_{i-1},x_i]}=\frac{(x-x_{i-1})^3m_i + (x_i-x)^3m_{i-1}}{6h_i}+q_i(x-x_{i-1})+r_i,
+		\end{equation}
+		dove $r_i$ è una seconda costante d'integrazione.\\
+		Imponendo a questo punto le condizioni d'interpolazione (\ref{condizioniInterpSpline}) si ottiene
+		\begin{align*}
+			&s_3(x_{i-1})=\frac{h_i^2}{6}m_{i-1}+r_i\equiv f_{i-1},\\
+			&s_3(x_i)=\frac{h_i^2}{6}m_i+q_ih_ir_i\equiv f_i.
+		\end{align*}
+		Pertanto si ricava:
+		\begin{align}
+			\label{ri}
+			&r_i=f_{i-1}-\frac{h_i^2}{6}m_{i-1},\\
+			\label{qi}
+			&q_i=\frac{f_i-f_{i-1}}{h_i}-\frac{h_i}{6}(m_i-m_{i-1}).
+		\end{align}
+		Una volta calcolati i fattori $\{m_i\}$, come vedremo di seguito, possiamo ricavare le $n$ espressioni che caratterizzano la \textit{spline}, come descritto dal Codice \ref{lst:espressioniSplineCubica}.
+		\lstinputlisting[caption={Calcolo delle espressioni di una \textit{spline} (noti i fattori $\{m_i\}$).}, label=lst:espressioniSplineCubica]{code/espressioniSplineCubica.m}
+		Sostituendo l'espressione (\ref{qi}) nella (\ref{derivataPrimaSpline}) si ottiene:
+		$$s'_3|_{[x_{i-1},x_i]}(x)=\frac{(x-x_{i-1})^2m_i-(x_i-x)^2m_{i-1}}{2h_i}+\frac{f_i-f_{i-1}}{h_i}-\frac{h_i}{6}(m_i-m_{i-1}).$$
+		Quindi, considerando che $s'_3(x)$ deve risultare $\in C^{(1)}$, si deve imporre la continuità in $x_i$, che è il punto di incontro tra i sottointervalli $[x_{i-1},x_i]$ e $[x_i,x_{i+1}]$. Ovvero deve valere
+		$$s'_3|_{[x_{i-1},x_i]}(x_i)=s'_3|_{[x_i,x_{i+1}]}(x_i),$$
+		che equivale ad imporre (ricordando che, per definizione di \textit{differenza divisa}, $\frac{f_i-f_{i-1}}{h_i}=f[x_{i-1},x_i]$):
+		$$\frac{h_i}{2}m_i+f[x_{i-1},x_i]-\frac{h_i}{6}(m_i-m_{i-1})=-\frac{h_{i+1}}{2}m_i+f[x_i,x_{i+1}]-\frac{h_{i+1}}{6}(m_{i+1}-m_i),$$
+		ovvero (per la (\ref{diffDivOrdineInferiore})),
+		$$\varphi_im_{i-1} +2m_i +\xi_im_{i+1}=6f[x_{i-1},x_i,x_{i+1}],$$
+		con
+		$$\varphi_i=\frac{h_i}{h_i+h_{i+1}},\qquad\xi_i=\frac{h_{i+1}}{h_i+h_{i+1}},\qquad i=1,\dots,n-1.$$
+		Si osserva che
+		\begin{equation}
+			\label{phiXi}
+			\varphi_i\xi_i>0,\qquad \varphi_i+\xi_i=1,\qquad i=1,\dots,n-1.
+		\end{equation}
+		Per una \textit{spline} naturale, quindi, tenendo conto delle condizioni aggiuntive (\ref{condizioniCalcoloSplineNat}), si ottiene il seguente sistema \textit{tridiagonale}:
+		\begin{equation}
+			\label{sistemaSplineNaturale}
+			\begin{pmatrix}
+				2 & \xi_1 & & &\\
+				\varphi_2 & 2 & \xi_2 & &\\
+				& \ddots & \ddots & \ddots &\\
+				& & \ddots & \ddots & \xi_{n-2}\\
+				& & & \varphi_{n-1} & 2
+			\end{pmatrix}
+			\begin{pmatrix}
+				m_1\\
+				m_2\\
+				\vdots\\
+				\vdots\\
+				m_{n-1}
+			\end{pmatrix} =6
+			\begin{pmatrix}
+				f[x_0,x_1,x_2]\\
+				f[x_1,x_2,x_3]\\
+				\vdots\\
+				\vdots\\
+				f[x_{n-2},x_{n-1},x_n]
+			\end{pmatrix}.
+		\end{equation}
+		Dalla (\ref{phiXi}) si vede che la matrice dei coefficienti è \textit{diagonale dominante per righe}, e quindi fattorizzabile $LU$. Una volta calcolati i valori $\{m_i\}$ incogniti, si sostituiscono, assieme ai valori di $r_i$ e $q_i$ (vedi (\ref{ri}) e (\ref{qi})), nella (\ref{espressioneSpline}).\\
+		Da questo sistema, e da altre considerazioni (vedi Esercizio \ref{es:4.16}), possiamo ricavare il seguente Codice per il calcolo dei fattori $\{m_i\}$ per una \textit{spline} cubica naturale:
+		\lstinputlisting[caption={Calcolo dei fattori $\{m_i\}$ per una \textit{spline} cubica naturale.}, label=lst:risolviSistemaSplineNaturale]{code/risolviSistemaSplineNaturale.m} 
+
+		Analogamente per le \textit{spline not-a-knot}, tenendo conto delle condizioni aggiuntive (\ref{condizioniCalcoloSplineNaK}), si ottiene il seguente sistema lineare:
+		\[
+			\begin{pmatrix}
+				\xi_1 & -1 & \varphi_1 & &\\
+				\varphi_1 & 2 & \xi_1 & &\\
+				& \ddots & \ddots & \ddots &\\
+				& & \varphi_{n-1} & 2 & \xi_{n-1}\\
+				& & \xi_{n-1} & -1 & \varphi_{n-1}
+			\end{pmatrix}
+			\begin{pmatrix}
+				m_0\\
+				m_1\\
+				\vdots\\
+				m_{n-1}\\
+				m_n
+			\end{pmatrix} =6
+			\begin{pmatrix}
+				0\\
+				f[x_0,x_1,x_2]\\
+				\vdots\\
+				f[x_{n-2},x_{n-1},x_n]\\
+				0
+			\end{pmatrix}.
+		\]
+		Si vede facilmente che quest'ultimo sistema lineare è equivalente a:
+		\begin{equation}
+			\label{sistemaSplineNaK}
+			A\underline{x}=6\underline{b},
+		\end{equation}
+		con:
+		\begin{align*}
+			&A=\begin{pmatrix}
+				1 & 0 & & & & &\\
+				\varphi_1 & (2-\varphi_1) & (\xi_1-\varphi_1) & & & &\\
+				& \varphi_2 & 2 & \xi_2 & & &\\
+				& & \ddots & \ddots & \ddots & &\\
+				& & & \varphi_{n-2} & 2 & \xi_{n-2} &\\
+				& & & & (\varphi_{n-1}-\xi_{n-1}) & (2-\xi_{n-1}) & \xi_{n-1}\\
+				& & & & & 0 & 1
+			\end{pmatrix},\\
+			&\underline{x}=\begin{pmatrix}
+				m_0+m_1+m_2\\
+				m_1\\
+				\vdots\\
+				m_{n-1}\\
+				m_{n-2}+m_{n-1}+m_n
+			\end{pmatrix},\\
+			&\underline{b}=\begin{pmatrix}
+				f[x_0,x_1,x_2]\\
+				f[x_0,x_1,x_2]\\
+				\vdots\\
+				f[x_{n-2},x_{n-1},x_n]\\
+				f[x_{n-2},x_{n-1},x_n]
+			\end{pmatrix},
+		\end{align*}
+		il quale, avendo tutti i minori principali non nulli, risulta fattorizzabile $LU$.\\
+		Analogamente a quanto visto per le \textit{spline} cubiche naturali, possiamo implementare efficientemente (vedi Esercizio \ref{es:4.17}) in \textsc{Matlab} il calcolo degli $\{m_i\}$ nel caso delle \textit{spline} cubiche \textit{not-a-knot} come segue:
+		\lstinputlisting[caption={Calcolo dei fattori $\{m_i\}$ per una \textit{spline} cubica \textit{not-a-knot}.}, label=lst:risolviSistemaSplineNotAKnot]{code/risolviSistemaSplineNotAKnot.m}
+		Possiamo quindi, a questo punto, definire il seguente Codice \textsc{Matlab} per la determinazione di una qualsiasi \textit{spline} cubica (naturale o con condizioni \textit{not-a-knot}):
+		\lstinputlisting[caption={Calcolo delle espressioni di una \textit{spline} (naturale o con condizioni \textit{not-a-knot}).}, label=lst:splineCubica]{code/splineCubica.m}
+		Data la natura polinomiale a tratti delle \textit{spline} è conveniente definire il seguente Codice, che valuta una \textit{spline} su una serie di punti:
+		\lstinputlisting[caption={Valutazione di una \textit{spline} su una serie di punti.}]{code/valutaSpline.m}
+
+	\section{Approssimazione polinomiale ai minimi quadrati}
+		Supponiamo adesso di avere a disposizione una serie di coppie di ascisse e relative ordinate che descrivono il comportamento di un fenomeno (ovviamente saranno principalmente dati di tipo sperimentale). Vogliamo determinare un polinomio di grado $m$
+		\begin{equation}
+			\label{polinomioSovradet}
+			y(x)=\sum_{k=0}^{m}a_kx^k,
+		\end{equation}
+		che meglio approssimi le coppie di dati sperimentali
+		\begin{equation}
+			\label{coppieSperimentali}
+			(x_i,y_i),\qquad i=0,1,\dots,n,\qquad n\geq m.
+		\end{equation}
+		Supporremo, di seguito, che almeno $m+1$ ascisse $x_i$ delle coppie (\ref{coppieSperimentali}) siano tra loro \textit{distinte}.\\
+		Definiamo allora i vettori
+		\begin{equation}
+			\label{yz}
+			\underline{y}=
+			\begin{pmatrix}
+				y_0\\
+				y_1\\
+				\vdots\\
+				y_n
+			\end{pmatrix},
+			\qquad z=
+			\begin{pmatrix}
+				z_0\\
+				z_1\\
+				\vdots\\
+				z_n
+			\end{pmatrix}\equiv
+			\begin{pmatrix}
+				\sum_{k=0}^{m}a_kx_0^k\\
+				\sum_{k=0}^{m}a_kx_1^k\\
+				\vdots\\
+				\sum_{k=0}^{m}a_kx_n^k
+			\end{pmatrix},
+		\end{equation}
+		dove $\underline{y}$ è il vettore dei \textit{valori misurati}, mentre $\underline{z}$ è il vettore dei \textit{valori previsti} (ovvero quelli calcolati utilizzando il polinomio approssimante ``attuale'') in corrispondenza delle ascisse $x_i$, $i=0,1,\dots,n$. Quindi si tratta di determinare il vettore
+		\[
+			\underline{a}=
+			\begin{pmatrix}
+				a_0\\
+				a_1\\
+				\vdots\\
+				a_m
+			\end{pmatrix},
+		\]
+		che minimizzi la quantità
+		$$||y-z||_2^2=\sum_{i=0}^{n}|y_i-z_i|^2,$$
+		la quale corrisponde al residuo (\ref{normaR}) di un sistema lineare sovradeterminato, come visto in Sezione \ref{sezSistemiSovradet}. Quindi questo vettore $\underline{a}$ definisce il polinomio (\ref{polinomioSovradet}) di approssimazione ai \textit{minimi quadrati}. Si vede facilmente che il vettore $\underline{z}$ in (\ref{yz}) può essere scritto come
+		\[
+			\underline{z}=V\underline{a},
+		\]
+		con la matrice $V\in\mathbb{R}^{n+1\times m+1}$ che è una matrice di tipo \textit{Vandermonde} (in realtà la trasposta di una matrice di tipo \textit{Vandermonde}), ovvero
+		\[
+			\begin{pmatrix}
+				x_0^0 & x_0^1 & \dots & x_0^m\\
+				x_1^0 & x_1^1 & \dots & x_1^m\\
+				\vdots & \vdots & & \vdots\\
+				x_n^0 & x_n^1 & \dots & x_n^m
+			\end{pmatrix}.
+		\]
+		\begin{teo}
+			Se almeno $m+1$ ascisse $x_i$ delle coppie (\ref{coppieSperimentali}) sono tra loro distinte, allora la matrice $V$ ha rango massimo pari ad $m+1$.
+		\end{teo}
+		Quindi risulta che il problema della determinazione del polinomio approssimante (\ref{polinomioSovradet}) equivale alla risoluzione, nel senso dei \textit{minimi quadrati}, del sistema lineare determinato
+		$$V\underline{a}=\underline{y},$$
+		in cui la matrice dei coefficienti $V$ ha rango massimo.\\
+		Quindi, per quanto già visto in Sezione \ref{sezSistemiSovradet}, ed in particolare per il Teorema \ref{teoFattQR}, possiamo fattorizzare
+		\[
+			V=QR\equiv
+			\begin{pmatrix}
+				\hat{R}\\
+				O
+			\end{pmatrix},
+			\qquad\hat{R}\in\mathbb{R}^{m+1\times m+1},
+		\]
+		con $Q$ ortogonale ed $\hat{R}$ triangolare superiore e nonsingolare. Quindi per le stesse argomentazioni già viste in Sezione \ref{sezSistemiSovradet} (in riferimento alla minimizzazione del residuo), otteniamo che la soluzione, nel senso dei minimi quadrati, è data da
+		$$\underline{a}=\hat{R}^{-1}\underline{g_1},$$
+		con
+		\[
+			Q^T\underline{y}\equiv \underline{g}=
+			\begin{pmatrix}
+				\underline{g_1}\\
+				\underline{g_2}
+			\end{pmatrix},
+			\qquad \underline{g_1}\in\mathbb{R}^{m+1}.
+		\]
+		Si evince quindi che la soluzione $\underline{a}$ esiste ed è unica e, di conseguenza, tale è il polinomio di approssimazione ai minimi quadrati (\ref{polinomioSovradet}). Per quanto riguarda il \underline{costo computazionale} e l'\underline{occupazione di memoria} valgono le stesse considerazioni fatte in Sezione \ref{sezSistemiSovradet} per il costo della fattorizzazione $QR$ di Householder.\\
+		Osserviamo che nel caso in cui $m=n$ il polinomio di approssimazione ai minimi quadrati coincide con il polinomio interpolante le $n+1$ ascisse: infatti il vettore $\underline{g_2}$ risulta vuoto e, pertanto, il polinomio interpola tutti i valori.
+
+		Spesso, anziché minimizzare la norma del vettore residuo
+		$$||V\underline{a}-\underline{y}||_2^2,$$
+		risulta più utile minimizzare un \textit{vettore pesato}, ovvero
+		$$||D(V\underline{a}-\underline{y})||_2^2,$$
+		dove
+		\[
+			D=
+			\begin{pmatrix}
+				w_0 & &\\
+				& \ddots &\\
+				& & w_n
+			\end{pmatrix}
+		\]
+		è la matrice diagonale dei pesi, con $w_i>0$. Assegnando un peso maggiore in corrispondenza di un'ascissa piuttosto che un'altra si da maggior peso a quell'ascissa, facendo sì che la funzione venga approssimata con più accuratezza vicino a quel valore. Si può utilizzare una tecnica del genere quando si hanno dati sperimentali più affidabili di altri (perché raccolti con strumenti migliori, in condizioni più favorevoli, ecc...).
+	\section*{Esercizi}
+		\addcontentsline{toc}{section}{Esercizi}
+		\markboth{\textsc{\uppercase{Capitolo }\ref{chapterApprossimazioniFunzioni}\uppercase{. Approssimazione di funzioni}}}{\textsc{\uppercase{Esercizi}}}
+		\begin{es} %4.1
+			Sia $f(x)=4x^2-12x+1$. Determinare $p(x)\in\Pi_4$ che interpola $f(x)$ sulle ascisse $x_i=i$, $i=0,\dots,4$.
+		\end{es}
+		\begin{sol}
+			\normalfont Poiché la funzione è un polinomio di grado $2$ e $\Pi_2\subset\Pi_4$, il polinomio interpolante sulle ascisse $x_i=i$, $i=0,\ldots, 4$ coincide con la funzione stessa: $p(x)=f(x)$.
+		\end{sol}
+		\sectionline
+		\begin{es}[Algoritmo di Horner] %4.2
+			\label{es4.2}
+			Dimostrare che il seguente algoritmo,
+			\lstinputlisting[frame=none, stepnumber=0, nolol=true]{code/matlab4_2.m}
+			valuta il polinomio (\ref{genericoPolinomio}) nel punto $x$, se il vettore $\underline{a}$ contiene i coefficienti del polinomio $p(x)$ (Osservare che in \textsc{Matlab} i vettori hanno indice che parte da $1$, invece che da $0$).
+		\end{es}
+		\begin{sol}
+			Un generico polinomio è rappresentabile, rispetto alla base delle potenze, come
+			$$\sum_{k=0}^na_kx^k,$$
+			con $a_k$ coefficiente reale del $k$-esimo polinomio costituente la base delle potenze, $x^k$. Raccogliendo di volta in volta un fattore $x$ si ottiene
+			\begin{align*}
+				\sum_{k=0}^na_kx^k &= a_0+a_1x+a_2x^2+\dots+a_{n-1}x^{n-1}+a_nx^n =\\
+				&= a_0 + x(a_1+x(a_2+\dots+x(a_{n-1}+a_nx)\dots)).
+			\end{align*}
+			Quindi si vede facilmente che, sostituendo ad $x$ il punto in cui si vuol valutare il polinomio ed eseguendo le operazioni (prodotti e somme) nell'ordine indicato dalle parentesi, si ottiene esattamente l'Algoritmo di Horner, che quindi risulta essere esatto ai fini della valutazione di polinomio in un dato punto conoscendo i coefficienti $\{a_i\}$ rispetto alla base delle potenze.
+		\end{sol}
+		\sectionline
+		\begin{es} %4.3
+			Dimostrare il Lemma \ref{lem4.1}.
+		\end{es}
+		\begin{sol}
+			\normalfont 
+			\begin{enumerate}
+				\item Si distinguono i due casi:\\
+			\begin{itemize}
+				\item se $k=i$, $L_{i,n}(x_i)=\prod_{j=0, j\neq k}^{n}{\frac{x_i-x_j}{x_i-x_j}} = \prod_{j=0, j\neq k}^{n}{1} = 1 $:
+				\item se $k\neq i$, $\exists j=k$ tale che $x_k-x_j=0$ quindi $L_{i,n}(x_k)=0$.
+			\end{itemize}
+				\item Gli $n$ elementi della produttoria sono polinomi di grado $1$ quindi $L_{k,n}(x)$ ha grado $n$; ognuno di questi polinomi è monico quindi il coefficiente di principale di $L_{k,n}(x)$ è $\frac{1}{\prod_{j=0,j\neq k}^n{(x_k-x_j)}}$.
+				\item Si prova che $\sum_{k=0}^n{c_kL_{k,n}(x)}=0$ se $c_k=0$ $\forall x\in\mathbb{R}$, $k=0,\ldots,n$. Nelle ascisse di interpolazione si ha $L_{k,k}(x_k)=1$ quindi, affinché la quantità si annulli è necessario che $c_k=0$ quindi sono linearmente indipendenti; essendo $n$ costituiscono una base per $\Pi_n$.\end{enumerate}
+		\end{sol}
+		\sectionline
+		\begin{es} %4.4
+			Dimostrare il Lemma \ref{lem4.2}.
+		\end{es}
+		\begin{sol}
+			\normalfont 
+			\begin{enumerate}
+				\item Per induzione: $w_0(x)=1\in\Pi'_0$, $w_{k+1}(x)=(x-x_k)w_k\in\Pi'_{k+1}$ in quanto $w_k\in\Pi'_k$ per induzione e $(x-x_k)\in\Pi'_1$.
+				\item Risulta $w_{k+1}(x)=(x-x_k)w_k=(x-x_k)(x-x_{k-1})w_{k-1}=\ldots=(x-x_k)(x-x_{k-1})\ldots(x-x_0)=\prod_{j=0}^k{(x-x_j)}$.
+				\item Dal punto precedente, per $j\leq k$, un fattore della produttoria è del tipo $(x-x_j)$ quindi $w_{k+1}(x_j)=0$.
+				\item I vari $w_i(x)$ sono linearmente indipendenti: $c_iw_i(x_j)=0$ implica $c_i=0$ per $j\neq i$ in virtù del punto precedente; essendo $k$, costituiscono una base per $\Pi_k$.
+			\end{enumerate}
+		\end{sol}
+		\sectionline
+		\begin{es} %4.5
+			Dimostrare il Teorema \ref{teoProprietàDiffDiv}.
+		\end{es}
+		\begin{sol}
+			\normalfont 
+			\begin{enumerate}
+				\item Linearità delle differenze divise: \begin{equation*}\begin{split}(\alpha f+\beta g)&[x_0,\ldots,x_r]=\sum_{k=0}^r{\frac{\alpha f_k+\beta g_k}{\prod_{j=0,j\neq k}^r{(x_k-x_j)}}}=\\=&\sum_{k=0}^r{\frac{\alpha f_k}{\prod_{j=0,j\neq k}^r{(x_k-x_j)}}}+\sum_{k=0}^r{\frac{\beta g_k}{\prod_{j=0,j\neq k}^r{(x_k-x_j)}}}=\\=&\alpha\sum_{k=0}^r{\frac{f_k}{\prod_{j=0,j\neq k}^r{(x_k-x_j)}}}+\beta\sum_{k=0}^r{\frac{g_k}{\prod_{j=0,j\neq k}^r{(x_k-x_j)}}}=\\=&\alpha f[x_0,\ldots,x_r]+\beta g[x_0,\ldots,x_r].\end{split}\end{equation*}
+				\item La permutazione degli indici è possibile poiché somme e prodotti sono operazioni commutative.
+				\item Differenze divise e polinomi: dato che $f(x)$ è un polinomio ed il polinomio interpolante è unico, $$f(x)=\sum_{i=0}^k{a_ix^i}=\sum_{i=0}^k{f[x_0,\ldots,x_k]w_k(x)}=p_k(x).$$Il termine $k$-esimo è $a_kx^k=f[x_0,\ldots,x_k]w_k(x)$ quindi $f[x_0,\ldots,x_k]=a_k$ poiché $w_k(x)\in\Pi'_k$. I termini con $r>k$ non compaiono nella funzione dunque hanno coefficiente $f[x_0,\ldots,x_r]=0$.
+				\item Derivabilità: sia $p(x)$ il polinomio interplante allora $e(x)=f(x)-p(x)\in C^{(r)}\left([a,b]\right)$ ed $e(x_i)=0$ per $i=0,\ldots,r$. Per il teorema di Rolle sulle funzioni continue, $\exists\xi^{(1)}_i\in\left[x_i,x_{i+1}\right]$ tali che $e'(\xi^{(1)}_i)=0$ per $i=0,\ldots,r-1$. Reiterando, $\exists\xi^{(2)}_i\in\left[\xi^{(1)}_i,\xi^{(1)}_{i+1}\right]$ tali che $e''(\xi^{(2)}_i)=0$ per $i=0,\ldots,r-2$ e così via; infine $\exists\xi^{(r)}\in\left[a,b\right]$ tali che $e^{(r)}(\xi^{(r)})=0$. Segue $e^{(r)}(x)=f^{(r)}(x)-p^{(r)}(x)=f^{(r)}(x)-r!f[x_0,\ldots,x_r]=0$ ovvero $f[x_0,\ldots,x_r]=\frac{f^{(r)}(\xi^{(r)})}{r!}$.
+				\item Ricorsività: \begin{equation*}\begin{split}\:&\frac{f[x_1,\ldots,x_r]-f[x_0,\ldots,x_{r-1}]}{x_r-x_0}=\\=&\left[\sum_{k=1}^r{\frac{f_k}{\prod_{j=1,j\neq k}^r(x_k-x_j)}} + \sum_{k=0}^{r-1}{\frac{f_k}{\prod_{j=0,j\neq k}^{r-1}(x_k-x_j)}}\right]\frac{1}{x_r-x_0} = \\ =&\left[\sum_{k=1}^r{\frac{f_k(x_j-x_0)}{\prod_{j=0,j\neq k}^r(x_k-x_j)}} - \sum_{k=0}^{r-1}{\frac{f_k(x_j-x_k)}{\prod_{j=0,j\neq k}^r(x_k-x_j)}}\right]\frac{1}{x_r-x_0} = \\=&\left[\sum_{k=0}^r{\frac{f_k(x_j-x_0)}{\prod_{j=0,j\neq k}^r(x_k-x_j)}} - \sum_{k=0}^{r}{\frac{f_k(x_j-x_k)}{\prod_{j=0,j\neq k}^r(x_k-x_j)}}\right]\frac{1}{x_r-x_0} = \\=& \left[\sum_{k=0}^r{\frac{f_k(x_j-x_0)-f_k(x_j-x_k)}{\prod_{j=0,j\neq k}^r(x_k-x_j)}}\right]\frac{1}{x_r-x_0}  =\\=& 	
+			\left[\sum_{k=0}^r{\frac{f_k(x_r-x_0)}{\prod_{j=0,j\neq k}^r(x_k-x_j)}}\right]\frac{1}{x_r-x_0}= \\=&(x_r-x_0)\left[\sum_{k=0}^r{\frac{f_k}{\prod_{j=0,j\neq k}^r(x_k-x_j)}}\right]\frac{1}{x_r-x_0}= \end{split}\end{equation*}
+			\newpage\begin{equation*}\begin{split}=&\sum_{k=0}^r{\frac{f_k}{\prod_{j=0,j\neq k}^r(x_k-x_j)}} = f[x_0,\ldots,x_r].\end{split}\end{equation*}
+			\end{enumerate}
+		\end{sol}
+		\sectionline
+		\begin{es} %4.6
+			\label{es4.6}
+			Costruire una \lstinline{function} in \textsc{Matlab} che implementi in modo efficiente l'algoritmo del calcolo delle differenze divise.
+		\end{es}
+		\begin{sol}
+			Per l'implementazione in \textsc{Matlab} dell'algoritmo per il calcolo delle differenze divise si veda il Codice \ref{lst:differenzeDivise} a pagina \pageref{lst:differenzeDivise}.
+		\end{sol}
+		\sectionline
+		\begin{es}[Algoritmo di Horner generalizzato] %4.7
+			Dimostrare che il seguente algoritmo, che riceve in ingresso i vettori $\underline{x}$ ed $\underline{f}$ prodotti dalla \lstinline{function} dell'Esercizio \ref{es4.6}, valuta il corrispondente polinomio interpolante di Newton in un punto $xx$ assegnato.
+			\lstinputlisting[frame=none, stepnumber=0, nolol=true]{code/matlab4_7.m}
+			Qual'è il suo costo computazionale? Confrontarlo con quello dell'Algoritmo dell'Esercizio \ref{es4.6}. Costruire, quindi, una corrispondente \lstinline{function} \textsc{Matlab} che lo implementi efficientemente (contemplare la possibilità che $xx$ sia un vettore).
+		\end{es}
+		\begin{sol}
+			Essendo un polinomio in forma di Newton esprimibile come
+			$$p_n(x)=\sum_{k=0}^nf[x_0,\dots,x_k]w_k(x)$$
+			ed essendo il $(k+1)$-esimo polinomio della base di Newton esprimibile come
+			$$w_{k+1}=\prod_{j=0}^k(x-x_j),$$
+			vediamo che, come nel caso dell'Esercizio \ref{es4.2}, possiamo raggruppare i vari $(x-x_i)$ e considerare le differenze divise come coefficienti rispetto alla base di Newton. Si ottiene quindi:
+			\begin{align*}
+				\sum_{k=0}^nf[x_0,\dots,x_k]w_k(x) &= f[x_0] +(x-x_0)(f[x_0,x_1]+\dots\\
+				&\dots+(x-x_{n-2})(f[x_0,\dots,x_{n-1}]+f[x_0,\dots,x_n](x-x_{n-1}))\dots).
+			\end{align*}
+			Quindi, eseguendo le operazioni nell'ordine indicato, otteniamo l'algoritmo di Horner generalizzato, il cui costo risulta essere di $3n$ \texttt{flop}, in quanto ad ogni iterazione vengono eseguiti una sottrazione, un prodotto ed una somma. Il costo dell'Algoritmo per il calcolo delle differenze divise risulta invece essere pari a $(\frac{3}{2}n^2-3n)$ \texttt{flop}, in quanto per calcolare ogni differenza divisa vengono eseguite due sottrazioni ed una divisione ($3$ \texttt{flop}) ed il numero di differenze divise da calcolare è pari al numero di elementi triangolari inferiori di una matrice $n\times n$ (quindi $\frac{1}{2}n^2$) meno gli elementi della prima colonna (che sono $n$) che sono dati.\\
+			Nell'implementazione \textsc{Matlab}, proposta di seguito, si è considerato il caso in cui \lstinline{xx} sia un vettore di punti semplicemente reiterando $m$ volte, con $m$ dimensione del vettore \lstinline{xx}, l'algoritmo di Horner generalizzato. in questo caso il costo computazionale risulta essere $3mn$ \texttt{flop}.
+			\lstinputlisting[caption={Algoritmo di Horner generalizzato.}]{code/hornerGeneralizzato.m}
+		\end{sol}
+		\sectionline
+		\begin{es} %4.8
+			\label{es4.8}
+			Costruire una \lstinline{function} \textsc{Matlab} che implementi in modo efficiente l'algoritmo del calcolo delle differenze divise per il polinomio di Hermite.
+		\end{es}
+		\begin{sol}
+			Consultare il Codice \ref{lst:differenzeDiviseHermite} a pagina \pageref{lst:differenzeDiviseHermite} per il file corrispondente all'implementazione in \textsc{Matlab} dell'algoritmo per il calcolo delle differenze divise ottimizzato nel caso di ascisse di Hermite.
+		\end{sol}
+		\sectionline
+		\begin{es} %4.9
+			\label{es:4.9}
+			Si consideri la funzione
+			$$f(x)=(x-1)^9.$$
+			Utilizzando le \lstinline{function} degli Esercizi \ref{es4.6} e \ref{es4.8}, valutare i polinomi interpolanti di Newton e di Hermite sulle ascisse
+			$$0,0.25,0.5,0.75,1,$$
+			per \lstinline{x=linspace(0,1,101)}. Raffigurare, quindi, (e spiegare) i risultati.
+		\end{es}
+		\begin{sol}
+			I seguenti grafici mostrano i risultati ottenuti interpolando la funzione sulle ascisse indicate con i polinomi di Newton e di Hermite:
+			\begin{center}
+				\includegraphics[scale=0.45]{es4_9a.png}
+			\end{center}
+			\begin{center}
+				\includegraphics[scale=0.45]{es4_9b.png}
+			\end{center}
+			Dai grafici ottenuti si vede che l'interpolazione tramite polinomio di Newton approssima abbastanza bene la funzione, mentre utilizzando il polinomio di Hermite si ha una totale coincidenza tra la funzione originaria ed il polinomio interpolante. Questo è dovuto al fatto che il polinomio di Hermite interpola la funzione su un totale di $10$ ascisse, il che lo rende a tutti gli effetti un polinomio di grado $9$, esattamente come la funzione originaria. Il polinomio di newton, invece, interpolando la funzione su $5$ sole ascisse, risulta essere un polinomio di quarto grado.
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es4.9} (pagina \pageref{lst:es4.9})
+			\end{flushright}
+		\end{sol}
+		\sectionline
+		\begin{es} %4.10
+			\label{es:4.10}
+			Quante ascisse di interpolazione equidistanti sono necessarie per approssimare la funzione $\sin(x)$ sull'intervallo $[0,2\pi]$, con un errore di interpolazione inferiore a $10^{-6}$?
+		\end{es}
+		\begin{sol}
+			\normalfont Considerando l'espressione dell'errore d'interpolazione (\ref{erroreInterpolazione}) si può massimizzare $\left|f^{(n+1)}(\xi_x)\right|\leq 1$ in quando le derivate di $f(x)$ sono $\pm\sin{x}$, $\pm\cos{x}$ quindi limitate; inoltre $w_{n+1}(x)=\prod_{j=0}^{n}{(x-x_j)}\leq\prod_{j=0}^{n}{2\pi}=2\pi^{n+1}$ poiché $|x-x_j|\leq 2\pi$, $\forall j$. Segue $e(x)=\frac{1}{(n+1)!}(2\pi)^{n+1}$; eseguendo lo script \textsc{Matlab}, risulta \texttt{e(26) = 3.265e-007}$\leq 10^{-6}$.
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es4.10} (pagina \pageref{lst:es4.10})
+			\end{flushright}
+		\end{sol}
+		\sectionline
+		\begin{es} %4.11
+			\label{es:4.11}
+			Verificare sperimentalmente che, considerando le ascisse di interpolazione equidistanti (\ref{ascisseEquidistanti}) su cui si definisce il polinomio $p(x)$ interpolante $f(x)$, l'errore $||f-p||$ diverge, al crescere di $n$, nei seguenti due casi:
+			\begin{enumerate}
+				\item esempio di Runge:
+					$$f(x)=\frac{1}{1+x^2},\qquad [a,b]\equiv[-5,5];$$
+				\item esempio di Bernstein:
+					$$f(x)=|x|,\qquad [a,b]\equiv[-1,1].$$
+			\end{enumerate}
+		\end{es}
+		\begin{sol}
+			\begin{itemize}
+				\item \underline{Esempio di Runge:}\\
+					Osserviamo i seguenti grafici che mostrano, rispettivamente, l'errore commesso con $n=5,10,15$ e l'interpolazione della funzione per $n=5,10,15,20$:
+					\begin{center}
+						\includegraphics[scale=0.4]{es4_11a.png}
+					\end{center}
+					\begin{center}
+						\includegraphics[scale=0.4]{es4_11b.png}
+					\end{center}
+				\item \underline{Esempio di Bernstein:}
+					Come per l'esempio di Runge, proponiamo i grafici dell'errore e dell'interpolazione per l'esempio di Bernstein:
+					\begin{center}
+						\includegraphics[scale=0.4]{es4_11c.png}
+					\end{center}
+					\begin{center}
+						\includegraphics[scale=0.4]{es4_11d.png}
+					\end{center}
+			\end{itemize}
+			Da i grafici proposti per le due funzioni d'esempio deduciamo che l'errore commesso tende a divergere all'aumentare di $n$ con le ascisse di interpolazione scelte equidistanti, ovvero uniformemente distribuite sull'intervallo di interpolazione. Vediamo infine i valori dell'errore massimo di interpolazione commesso nei due esempi per $n=5,10,15,20$:
+			\begin{center}
+				\begin{tabular}{c||c|c}
+					\multirow{2}{*}{$n$} & \multicolumn{2}{|c}{\textbf{Errore}}\\
+					& \textbf{Runge} & \textbf{Bernstein}\\
+					\hline
+					$5$ & 0.4327 & 0.0422\\
+					$10$ & 0.3276 & 0.1149\\
+					$15$ & 2.1076 & 0.5054\\
+					$20$ & 59.8223 & 95.1889
+				\end{tabular}
+			\end{center}
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es4.11} (pagina \pageref{lst:es4.11})
+			\end{flushright}
+		\end{sol}
+		\sectionline
+		\begin{es} %4.12
+			\label{es4.12}
+			Dimostrare che, se $x\in[-1,1]$, allora:
+			$$\tilde{x}\equiv\frac{a+b}{2}+\frac{b-a}{2}x\in[a,b].$$
+			Viceversa, se $\tilde{x}\in[a,b]$, allora:
+			$$x\equiv\frac{2\tilde{x}-a-b}{b-1}\in[-1,1].$$
+			Concludere che è sempre possibile trasformare il problema di interpolazione (\ref{ascisse})-(\ref{condizioniInterp}) in uno definito sull'intervallo $[-1,1]$, e viceversa.
+		\end{es}
+		\begin{sol}
+			\normalfont
+			\begin{itemize}
+				\item $x\in[-1,1]\:\Rightarrow\:\tilde{x}\in[a,b]$:
+			\begin{itemize}
+				\item se $x=-1$, $\tilde{x}=\frac{a+b}{2}-\frac{b-a}{2} = a$;
+				\item se $x=1$, $\tilde{x}=\frac{a+b}{2}+\frac{b-a}{2} = b$.
+			\end{itemize}
+				\item $\tilde{x}\in[a,b]\:\Rightarrow\:x\in[-1,1]$:
+			\begin{itemize}
+				\item se $\tilde{x}=a$, $x=\frac{2a-a-b}{b-a}=-1$;
+				\item se $\tilde{x}=b$, $x=\frac{2b-a-b}{b-a}=1$;
+			\end{itemize}
+			\end{itemize}
+		\end{sol}
+		\sectionline
+		\begin{es} %4.13
+			Dimostrare le proprietà dei polinomi di Chebyshev di I specie (\ref{chebyshevISpecie}) elencate nel Teorema \ref{proprietàPolinomiChebyshev}.
+		\end{es}
+		\begin{sol}
+			\normalfont
+			Prime proprietà
+			\begin{enumerate}
+				\item $T_k(x)$ è un polinomio di grado esatto $k$:
+			\begin{itemize}
+				\item $k=0$: $T_0(x)=1$ polinomio di grado $0$;
+				\item $k>0$: $T_{k+1}(x)=2xT_k(x)-T_{k-1}(x)$ dove, per ipotesi induttiva, $T_k(x)$ è un polinomio di grado $k$ quindi $T_{k+1}(x)$ è un polinomio di grado $k+1$.
+			\end{itemize}
+				\item Il coefficiente principale di $T_k(x)$ è $2^{k-1}$, $k=1,2,\ldots$:
+				\begin{itemize}
+				\item $k=1$: $T_1(x)=x$ e $2^{1-1}=1$;
+				\item $k>1$: $T_{k+1}(x)=2xT_k(x)-T_{k-1}(x)$ dove, per ipotesi induttiva, il coefficiente principale di $T_k(x)$ è $2^{k-1}$ quindi il coefficiente principale di $T_{k+1}(x)$ è $2\cdot2^{k-1}=2^k$.
+			\end{itemize}
+				\item La famiglia di polinomi $\{\hat{T}_k\}$, in cui $$\hat{T}_0(x)=T_0(x),\quad\hat{T}_k(x)=2^{1-k}T_k(x),\quad k=1,2,\ldots,$$ è una famiglia di polinomi monici di grado $k$, $k=1,2,\ldots$:
+			\begin{itemize}
+				\item grado $k$: il grado di $\hat{T}_k$ coincide con il grado di $T_k(x)$ che è $k$;
+				\item monici: il coefficiente principale di $\hat{T}_k$ è $2^{1-k}$ dunque $2^{1-k}2^{k-1}=1$ il polinomio è monico.
+			\end{itemize}
+				\item Ponendo $x=\cos{\theta}$, $\theta\in[0,\pi]$, si ottiene $T_k(x)=T_k(\cos{\theta})=\cos{k\theta},\quad k=0,1,\ldots$:
+			\begin{itemize}
+				\item $k=0$: $T_0(\cos{\theta})=\cos{0\theta}=1=T_0(x)$;
+				\item $k=1$: $T_0(\cos{\theta})=\cos{\theta}=x=T_1(x)$:
+				\item $k>1$: $T_{k+1}(\cos{\theta})=2\cos{\theta}T_k({\cos{\theta}})-T_{k-1}(\cos{\theta})$ per ipotesi induttiva, $T_k({\cos{\theta}})=\cos{k\theta}$ e $T_{k-1}(\cos{\theta})=\cos{(k-1)\theta}$ dunque $T_{k+1}(\cos{\theta})=2\cos{\theta}\cos{k\theta}-\cos{(k-1)\theta}=\cos{(k+1)\theta}+\cos{(k-1)\theta}-\cos{(k-1)\theta}=\cos{(k+1)\theta}=T_{k+1}(x)$.
+			\end{itemize}
+			\end{enumerate}
+			Teorema 4.9
+			\begin{itemize}
+				\item Radici del polinomio: $T_k(x)=T_k(\cos{\theta})=\cos{k\theta}=0$ se $\cos{k\theta}=0$ ovvero per $k\theta=\frac{\pi}{2}+i\pi$; segue $\theta_i=\frac{\frac{\pi}{2}+i\pi}{k}=\frac{(2i+1)\pi}{2k}$ cioè gli zeri del polinomio sono dati da $x_i^{(k)}=\cos{\frac{(2i+1)\pi}{2k}}$.
+				\item Estremi: Agli estremi $\cos{k\theta}=\pm 1$ ovvero $k\theta=i\pi$; segue $\theta_i=\frac{i}{k}\pi$ dunque gli estremi sono assunti in $\xi_i^{(k)}=\cos{\frac{i}{k}\pi}$; in tali punti, poiché $\cos{k\pi}=(-1)^i$ la funzione vale $T_k(\xi_i^{(k)})=(-1)^i$.
+				\item Norme: dal punto precedente segue inoltre $||T_k||=1$ e  $||\hat{T}_k||=||2^{1-k}T_k||=||2^{1-k}||$.
+				\item Minima norma per $\hat{T}_k(x)$: supponiamo per assurdo che $\exists p\neq\hat{T}_k(x)$ monico tale che $||p||<2^{1-k}=||\hat{T}_k||$, quindi $g(x)=\hat{T}_k-p(x)\in\Pi_{k-1}$ poiché entrambi monici di grado $K$. Studiando il segno di $g$ si nota $sign(g(x_i))=(-1)^i$ per $i=0,\ldots,k$ ovvero ci sono $k$ cambiamenti di segno quindi $k$ radici cioè $g(x)\in\Pi_k$ ma, per ipotesi, $g(x)\in\Pi_{k-1}$ quindi $g(x)=0$.
+			\end{itemize}
+		\end{sol}
+		\sectionline
+		\begin{es} %4.14
+			Quali diventano le ascisse di Chebyshev (\ref{ascisseChebyshev}), per un problema definito su un generico intervallo $[a,b]$?
+		\end{es}
+		\begin{sol}
+			\normalfont Le ascisse di Chebyshev sono $$x_{n-i}=\cos{\frac{(2i+1)\pi}{2(n+1)}}\in[-1,1];$$ utilizzando il risultato dell'Esercizio 4.12 si ha $$\tilde{x}_{n-i}=\frac{a+b}{2}-\frac{b-a}{2}\cos{\frac{(2i+1)\pi}{2(n+1)}}\in[a,b].$$Tali $\tilde{x}_i$ definiscono le ascisse di Chebyshev per un generico intervallo $[a,b]$.
+		\end{sol}
+		\sectionline
+		\begin{es} %4.15
+			\label{es:4.15}
+			Utilizzare le ascisse di Chebyshev (\ref{ascisseChebyshev}) per approssimare gli esempi visti nell'Esercizio \ref{es:4.11}, per $n=2,4,6,\dots,40$.
+		\end{es}
+		\begin{sol}
+			Similmente a quanto visto nell'Esercizio \ref{es:4.11} mostriamo di seguito i grafici degli errori e di interpolazione per $n=5,10,15,20$, rispetto agli esempi di Runge e Bernstein.
+			\begin{itemize}
+				\item \underline{Esempio di Runge}:
+					\begin{center}
+						\includegraphics[scale=0.4]{es4_15a.png}
+					\end{center}
+					\begin{center}
+						\includegraphics[scale=0.4]{es4_15b.png}
+					\end{center}
+				\item \underline{Esempio di Bernstein}:
+					\begin{center}
+						\includegraphics[scale=0.4]{es4_15c.png}
+					\end{center}
+					\begin{center}
+						\includegraphics[scale=0.4]{es4_15d.png}
+					\end{center}
+			\end{itemize}
+			Di seguito proponiamo anche gli errori di interpolazione massimi commessi nei due esempi per $n=5,10,15,20$:
+			\begin{center}
+				\begin{tabular}{c||c|c}
+					\multirow{2}{*}{$n$} & \multicolumn{2}{|c}{\textbf{Errore}}\\
+					& \textbf{Runge} & \textbf{Bernstein}\\
+					\hline
+					$5$ & 0.0881 & 0.0305\\
+					$10$ & 0.0897 & 0.0275\\
+					$15$ & 0.0831 & 0.0628\\
+					$20$ & 0.0153 & 0.0140
+				\end{tabular}
+			\end{center}
+			Si evince quindi, dai grafici e dai valori riportati, che la scelta delle ascisse di Chebyshev al posto di ascisse equidistanti è estremamente più conveniente, in quanto evita la divergenza dell'errore di interpolazione all'aumentare di $n$. Infatti l'errore commesso, all'aumentare di $n$ risulta essere in generale molto stabile e, molto spesso, risulta anche in diminuzione.
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es4.15} (pagina \pageref{lst:es4.15})
+			\end{flushright}
+		\end{sol}
+		\sectionline
+		\begin{es} %4.16
+			\label{es:4.16}
+			Verificare che la fattorizzazione $LU$ della matrice dei coefficienti del sistema tridiagonale (\ref{sistemaSplineNaturale}) è dato da:
+			\[
+				L=
+				\begin{pmatrix}
+					1 & & &\\
+					l_2 & 1 & &\\
+					& \ddots & \ddots &\\
+					& & l_{n-1} & 1
+				\end{pmatrix},
+				\qquad U=
+				\begin{pmatrix}
+					u_1 & \xi_1 & &\\
+					& u_2 & \ddots &\\
+					& & \ddots & \xi_{n-2}\\
+					& & & u_{n-1}
+				\end{pmatrix},
+			\]
+			con
+			\begin{align*}
+				&u_1=2,\\
+				&l_i=\frac{\varphi_i}{u_{i-1}},\\
+				&u_i=2-l_i\xi_{i-1},\qquad i=2,\dots,n-1.
+			\end{align*}
+			Scrivere una \lstinline{function} \textsc{Matlab} che implementi efficientemente la risoluzione della (\ref{sistemaSplineNaturale}).
+		\end{es}
+		\begin{sol}
+			La matrice dei coefficienti
+			\[
+				A=\begin{pmatrix}
+					2 & \xi_1 & & &\\
+					\varphi_2 & 2 & \xi_2 & &\\
+					& \ddots & \ddots & \ddots &\\
+					& & \ddots & \ddots & \xi_{n-2}\\
+					& & & \varphi_{n-1} & 2
+				\end{pmatrix}
+			\]
+			si vede essere \textit{dominante per righe} in quanto, essendo
+			$$\varphi_i=\frac{h_i}{h_i+h_{i+1}},\qquad\xi_i=\frac{h_{i+1}}{h_i+h_{i+1}},\qquad i=1,\dots,n-1,$$
+			si vede facilmente che $\varphi_i+\xi_i=1$. Quindi la matrice è fattorizzabile $LU$.\\
+			Moltiplichiamo adesso i termini $L$ ed $U$ e vediamo che il risultato sono proprio i termini della matrice $A$:
+			\begin{itemize}
+				\item $a_{11}=1\cdot u_1=u_1=2$;
+				\item $a_{12}=1\cdot\xi_1 + 0\cdot u_2=\xi_1$;
+				\item $a_{i,i-1}=0\cdot\xi_{i-2}+l_i\cdot u_{i-1}+1\cdot 0=l_i\cdot u_{i-1}=\frac{\varphi_i}{u_{i-1}}u_{i-1}=\varphi_i$, per $i>1$;
+				\item $a_{ii}=l_i\cdot\xi_{i-1}+1\cdot u_i=l_i\xi_{i-1}+2-l_i\xi_{i-1}=2$, per $i>1$;
+				\item $a_{i,i+1}=l_i\cdot 0+1\cdot\xi_i +0\cdot u_{i+1}=\xi_i$, per $i>1$.
+			\end{itemize}
+			Quindi il sistema $A\underline{m}=\underline{d}$ si risolve come segue:
+			\begin{itemize}
+				\item si risolve $L\underline{y}= 6\underline{d}$:
+					\begin{itemize}
+						\item $y_1=6d_1$,
+						\item $y_i=6d_i-l_iy_{i-1}$ per $i=2,\dots,n-1$;
+					\end{itemize}
+				\item si risolve il sistema $U\underline{m}=\underline{y}$:
+					\begin{itemize}
+						\item $m_{n-1}=\frac{y_{n-1}}{u_{n-1}}$,
+						\item $m_{i}=\frac{y_i-\xi_i m_{i+1}}{u_i}$, per $i=n-2, \dots ,1$.
+					\end{itemize}
+			\end{itemize}
+			Per quanto riguarda l'implementazione \textsc{Matlab} dell'algoritmo per la risoluzione di suddetto sistema lineare, fare riferimento al Codice \ref{lst:risolviSistemaSplineNaturale} a pagina \pageref{lst:risolviSistemaSplineNaturale}. In questa implementazione si è deciso di non utilizzare la fattorizzazione $LU$ vista in Sezione \ref{sez3.2} (la cui implementazione in \textsc{Matlab} è consultabile a pagina \pageref{lst:fattorizzaLU}), ma se ne propone una versione ottimizzata basata sulle osservazioni appena fatte.
+		\end{sol}
+		\sectionline
+		\begin{es} %4.17
+			\label{es:4.17}
+			Generalizzare la fattorizzazione del precedente Esercizio \ref{es:4.16} al caso della matrice dei coefficienti del sistema lineare (\ref{sistemaSplineNaK}). Scrivere una corrispondente \lstinline{function} \textsc{Matlab} che risolva efficientemente questo sistema.
+		\end{es}
+		\begin{sol}
+			Generalizzando il risultato ottenuto nell'Esercizio \ref{es:4.16}, la fattorizzazione è della forma
+			\[
+				L=\begin{pmatrix}
+					1 & & &\\
+					l_2 & 1 & &\\
+					& \ddots & \ddots &\\
+					& & l_{n+1} & 1
+				\end{pmatrix},\qquad U=\begin{pmatrix}
+					u_1 & w_1 & &\\
+					& u_2 & \ddots &\\
+					& & \ddots & w_n\\
+					& & & u_{n+1}
+				\end{pmatrix}.
+			\]
+			Se come prima moltiplichiamo i fattori $L$ ed $U$ ricaviamo le espressioni degli $l_i$, $u_i$ e $w_i$:
+			\begin{itemize}
+				\item per $i=4,\dots,n-1$:
+					\[
+						\begin{cases}
+							u_i=2-l_iw_{i-1}\\
+							w_{i-1}=\xi_{i-2}\\
+							l_i=\frac{\varphi_{i-1}}{u_{i-1}}
+						\end{cases};
+					\]
+				\item per $i=3$:
+					\[
+						\begin{cases}
+							u_3=2-l_3w_2\\
+							w_2=\xi_1-\varphi_1\\
+							l_3=\frac{\varphi_2}{u_2}
+						\end{cases};
+					\]
+				\item per $i=2$:
+					\[
+						\begin{cases}
+							u_2=2-\varphi_1\\
+							w_1=0\\
+							l_2=\frac{\varphi_1}{u_1}
+						\end{cases};
+					\]
+				\item per $i=1$:
+					$$u_1=1;$$
+				\item per $i=n$:
+					\[
+						\begin{cases}
+							u_n=2-\xi_{n-1}-l_nw_{n-1}\\
+							w_{n-1}=\xi_{n-2}\\
+							l_n=\frac{\varphi_{n-1}-\xi_{n-1}}{u_{n-1}}
+						\end{cases};
+					\]
+				\item per $i=n+1$:
+					\[
+						\begin{cases}
+							u_{n+1}=1\\
+							w_n=\xi_{n-1}\\
+							l_{n+1}=0
+						\end{cases}
+					\].
+			\end{itemize}
+			Quindi come prima avremo:
+			\begin{itemize}
+				\item risoluzione del sistema $L\underline{y}= 6\underline{d}$:
+					\begin{itemize}
+						\item $y_1=6d_1$,
+						\item $y_i=6d_i-l_iy_{i-1}$ per $i=2,\dots,n+1$;
+					\end{itemize}
+				\item risoluzione del sistema $U\underline{\hat{m}}=\underline{y}$:
+					\begin{itemize}
+						\item $\hat{m}_{n+1}=\frac{y_{n+1}}{u_{n+1}}$,
+						\item $\hat{m}_{i}=\frac{y_i-w_i \hat{m}_{i+1}}{u_i}$, per $i=n, \dots ,1$;
+					\end{itemize}
+				\item calcolo della soluzione:
+					\begin{itemize}
+						\item $m_1=\hat{m}_1-\hat{m}_2-\hat{m}_3$,
+						\item $m_i=\hat{m}_i$, per $i=2,\dots,n$,
+						\item $m_{n+1}=\hat{m}_{n+1}-\hat{m}_n-\hat{m}_{n-1}$.
+					\end{itemize}
+			\end{itemize}
+			Per l'implementazione in \textsc{Matlab} della \lstinline{function} relativa, si veda il Codice \ref{lst:risolviSistemaSplineNotAKnot} a pagina \pageref{lst:risolviSistemaSplineNotAKnot}.
+		\end{sol}
+		\sectionline
+		\begin{es} %4.18
+			Scrivere una \lstinline{function} \textsc{Matlab} che, noti gli $\{m_i\}$ in (\ref{mi}), determini l'espressione, polinomiale a tratti, della spline cubica (\ref{espressioneSpline}).
+		\end{es}
+		\begin{sol}
+			Per l'implementazione \textsc{Matlab} dell'algoritmo che determina l'espressione polinomiale a tratti di una spline cubica si veda il Codice \ref{lst:espressioniSplineCubica} a pagina \pageref{lst:espressioniSplineCubica}. In questo algoritmo viene creato un vettore contenente le espressioni degli $n$ polinomi che definiscono la spline cubica, applicando la (\ref{espressioneSpline}), passando come input i nodi di interpolazione, i valori assunti dalla funzione in tali nodi e i fattori $m_i$, eventualmente calcolati utilizzando gli Algoritmi degli Esercizi \ref{es:4.16} e \ref{es:4.17}.
+		\end{sol}
+		\sectionline
+		\begin{es} %4.19
+			\label{es4.19}
+			Costruire una \lstinline{function} \textsc{Matlab} che implementi le spline cubiche naturali e quelle definite dalle condizioni not-a-knot.
+		\end{es}
+		\begin{sol}
+			Per l'implementazione si veda il Codice \ref{lst:splineCubica} a pagina \pageref{lst:splineCubica}, nel quale la scelta tra spline naturale e con condizioni not-a-knot dipende dal valore dell'input \lstinline{nak} (rispettivamente, false e true). Quello che viene fatto è creare, a partire dai nodi di interpolazione e dai valori assunti dalla funzione in tali punti, i vettori $\underline{\varphi}$, $\underline{\xi}$ e delle differenze divise (si è costruita una nuova \lstinline{function} che calcola una singola differenza divisa in modo indipendente dalle altre, in quanto la \lstinline{function} che era stata scritta per la forma di Newton non è chiaramente riutilizzabile). Viene quindi risolto il sistema lineare corrispondente per determinare i fattori $m_i$ ed infine viene determinata l'espressione della spline, ovvero le espressioni degli $n$ polinomi costituenti la spline cubica. È stata scritta, inoltre, una \lstinline{function} \textsc{Matlab} che, prendendo in input i nodi di interpolazione, l'espressione della spline ed un set di punti, restituisce la valutazione della spline in corrispondenza di tali punti.
+		\end{sol}
+		\sectionline
+		\begin{es} %4.20
+			\label{es:4.20}
+			Utilizzare la \lstinline{function} dell'Esercizio \ref{es4.19} per approssimare, su partizioni (\ref{partizione}) uniformi con $n=10,20,30,40$, gli esempi proposti nell'Esercizio \ref{es:4.11}.
+		\end{es}
+		\begin{sol}
+			I grafici ottenuti mostrano l'interpolazione delle due funzioni d'esempio tramite spline cubiche con condizioni \textit{not-a-knot} (si osservi che nei grafici i due punti definiti, appunto, \textit{not-a-knot}, sono indicati da un cerchio nero al posto di un asterisco come per tutti gli altri nodi). Non sono stati riportati i grafici riguardanti l'interpolazione tramite spline cubiche naturali in quanto tra i due tipi di grafici non sono presenti sostanziali differenze (eseguendo il file \textsc{Matlab} relativo vengono disegnati entrambi i grafici per i due esempi).
+			\begin{itemize}
+				\item \underline{Esempio di Runge}:
+					\begin{center}
+						\includegraphics[scale=0.4]{es4_20a.png}
+					\end{center}
+				\item \underline{Esempio di Bernstein}:
+					\begin{center}
+						\includegraphics[scale=0.4]{es4_20b.png}
+					\end{center}
+			\end{itemize}
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es4.20} (pagina \pageref{lst:es4.20})
+			\end{flushright}
+		\end{sol}
+		\sectionline
+		\begin{es} %4.21
+			Interpretare la retta dell'Esercizio \ref{es:3.32} come retta di approssimazione ai minimi quadrati dei dati.
+		\end{es}
+		\begin{sol}
+			\normalfont Il problema ai minimi quadrati è dato da $$\min_{a_1,a_2\in\mathbb{R}}{\sum_{k=0}^n{|y_i-a_1x_i-a_2|^2}}$$ dove $\underline{y}$ è il vettore dei valori previsti per la retta. Il problema è esprimibile in forma matriciale come $$\begin{pmatrix}1&x_0\\1&x_1\\\vdots&\vdots\\1&x_n\end{pmatrix}\begin{pmatrix}a_2\\a_1\end{pmatrix}=\begin{pmatrix}y_0\\y_1\\\vdots\\y_n\end{pmatrix} ;$$ si tratta di risolvere un sistema sovradeterminato che ha soluzione se almeno $2$ ascisse sono distinte in quanto $r(x)\in\Pi_1$.
+		\end{sol}
+		\sectionline
+		\begin{es} %4.22
+			\label{es:4.22}
+			È noto che un fenomeno ha un decadimento esponenziale, modellizzato come
+			$$y=\alpha\cdot e^{-\lambda t},$$
+			in cui $\alpha$ e $\lambda$ sono parametri positivi e incogniti. Riformulare il problema in modo che il modello sia di tipo polinomiale. Supponendo inoltre di disporre delle seguenti misure,
+			\begin{center}
+				\setlength{\tabcolsep}{4pt}
+				\begin{tabular}{|c|c c c c c c c c c c c|}
+					\hline
+					$t_1$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10\\
+					\hline
+					$y_i$ & 5.22 & 4.00 & 4.28 & 3.89 & 3.53 & 3.12 & 2.73 & 2.70 & 2.20 & 2.08 & 1.94\\
+					\hline
+				\end{tabular}
+			\end{center}
+			calcolare la stime ai minimi quadrati dei due parametri incogniti. Valutare il residuo e raffigurare, infine, i risultati ottenuti.
+		\end{es}
+		\begin{sol}
+			\normalfont 
+			Il problema in forma polinomiale è $$\bar{y}=\bar{\alpha}+\bar{\lambda}t,\quad\mbox{ con }\bar{y}=\log{y}\mbox{, }\bar{\alpha}=\log{\alpha}\mbox{ e }\bar{\lambda}=-\lambda$$ infatti si ha $y=\alpha\cdot e^{-\lambda t}\:\Rightarrow\:\log{y}=\log{(\alpha\cdot e^{-\lambda t})}\:\Rightarrow\:\log{y}=\log{\alpha}-\lambda t\:\:\Rightarrow\:\bar{y}=\bar{\alpha}+\bar{\lambda}t$. Si tratta di risolvere il sistema lineare sovradeterminato $$\begin{pmatrix}1&t_0\\1&t_1\\\vdots&\vdots\\1&t_10\end{pmatrix}\begin{pmatrix}\bar{\alpha}\\\bar{\lambda}\end{pmatrix}=\begin{pmatrix}\bar{y}_0\\\bar{y}_1\\\vdots\\\bar{y}_n\end{pmatrix}$$ 
+			mediante fattorizzazione $QR$ (possibile poiché tutte le ascisse sono distinte) e ricavare $\begin{pmatrix}\bar{\alpha}\\\bar{\lambda}\end{pmatrix}$ da qui $\begin{pmatrix}\alpha\\\lambda\end{pmatrix}=\begin{pmatrix}e^{\bar{\alpha}}\\-\bar{\lambda}\end{pmatrix}.$\\I risultati ottenuti dallo \lstinline{scritp} \textsc{Matlab} sono $\begin{pmatrix}\alpha\\\lambda\end{pmatrix}=\begin{pmatrix}5.008\\0.0959\end{pmatrix}$ con un residuo $r=0.1708$. \centering\begin{figure}[H]\includegraphics[scale=0.60]{es4_22.png}\end{figure}
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es4.22} (pagina \pageref{lst:es4.22})
+			\end{flushright}
+		\end{sol}
+	\section*{Codice degli esercizi}
+		\addcontentsline{toc}{section}{Codice degli esercizi}
+		\markboth{\textsc{\uppercase{Capitolo }\ref{chapterApprossimazioniFunzioni}\uppercase{. Approssimazione di funzioni}}}{\textsc{\uppercase{Codice degli esercizi}}}
+		\lstinputlisting[caption={Esercizio \ref{es:4.9}.}, label=lst:es4.9]{code/es4_9.m}
+		\sectionline
+		\lstinputlisting[caption={Esercizio \ref{es:4.10}.}, label=lst:es4.10]{code/es4_10.m}
+		\sectionline
+		\lstinputlisting[caption={Esercizio \ref{es:4.11}.}, label=lst:es4.11]{code/es4_11.m}
+		\sectionline
+		\lstinputlisting[caption={Esercizio \ref{es:4.15}.}, label=lst:es4.15]{code/es4_15.m}
+		\sectionline
+		\lstinputlisting[caption={Esercizio \ref{es:4.20}.}, label=lst:es4.20]{code/es4_20.m}
+		\sectionline
+		\lstinputlisting[caption={Esercizio \ref{es:4.22}.}, label=lst:es4.22]{code/es4_22.m}
+		
