@@ -1,0 +1,102 @@
+\documentclass[pdftex, 11pt, a4paper, openright, twoside]{book}
+
+%--------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage[pdftex]{graphicx}
+\usepackage[numbers]{natbib}
+\usepackage[Lenny]{fncychap}
+\usepackage[nottoc, notlof]{tocbibind}
+\usepackage[unicode]{hyperref}
+\usepackage[object=vectorian]{pgfornament}
+\usepackage{color, caption, perpage, placeins, wrapfig, xfrac, geometry, mcode, xcolor, afterpage, listingsutf8, tikz}
+
+%--------------------------------------------------------------
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\newcommand{\sectionline}{
+	\begin{center}
+		\resizebox{0.5\linewidth}{1ex}{
+			\begin{tikzpicture}
+				\node  (C) at (0,0) {};
+				\node (D) at (9,0) {};
+				\path (C) to [ornament=88] (D);
+			\end{tikzpicture}
+		}
+	\end{center}
+}
+
+\captionsetup{format=hang,font=small}
+
+\MakePerPage{footnote}
+
+\graphicspath{{img/}}
+
+%--------------------------------------------------------------
+
+\lstloadlanguages{Matlab}
+\renewcommand*{\lstlistingname}{Codice}
+\renewcommand*{\lstlistlistingname}{Elenco dei codici}
+\lstset{
+	language = Matlab,
+	frameround = fttt,
+	frame = TRBl,
+	numbers = left,
+	stepnumber = 2,
+	breaklines = true,
+	numberstyle=\tiny\color{gray},
+	inputencoding=utf8/latin1,
+	numberbychapter=false
+}
+
+%--------------------------------------------------------------
+
+\geometry{
+	a4paper,
+	ignoremp,
+	bindingoffset = 1cm, 
+	textwidth     = 13.5cm,
+	textheight    = 21.5cm,
+	lmargin       = 3.5cm,
+	tmargin       = 4cm
+}
+
+%--------------------------------------------------------------
+
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+
+%--------------------------------------------------------------
+
+\begin{document}
+	\pagenumbering{roman}
+
+	\input{chapters/title}
+
+	\tableofcontents
+	\listoffigures
+	\lstlistoflistings
+	\cleardoublepage \pagenumbering{arabic}
+	
+	\input{chapters/chapter1}
+	\input{chapters/chapter2}
+	\input{chapters/chapter3}
+	\input{chapters/chapter4}
+	\input{chapters/chapter5}
+	\input{chapters/chapter6}
+	\input{chapters/chapter7}
+	
+	\input{chapters/code}
+	
+	\nocite{*}
+	\bibliographystyle{plainnat}
+	\bibliography{bibliography}
+	
+\end{document}
