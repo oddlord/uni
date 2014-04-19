@@ -1,0 +1,74 @@
+\documentclass[pdflatex, 11pt, a4paper]{report}
+
+%--------------------------------------------------------------
+
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+
+%--------------------------------------------------------------
+
+\begin{document}
+
+	\newpage
+	\pagestyle{empty}
+	\begin{center}
+		\large Università degli Studi di Firenze\\
+		Facoltà di Scienze Matematiche, Fisiche e Naturali\\
+		Corso di Laurea in Informatica\\
+		\vspace{0.5cm}
+		\normalsize Anno Accademico 2011/2012\\
+		\large Riassunto Tesi di Laurea\\
+		\Large \textsc{Visualizzazione Grafica di Algoritmi in HTML5}
+	\end{center}
+	\begin{minipage}{0.5\textwidth}
+		\begin{flushleft}
+			\large \underline{Laureando:}\\
+			\normalsize Tommaso \textsc{Papini}\\
+			tommaso.papini.unifi@gmail.com
+		\end{flushleft}
+	\end{minipage}
+	\begin{minipage}{0.5\textwidth}
+		\begin{flushright}
+			\large \underline{Relatore:}\\
+			\normalsize Pierluigi \textsc{Crescenzi}\\
+			pierluigi.crescenzi@unifi.it
+		\end{flushright}
+	\end{minipage}
+	\\[0.7cm]
+	Questa tesi si occupa dello sviluppo della quarta versione del programma AlViE (\textit{Algorithm Visualization Environment}). AlViE è un sistema di visualizzazione di algoritmi: l'obiettivo principale dell'aggiornamento ad AlViE4 è l'introduzione della possibilità di esportare le visualizzazioni prodotte dal sistema in pagine HTML5 (\textit{HyperText Markup Language}, quinta versione).\\
+	\\
+	La visualizzazione di algoritmi è una branca dell'Informatica che si occupa del problema della rappresentazione grafica dell'esecuzione di programmi ed algoritmi, al fine di semplificarne la comprensione. I primi sistemi di visualizzazione di algoritmi, BALSA e TANGO, nacquero negli anni '80 ed influenzarono tutti i sistemi successivi, che implementarono sempre più funzioni rispetto ai loro antenati, come il supporto alla grafica a colori o 3D, la visualizzazione di programmi concorrenti o l'esecuzione del sistema attraverso il Web. AlViE permette l'esecuzione e la visualizzazione di algoritmi scritti in Java. È stato scelto il nuovo standard HTML5 per l'esportazione delle visualizzazioni sul Web in quanto esso offre nuovi strumenti per le applicazioni multimediali. In particolare, in questo progetto viene utilizzato lo strumento \textit{Canvas} (dall'inglese, \textit{tela}), che permette la creazione e manipolazione di grafica \textit{bitmap} 2D in tempo reale, tramite semplici funzioni JavaScript. Il sistema AlViE memorizza su disco le visualizzazioni prodotte su specifici file XML (\textit{eXtensible Markup Language}), dove vengono indicate le strutture dati presenti ad ogni passo della visualizzazione e le caratteristiche grafiche di tali strutture. Quello che è stato fatto per produrre la pagina HTML5 della visualizzazione consiste nel compilare il file XML della visualizzazione tramite un apposito compilatore XML-HTML5. La parte centrale di questo lavoro consiste proprio nell'aver scritto questo compilatore (ed il relativo parser XML) per poter tradurre la specifica XML della visualizzazione nella relativa specifica HTML5.\\
+	L'altra novità, di secondaria importanza, introdotta con AlViE4, consiste in un editor di strutture dati, che permette di creare, tramite una semplice interfaccia tabulare, i file XML di input necessari ad AlViE per eseguire (e quindi visualizzare) gli algoritmi.
+	
+	\newpage
+	\begin{center}
+		\large University of Florence\\
+		Faculty of Mathematical, Physical and Natural Sciences\\
+		Computer Science Degree\\
+		\vspace{0.5cm}
+		\normalsize Academic Year 2011/2012\\
+		\large Thesis abstract\\
+		\Large \textsc{Algorithm Visualization in HTML5}
+	\end{center}
+	\begin{minipage}{0.5\textwidth}
+		\begin{flushleft}
+			\large \underline{Student:}\\
+			\normalsize Tommaso \textsc{Papini}\\
+			tommaso.papini.unifi@gmail.com
+		\end{flushleft}
+	\end{minipage}
+	\begin{minipage}{0.5\textwidth}
+		\begin{flushright}
+			\large \underline{Supervisor:}\\
+			\normalsize Pierluigi \textsc{Crescenzi}\\
+			pierluigi.crescenzi@unifi.it
+		\end{flushright}
+	\end{minipage}
+	\\[0.7cm]
+	This thesis concerns about the development of the fourth version of the AlViE program (\textit{Algorithm Visualization Environment}). AlViE is an algorithm visualization system: the main goal of the upgrade to AlViE4 is the introduction of the possibility to export the visualizations produced by the system in HTML5 pages (\ textit {HyperText Markup Language}, fifth version).\\
+	\\
+	The algorithm visualization is a branch of Computer Science that deals with the problem of graphical representation of programs and algorithms running, in order to simplify its understanding. The first algorithm visualization systems, BALSA and TANGO, were born in the 80s and influenced all subsequent systems, which implemented more and more functions than their ancestors, such as the support of colored or 3D graphics, the visualization of concurrent programs or the execution of the system through the Web. AlViE allows the execution and visualization of algorithms written in Java. The new HTML5 standard has been chosen to export the visualizations on the Web because it offers new tools for multimedia applications. In particular, in this project we used the tool \textit{Canvas}, which allows the creation and manipulation of 2D \textit{bitmap} graphics  in real time, using simple JavaScript functions. The AlViE system stores the produced visualizations on specific XML (\textit{eXtensible Markup Language}) files in the disk. In these files are also defined the data structures at every step of the visualization and the graphical features of such structures. To produce the HTML5 visualization page is needed to compile the XML visualization file through a special XML-HTML5 compiler. The central part of this work consists in having written this compiler (and a specific XML parser) to translate the XML specification of the visualization into its HTML5 counterpart.\\
+	Another feature, of secondary importance, introduced with AlViE4, consists of a data structure editor, which allows to create, through a simple tabular interface, the input XML file required by AlViE to run (and visualize) algorithms.
+
+\end{document}

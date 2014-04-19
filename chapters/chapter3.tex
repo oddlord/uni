@@ -1,0 +1,107 @@
+\chapter{AlViE}
+	\label{chap:alvie}
+	AlViE (\textit{Algorithm Visualization Environment}) è un ambiente per lo sviluppo e la visualizzazione di algoritmi scritto in linguaggio Java.\\
+	AlViE è un sistema di visualizzazione di algoritmi \textit{post-mortem} orientato agli eventi.
+	\section{Caratteristiche principali}
+		\label{sec:caratteristichePrincipali}
+		Vedremo, in questa Sezione, quali sono le caratteristiche principali del sistema AlViE, cercando di collocare quest'ultimo nelle opportune categorie della tassonomia proposta all'interno del Capitolo \ref{chap:visualizzazioneAlgoritmi}.\\
+		\\
+		I limiti di portata di AlViE sono piuttosto ampi: essendo sviluppato in ambiente Java, il sistema risulta essere multi-piattaforma e quindi eseguibile a prescindere dall'hardware o dal Sistema Operativo (purché sia installata una distribuzione Java aggiornata). Anche sui tipi di algoritmo visualizzabili non ci sono particolari restrizioni. Per quanto riguarda la scalabilità, AlViE non presenta problemi a gestire algoritmi o dati di grandi dimensioni, quindi i limiti del sistema coincidono con i limiti della macchina su cui viene eseguito.\\
+		L'unica restrizione presente è il linguaggio di programmazione: è infatti necessario che gli algoritmi da voler visualizzare siano scritti in linguaggio Java.\\
+		\\
+		Com'è intuibile dal nome del sistema stesso, AlViE è orientato agli algoritmi, piuttosto che al programma. Come già accennato prima, AlViE è un sistema \textit{post-mortem}, ovvero è un sistema che raccoglie dati durante l'esecuzione dell'algoritmo e soltanto dopo genera la visualizzazione a partire dall'insieme di questi dati. La mappatura temporale tra l'esecuzione e la visualizzazione è di tipo ``da statico a statico'', ovvero vengono generati degli snapshot, istantanee dell'esecuzione del programma prive di un qualsiasi tipo di animazione in fase di visualizzazione.\\
+		\\
+		Il mezzo di destinazione principale di AlViE è un generico monitor a colori, di qualsiasi formato o risoluzione. Il vocabolario grafico di AlViE è composto dalle principali figure geometriche 2D: si hanno quadrati, rettangoli, cerchi, ovali, linee e frecce. Inoltre sono presenti oggetti di tipo testuale, come etichette, e lo pseudocodice, le cui linee vengono evidenziate con il progredire della visualizzazione. Come già accennato prima, AlViE non supporta le animazioni, quindi il passaggio da un passo dell'algoritmo al seguente risulterà in un cambio netto tra l'immagine precedente e la nuova. Al momento, il sistema non supporta nemmeno l'utilizzo di suoni all'interno delle visualizzazioni. Tutte le visualizzazioni di AlViE sono a colori.\\
+		Per quanto riguarda la granularità dell'informazione visualizzata, AlViE visualizza prevalentemente informazioni a grana larga e strutture dati di alto livello, cercando quindi di astrarre il più possibile il programma per poter visualizzare l'algoritmo sottostante.\\
+		\\
+		In AlViE, la specifica della visualizzazione è orientata agli eventi, il che significa che il processo di produzione di una visualizzazione non è automatico, ma richiede l'inserimento di particolari funzioni all'interno del codice sorgente dell'algoritmo. Più in particolare, AlViE ha bisogno di una classe, interna all'algoritmo, che definisca le strutture dati grafiche e gli eventi. Le strutture grafiche avranno una controparte all'interno dell'algoritmo e verranno poi utilizzate per aggiornare la visualizzazione. Gli eventi invece definiscono azioni o cambiamenti sulla visualizzazione, come un oggetto grafico che cambia di colore o di posizione.\\
+		Il livello di personalizzazione della visualizzazione è piuttosto alto: un qualsiasi utente con una conoscenza media del linguaggio Java può tranquillamente utilizzare le funzioni grafiche e le strutture dati messe a disposizione dal sistema per definire la propria visualizzazione o modificare visualizzazioni esistenti.\\
+		Essendo AlViE orientato agli eventi e non automatico, è richiesto l'utilizzo di una tecnica di connessione invasiva che prevede, quindi, l'inserimento di opportune invocazioni all'interno del codice sorgente originale dell'algoritmo.\\
+		\\
+		AlViE mette a disposizione una serie di bottoni per l'interazione utente-sistema. Un bottone permette di modificare le impostazioni generali di AlViE, come ad esempio l'ubicazione della cartella contenente gli algoritmi da visualizzare. Con un altro bottone si può selezionare un algoritmo da eseguire e visualizzare: una lista di algoritmi disponibili permette di scegliere con un semplice click, quindi si dovrà scegliere, tramite delle apposite finestre, dove salvare la visualizzazione che sarà generata e da dove leggere l'input dell'algoritmo. Sono poi disponibili un bottone per caricare una visualizzazione preesistente ed uno per modificare le impostazioni di visualizzazione, come la grandezza del testo o il colore degli oggetti grafici. Si hanno quindi quattro bottoni di navigazione, che permettono di andare al passo precedente, al successivo, al primo o all'ultimo, e tre bottoni per lo zoom. Sono infine stati introdotti, nella quarta versione del sistema, altri due bottoni, per l'esportazione della visualizzazione in HTML5 e per la creazione manuale di un file di input, ma di queste due nuove funzionalità parleremo ampiamente più avanti.
+		\subsection{Specifica delle visualizzazioni}
+			Le visualizzazioni prodotte da AlViE vengono memorizzate sul disco come file XML.\\
+			L'intero file è quindi suddiviso in una serie di tag, spesso annidati tra loro.\\
+			\\
+			Il tag più esterno, che racchiude tutta la visualizzazione, è \lstinline{<algorithm name="NomeAlgoritmo">} e non presenta attributi significativi, se non il nome dell'algoritmo.\\
+			All'interno del tag \lstinline{<algorithm>} troviamo una serie di tag della forma \lstinline{<step number="x">}, con x intero maggiore o uguale a 0, ognuno dei quali racchiude la specifica di un singolo passo di visualizzazione.\\
+			Ogni step è formato da uno o più tag della forma \lstinline{<structure name="NomeStruttura" type="TipoStruttura">}, con il campo \lstinline{type} che può assumere i seguenti valori: Array, Pseudocode, List, Queue, GeometricFigure, Graph o BinaryTree. Il numero delle strutture presenti ad ogni passo è arbitrario, anche se solitamente la struttura Pseudocode appare una ed una sola volta ad ogni passo.\\
+			Ogni struttura è composta da tre elementi: la struttura dati vera e propria, la sua controparte grafica ed un messaggio. Il messaggio serve per commentare il passo corrente dell'algoritmo e solitamente viene lasciato vuoto in tutte le strutture tranne una (per step). Della specifica della struttura dati vera e propria parleremo più avanti. Per quanto riguarda invece la struttura dati grafica, essa contiene informazioni sulle coordinate in cui visualizzare i vari elementi che compongono la struttura ed altre caratteristiche come altezza, larghezza, colore o forma. Nel tag esterno della struttura dati grafica vengono specificate le caratteristiche di default degli elementi che la compongono: gli elementi vengono quindi specificati all'interno del tag soltanto se hanno almeno un attributo diverso da quello di default.\\
+			Per quanto riguarda la struttura Pseudocode essa contiene la stringa da visualizzare per ogni linea dello pseudocodice (indicandone esplicitamente il numero) e la specifica grafica. Quest'ultima indica quali linee evidenziare, con quale colore, quale font utilizzare e in che punto visualizzare lo pseudocodice.
+		\subsection{Specifica delle strutture dati}
+			I file di input di AlViE sono anch'essi scritti in XML utilizzando una sintassi identica a quella delle strutture dati nei file di visualizzazione.\\
+			\\
+			Ogni struttura dati possiede il proprio tag, che solitamente presenta almeno due attributi: \lstinline{size}, che indica il numero di elementi della struttura dati, e \lstinline{type}, che definisce il tipo di informazione presente nella struttura dati. All'interno del tag saranno poi presenti i tag che definiscono i singoli elementi. Anche questi tag contengono almeno due attributi: \lstinline{id}, che rappresenta l'indice, o identificatore, dell'elemento, e \lstinline{value}, che ne indica il valore.\\
+			Alcune strutture, come i grafi, presentano attributi aggiuntivi, come l'orientazione, e possono anche distinguere tra elementi diversi, come nodi ed archi. Il seguente file XML può essere preso a esempio per la costruzione di un vettore di interi:
+			\lstinputlisting[language=XML]{code/array.xml}
+			Un discorso a parte va fatto riguardo agli alberi binari ed in particolare riguardo all'assegnazione degli indici. Nella specifica di un albero binario non sono presenti, in modo esplicito, i rapporti di parentela che intercorrono tra i nodi dell'albero. Le parentele (padre)$\rightarrow$(figlio sinistro) e (padre)$\rightarrow$(figlio destro) vengono infatti dedotte dall'indice di ogni nodo, che viene assegnato secondo lo schema in Figura \ref{fig:indiciAlbero}.\\
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[scale=0.6]{indiciAlbero.png}
+				\caption[Indici di un albero binario nella specifica XML di AlViE]{Assegnazione degli indici per i nodi di un albero binario nella specifica XML di AlViE.}
+				\label{fig:indiciAlbero}
+			\end{figure}
+			Sia quindi $x$ l'indice di un determinato nodo, il figlio sinistro di questo nodo avrà indice $2x +1$, mentre il figlio destro $2(x+1)$. Analogamente, se $x$ è dispari, il padre di $x$ avrà indice $\frac{x-1}{2}$, mentre se è pari $\frac{x}{2}-1$.
+	\section{AlViE4}
+		AlViE4 rappresenta la quarta versione del sistema AlViE, nonché l'obiettivo principale di questo progetto. Le principali novità di questa versione sono l'esportazione delle visualizzazioni in pagine HTML5 e l'editor di strutture dati, che adesso andremo a vedere in maggior dettaglio.
+		\subsection{HTML5}
+			La nuova funzione di conversione delle visualizzazioni in pagine HTML5 rappresenta la principale novità introdotta nella quarta versione di AlViE.\\
+			Tramite il bottone \includegraphics[scale=0.1]{title.png} è possibile convertire una visualizzazione in pagina HTML5, che potrà poi essere inserita in un qualsiasi sito Internet.\\
+			\\
+			Per esportare una visualizzazione in HTML5 è necessario innanzitutto generare una nuova visualizzazione o caricarne da file una precedente. A questo punto basterà cliccare sul bottone relativo all'HTML5 e selezionare il nome e la destinazione della nuova pagina HTML5 che conterrà la visualizzazione. Fatto ciò, il sistema si occuperà di creare la pagina HTML5 sulla base della visualizzazione indicata ed avviserà l'utente con un messaggio a video una volta che l'operazione sarà conclusa.\\
+			Per i dettagli implementativi riguardo all'intera procedura di esportazione in HTML5 della visualizzazione, si veda il Capitolo \ref{chap:alvieHTML5}, che tratterà le tecniche utilizzate nel dettaglio.
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[scale=0.5]{alvieHTML5.png}
+				\caption[AlViE4: InsertionSort sul Web]{Una visualizzazione dell'algoritmo dell'InsertionSort esportata da AlViE in formato HTML.}
+			\end{figure}
+		\subsection{Editor di strutture dati}
+			Un'altra importante funzione aggiunta da AlViE4 è la possibilità di creare facilmente file di input tramite un editor di strutture dati. L'editor permette di creare i file XML di input, necessari per l'esecuzione e la visualizzazione degli algoritmi su AlViE, tramite un'interfaccia tabulare.\\
+			\\
+			Le strutture dati disponibili nell'editor sono, attualmente, vettori, alberi binari, grafi (orientati e non), liste e matrici. I tipi di dato con cui è possibile inizializzare gli elementi di tali strutture dati sono invece valori booleani (vero o falso), caratteri, stringhe, numeri interi o numeri reali.\\
+			Per i vettori e le liste, verrà chiesta innanzitutto la dimensione della struttura dati, che dovrà quindi essere un intero positivo. Successivamente apparirà una tabella dove potrà essere inserito il valore per ogni elemento della struttura dati. La prima colonna di tale matrice è non modificabile e contiene gli indici relativi agli elementi della struttura dati, che vanno da $0$ ad $n-1$, con $n$ la dimensione scelta.\\
+			Per gli alberi binari la situazione è molto simile, con l'unica differenza che la colonna degli indici risulterà vuota e modificabile. Si dovranno infatti inserire, oltre ai valori dei nodi dell'albero, anche gli indici relativi ad ogni nodo, seguendo la convenzione indicata in Sezione \ref{sec:caratteristichePrincipali}. Nel caso di indici non consistenti, verrà mostrato un messaggio di errore a video e si aprirà nuovamente la tabella di input per inserire nuovi valori.\\
+			Per quanto riguarda la matrice, bisogna specificare inizialmente sia il numero di colonne che il numero di righe. Verrà quindi visualizzata una matrice completamente vuota e modificabile della dimensione richiesta.\\
+			Infine per i grafi viene richiesto di scegliere se si vuole un grafo orientato o non orientato, quindi si passa all'inserimento del numero dei nodi e del numero di archi presenti tra di essi. Dopodiché verranno mostrate due tabelle in sequenza: la prima è relativa ai nodi del grafo e vi si dovrà indicare il valore di ogni nodo e le sue coordinate (X ed Y) espresse in pixel (vedi Figura \ref{fig:inputGrafo}); la seconda tabella serve invece per la definizione degli archi, indicando l'id del nodo di partenza, l'id del nodo di arrivo e l'etichetta dell'arco. Si osservi che, nel caso di grafi non orientati, il nodo di partenza e quello di arrivo sono interscambiabili. Inoltre la colonna delle etichette è opzionale: nel caso in cui non servano etichette di alcun tipo basterà lasciare la colonna in bianco.\\
+			\\
+			La creazione di ogni struttura dati viene gestita da una classe Java diversa, detta InputWriter. Una volta scelta la struttura dati da creare, viene applicato il design pattern del \textit{factory} per invocare l'editor corretto.\\
+			Inoltre sono presenti anche delle classi, dette InputChecker, per il controllo del tipo di input inserito. Se ad esempio si è scelto di creare un vettore di elementi interi e, nella tabella di creazione, viene inserito un valore non intero, come una stringa, allora verrà mostrato a video un messaggio d'errore, permettendo all'utente di reinserire nuovi valori.
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[scale=0.6]{inputEditor.png}
+				\caption[Creazione manuale di un grafo orientato]{La creazione di un grafo orientato a valori interi tramite l'editor di strutture dati di AlViE4.}
+				\label{fig:inputGrafo}
+			\end{figure}
+	\section{Un esempio pratico}
+		Vedremo, in questa Sezione, un breve esempio su come costruire l'algoritmo del SelectionSort in AlViE e su come ottenerne una visualizzazione.\\
+		\\
+		Innanzitutto si deve implementare l'algoritmo del SelectionSort in Java, utilizzando le strutture dati di AlViE e inserendo gli eventi interessanti (\textit{interesting events}) all'interno del codice, come di seguito:
+		\lstinputlisting[language=java]{code/selection.java}
+		Le funzioni che iniziano per \textit{ie} sono, appunto, gli eventi interessanti di cui parlavamo prima. Ogni chiamata di queste funzioni definisce, quindi, un passo della visualizzazione. L'oggetto VisualSelectionSort, invece, è un'istanza della classe grafica del SelectionSort, che definisce e raccoglie le funzioni degli eventi interessanti.\\
+		Vediamo, a titolo d'esempio, la funzione \lstinline[language=java]{ieSelectionChanged()}, che viene invocata dall'algoritmo quando viene aggiornato il minimo corrente del vettore residuo, come mostrato in Figura \ref{fig:alvie}:
+		\lstinputlisting[language=java]{code/selectionChanged.java}
+		Quello che viene fatto in questa funzione è impostare il colore del precedente minimo (\lstinline[language=java]{tmp}) al colore di default, mentre il colore del nuovo minimo viene impostato al colore scelto per il minimo nel file di configurazione. Quindi viene aumentato il numero di step e viene scritto il codice XML del nuovo vettore, tramite la funzione \lstinline[language=java]{draw()}. La stringa passata come terzo argomento rappresenta il messaggio da visualizzare durante quello step di visualizzazione, che viene indicato nel file di configurazione dell'algoritmo. Infine, prima della terminazione dello step, vengono scritti nel file XML le linee relative allo pseudocodice, evidenziandone gli elementi di indice 6 e 7, ovvero le linee 7 e 8 dello pseudocodice.\\
+		In linea di massima, le funzioni che definiscono gli eventi, devono aggiornare l'aspetto grafico delle strutture dati coinvolte ed indicare quali strutture dati visualizzare.\\
+		\\
+		Una volta definito l'algoritmo c'è bisogno di definire il file .properties di configurazione. Questo file, specifico per ogni algoritmo, definisce dettagli grafici, come le dimensioni degli oggetti, i colori utilizzati o le font delle scritte. Non ci dilungheremo elencando tutti i campi del file di configurazione, ma di seguito si possono vedere alcuni dei campi più importanti:
+		\begin{itemize}
+			\item pseudocodeFileName: indica il nome del file XML contenente la specifica dello pseudocodice;
+			\item algorithmName: indica il nome dell'algoritmo;
+			\item algorithmCategory: indica il nome della categoria in cui inserire l'algoritmo nel menu di scelta del sistema;
+			\item algorithmFileName: indica il nome del file .class contenente la specifica dell'algoritmo.
+		\end{itemize}
+		Definito l'algoritmo e costruito il file di configurazione, è finalmente possibile avviare il sistema e produrre una visualizzazione.\\
+		Avviato il sistema, si deve cliccare sull'icona \includegraphics[scale=0.1]{record.png} e quindi selezionare l'algoritmo appena costruito. Verrà allora chiesto di selezionare il file XML su cui scrivere la specifica della visualizzazione ed il file (o i file) XML di input, necessario all'esecuzione dell'algoritmo. Si osservi che nel caso in cui si voglia inserire un nuovo input, è necessario averlo costruito prima, manualmente o tramite l'editor di strutture dati. Una volta terminata l'esecuzione dell'algoritmo, un messaggio a video informerà l'utente e la visualizzazione verrà infine mostrata.
+		\begin{figure}[h!]
+			\centering
+			\includegraphics[scale=0.35]{alvie.png}
+			\caption[AlViE4: visualizzazione del SelectionSort]{Uno step dell'esecuzione dell'algoritmo del SelectionSort all'interno del sistema AlViE.}
+			\label{fig:alvie}
+		\end{figure}
+	\section{Sviluppi futuri}
+		Sicuramente il supporto al Web e l'editor di strutture dati hanno fatto della quarta versione di AlViE un valido strumento per la visualizzazione di algoritmi. Queste novità aprono, però, anche un orizzonte di nuove possibilità per gli sviluppi futuri del sistema.\\
+		\\
+		In futuro, ad esempio, si potrà eseguire AlViE direttamente sul Web, in modo da poter ottenere visualizzazioni su pagine HTML senza dover dipendere dalla versione Desktop del sistema. Una possibile implementazione potrebbe essere quella tramite CGI (\textit{Common Gateway Interface}, ovvero \textit{Interfaccia per Gateway Standardizzata}): in una pagina Web iniziale saranno presenti una serie di menu ed opzioni per selezionare l'algoritmo da visualizzare ed indicare (o creare) l'input relativo. Dalle scelte fatte verrà generata una stringa di query contenente tutte le informazioni necessarie. Questa query sarà quindi inviata al programma CGI, che darà istruzioni al server per l'esecuzione dell'algoritmo e l'esportazione della visualizzazione in HTML5. Quindi, una volta generata la pagina della visualizzazione sul server, il programma CGI la invierà nuovamente alla macchina client, che potrà visualizzare l'esecuzione dell'algoritmo sul browser.\\
+		Un altro possibile sviluppo, strettamente correlato a quello appena esposto, è la possibilità di inviare, sempre tramite Web, i propri algoritmi (non presenti, quindi, nella libreria di AlViE), che verranno eseguiti sul momento dal sistema sul server.\\
+		\\
+		Altri possibili scenari futuri potrebbero prevedere l'utilizzo di librerie grafiche 3D per il supporto a visualizzazioni tridimensionali, oppure garantire una maggior elasticità degli algoritmi per quanto riguarda il linguaggio e la specifica della visualizzazione: il processo di produzione della visualizzazione potrebbe infatti essere implementato con un certo grado di automazione.
