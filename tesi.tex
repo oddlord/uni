@@ -1,0 +1,52 @@
+\documentclass[twoside, openright, titlepage, fleqn, headinclude, 11pt, a4paper, BCOR5mm, footinclude]{scrbook}
+
+\input{config/config}
+
+\begin{document}
+
+	\frenchspacing
+	\raggedbottom
+	\pagenumbering{roman}
+	\pagestyle{plain}
+	
+%********************************************************************
+% Front matter
+%********************************************************************
+
+	\input{frontmatter/title}
+	
+	\pagestyle{scrheadings}
+	
+	\input{frontmatter/abstract}
+%	\input{frontmatter/aknowledgements}
+	\input{frontmatter/contents}
+	
+%********************************************************************
+% Body matter
+%********************************************************************
+	
+	\pagenumbering{arabic}
+	
+	\part{CERN e Indico}  \label{part:CERN_indico}
+		\input{chapters/cern}
+		\input{chapters/indico}
+	
+	\part{Indico KT Project} \label{part:indico_KT_project}
+		\input{chapters/panoramica}
+		\input{chapters/strumenti_e_linguaggi}
+		\input{chapters/cloud_deployment}
+		\input{chapters/distribuzione_packaging}
+		\input{chapters/instance_tracker}
+		\input{chapters/conference_customization_prototype}
+	
+	\part{Note e conclusioni} \label{part:note_conclusioni}
+		\input{chapters/altri_progetti}
+		\input{chapters/conclusioni}
+		
+%********************************************************************
+% Back matter
+%********************************************************************
+	
+	\input{backmatter/bibliography}
+
+\end{document}
