@@ -1,0 +1,39 @@
+\documentclass[twoside, openright, titlepage, fleqn, headinclude, 11pt, a4paper, BCOR5mm, footinclude]{scrbook}
+
+\input{config/config}
+
+\begin{document}
+
+	\frenchspacing
+	\raggedbottom
+	\pagenumbering{roman}
+	\pagestyle{plain}
+	
+%********************************************************************
+% Front matter
+%********************************************************************
+
+	\input{frontmatter/title}
+	
+	\pagestyle{scrheadings}
+	
+	\input{frontmatter/abstract}
+%	\input{frontmatter/aknowledgements}
+	\input{frontmatter/contents}
+
+%********************************************************************
+% Body matter
+%********************************************************************
+
+	\pagenumbering{arabic}
+	
+	\input{chapters/valutazione_euristica}
+	\input{chapters/modello_qualità}
+	
+%********************************************************************
+% Back matter
+%********************************************************************
+	
+	\input{backmatter/bibliography}
+
+\end{document}
