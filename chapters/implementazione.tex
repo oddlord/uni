@@ -21,4 +21,7 @@ Un altro dubbio che abbiamo avuto durante la fase di implementazione dell'algori
 	\section*{Speedup e miglioramenti}
 Allo scopo di velocizzare l'algoritmo sono state introdotte le strutture dati \textbf{SDF} (Sorted Document Features) e \textbf{last}.\\
 In particolare, la matrice \textbf{SDF} contiene, per ogni features e per ogni query, gli indici dei documenti ordinati in senso decrescente. Tale matrice viene inizializzata all'interno del metodo \textit{init()} e viene utilizzata soprattutto all'interno del metodo \textit{compute\_weak\_ranker} per poter calcolare in maniera più efficiente lo weak ranker migliore per ogni feature.\\
-Il vettore \textbf{last}, invece, conterrà l'ultima posizione considerata nei documenti di ogni query ed è particolarmente utile all'interno del metodo \textit{compute\_weak\_ranker} per poter ``saltare'' tutti i documenti già precedentemente considerati ed evitare, dunque, inutili iterazioni. È possibile fare ciò, naturalmente, grazie alla presenza ed all'utilizzo della matrice SDF che permette di avere i documenti ordinati in senso decrescente.
+Il vettore \textbf{last}, invece, conterrà l'ultima posizione considerata nei documenti di ogni query ed è particolarmente utile all'interno del metodo \textit{compute\_weak\_ranker} per poter ``saltare'' tutti i documenti già precedentemente considerati ed evitare, dunque, inutili iterazioni. È possibile fare ciò, naturalmente, grazie alla presenza ed all'utilizzo della matrice SDF che permette di avere i documenti ordinati in senso decrescente.\\
+
+
+
