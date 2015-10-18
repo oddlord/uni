@@ -16,8 +16,11 @@ with task('Training'):
                     'sales': 0.0,
                     'n': 0
                 }
-            stores[store_id]['sales'] += float(line.split(',')[3])
-            stores[store_id]['n'] += 1
+            is_open = int(line.split(',')[5])
+            if is_open:
+                customers = int(line.split(',')[4])
+                stores[store_id]['sales'] += float(line.split(',')[3]) * customers
+                stores[store_id]['n'] += customers
         for store_id  in stores:
             stores[store_id]['mean'] = stores[store_id]['sales']/stores[store_id]['n']
 
@@ -27,7 +30,9 @@ with task('Prediction'):
         f_out.write('"Id","Sales"\n')
         for line in f_in:
             store_id = int(line.split(',')[1])
-            f_out.write("%s,%.5f\n" % (line.split(',')[0], stores[store_id]['mean']))
+            is_open = 1 if line.split(',')[4] is '' else int(line.split(',')[4])
+            sales = stores[store_id]['mean'] if is_open else 0
+            f_out.write("%s,%.10f\n" % (line.split(',')[0], sales))
 
 with task('GZip compression'):
     with open(predictions, 'r') as f_in, gzip.open(predictions_gz, 'w') as f_out:
