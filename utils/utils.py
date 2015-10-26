@@ -6,6 +6,11 @@ from os.path import isfile
 import sys
 import time
 
+on_off = {
+    True: 'ON',
+    False: 'OFF'
+}
+
 @contextmanager
 def task(task_name):
     sys.stdout.write("%s started... " % (task_name))
@@ -13,7 +18,6 @@ def task(task_name):
     start_time = time.clock()
     yield
     sys.stdout.write("[Done] (%.4f s.)\n" % (time.clock() - start_time))
-    sys.stdout.flush()
 
 def parse_args():
     usage_str = 'pred.py [-r <train_file>] [-e <test_file>] [-p <prediction_file>] [-c]'
@@ -22,14 +26,18 @@ def parse_args():
                 + 'Usage:\n' \
                 + '\t' + usage_str + '\n' \
                 + 'Options:\n' \
-                + '\t-h|--help:\tprint this help message.\n' \
-                + '\t-r|--train:\ttrain dataset to be used.\n' \
-                + '\t-e|--test:\ttest dataset to be used.\n' \
-                + '\t-p|--pred:\tpath to the prediction .csv output file.\n' \
-                + '\t-c|--compress:\tenable output compression to a gzip archive.'
-    compress = False
+                + '\t-h|--help:\t\tprint this help message.\n' \
+                + '\t-r|--train:\t\ttrain dataset to be used.\n' \
+                + '\t-e|--test:\t\ttest dataset to be used.\n' \
+                + '\t-p|--pred:\t\tpath to the prediction .csv output file.\n' \
+                + '\t-c|--compress:\t\tenable output compression to a gzip archive.\n' \
+                + '\t-v|--validation:\tenable validation on half of the train dataset.'
+    options = {
+        'compress': False,
+        'validation': False
+    }
     try:
-        opts, args =  getopt.getopt(sys.argv[1:], 'hr:e:p:c', ['help', 'train=', 'test=', 'pred=', 'compress'])
+        opts, args =  getopt.getopt(sys.argv[1:], 'hr:e:p:cv', ['help', 'train=', 'test=', 'pred=', 'compress', 'validation'])
     except getopt.GetoptError:
         print help_str
         sys.exit(1)
@@ -44,9 +52,15 @@ def parse_args():
         elif opt in ('-p', '--pred'):
             data['pred'] = arg
         elif opt in ('-c', '--compress'):
-            compress = True
+            options['compress'] = True
+        elif opt in ('-v', '--validation'):
+            options['validation'] = True
+    data['pred_gz'] = data['pred'] + '.gz'
     check_data(data)
-    return data, compress
+    print "GZip compression: %s" % (on_off[options['compress']])
+    print "Validation: %s" % (on_off[options['validation']])
+    sys.stdout.flush()
+    return data, options
 
 def check_data(data):
     if not isfile(data['train']):
