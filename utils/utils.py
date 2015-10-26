@@ -11,9 +11,12 @@ on_off = {
     False: 'OFF'
 }
 
+def to_int(string):
+    return int(string)
+
 @contextmanager
 def task(task_name):
-    sys.stdout.write("%s started... " % (task_name))
+    sys.stdout.write("* %s started... " % (task_name))
     sys.stdout.flush()
     start_time = time.clock()
     yield
@@ -57,8 +60,8 @@ def parse_args():
             options['validation'] = True
     data['pred_gz'] = data['pred'] + '.gz'
     check_data(data)
-    print "GZip compression: %s" % (on_off[options['compress']])
-    print "Validation: %s" % (on_off[options['validation']])
+    print "* GZip compression: %s" % (on_off[options['compress']])
+    print "* Validation: %s" % (on_off[options['validation']])
     sys.stdout.flush()
     return data, options
 
