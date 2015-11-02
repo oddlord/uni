@@ -1,4 +1,5 @@
-from utils.utils import task, parse_args, to_int
+from utils.fields import *
+from utils.utils import *
 
 import gzip
 from numpy import mean, ceil
@@ -7,103 +8,65 @@ from sklearn import *
 
 data, options = parse_args()
 
-state_holiday_map = {
-    '0': 0,
-    'a': 1,
-    'b': 2,
-    'c': 3
-}
-
-field_idx = {
-    'Id': {
-        'test': 0,
-        'parse': (lambda field: field)
-    },
-    'Store': {
-        'train': 0,
-        'test': 1,
-        'parse': to_int
-    },
-    'DayOfWeek': {
-        'train': 1,
-        'test': 2,
-        'parse': to_int
-    },
-    'Date': {
-        'train': 2,
-        'test': 3
-    },
-    'Sales': {
-        'train': 3,
-        'parse': (lambda field: float(field))
-    },
-    'Customers': {
-        'train': 4,
-        'parse': to_int
-    },
-    'Open': {
-        'train': 5,
-        'test': 4,
-        'parse': (lambda field: 1 if field == '' else to_int(field))
-    },
-    'Promo': {
-        'train': 6,
-        'test': 5,
-        'parse': to_int
-    },
-    'StateHoliday': {
-        'train': 7,
-        'test': 6,
-        'parse': (lambda field: state_holiday_map[field.strip('"')])
-    },
-    'SchoolHoliday': {
-        'train': 8,
-        'test': 7,
-        'parse': (lambda field: int(field.rstrip('\n').strip('"')))
-    }
-}
-
 def get_model():
-    return neighbors.KNeighborsRegressor(30, 'distance')
-
-def get_raw_field(line, field, dataset):
-    return line.split(',')[field_idx[field][dataset]]
-
-def get_field(line, field, dataset):
-    return field_idx[field]['parse'](get_raw_field(line, field, dataset))
+    return tree.DecisionTreeRegressor()
 
 features = ['Store', 'DayOfWeek', 'Promo', 'StateHoliday', 'SchoolHoliday']
 
-with task('Training'), open(data['train'], 'r') as f_in:
-    f_in.readline()
-    X_train = []
-    Y_train = []
-    for line in f_in:
-        is_open = get_field(line, 'Open', 'train')
-        if not is_open:
-            continue
-        x = []
-        for feature in features:
-            x.append(get_field(line, feature, 'train'))
-        X_train.append(x)
-        Y_train.append(float(line.split(',')[3]))
+with task('Feature extraction'):
+    with open(data['train'], 'r') as f_train:
+        f_train.readline()
+        X_train = []
+        Y_train = []
+        for line in f_train:
+            is_open = get_field(line, 'Open', Dataset.Train)
+            if not is_open:
+                continue
+            x = []
+            for feature in features:
+                x.append(get_field(line, feature, Dataset.Train))
+            X_train.append(x)
+            Y_train.append(get_field(line, 'Sales', Dataset.Train))
+    if options['validation']:
+        X_vali = X_train[0:options['validation_limit']]
+        Y_vali_target = Y_train[0:options['validation_limit']]
+        X_train = X_train[options['validation_limit']:]
+        Y_train = Y_train[options['validation_limit']:]
+    with open(data['test'], 'r') as f_test:
+        f_test.readline()
+        X_test = []
+        for line in f_test:
+            x = []
+            for feature in features:
+                x.append(get_field(line, feature, Dataset.Test))
+            X_test.append(x)
+print "** Features: %d" % (len(features))
+print "** Train dataset: %d instances" % (len(X_train))
+if options['validation']:
+    print "** Validation dataset: %d instances" % (len(X_vali))
+print "** Test dataset: %d instances" % (len(X_test))
+
+with task('Training model'):
     model = get_model()
     model.fit(X_train, Y_train)
 
-with task('Test prediction'), open(data['test'], 'r') as f_in, open(data['pred'], 'w+') as f_out:
-    f_in.readline()
-    f_out.write('"Id","Sales"\n')
-    for line in f_in:
-        is_open = get_field(line, 'Open', 'test')
-        if is_open:
-            X_test = [[]]
-            for feature in features:
-                X_test[0].append(get_field(line, feature, 'test'))
-            Y_test = model.predict(X_test)[0]
-        else:
-            Y_test = 0
-        f_out.write("%s,%.8f\n" % (get_field(line, 'Id', 'test'), Y_test))
+if options['validation']:
+    Y_vali_pred = model.predict(X_vali)
+    rmspe = compute_rmspe(Y_vali_target, Y_vali_pred)
+    print "** RMSPE on Validation data: %.8f" % (rmspe)
+
+with task('Test prediction'), open(data['test'], 'r') as f_test, open(data['pred'], 'w+') as f_pred:
+    f_test.readline()
+    f_pred.write('"Id","Sales"\n')
+    Y_test = model.predict(X_test)
+    for line in f_test:
+        y_id = get_field(line, 'Id', Dataset.Test)
+        is_open = get_field(line, 'Open', Dataset.Test)
+        y = Y_test[y_id-1] if is_open else 0
+        f_pred.write("%s,%.8f\n" % (y_id, y))
+print "** Predictions saved to '%s'" % (data['pred'])
 
 if options['compress']:
-    with task('GZip compression'), open(data['pred'], 'r') as f_in, gzip.open(data['pred_gz'], 'w') as f_out:
-        shutil.copyfileobj(f_in, f_out)
+    with task('GZip compression'), open(data['pred'], 'r') as f_pred, gzip.open(data['pred_gz'], 'w') as f_gz:
+        shutil.copyfileobj(f_pred, f_gz)
+    print "** Predictions gzipped to '%s'" % (data['pred_gz'])

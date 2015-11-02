@@ -7,16 +7,27 @@ import sys
 import time
 
 on_off = {
-    True: 'ON',
-    False: 'OFF'
+    True: '\033[1m\033[92mON\033[0m',
+    False: '\033[1m\033[91mOFF\033[0m'
 }
 
 def to_int(string):
     return int(string)
 
+def compute_rmspe(Y_target, Y_pred):
+    rmspe = 0.0
+    n = 0
+    for i in range(0, len(Y_target)-1):
+        if Y_target[i] == 0:
+            continue
+        rmspe += pow((Y_target[i]-Y_pred[i])/Y_target[i], 2)
+        n += 1
+    rmspe /= n
+    return rmspe
+
 @contextmanager
 def task(task_name):
-    sys.stdout.write("* %s started... " % (task_name))
+    sys.stdout.write("*\n* %s... " % (task_name))
     sys.stdout.flush()
     start_time = time.clock()
     yield
@@ -37,7 +48,8 @@ def parse_args():
                 + '\t-v|--validation:\tenable validation on half of the train dataset.'
     options = {
         'compress': False,
-        'validation': False
+        'validation': False,
+        'validation_limit': 236380  # 2015 as validation
     }
     try:
         opts, args =  getopt.getopt(sys.argv[1:], 'hr:e:p:cv', ['help', 'train=', 'test=', 'pred=', 'compress', 'validation'])
