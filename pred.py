@@ -52,7 +52,7 @@ with task('Training model'):
 if options['validation']:
     Y_vali_pred = model.predict(X_vali)
     rmspe = compute_rmspe(Y_vali_target, Y_vali_pred)
-    print "*\tRMSPE on validation data: %.8f" % (rmspe)
+    print "*\tRMSPE on validation data: %.5f" % (rmspe)
 
 with task('Test prediction'), open(data['test'], 'r') as f_test, open(data['pred'], 'w+') as f_pred:
     f_test.readline()

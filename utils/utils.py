@@ -2,6 +2,8 @@ from config import data
 
 from contextlib import contextmanager
 import getopt
+import math
+import numpy
 from os.path import isfile
 import sys
 import time
@@ -15,14 +17,7 @@ def to_int(string):
     return int(string)
 
 def compute_rmspe(Y_target, Y_pred):
-    rmspe = 0.0
-    n = 0
-    for i in range(0, len(Y_target)-1):
-        if Y_target[i] == 0:
-            continue
-        rmspe += pow((Y_target[i]-Y_pred[i])/Y_target[i], 2)
-        n += 1
-    rmspe /= n
+    rmspe = math.sqrt(numpy.mean([pow((y_t-y_p)/y_t, 2) for y_t, y_p in zip(Y_target, Y_pred) if y_t != 0]))
     return rmspe
 
 @contextmanager
@@ -45,11 +40,11 @@ def parse_args():
                 + '\t-e|--test:\t\ttest dataset to be used.\n' \
                 + '\t-p|--pred:\t\tpath to the prediction .csv output file.\n' \
                 + '\t-c|--compress:\t\tenable output compression to a gzip archive.\n' \
-                + '\t-v|--validation:\tenable validation on half of the train dataset.'
+                + '\t-v|--validation:\tenable validation on a subset of the train dataset.'
     options = {
         'compress': False,
         'validation': False,
-        'validation_limit': 236380  # 2015 as validation
+        'validation_limit': 68015   # last two months
     }
     try:
         opts, args =  getopt.getopt(sys.argv[1:], 'hr:e:p:cv', ['help', 'train=', 'test=', 'pred=', 'compress', 'validation'])
