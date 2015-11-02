@@ -40,20 +40,19 @@ with task('Feature extraction'):
             for feature in features:
                 x.append(get_field(line, feature, Dataset.Test))
             X_test.append(x)
-print "** Features: %d" % (len(features))
-print "** Train dataset: %d instances" % (len(X_train))
+print "*\tFeatures: %d" % (len(features))
+print "*\tTrain dataset: %d instances" % (len(X_train))
 if options['validation']:
-    print "** Validation dataset: %d instances" % (len(X_vali))
-print "** Test dataset: %d instances" % (len(X_test))
+    print "*\tValidation dataset: %d instances" % (len(X_vali))
+print "*\tTest dataset: %d instances" % (len(X_test))
 
 with task('Training model'):
     model = get_model()
     model.fit(X_train, Y_train)
-
 if options['validation']:
     Y_vali_pred = model.predict(X_vali)
     rmspe = compute_rmspe(Y_vali_target, Y_vali_pred)
-    print "** RMSPE on Validation data: %.8f" % (rmspe)
+    print "*\tRMSPE on validation data: %.8f" % (rmspe)
 
 with task('Test prediction'), open(data['test'], 'r') as f_test, open(data['pred'], 'w+') as f_pred:
     f_test.readline()
@@ -64,9 +63,8 @@ with task('Test prediction'), open(data['test'], 'r') as f_test, open(data['pred
         is_open = get_field(line, 'Open', Dataset.Test)
         y = Y_test[y_id-1] if is_open else 0
         f_pred.write("%s,%.8f\n" % (y_id, y))
-print "** Predictions saved to '%s'" % (data['pred'])
-
+print "*\tPredictions saved to '%s'" % (data['pred'])
 if options['compress']:
-    with task('GZip compression'), open(data['pred'], 'r') as f_pred, gzip.open(data['pred_gz'], 'w') as f_gz:
+    with open(data['pred'], 'r') as f_pred, gzip.open(data['pred_gz'], 'w') as f_gz:
         shutil.copyfileobj(f_pred, f_gz)
-    print "** Predictions gzipped to '%s'" % (data['pred_gz'])
+    print "*\tPredictions gzipped to '%s'" % (data['pred_gz'])
