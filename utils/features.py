@@ -1,18 +1,26 @@
 from utils import to_int
 
 class Dataset:
-    Train, Test = range(1, 3)
+    Train, Test, Store = range(1, 4)
 
 def field_strip(field):
     return field.rstrip('\n').strip('"')
 
-def get_raw_field(line, field_dict, field, dataset=None):
-    where = dataset if dataset else 'at'
-    return line.split(',')[field_dict[field][where]]
+def get_field(line, field, dataset):
+    delim = fields[field]['delim'] if 'delim' in fields[field] else ','
+    field_str = field_strip(line.split(delim)[fields[field][dataset]])
+    return fields[field]['default'] if field_str == '' else fields[field]['parse'](field_str)
 
-def get_field(line, field_dict, field, dataset=None):
-    field_str = field_strip(get_raw_field(line, field_dict, field, dataset))
-    return field_dict[field]['default'] if field_str == '' else field_dict[field]['parse'](field_str)
+def build_store_features(store_path):
+    with open(store_path, 'r') as f_store:
+        store_features = {}
+        f_store.readline()
+        for line in f_store:
+            store_id = get_field(line, 'Store', Dataset.Store)
+            store_features[store_id] = {}
+            for field in ['StoreType', 'Assortment', 'CompetitionDistance', 'CompetitionOpenSinceMonth', 'CompetitionOpenSinceYear', 'Promo2', 'Promo2SinceWeek', 'Promo2SinceYear', 'PromoInterval']:
+                store_features[store_id][field] = get_field(line, field, Dataset.Store)
+    return store_features
 
 def map_category(cat):
     categories_map = {
@@ -24,54 +32,6 @@ def map_category(cat):
     }
     return categories_map[cat]
 
-store_fields = {
-    'Store': {
-        'at': 0,
-        'parse': to_int
-    },
-    'StoreType': {
-        'at': 1,
-        'parse': map_category
-    },
-    'Assortment': {
-        'at': 2,
-        'parse': map_category
-    },
-    'CompetitionDistance': {
-        'at': 3,
-        'default': -1,
-        'parse': to_int
-    },
-    'CompetitionOpenSinceMonth': {
-        'at': 4,
-        'default': -1,
-        'parse': to_int
-    },
-    'CompetitionOpenSinceYear': {
-        'at': 5,
-        'default': -1,
-        'parse': to_int
-    },
-    'Promo2': {
-        'at': 6,
-        'parse': to_int
-    },
-    'Promo2SinceWeek': {
-        'at': 7,
-        'default': -1,
-        'parse': to_int
-    },
-    'Promo2SinceYear': {
-        'at': 8,
-        'default': -1,
-        'parse': to_int
-    },
-    'PromoInterval': {
-        'at': 9,
-        'parse': (lambda field: field)
-    }
-}
-
 fields = {
     'Id': {
         Dataset.Test: 0,
@@ -80,6 +40,7 @@ fields = {
     'Store': {
         Dataset.Train: 0,
         Dataset.Test: 1,
+        Dataset.Store: 0,
         'parse': to_int
     },
     'DayOfWeek': {
@@ -119,5 +80,48 @@ fields = {
         Dataset.Train: 8,
         Dataset.Test: 7,
         'parse': to_int
+    },
+    'StoreType': {
+        Dataset.Store: 1,
+        'parse': map_category
+    },
+    'Assortment': {
+        Dataset.Store: 2,
+        'parse': map_category
+    },
+    'CompetitionDistance': {
+        Dataset.Store: 3,
+        'default': -1,
+        'parse': to_int
+    },
+    'CompetitionOpenSinceMonth': {
+        Dataset.Store: 4,
+        'default': -1,
+        'parse': to_int
+    },
+    'CompetitionOpenSinceYear': {
+        Dataset.Store: 5,
+        'default': -1,
+        'parse': to_int
+    },
+    'Promo2': {
+        Dataset.Store: 6,
+        'parse': to_int
+    },
+    'Promo2SinceWeek': {
+        Dataset.Store: 7,
+        'default': -1,
+        'parse': to_int
+    },
+    'Promo2SinceYear': {
+        Dataset.Store: 8,
+        'default': -1,
+        'parse': to_int
+    },
+    'PromoInterval': {
+        Dataset.Store: 5,
+        'delim': '"',
+        'default': '',
+        'parse': (lambda field: field)
     }
 }
