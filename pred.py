@@ -6,12 +6,13 @@ from numpy import mean, ceil
 import shutil
 from sklearn import *
 
+global data, options, store_features, models
 data, options = parse_args()
 
 def get_model():
     return tree.DecisionTreeRegressor()
 
-def extract_instance(data_path, dataset, line):
+def extract_instance(line, data_path, dataset):
     x = []
     y = []
     store_id = get_field(line, 'Store', dataset)
@@ -25,45 +26,48 @@ def extract_instance(data_path, dataset, line):
         y = get_field(line, 'Sales', dataset)
     return x, y
 
-def extract_train_features(data_path, validation):
-    with open(data_path, 'r') as f_data:
+def extract_train_features():
+    with open(data['train'], 'r') as f_train:
         X_train = {}
         Y_train = {}
-        X_vali = []
-        Y_vali_target = []
-        f_data.readline()
-        line_count = 1
-        for line in f_data:
+        start = 1 if not options['validation'] else options['validation_limit']
+        for line in f_train.readlines()[start:]:
             is_open = get_field(line, 'Open', Dataset.Train)
             store_id = get_field(line, 'Store', Dataset.Train)
-            if not validation and not is_open:
+            if not is_open:
                 continue
             if not store_id in X_train:
                 X_train[store_id] = []
                 Y_train[store_id] = []
-            x, y = extract_instance(data_path, Dataset.Train, line)
-            if validation and line_count < options['validation_limit']:
-                X_vali.append({
-                    'store_id': store_id,
-                    'open': is_open,
-                    'x': x
-                })
-                Y_vali_target.append(y)
-            else:
-                X_train[store_id].append(x)
-                Y_train[store_id].append(y)
-            line_count += 1
-    return X_train, Y_train, X_vali, Y_vali_target
+            x, y = extract_instance(line, data['train'], Dataset.Train)
+            X_train[store_id].append(x)
+            Y_train[store_id].append(y)
+    return X_train, Y_train
 
-def extract_test_features(data_path):
-    with open(data_path, 'r') as f_data:
+def extract_validation_features():
+    with open(data['train'], 'r') as f_vali:
+        X_vali = []
+        Y_vali_target = []
+        for line in f_vali.readlines()[1:options['validation_limit']]:
+            is_open = get_field(line, 'Open', Dataset.Train)
+            store_id = get_field(line, 'Store', Dataset.Train)
+            x, y = extract_instance(line, data['train'], Dataset.Train)
+            X_vali.append({
+                'store_id': store_id,
+                'open': is_open,
+                'x': x
+            })
+            Y_vali_target.append(y)
+    return X_vali, Y_vali_target
+
+def extract_test_features():
+    with open(data['test'], 'r') as f_test:
         X_test = []
-        f_data.readline()
-        for line in f_data:
+        for line in f_test.readlines()[1:]:
             is_open = get_field(line, 'Open', Dataset.Test)
             store_id = get_field(line, 'Store', Dataset.Test)
             instance_id = get_field(line, 'Id', Dataset.Test)
-            x, y = extract_instance(data_path, Dataset.Test, line)
+            x, y = extract_instance(line, data['test'], Dataset.Test)
             X_test.append({
                 'id': instance_id,
                 'store_id': store_id,
@@ -72,11 +76,16 @@ def extract_test_features(data_path):
                 })
     return X_test
 
+def predict_instance(x):
+    return 0 if not x['open'] else models[x['store_id']].predict([x['x']])
+
 # Feature extraction
 with task('Feature extraction'):
     store_features = build_store_features(data['store'])
-    X_train, Y_train, X_vali, Y_vali_target = extract_train_features(data['train'], options['validation'])
-    X_test = extract_test_features(data['test'])
+    X_train, Y_train = extract_train_features()
+    if options['validation']:
+        X_vali, Y_vali_target = extract_validation_features()
+    X_test = extract_test_features()
 print "*\tFeatures: %d" % (len(X_train[1][0]))
 print "*\tTrain dataset: %d instances" % (reduce(lambda x,y: x+y, [len(X_train[store_id]) for store_id in X_train.keys()]))
 if options['validation']:
@@ -92,7 +101,7 @@ with task('Training model'):
 if options['validation']:
     Y_vali_pred = []
     for x in X_vali:
-        Y_vali_pred.append(0 if not x['open'] else models[x['store_id']].predict([x['x']]))
+        Y_vali_pred.append(predict_instance(x))
     rmspe = compute_rmspe(Y_vali_target, Y_vali_pred)
     print "*\tRMSPE on validation data: %.5f" % (rmspe)
 
@@ -100,8 +109,7 @@ if options['validation']:
 with task('Test prediction'), open(data['pred'], 'w+') as f_pred:
     f_pred.write('"Id","Sales"\n')
     for x in X_test:
-        y = 0 if not x['open'] else models[x['store_id']].predict([x['x']])
-        f_pred.write("%s,%.8f\n" % (x['id'], y))
+        f_pred.write("%s,%.8f\n" % (x['id'], predict_instance(x)))
 print "*\tPredictions saved to '%s'" % (data['pred'])
 if options['compress']:
     with open(data['pred'], 'r') as f_pred, gzip.open(data['pred_gz'], 'w') as f_gz:
