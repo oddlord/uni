@@ -80,7 +80,7 @@ def predict_instance(x):
     return 0 if not x['open'] else models[x['store_id']].predict([x['x']])
 
 # Feature extraction
-with task('Feature extraction'):
+with task('Extracting features'):
     store_features = build_store_features(data['store'])
     X_train, Y_train = extract_train_features()
     if options['validation']:
@@ -93,20 +93,23 @@ if options['validation']:
 print "*\tTest dataset: %d instances" % (len(X_test))
 
 # Training
-with task('Training model'):
+with task('Training model(s)'):
     models = {}
     for store_id in X_train.keys():
         models[store_id] = get_model()
         models[store_id].fit(X_train[store_id], Y_train[store_id])
+
+# Validation
 if options['validation']:
-    Y_vali_pred = []
-    for x in X_vali:
-        Y_vali_pred.append(predict_instance(x))
-    rmspe = compute_rmspe(Y_vali_target, Y_vali_pred)
+    with task('Testing validation data'):
+        Y_vali_pred = []
+        for x in X_vali:
+            Y_vali_pred.append(predict_instance(x))
+        rmspe = compute_rmspe(Y_vali_target, Y_vali_pred)
     print "*\tRMSPE on validation data: %.5f" % (rmspe)
 
 # Prediction
-with task('Test prediction'), open(data['pred'], 'w+') as f_pred:
+with task('Predicting test data'), open(data['pred'], 'w+') as f_pred:
     f_pred.write('"Id","Sales"\n')
     for x in X_test:
         f_pred.write("%s,%.8f\n" % (x['id'], predict_instance(x)))
