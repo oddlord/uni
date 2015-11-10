@@ -16,7 +16,8 @@ on_off = {
 options = {
     'compress': False,
     'validation': False,
-    'validation_limit': 68016   # last two months
+    'validation_limit': 68016,  # last two months
+    'per_store_training': True
 }
 
 def to_int(string):

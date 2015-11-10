@@ -5,6 +5,7 @@ import gzip
 from numpy import mean, ceil
 import shutil
 from sklearn import *
+from datetime import datetime
 
 global data, options, store_features, models
 data, options = parse_args()
@@ -16,12 +17,14 @@ def extract_instance(line, data_path, dataset):
     x = []
     y = []
     store_id = get_field(line, 'Store', dataset)
-    x.append(store_features[store_id]['StoreType'])
-    x.append(store_features[store_id]['Assortment'])
-    x.append(get_field(line, 'DayOfWeek', dataset))
-    x.append(get_field(line, 'Promo', dataset))
-    x.append(get_field(line, 'StateHoliday', dataset))
-    x.append(get_field(line, 'SchoolHoliday', dataset))
+    # x.append(store_features[store_id]['StoreType'])                     # Store type
+    # x.append(store_features[store_id]['Assortment'])                    # Assortment
+    x.append(get_field(line, 'DayOfWeek', dataset))                     # Day of the week
+    # x.append(int(get_field(line, 'Date', dataset).strftime('%j')))      # Day of the year
+    # x.append(int(get_field(line, 'Date', dataset).strftime('%m')))      # Month of the year
+    x.append(get_field(line, 'Promo', dataset))                         # Promo
+    # x.append(get_field(line, 'StateHoliday', dataset))                  # State holiday
+    # x.append(get_field(line, 'SchoolHoliday', dataset))                 # School holiday
     if dataset == Dataset.Train:
         y = get_field(line, 'Sales', dataset)
     return x, y
@@ -30,10 +33,10 @@ def extract_train_features():
     with open(data['train'], 'r') as f_train:
         X_train = {}
         Y_train = {}
-        start = 1 if not options['validation'] else options['validation_limit']
+        start = options['validation_limit'] if options['validation'] else 1
         for line in f_train.readlines()[start:]:
             is_open = get_field(line, 'Open', Dataset.Train)
-            store_id = get_field(line, 'Store', Dataset.Train)
+            store_id = get_field(line, 'Store', Dataset.Train) if options['per_store_training'] else 1
             if not is_open:
                 continue
             if not store_id in X_train:
@@ -50,7 +53,7 @@ def extract_validation_features():
         Y_vali_target = []
         for line in f_vali.readlines()[1:options['validation_limit']]:
             is_open = get_field(line, 'Open', Dataset.Train)
-            store_id = get_field(line, 'Store', Dataset.Train)
+            store_id = get_field(line, 'Store', Dataset.Train) if options['per_store_training'] else 1
             x, y = extract_instance(line, data['train'], Dataset.Train)
             X_vali.append({
                 'store_id': store_id,
@@ -65,7 +68,7 @@ def extract_test_features():
         X_test = []
         for line in f_test.readlines()[1:]:
             is_open = get_field(line, 'Open', Dataset.Test)
-            store_id = get_field(line, 'Store', Dataset.Test)
+            store_id = get_field(line, 'Store', Dataset.Test) if options['per_store_training'] else 1
             instance_id = get_field(line, 'Id', Dataset.Test)
             x, y = extract_instance(line, data['test'], Dataset.Test)
             X_test.append({

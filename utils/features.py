@@ -1,5 +1,7 @@
 from utils import to_int
 
+from datetime import datetime
+
 class Dataset:
     Train, Test, Store = range(1, 4)
 
@@ -50,7 +52,8 @@ fields = {
     },
     'Date': {
         Dataset.Train: 2,
-        Dataset.Test: 3
+        Dataset.Test: 3,
+        'parse': (lambda field: datetime.strptime(field, "%Y-%m-%d"))
     },
     'Sales': {
         Dataset.Train: 3,
