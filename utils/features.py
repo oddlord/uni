@@ -14,15 +14,33 @@ def get_field(line, field, dataset):
     return fields[field]['default'] if field_str == '' else fields[field]['parse'](field_str)
 
 def build_store_features(store_path):
+    store_features = {}
     with open(store_path, 'r') as f_store:
-        store_features = {}
-        f_store.readline()
-        for line in f_store:
+        for line in f_store.readlines()[1:]:
             store_id = get_field(line, 'Store', Dataset.Store)
             store_features[store_id] = {}
             for field in ['StoreType', 'Assortment', 'CompetitionDistance', 'CompetitionOpenSinceMonth', 'CompetitionOpenSinceYear', 'Promo2', 'Promo2SinceWeek', 'Promo2SinceYear', 'PromoInterval']:
                 store_features[store_id][field] = get_field(line, field, Dataset.Store)
     return store_features
+
+def extract_date_features(data_path, dataset):
+    date_features = {}
+    with open(data_path, 'r') as f_train:
+        for line in f_train.readlines()[1:]:
+            store_id = get_field(line, 'Store', dataset)
+            if store_id != 1:
+                continue
+            date = get_field(line, 'Date', dataset)
+            date_features[date.toordinal()] = {
+                'StateHoliday': get_field(line, 'StateHoliday', dataset),
+                'SchoolHoliday': get_field(line, 'SchoolHoliday', dataset)
+            }
+    return date_features
+
+def build_date_features(train_path, test_path):
+    date_features = extract_date_features(train_path, Dataset.Train).copy()
+    date_features.update(extract_date_features(test_path, Dataset.Test))
+    return date_features
 
 def map_category(cat):
     categories_map = {

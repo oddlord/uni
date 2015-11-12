@@ -7,24 +7,36 @@ import shutil
 from sklearn import *
 from datetime import datetime
 
-global data, options, store_features, models
+global data, options, store_features, date_features, models
 data, options = parse_args()
 
 def get_model():
-    return tree.DecisionTreeRegressor()
+    return ensemble.RandomForestRegressor(n_estimators=100)
 
 def extract_instance(line, data_path, dataset):
     x = []
     y = []
     store_id = get_field(line, 'Store', dataset)
-    # x.append(store_features[store_id]['StoreType'])                     # Store type
-    # x.append(store_features[store_id]['Assortment'])                    # Assortment
-    x.append(get_field(line, 'DayOfWeek', dataset))                     # Day of the week
-    # x.append(int(get_field(line, 'Date', dataset).strftime('%j')))      # Day of the year
-    # x.append(int(get_field(line, 'Date', dataset).strftime('%m')))      # Month of the year
-    x.append(get_field(line, 'Promo', dataset))                         # Promo
-    # x.append(get_field(line, 'StateHoliday', dataset))                  # State holiday
-    # x.append(get_field(line, 'SchoolHoliday', dataset))                 # School holiday
+    # x += [store_features[store_id]['StoreType']]                            # Store type
+    # x += [store_features[store_id]['Assortment']]                           # Assortment
+    x += [get_field(line, 'DayOfWeek', dataset)]                            # Day of the week
+    # x += [int(get_field(line, 'Date', dataset).strftime('%j'))]             # Day of the year
+    # x += [int(get_field(line, 'Date', dataset).strftime('%m'))]             # Month of the year
+    x += [get_field(line, 'Promo', dataset)]                                # Promo
+    # next_day = get_field(line, 'Date', dataset).toordinal()                 # Before state holiday
+    # if next_day in date_features.keys():                                    #
+    #     before_state_holiday = date_features[next_day]['StateHoliday']      #
+    # else:                                                                   #
+    #     before_state_holiday = 0                                            #
+    # x += [before_state_holiday]                                             #
+    # next_day = get_field(line, 'Date', dataset).toordinal()                 # Day before school holiday
+    # if next_day in date_features.keys():                                    #
+    #     before_school_holiday = date_features[next_day]['SchoolHoliday']    #
+    # else:                                                                   #
+    #     before_school_holiday = 0                                           #
+    # x += [before_school_holiday]                                            #
+    # x += [get_field(line, 'StateHoliday', dataset)]                         # State holiday
+    # x += [get_field(line, 'SchoolHoliday', dataset]                         # School holiday
     if dataset == Dataset.Train:
         y = get_field(line, 'Sales', dataset)
     return x, y
@@ -43,8 +55,8 @@ def extract_train_features():
                 X_train[store_id] = []
                 Y_train[store_id] = []
             x, y = extract_instance(line, data['train'], Dataset.Train)
-            X_train[store_id].append(x)
-            Y_train[store_id].append(y)
+            X_train[store_id] += [x]
+            Y_train[store_id] += [y]
     return X_train, Y_train
 
 def extract_validation_features():
@@ -55,12 +67,12 @@ def extract_validation_features():
             is_open = get_field(line, 'Open', Dataset.Train)
             store_id = get_field(line, 'Store', Dataset.Train) if options['per_store_training'] else 1
             x, y = extract_instance(line, data['train'], Dataset.Train)
-            X_vali.append({
+            X_vali += [{
                 'store_id': store_id,
                 'open': is_open,
                 'x': x
-            })
-            Y_vali_target.append(y)
+            }]
+            Y_vali_target += [y]
     return X_vali, Y_vali_target
 
 def extract_test_features():
@@ -71,12 +83,12 @@ def extract_test_features():
             store_id = get_field(line, 'Store', Dataset.Test) if options['per_store_training'] else 1
             instance_id = get_field(line, 'Id', Dataset.Test)
             x, y = extract_instance(line, data['test'], Dataset.Test)
-            X_test.append({
+            X_test += [{
                 'id': instance_id,
                 'store_id': store_id,
                 'open': is_open,
                 'x': x
-                })
+            }]
     return X_test
 
 def predict_instance(x):
@@ -85,6 +97,7 @@ def predict_instance(x):
 # Feature extraction
 with task('Extracting features'):
     store_features = build_store_features(data['store'])
+    date_features = build_date_features(data['train'], data['test'])
     X_train, Y_train = extract_train_features()
     if options['validation']:
         X_vali, Y_vali_target = extract_validation_features()
@@ -107,7 +120,7 @@ if options['validation']:
     with task('Testing validation data'):
         Y_vali_pred = []
         for x in X_vali:
-            Y_vali_pred.append(predict_instance(x))
+            Y_vali_pred += [predict_instance(x)]
         rmspe = compute_rmspe(Y_vali_target, Y_vali_pred)
     print "*\tRMSPE on validation data: %.5f" % (rmspe)
 
