@@ -1,4 +1,5 @@
 from datetime import datetime
+import sys
 
 class Dataset:
     Train, Test, Store = range(1, 4)
@@ -11,13 +12,17 @@ def get_field(line, field, dataset):
     field_str = field_strip(line.split(delim)[fields[field][dataset]])
     return fields[field]['default'] if field_str == '' else fields[field]['parse'](field_str)
 
+def add_feature(x, feature):
+    x.append(feature)
+
 def build_store_features(store_path):
     store_features = {}
     with open(store_path, 'r') as f_store:
-        for line in f_store.readlines()[1:]:
+        headers = f_store.readline().replace('"', '').replace('Store,', '').rstrip('\n').split(',')
+        for line in f_store:
             store_id = get_field(line, 'Store', Dataset.Store)
             store_features[store_id] = {}
-            for field in ['StoreType', 'Assortment', 'CompetitionDistance', 'CompetitionOpenSinceMonth', 'CompetitionOpenSinceYear', 'Promo2', 'Promo2SinceWeek', 'Promo2SinceYear', 'PromoInterval']:
+            for field in headers:
                 store_features[store_id][field] = get_field(line, field, Dataset.Store)
     return store_features
 
@@ -93,7 +98,7 @@ fields = {
     },
     'CompetitionDistance': {
         Dataset.Store: 3,
-        'default': 0,
+        'default': sys.maxint,
         'parse': int
     },
     'CompetitionOpenSinceMonth': {
