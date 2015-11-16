@@ -1,5 +1,3 @@
-from utils import to_int
-
 from datetime import datetime
 
 class Dataset:
@@ -23,25 +21,6 @@ def build_store_features(store_path):
                 store_features[store_id][field] = get_field(line, field, Dataset.Store)
     return store_features
 
-def extract_date_features(data_path, dataset):
-    date_features = {}
-    with open(data_path, 'r') as f_train:
-        for line in f_train.readlines()[1:]:
-            store_id = get_field(line, 'Store', dataset)
-            if store_id != 1:
-                continue
-            date = get_field(line, 'Date', dataset)
-            date_features[date.toordinal()] = {
-                'StateHoliday': get_field(line, 'StateHoliday', dataset),
-                'SchoolHoliday': get_field(line, 'SchoolHoliday', dataset)
-            }
-    return date_features
-
-def build_date_features(train_path, test_path):
-    date_features = extract_date_features(train_path, Dataset.Train).copy()
-    date_features.update(extract_date_features(test_path, Dataset.Test))
-    return date_features
-
 def map_category(cat):
     categories_map = {
         '0': 0,
@@ -55,18 +34,18 @@ def map_category(cat):
 fields = {
     'Id': {
         Dataset.Test: 0,
-        'parse': to_int
+        'parse': int
     },
     'Store': {
         Dataset.Train: 0,
         Dataset.Test: 1,
         Dataset.Store: 0,
-        'parse': to_int
+        'parse': int
     },
     'DayOfWeek': {
         Dataset.Train: 1,
         Dataset.Test: 2,
-        'parse': to_int
+        'parse': int
     },
     'Date': {
         Dataset.Train: 2,
@@ -75,32 +54,34 @@ fields = {
     },
     'Sales': {
         Dataset.Train: 3,
-        'parse': (lambda field: float(field))
+        'parse': float
     },
     'Customers': {
         Dataset.Train: 4,
-        'parse': to_int
+        'parse': int
     },
     'Open': {
         Dataset.Train: 5,
         Dataset.Test: 4,
         'default': 1,
-        'parse': to_int
+        'parse': int
     },
     'Promo': {
         Dataset.Train: 6,
         Dataset.Test: 5,
-        'parse': to_int
+        'parse': int
     },
     'StateHoliday': {
         Dataset.Train: 7,
         Dataset.Test: 6,
+        'default': 0,
         'parse': map_category
     },
     'SchoolHoliday': {
         Dataset.Train: 8,
         Dataset.Test: 7,
-        'parse': to_int
+        'default': 0,
+        'parse': int
     },
     'StoreType': {
         Dataset.Store: 1,
@@ -112,32 +93,32 @@ fields = {
     },
     'CompetitionDistance': {
         Dataset.Store: 3,
-        'default': -1,
-        'parse': to_int
+        'default': 0,
+        'parse': int
     },
     'CompetitionOpenSinceMonth': {
         Dataset.Store: 4,
-        'default': -1,
-        'parse': to_int
+        'default': 1,
+        'parse': int
     },
     'CompetitionOpenSinceYear': {
         Dataset.Store: 5,
-        'default': -1,
-        'parse': to_int
+        'default': 2013,
+        'parse': int
     },
     'Promo2': {
         Dataset.Store: 6,
-        'parse': to_int
+        'parse': int
     },
     'Promo2SinceWeek': {
         Dataset.Store: 7,
         'default': -1,
-        'parse': to_int
+        'parse': int
     },
     'Promo2SinceYear': {
         Dataset.Store: 8,
         'default': -1,
-        'parse': to_int
+        'parse': int
     },
     'PromoInterval': {
         Dataset.Store: 5,

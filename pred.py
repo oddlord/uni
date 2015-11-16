@@ -2,16 +2,17 @@ from utils.features import *
 from utils.utils import *
 
 import gzip
+from matplotlib import pyplot as plt
 from numpy import mean, ceil
 import shutil
 from sklearn import *
 from datetime import datetime
 
-global data, options, store_features, date_features, models
+global data, options, store_features, models
 data, options = parse_args()
 
 def get_model():
-    return ensemble.RandomForestRegressor(n_estimators=100)
+    return tree.DecisionTreeRegressor()
 
 def extract_instance(line, data_path, dataset):
     x = []
@@ -23,18 +24,6 @@ def extract_instance(line, data_path, dataset):
     # x += [int(get_field(line, 'Date', dataset).strftime('%j'))]             # Day of the year
     # x += [int(get_field(line, 'Date', dataset).strftime('%m'))]             # Month of the year
     x += [get_field(line, 'Promo', dataset)]                                # Promo
-    # next_day = get_field(line, 'Date', dataset).toordinal()                 # Before state holiday
-    # if next_day in date_features.keys():                                    #
-    #     before_state_holiday = date_features[next_day]['StateHoliday']      #
-    # else:                                                                   #
-    #     before_state_holiday = 0                                            #
-    # x += [before_state_holiday]                                             #
-    # next_day = get_field(line, 'Date', dataset).toordinal()                 # Day before school holiday
-    # if next_day in date_features.keys():                                    #
-    #     before_school_holiday = date_features[next_day]['SchoolHoliday']    #
-    # else:                                                                   #
-    #     before_school_holiday = 0                                           #
-    # x += [before_school_holiday]                                            #
     # x += [get_field(line, 'StateHoliday', dataset)]                         # State holiday
     # x += [get_field(line, 'SchoolHoliday', dataset]                         # School holiday
     if dataset == Dataset.Train:
@@ -97,7 +86,6 @@ def predict_instance(x):
 # Feature extraction
 with task('Extracting features'):
     store_features = build_store_features(data['store'])
-    date_features = build_date_features(data['train'], data['test'])
     X_train, Y_train = extract_train_features()
     if options['validation']:
         X_vali, Y_vali_target = extract_validation_features()
@@ -123,6 +111,16 @@ if options['validation']:
             Y_vali_pred += [predict_instance(x)]
         rmspe = compute_rmspe(Y_vali_target, Y_vali_pred)
     print "*\tRMSPE on validation data: %.5f" % (rmspe)
+    if options['plot']:
+        store_id = 1
+        Y_plot_target = [y for (x,y) in zip(X_vali, Y_vali_target) if x['store_id'] == store_id]
+        Y_plot_pred = [y for (x,y) in zip(X_vali, Y_vali_pred) if x['store_id'] == store_id]
+        plt.plot(Y_plot_target, c='blue', ls='-', lw='3')
+        plt.plot(Y_plot_pred, c='red', ls='--', marker='o')
+        # plt.xticks(range(len(X_vali)),range(len(X_vali)), rotation='vertical')
+        plt.title("Validation plot")
+        plt.grid(True)
+        plt.show(block=False)
 
 # Prediction
 with task('Predicting test data'), open(data['pred'], 'w+') as f_pred:
@@ -134,3 +132,8 @@ if options['compress']:
     with open(data['pred'], 'r') as f_pred, gzip.open(data['pred_gz'], 'w') as f_gz:
         shutil.copyfileobj(f_pred, f_gz)
     print "*\tPredictions gzipped to '%s'" % (data['pred_gz'])
+
+if options['validation'] and options['plot']:
+    plt.show(block=True)
+
+sys.exit(0)

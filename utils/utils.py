@@ -17,11 +17,9 @@ options = {
     'compress': False,
     'validation': False,
     'validation_limit': 68016,  # last two months
-    'per_store_training': True
+    'per_store_training': True,
+    'plot': False
 }
-
-def to_int(string):
-    return int(string)
 
 def compute_rmspe(Y_target, Y_pred):
     rmspe = math.sqrt(numpy.mean([pow((y_t-y_p)/y_t, 2) for y_t, y_p in zip(Y_target, Y_pred) if y_t != 0]))
@@ -36,7 +34,7 @@ def task(task_name):
     sys.stdout.write("[Done] (%.4f s.)\n" % (time.clock() - start_time))
 
 def parse_args():
-    usage_str = 'Usage:\n\tpred.py [-r <train_file>] [-s <store_file>] [-e <test_file>] [-p <prediction_file>] [-c]'
+    usage_str = 'Usage:\n\tpred.py [-r <train_file>] [-s <store_file>] [-e <test_file>] [-p <prediction_file>] [-c] [-v [-l]]'
     help_str = ('Training script for the Rossman Store Sales competition on Kaggle.\n'
                 + 'Author: Tommaso Papini, tommaso.papini1@stud.unifi.it\n'
                 + usage_str + '\n'
@@ -47,9 +45,10 @@ def parse_args():
                 + '\t-e|--test:\t\ttest dataset to be used.\n'
                 + '\t-p|--pred:\t\tpath to the prediction .csv output file.\n'
                 + '\t-c|--compress:\t\tenable output compression to a gzip archive.\n'
-                + '\t-v|--validation:\tenable validation on a subset of the train dataset.')
+                + '\t-v|--validation:\tenable validation on a subset of the train dataset.\n'
+                + '\t-l|--plot:\t\tshow validation plot.')
     try:
-        opts, args =  getopt.getopt(sys.argv[1:], 'hr:s:e:p:cv', ['help', 'train=', 'store=', 'test=', 'pred=', 'compress', 'validation'])
+        opts, args =  getopt.getopt(sys.argv[1:], 'hr:s:e:p:cvl', ['help', 'train=', 'store=', 'test=', 'pred=', 'compress', 'validation', 'plot'])
     except getopt.GetoptError:
         print usage_str
         sys.exit(1)
@@ -69,10 +68,14 @@ def parse_args():
             options['compress'] = True
         elif opt in ('-v', '--validation'):
             options['validation'] = True
+        elif opt in ('-l', '--plot'):
+            options['plot'] = True
     data['pred_gz'] = data['pred'] + '.gz'
     check_data(data)
     print "* GZip compression: %s" % (on_off[options['compress']])
     print "* Validation: %s" % (on_off[options['validation']])
+    if options['validation']:
+        print "* Plot: %s" % (on_off[options['plot']])
     sys.stdout.flush()
     return data, options
 
