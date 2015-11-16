@@ -20,10 +20,28 @@ def extract_instance(line, dataset):
     y = []
     store_id = get_field(line, 'Store', dataset)
     date = get_field(line, 'Date', dataset)
+    year = int(date.strftime('%Y'))
+    month = int(date.strftime('%m'))
     c_month = store_features[store_id]['CompetitionOpenSinceMonth']
     c_year = store_features[store_id]['CompetitionOpenSinceYear']
     c_open_since = datetime(c_year, c_month, 1)
     c_distance = store_features[store_id]['CompetitionDistance'] if date >= c_open_since else sys.maxint
+    promo2 = store_features[store_id]['Promo2']
+    promo2_distance = sys.maxint
+    if promo2:
+        promo2_week = store_features[store_id]['Promo2SinceWeek']
+        promo2_year = store_features[store_id]['Promo2SinceYear']
+        promo2_since = datetime.strptime("%d-%d-0" % (promo2_year, promo2_week), '%Y-%W-%w')
+        if date >= promo2_since:
+            promo2_interval = store_features[store_id]['PromoInterval']
+            promo2_starts = [datetime(year - 1, promo2_interval[3], 1)]
+            promo2_starts += [datetime(year, month, 1) for month in promo2_interval]
+            promo2_starts += [datetime(year + 1, promo2_interval[0], 1)]
+            for i in range(0, len(promo2_starts) - 1):
+                if date >= promo2_starts[i] and date < promo2_starts[i+1]:
+                    promo2_distance = (date - promo2_starts[i]).days
+                    break
+
 
     if not options['per_store_training']:
         add_feature(x, store_id)
@@ -31,12 +49,13 @@ def extract_instance(line, dataset):
     # add_feature(x, store_features[store_id]['StoreType'])                   # Store type
     # add_feature(x, store_features[store_id]['Assortment'])                  # Assortment
     add_feature(x, get_field(line, 'DayOfWeek', dataset))                   # Day of the week
-    # add_feature(x, int(date.strftime('%j')))    # Day of the year
-    # add_feature(x, int(date.strftime('%m')))    # Month of the year
+    # add_feature(x, int(date.strftime('%j')))                                # Day of the year
+    # add_feature(x, month)                                                   # Month of the year
     add_feature(x, get_field(line, 'Promo', dataset))                       # Promo
     # add_feature(x, get_field(line, 'StateHoliday', dataset))                # State holiday
     # add_feature(x, get_field(line, 'SchoolHoliday', dataset)                # School holiday
     add_feature(x, c_distance)                                              # Competition Distance
+    # add_feature(x, promo2_distance)                                         # Promo2
 
     if dataset == Dataset.Train:
         y = get_field(line, 'Sales', dataset)

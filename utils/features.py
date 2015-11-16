@@ -36,6 +36,27 @@ def map_category(cat):
     }
     return categories_map[cat]
 
+def parse_promo_interval(promo_interval):
+    months_map = {
+        'Jan': 1,
+        'Feb': 2,
+        'Mar': 3,
+        'Apr': 4,
+        'May': 5,
+        'Jun': 6,
+        'Jul': 7,
+        'Aug': 8,
+        'Sept': 9,
+        'Oct': 10,
+        'Nov': 11,
+        'Dec': 12
+    }
+    intervals = []
+    months = promo_interval.split(',')
+    for month in months:
+        intervals += [months_map[month]]
+    return intervals
+
 fields = {
     'Id': {
         Dataset.Test: 0,
@@ -117,18 +138,18 @@ fields = {
     },
     'Promo2SinceWeek': {
         Dataset.Store: 7,
-        'default': -1,
+        'default': 1,
         'parse': int
     },
     'Promo2SinceYear': {
         Dataset.Store: 8,
-        'default': -1,
+        'default': 2013,
         'parse': int
     },
     'PromoInterval': {
         Dataset.Store: 5,
         'delim': '"',
         'default': '',
-        'parse': (lambda field: field)
+        'parse': parse_promo_interval
     }
 }
