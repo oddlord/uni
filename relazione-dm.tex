@@ -1,12 +1,10 @@
-\documentclass[oneside, 11pt, a4paper]{scrbook}
+\documentclass[11pt, a4paper]{article}
 \newcommand{\bflabel}{\aclabelfont} 
 
 \input{config/config}
 
 \begin{document}
 
-    \let\cleardoublepage\relax
-    \let\cleardoublepage\relax
     
 %********************************************************************
 % Front matter
@@ -18,6 +16,8 @@
 % Body matter
 %********************************************************************
 	
+    \input{chapters/intro}
+    \input{chapters/modello_feature}
 	\input{chapters/implementazione}
 
 \end{document}

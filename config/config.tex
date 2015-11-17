@@ -5,9 +5,10 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[italian]{babel}
-\usepackage{packages/dia-classicthesis-ldpkg}
-\usepackage[eulerchapternumbers, subfig, beramono, eulermath, parts, subfigure, dottedtoc]{packages/classicthesis}
+\usepackage{graphicx}
+\usepackage{hyperref}
 \usepackage{multirow}
+\usepackage{titlesec}
 
 %********************************************************************
 % Packages options
@@ -29,3 +30,15 @@
 
 % graphicx
 \graphicspath{{img/}}
+
+%********************************************************************
+% (Re)new commands & styles
+%********************************************************************
+
+% fixed classicthesis chapter number (right-aligned)
+\titleformat{\section}[display]
+    {\bfseries\Large}
+    {\thesection.}
+    {-5pt}
+    {\raggedright}
+    [\normalsize\vspace*{.8\baselineskip}\titlerule]
