@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import sys
 
 class Dataset:
@@ -12,19 +12,77 @@ def get_field(line, field, dataset):
     field_str = field_strip(line.split(delim)[fields[field][dataset]])
     return fields[field]['default'] if field_str == '' else fields[field]['parse'](field_str)
 
+def get_competition_distance(store_features, store_id, date):
+    c_month = store_features[store_id]['CompetitionOpenSinceMonth']
+    c_year = store_features[store_id]['CompetitionOpenSinceYear']
+    c_open_since = datetime(c_year, c_month, 1)
+    c_distance = store_features[store_id]['CompetitionDistance'] if date >= c_open_since else sys.maxint
+    return c_distance
+
+def get_promo2_distance(store_features, store_id, date):
+    year = int(date.strftime('%Y'))
+    month = int(date.strftime('%m'))
+    promo2 = store_features[store_id]['Promo2']
+    promo2_distance = sys.maxint
+    if promo2:
+        promo2_week = store_features[store_id]['Promo2SinceWeek']
+        promo2_year = store_features[store_id]['Promo2SinceYear']
+        promo2_since = datetime.strptime("%d-%d-0" % (promo2_year, promo2_week), '%Y-%W-%w')
+        if date >= promo2_since:
+            promo2_interval = store_features[store_id]['PromoInterval']
+            promo2_starts = [datetime(year - 1, promo2_interval[3], 1)]
+            promo2_starts += [datetime(year, month, 1) for month in promo2_interval]
+            promo2_starts += [datetime(year + 1, promo2_interval[0], 1)]
+            for i in range(0, len(promo2_starts) - 1):
+                if date >= promo2_starts[i] and date < promo2_starts[i+1]:
+                    promo2_distance = (date - promo2_starts[i]).days
+                    break
+    return promo2_distance
+
+def get_open_tomorrow(date_index, store_id, date, trainset, testset):
+    tomorrow = date + timedelta(days=1)
+    open_default = fields['Open']['default']
+    tmr_info = date_index[tomorrow.toordinal()] if tomorrow.toordinal() in date_index.keys() else None
+    if tmr_info is None:
+        return open_default
+    tmr_at = tmr_info['dataset']
+    tmr_index = tmr_info[store_id] if store_id in tmr_info.keys() else None
+    if tmr_index is None:
+        return open_default
+    line = trainset[tmr_index] if tmr_at == Dataset.Train else testset[tmr_index]
+    tmr_open = get_field(line, 'Open', tmr_at)
+    return tmr_open
+
 def add_feature(x, feature):
     x.append(feature)
 
-def build_store_features(store_path):
+def build_store_features(storeset):
     store_features = {}
-    with open(store_path, 'r') as f_store:
-        headers = f_store.readline().replace('"', '').replace('Store,', '').rstrip('\n').split(',')
-        for line in f_store:
-            store_id = get_field(line, 'Store', Dataset.Store)
-            store_features[store_id] = {}
-            for field in headers:
-                store_features[store_id][field] = get_field(line, field, Dataset.Store)
+    headers = storeset[0].replace('"', '').replace('Store,', '').rstrip('\n').split(',')
+    for line in storeset[1:]:
+        store_id = get_field(line, 'Store', Dataset.Store)
+        store_features[store_id] = {}
+        for field in headers:
+            store_features[store_id][field] = get_field(line, field, Dataset.Store)
     return store_features
+
+def build_date_index(trainset, testset):
+    first_train_date = datetime(2013, 1, 1)
+    last_train_date = datetime(2015, 7, 31)
+    first_test_date = datetime(2015, 8, 1)
+    last_test_date = datetime(2015, 9, 17)
+    date_index = {}
+    for (lines, dataset) in [(trainset, Dataset.Train), (testset, Dataset.Test)]:
+        line_count = 0
+        for line in lines[1:]:
+            line_count += 1
+            store_id = get_field(line, 'Store', dataset)
+            date = get_field(line, 'Date', dataset).toordinal()
+            if date not in date_index.keys():
+                date_index[date] = {}
+                date_index[date]['dataset'] = dataset
+            date_index[date][store_id] = line_count
+    return date_index
 
 def map_category(cat):
     categories_map = {
