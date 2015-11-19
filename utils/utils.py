@@ -1,4 +1,4 @@
-from config import data
+from config import data, options
 
 from contextlib import contextmanager
 import getopt
@@ -11,14 +11,6 @@ import time
 on_off = {
     True: '\033[1m\033[92mON\033[0m',
     False: '\033[1m\033[91mOFF\033[0m'
-}
-
-options = {
-    'compress': False,
-    'validation': False,
-    'validation_limit': 68016,  # last two months
-    'per_store_training': True,
-    'plot': False
 }
 
 def compute_rmspe(Y_target, Y_pred):

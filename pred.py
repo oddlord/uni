@@ -4,6 +4,7 @@ from utils.utils import *
 from datetime import datetime
 import gzip
 from matplotlib import pyplot as plt
+import os
 import shutil
 from sklearn import tree
 import sys
@@ -143,7 +144,26 @@ def main():
             for x in X_vali:
                 Y_vali_pred += [predict_instance(x)]
             rmspe = compute_rmspe(Y_vali_target, Y_vali_pred)
-        print "*\tRMSPE on validation data: %.5f" % (rmspe)
+            best_rmspe = rmspe
+            if os.path.isfile(data['best_rmspe']):
+                with open(data['best_rmspe'], 'r') as f_rmspe:
+                    best_rmspe = float(f_rmspe.readline())
+            delta_rmspe = float("%.5f" % (rmspe)) - best_rmspe
+            start_format = ''
+            end_format = ''
+            sign = '+-'
+            if delta_rmspe <= 0:
+                with open(data['best_rmspe'], 'w+') as f_rmspe:
+                    f_rmspe.write("%.5f" % (rmspe))
+            if delta_rmspe < 0:
+                start_format = '\033[1m\033[92m'
+                end_format = '\033[0m'
+                sign = ''
+            elif delta_rmspe > 0:
+                start_format = '\033[1m\033[91m'
+                end_format = '\033[0m'
+                sign = '+'
+        print "*\tRMSPE on validation data: %s%.5f%s (%s%.5f)" % (start_format, rmspe, end_format, sign, delta_rmspe)
         if options['plot']:
             store_id = 1
             Y_plot_target = [y for (x,y) in zip(X_vali, Y_vali_target) if x['store_id'] == store_id]
