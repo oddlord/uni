@@ -1,0 +1,30 @@
+\documentclass[pdflatex, 11pt]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage{calligra}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{epstopdf}
+
+\graphicspath{{img/}}
+
+\definecolor{links}{HTML}{2A1B81}
+\hypersetup{colorlinks,linkcolor=links,urlcolor=links}
+
+\mode<presentation>{
+  \usetheme{Boadilla}
+  \usecolortheme{beaver}
+  \setbeamercovered{transparent}
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{itemize item}{\checkmark}
+  \setbeamertemplate{itemize subitem}{-}
+  \setbeamertemplate{enumerate items}[default]
+}
+
+\usebackgroundtemplate{
+  \begin{tikzpicture}
+    \node[opacity=0.1] {\includegraphics[scale=1]{img/logoUnifi.eps}};
+  \end{tikzpicture}
+}
