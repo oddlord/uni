@@ -31,11 +31,157 @@
 }
 
 \begin{frame}[plain]
-  \titlepage
+	\titlepage
 \end{frame}
 
 \begin{frame}
-  \frametitle{Problema del Motif Finding}
+	\frametitle{Un po' di background}
+	DNA:
+	\begin{itemize}
+		\item sequenza di nucleotidi
+		\item 4 tipi di nucleotide: A, T, C, G
+		\item \textit{l-mer}: sottosequenza di DNA di lunghezza $l$
+	\end{itemize}
+	\begin{block}{Motifs}
+		In biologia può essere necessario ricavare certe sequenze di DNA ``nascoste''
+		\begin{itemize}
+			\item pattern di nucleotidi ripetuti (l-mer)
+			\item utili a capire determinati comportamenti biologici
+			\begin{itemize}
+				\item sequenze di attivazione di geni specifici
+			\end{itemize}
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Il problema del Motif Finding}
+	Il problema del Motif Finding consiste nel ricavare un set di $t$ \textbf{l-mer} da un insieme di $t$ sequenze di DNA.
+	\begin{block}{Input}
+		\begin{itemize}
+			\item $DNA$: matrice di nucleotidi $t \times n$
+			\begin{itemize}
+				\item $t$ sequenze di DNA
+				\item ognuna di lunghezza $n$
+			\end{itemize}
+			\item $l$: lunghezza del motif cercato
+		\end{itemize}
+	\end{block}
+	\begin{block}{Output}
+		\begin{itemize}
+			\item $s=(s_1,s_2,\dots,s_t)$: lista di $t$ posizioni iniziali di l-mer il più simili tra loro
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+\begin{frame}{Un primo esempio}
+	\begin{center}
+		CGGGGCT\spot<2->[fill=yellow]{ATGCAACT}GGGTCGTCACATTCCCCTTTCGATA\\
+		TTTGAGGGTGCCCAATAA\spot<2->[fill=yellow]{ATGCAACT}CCAAAGCGGACAAA\\
+		GG\spot<2->[fill=yellow]{ATGCAACT}GATGCCGTTTGACGACCTAAATCAACGGCC\\
+		AAGG\spot<2->[fill=yellow]{ATGCAACT}CCAGGAGCGCCTTTGCTGGTTCTACCTG\\
+		AATTTTCTAAAAAGATTATAATGTCGGTCC\spot<2->[fill=yellow]{ATGCAACT}TC\\
+		CTGCTGTACAACTGAGATCATGCTGC\spot<2->[fill=yellow]{ATGCAACT}TTCAAC\\
+		TACATGATCTTTTG\spot<2->[fill=yellow]{ATGCAACT}TGGATGAGGGAATGATGC
+	\end{center}
+\end{frame}
+
+\begin{frame}{Mutazioni random}
+	\begin{center}
+		CGGGGCT\spot<1->[fill=yellow]{ATcCAgCT}GGGTCGTCACATTCCCCTTTCGATA\\
+		TTTGAGGGTGCCCAATAA\spot<1->[fill=yellow]{ggGCAACT}CCAAAGCGGACAAA\\
+		GG\spot<1->[fill=yellow]{ATGgAtCT}GATGCCGTTTGACGACCTAAATCAACGGCC\\
+		AAGG\spot<1->[fill=yellow]{AaGCAACc}CCAGGAGCGCCTTTGCTGGTTCTACCTG\\
+		AATTTTCTAAAAAGATTATAATGTCGGTCC\spot<1->[fill=yellow]{tTGgAACT}TC\\
+		CTGCTGTACAACTGAGATCATGCTGC\spot<1->[fill=yellow]{ATGCcAtT}TTCAAC\\
+		TACATGATCTTTTG\spot<1->[fill=yellow]{ATGgcACT}TGGATGAGGGAATGATGC
+	\end{center}
+	Come trovare l'l-mer più simile tra tutti?
+\end{frame}
+
+\begin{frame}{Allineamento}
+	\tiny\begin{align*}
+		CGGGGCT&\spot<1->[fill=yellow]{ATcCAgCT}GGGTCGTCACATTCCCCTTTCGATA\\
+		TTTGAGGGTGCCCAATAA&\spot<1->[fill=yellow]{ggGCAACT}CCAAAGCGGACAAA\\
+		GG&\spot<1->[fill=yellow]{ATGgAtCT}GATGCCGTTTGACGACCTAAATCAACGGCC\\
+		AAGG&\spot<1->[fill=yellow]{AaGCAACc}CCAGGAGCGCCTTTGCTGGTTCTACCTG\\
+		AATTTTCTAAAAAGATTATAATGTCGGTCC&\spot<1->[fill=yellow]{tTGgAACT}TC\\
+		CTGCTGTACAACTGAGATCATGCTGC&\spot<1->[fill=yellow]{ATGCcAtT}TTCAAC\\
+		TACATGATCTTTTG&\spot<1->[fill=yellow]{ATGgcACT}TGGATGAGGGAATGATGC
+	\end{align*}
+\end{frame}
+
+\begin{frame}{Profilo e Consenso}
+	\begin{center}
+		\begin{tabular}{l l l l l l l l l l}
+			\multirow{8}{*}{\textbf{Allineamento}} & & A & T & C & C & A & G & C & T\\
+			& & G & G & G & C & A & A & C & T\\
+			& & A & T & G & G & A & T & C & T\\
+			& & A & A & G & C & A & A & C & C\\
+			& & T & T & G & G & A & A & C & T\\
+			& & A & T & G & C & C & A & T & T\\
+			& & A & T & G & G & C & A & C & T\\
+			\hline
+			\multirow{4}{*}{\textbf{Profilo}} & \textbf{A} & 5 & 1 & 0 & 0 & 5 & 5 & 0 & 0\\
+			& \textbf{T} & 1 & 5 & 0 & 0 & 0 & 1 & 1 & 6\\
+			& \textbf{G} & 1 & 1 & 6 & 3 & 0 & 1 & 0 & 0\\
+			& \textbf{C} & 0 & 0 & 1 & 4 & 2 & 0 & 6 & 1\\
+			\hline
+			\textbf{Consenso} & & A & T & G & C & A & A & C & T 
+		\end{tabular}
+	\end{center}
+\end{frame}
+
+\begin{frame}{Score}
+	Come definire la ``bontà'' di un set di l-mer?
+	\begin{block}{Funzione score}
+		Si definisce una funzione score sul vettore $s=(s_1,s_2,\dots,s_t)$ di posizioni iniziali:
+		\begin{equation*}
+			Score(s,DNA)=\sum_{j=1}^{l}M_{P(s)}(j)
+		\end{equation*}
+		dove
+		\begin{itemize}
+			\item $P(s)$: matrice profilo su $s$
+			\item $M_{P(s)}(j)$: elemento massimo nella colonna $j$-esima di $P(s)$
+		\end{itemize}
+	\end{block}
+	Si cerca il set di posizioni iniziali $s$ che massimizzi $Score(s,DNA)$!
+\end{frame}
+
+\begin{frame}{Score: l'esempio di prima}
+	\begin{center}
+		\begin{tabular}{l l l l l l l l l l}
+			\multirow{8}{*}{\textbf{Allineamento}} & & A & T & C & C & A & G & C & T\\
+			& & G & G & G & C & A & A & C & T\\
+			& & A & T & G & G & A & T & C & T\\
+			& & A & A & G & C & A & A & C & C\\
+			& & T & T & G & G & A & A & C & T\\
+			& & A & T & G & C & C & A & T & T\\
+			& & A & T & G & G & C & A & C & T\\
+			\hline
+			\multirow{4}{*}{\textbf{Profilo}} & \textbf{A} & 5 & 1 & 0 & 0 & 5 & 5 & 0 & 0\\
+			& \textbf{T} & 1 & 5 & 0 & 0 & 0 & 1 & 1 & 6\\
+			& \textbf{G} & 1 & 1 & 6 & 3 & 0 & 1 & 0 & 0\\
+			& \textbf{C} & 0 & 0 & 1 & 4 & 2 & 0 & 6 & 1\\
+			\hline
+			\textbf{Consenso} & & A & T & G & C & A & A & C & T 
+		\end{tabular}
+	\end{center}
+	$Score(s,DNA) = 5+5+6+4+5+5+6+6=42$
+\end{frame}
+
+\begin{frame}{Score}
+	Quanto può valere lo score?
+	\begin{equation*}
+		Score(s,DNA) = \begin{cases}
+			l\cdot t, & \mbox{nel caso migliore}\\
+			\frac{l\cdot t}{4}, & \mbox{nel caso peggiore}
+		\end{cases}
+	\end{equation*}
+	\begin{itemize}
+		\item $lt$ corrisponde al caso in cui tutti gli l-mer sono identici
+		\item $\frac{lt}{4}$ corrisponde al caso in cui gli l-mer siano diversi in tutte le posizioni
+	\end{itemize}
 \end{frame}
 
 \begin{frame}
