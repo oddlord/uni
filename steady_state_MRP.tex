@@ -2,210 +2,352 @@
 
 \begin{document}
 
-\title[Motif Finding]{Analisi di algoritmi per il Motif Finding}
-\date[11 Dicembre 2015]{\flushright 11 Dicembre 2015}
-\institute[Università di Firenze]{
-%  \includegraphics[width=2cm]{img/logoUnifi.eps}\\
-%  \includegraphics[width=2cm]{img/logoUnifi.png}\\
-%  \includegraphics[]{img/logoUnifiSmall.png}\\
-  \includegraphics[width=5cm]{img/logoUnifiName.eps}
-}
-
-\author[Papini - Bani]{
-  \begin{center}
-    \begin{tabular}{lr}
-      Tommaso \textsc{Papini}&Gabriele \textsc{Bani}\\
-      \href{mailto:tommaso.papini1@stud.unifi.it}{tommaso.papini1@stud.unifi.it}&
-      \href{mailto:gabriele.bani@stud.unifi.it}{gabriele.bani@stud.unifi.it}
-    \end{tabular}
-  \end{center}
-}
-
-\titlegraphic{
-  \vspace{-0.5cm}
-  \tiny
-  \href{http://creativecommons.org/licenses/by-sa/4.0/}{\includegraphics[width=1cm]{img/logoCC.png}}
-  This work is licensed under a
-  \href{http://creativecommons.org/licenses/by-sa/4.0/}{Creative
-    Commons Attribution-ShareAlike 4.0 International License}.
-}
-
-\begin{frame}[plain]
-	\titlepage
-\end{frame}
-
-\begin{frame}
-	\frametitle{Un po' di background}
-	DNA:
-	\begin{itemize}
-		\item sequenza di nucleotidi
-		\item 4 tipi di nucleotide: A, T, C, G
-		\item \textit{l-mer}: sottosequenza di DNA di lunghezza $l$
-	\end{itemize}
-	\begin{block}{Motifs}
-		In biologia può essere necessario ricavare certe sequenze di DNA ``nascoste''
+	\title[Motif Finding]{Analisi di algoritmi per il Motif Finding}
+	\date[11 Dicembre 2015]{\flushright 11 Dicembre 2015}
+	\institute[Università di Firenze]{\includegraphics[width=5cm]{img/logoUnifiName.eps}}
+	
+	\author[Papini - Bani]{
+		\begin{center}
+			\begin{tabular}{lr}
+				Tommaso \textsc{Papini}&Gabriele \textsc{Bani}\\
+				\href{mailto:tommaso.papini1@stud.unifi.it}{tommaso.papini1@stud.unifi.it}&
+				\href{mailto:gabriele.bani@stud.unifi.it}{gabriele.bani@stud.unifi.it}
+			\end{tabular}
+		\end{center}
+	}
+	
+	\titlegraphic{
+		\vspace{-0.5cm}
+		\tiny
+		\href{http://creativecommons.org/licenses/by-sa/4.0/}{\includegraphics[width=1cm]{img/logoCC.png}}
+		This work is licensed under a
+		\href{http://creativecommons.org/licenses/by-sa/4.0/}{Creative Commons Attribution-ShareAlike 4.0 International License}.
+	}
+	
+	\begin{frame}[plain]
+		\titlepage
+	\end{frame}
+	
+	\begin{frame}{Un po' di background}
+		DNA:
 		\begin{itemize}
-			\item pattern di nucleotidi ripetuti (l-mer)
-			\item utili a capire determinati comportamenti biologici
+			\item sequenza di nucleotidi
+			\item 4 tipi di nucleotide: A, T, C, G
+			\item \textit{l-mer}: sottosequenza di DNA di lunghezza $l$
+		\end{itemize}
+		\begin{block}{Motifs}
+			In biologia può essere necessario ricavare certe sequenze di DNA ``nascoste''
 			\begin{itemize}
-				\item sequenze di attivazione di geni specifici
+				\item pattern di nucleotidi ripetuti (l-mer)
+				\item utili a capire determinati comportamenti biologici
+				\begin{itemize}
+					\item sequenze di attivazione di geni specifici
+				\end{itemize}
 			\end{itemize}
-		\end{itemize}
-	\end{block}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Il problema del Motif Finding}
-	Il problema del Motif Finding consiste nel ricavare un set di $t$ \textbf{l-mer} da un insieme di $t$ sequenze di DNA.
-	\begin{block}{Input}
-		\begin{itemize}
-			\item $DNA$: matrice di nucleotidi $t \times n$
+		\end{block}
+	\end{frame}
+	
+	\begin{frame}{Il problema del Motif Finding}
+		Il problema del Motif Finding consiste nel ricavare un set di $t$ \textbf{l-mer} da un insieme di $t$ sequenze di DNA.
+		\begin{block}{Input}
 			\begin{itemize}
-				\item $t$ sequenze di DNA
-				\item ognuna di lunghezza $n$
+				\item $DNA$: matrice di nucleotidi $t \times n$
+				\begin{itemize}
+					\item $t$ sequenze di DNA
+					\item ognuna di lunghezza $n$
+				\end{itemize}
+				\item $l$: lunghezza del motif cercato
 			\end{itemize}
-			\item $l$: lunghezza del motif cercato
-		\end{itemize}
-	\end{block}
-	\begin{block}{Output}
-		\begin{itemize}
-			\item $s=(s_1,s_2,\dots,s_t)$: lista di $t$ posizioni iniziali di l-mer il più simili tra loro
-		\end{itemize}
-	\end{block}
-\end{frame}
-
-\begin{frame}{Un primo esempio}
-	\begin{center}
-		CGGGGCT\spot<2->[fill=yellow]{ATGCAACT}GGGTCGTCACATTCCCCTTTCGATA\\
-		TTTGAGGGTGCCCAATAA\spot<2->[fill=yellow]{ATGCAACT}CCAAAGCGGACAAA\\
-		GG\spot<2->[fill=yellow]{ATGCAACT}GATGCCGTTTGACGACCTAAATCAACGGCC\\
-		AAGG\spot<2->[fill=yellow]{ATGCAACT}CCAGGAGCGCCTTTGCTGGTTCTACCTG\\
-		AATTTTCTAAAAAGATTATAATGTCGGTCC\spot<2->[fill=yellow]{ATGCAACT}TC\\
-		CTGCTGTACAACTGAGATCATGCTGC\spot<2->[fill=yellow]{ATGCAACT}TTCAAC\\
-		TACATGATCTTTTG\spot<2->[fill=yellow]{ATGCAACT}TGGATGAGGGAATGATGC
-	\end{center}
-\end{frame}
-
-\begin{frame}{Mutazioni random}
-	\begin{center}
-		CGGGGCT\spot<1->[fill=yellow]{ATcCAgCT}GGGTCGTCACATTCCCCTTTCGATA\\
-		TTTGAGGGTGCCCAATAA\spot<1->[fill=yellow]{ggGCAACT}CCAAAGCGGACAAA\\
-		GG\spot<1->[fill=yellow]{ATGgAtCT}GATGCCGTTTGACGACCTAAATCAACGGCC\\
-		AAGG\spot<1->[fill=yellow]{AaGCAACc}CCAGGAGCGCCTTTGCTGGTTCTACCTG\\
-		AATTTTCTAAAAAGATTATAATGTCGGTCC\spot<1->[fill=yellow]{tTGgAACT}TC\\
-		CTGCTGTACAACTGAGATCATGCTGC\spot<1->[fill=yellow]{ATGCcAtT}TTCAAC\\
-		TACATGATCTTTTG\spot<1->[fill=yellow]{ATGgcACT}TGGATGAGGGAATGATGC
-	\end{center}
-	Come trovare l'l-mer più simile tra tutti?
-\end{frame}
-
-\begin{frame}{Allineamento}
-	\tiny\begin{align*}
-		CGGGGCT&\spot<1->[fill=yellow]{ATcCAgCT}GGGTCGTCACATTCCCCTTTCGATA\\
-		TTTGAGGGTGCCCAATAA&\spot<1->[fill=yellow]{ggGCAACT}CCAAAGCGGACAAA\\
-		GG&\spot<1->[fill=yellow]{ATGgAtCT}GATGCCGTTTGACGACCTAAATCAACGGCC\\
-		AAGG&\spot<1->[fill=yellow]{AaGCAACc}CCAGGAGCGCCTTTGCTGGTTCTACCTG\\
-		AATTTTCTAAAAAGATTATAATGTCGGTCC&\spot<1->[fill=yellow]{tTGgAACT}TC\\
-		CTGCTGTACAACTGAGATCATGCTGC&\spot<1->[fill=yellow]{ATGCcAtT}TTCAAC\\
-		TACATGATCTTTTG&\spot<1->[fill=yellow]{ATGgcACT}TGGATGAGGGAATGATGC
-	\end{align*}
-\end{frame}
-
-\begin{frame}{Profilo e Consenso}
-	\begin{center}
-		\begin{tabular}{l l l l l l l l l l}
-			\multirow{8}{*}{\textbf{Allineamento}} & & A & T & C & C & A & G & C & T\\
-			& & G & G & G & C & A & A & C & T\\
-			& & A & T & G & G & A & T & C & T\\
-			& & A & A & G & C & A & A & C & C\\
-			& & T & T & G & G & A & A & C & T\\
-			& & A & T & G & C & C & A & T & T\\
-			& & A & T & G & G & C & A & C & T\\
-			\hline
-			\multirow{4}{*}{\textbf{Profilo}} & \textbf{A} & 5 & 1 & 0 & 0 & 5 & 5 & 0 & 0\\
-			& \textbf{T} & 1 & 5 & 0 & 0 & 0 & 1 & 1 & 6\\
-			& \textbf{G} & 1 & 1 & 6 & 3 & 0 & 1 & 0 & 0\\
-			& \textbf{C} & 0 & 0 & 1 & 4 & 2 & 0 & 6 & 1\\
-			\hline
-			\textbf{Consenso} & & A & T & G & C & A & A & C & T 
-		\end{tabular}
-	\end{center}
-\end{frame}
-
-\begin{frame}{Score}
-	Come definire la ``bontà'' di un set di l-mer?
-	\begin{block}{Funzione score}
-		Si definisce una funzione score sul vettore $s=(s_1,s_2,\dots,s_t)$ di posizioni iniziali:
+		\end{block}
+		\begin{block}{Output}
+			\begin{itemize}
+				\item $s=(s_1,s_2,\dots,s_t)$: lista di $t$ posizioni iniziali di l-mer il più simili tra loro
+			\end{itemize}
+		\end{block}
+	\end{frame}
+	
+	\begin{frame}{Un primo esempio}
+		\begin{center}
+			CGGGGCT\spot<2->[fill=yellow]{ATGCAACT}GGGTCGTCACATTCCCCTTTCGATA\\
+			TTTGAGGGTGCCCAATAA\spot<2->[fill=yellow]{ATGCAACT}CCAAAGCGGACAAA\\
+			GG\spot<2->[fill=yellow]{ATGCAACT}GATGCCGTTTGACGACCTAAATCAACGGCC\\
+			AAGG\spot<2->[fill=yellow]{ATGCAACT}CCAGGAGCGCCTTTGCTGGTTCTACCTG\\
+			AATTTTCTAAAAAGATTATAATGTCGGTCC\spot<2->[fill=yellow]{ATGCAACT}TC\\
+			CTGCTGTACAACTGAGATCATGCTGC\spot<2->[fill=yellow]{ATGCAACT}TTCAAC\\
+			TACATGATCTTTTG\spot<2->[fill=yellow]{ATGCAACT}TGGATGAGGGAATGATGC
+		\end{center}
+	\end{frame}
+	
+	\begin{frame}{Mutazioni random}
+		\begin{center}
+			CGGGGCT\spot<1->[fill=yellow]{ATcCAgCT}GGGTCGTCACATTCCCCTTTCGATA\\
+			TTTGAGGGTGCCCAATAA\spot<1->[fill=yellow]{ggGCAACT}CCAAAGCGGACAAA\\
+			GG\spot<1->[fill=yellow]{ATGgAtCT}GATGCCGTTTGACGACCTAAATCAACGGCC\\
+			AAGG\spot<1->[fill=yellow]{AaGCAACc}CCAGGAGCGCCTTTGCTGGTTCTACCTG\\
+			AATTTTCTAAAAAGATTATAATGTCGGTCC\spot<1->[fill=yellow]{tTGgAACT}TC\\
+			CTGCTGTACAACTGAGATCATGCTGC\spot<1->[fill=yellow]{ATGCcAtT}TTCAAC\\
+			TACATGATCTTTTG\spot<1->[fill=yellow]{ATGgcACT}TGGATGAGGGAATGATGC
+		\end{center}
+		Come trovare l'l-mer più simile tra tutti?
+	\end{frame}
+	
+	\begin{frame}{Allineamento}
+		\tiny\begin{align*}
+			CGGGGCT&\spot<1->[fill=yellow]{ATcCAgCT}GGGTCGTCACATTCCCCTTTCGATA\\
+			TTTGAGGGTGCCCAATAA&\spot<1->[fill=yellow]{ggGCAACT}CCAAAGCGGACAAA\\
+			GG&\spot<1->[fill=yellow]{ATGgAtCT}GATGCCGTTTGACGACCTAAATCAACGGCC\\
+			AAGG&\spot<1->[fill=yellow]{AaGCAACc}CCAGGAGCGCCTTTGCTGGTTCTACCTG\\
+			AATTTTCTAAAAAGATTATAATGTCGGTCC&\spot<1->[fill=yellow]{tTGgAACT}TC\\
+			CTGCTGTACAACTGAGATCATGCTGC&\spot<1->[fill=yellow]{ATGCcAtT}TTCAAC\\
+			TACATGATCTTTTG&\spot<1->[fill=yellow]{ATGgcACT}TGGATGAGGGAATGATGC
+		\end{align*}
+	\end{frame}
+	
+	\begin{frame}{Profilo e Consenso}
+		\begin{center}
+			\begin{tabular}{l l l l l l l l l l}
+				\multirow{8}{*}{\textbf{Allineamento}} & & A & T & C & C & A & G & C & T\\
+				& & G & G & G & C & A & A & C & T\\
+				& & A & T & G & G & A & T & C & T\\
+				& & A & A & G & C & A & A & C & C\\
+				& & T & T & G & G & A & A & C & T\\
+				& & A & T & G & C & C & A & T & T\\
+				& & A & T & G & G & C & A & C & T\\
+				\hline
+				\multirow{4}{*}{\textbf{Profilo}} & \textbf{A} & 5 & 1 & 0 & 0 & 5 & 5 & 0 & 0\\
+				& \textbf{T} & 1 & 5 & 0 & 0 & 0 & 1 & 1 & 6\\
+				& \textbf{G} & 1 & 1 & 6 & 3 & 0 & 1 & 0 & 0\\
+				& \textbf{C} & 0 & 0 & 1 & 4 & 2 & 0 & 6 & 1\\
+				\hline
+				\textbf{Consenso} & & A & T & G & C & A & A & C & T 
+			\end{tabular}
+		\end{center}
+	\end{frame}
+	
+	\begin{frame}{Score}
+		Come definire la ``bontà'' di un set di l-mer?
+		\begin{block}{Funzione score}
+			Si definisce una funzione score sul vettore $s=(s_1,s_2,\dots,s_t)$ di posizioni iniziali:
+			\begin{equation*}
+				Score(s,DNA)=\sum_{j=1}^{l}M_{P(s)}(j)
+			\end{equation*}
+			dove
+			\begin{itemize}
+				\item $P(s)$: matrice profilo su $s$
+				\item $M_{P(s)}(j)$: elemento massimo nella colonna $j$-esima di $P(s)$
+			\end{itemize}
+		\end{block}
+		Si cerca il set di posizioni iniziali $s$ che massimizzi $Score(s,DNA)$!
+	\end{frame}
+	
+	\begin{frame}{Score: l'esempio di prima}
+		\begin{center}
+			\begin{tabular}{l l l l l l l l l l}
+				\multirow{8}{*}{\textbf{Allineamento}} & & A & T & C & C & A & G & C & T\\
+				& & G & G & G & C & A & A & C & T\\
+				& & A & T & G & G & A & T & C & T\\
+				& & A & A & G & C & A & A & C & C\\
+				& & T & T & G & G & A & A & C & T\\
+				& & A & T & G & C & C & A & T & T\\
+				& & A & T & G & G & C & A & C & T\\
+				\hline
+				\multirow{4}{*}{\textbf{Profilo}} & \textbf{A} & 5 & 1 & 0 & 0 & 5 & 5 & 0 & 0\\
+				& \textbf{T} & 1 & 5 & 0 & 0 & 0 & 1 & 1 & 6\\
+				& \textbf{G} & 1 & 1 & 6 & 3 & 0 & 1 & 0 & 0\\
+				& \textbf{C} & 0 & 0 & 1 & 4 & 2 & 0 & 6 & 1\\
+				\hline
+				\textbf{Consenso} & & A & T & G & C & A & A & C & T 
+			\end{tabular}
+		\end{center}
+		$Score(s,DNA) = 5+5+6+4+5+5+6+6=42$
+	\end{frame}
+	
+	\begin{frame}{Score}
+		Quanto può valere lo score?
 		\begin{equation*}
-			Score(s,DNA)=\sum_{j=1}^{l}M_{P(s)}(j)
+			Score(s,DNA) = \begin{cases}
+				l\cdot t, & \mbox{nel caso migliore}\\
+				\frac{l\cdot t}{4}, & \mbox{nel caso peggiore}
+			\end{cases}
 		\end{equation*}
-		dove
 		\begin{itemize}
-			\item $P(s)$: matrice profilo su $s$
-			\item $M_{P(s)}(j)$: elemento massimo nella colonna $j$-esima di $P(s)$
+			\item $lt$ corrisponde al caso in cui tutti gli l-mer sono identici
+			\item $\frac{lt}{4}$ corrisponde al caso in cui gli l-mer siano diversi in tutte le posizioni
 		\end{itemize}
-	\end{block}
-	Si cerca il set di posizioni iniziali $s$ che massimizzi $Score(s,DNA)$!
-\end{frame}
+	\end{frame}
+	
+	\begin{frame}{Algoritmi brute force}
+		\begin{block}{Forza bruta}
+			In informatica il metodo ``forza bruta'' (o ricerca esaustiva della soluzione) è un algoritmo di risoluzione di un problema dato che consiste nel verificare tutte le soluzioni teoricamente possibili fino a che si trova quella effettivamente corretta.
+		\end{block}
+	\end{frame}
+	
+	\begin{frame}{Simple motif search}
+		\begin{block}{L'idea}
+			Esamina tutte le possibili combinazioni delle posizioni di partenza $s$ e prendi quella con maggior \textit{Score}.
+		\end{block}
+		\begin{itemize}
+			\item Posizioni iniziali: $s=(1,\dots,1)$
+			\item Posizioni  finali: $s=((n-l+1),\dots,(n-l+1))$
+		\end{itemize}
+		Si utilizza il metodo $NextElement$ per passare da un elemento al successivo in ordine alfabetico.
+	\end{frame}
+	
+	\begin{frame}{Simple motif search}{Pseudocodice}
+		\begin{center}
+		    \begin{algorithmic}[1]
+			    \Procedure{SimpleMotifSearch}{$DNA,t,n,l$}
+				    \State $s\gets (1,1,\dots,1)$
+				    \State $bestScore\gets Score(s,DNA)$
+				    \While{$true$}
+				    	\State $s\gets NextElement(s,t,n-l+1)$
+				    	\If{$Score(s,DNA)>bestScore$}
+				    		\State $bestScore\gets Score(s,DNA)$
+				    		\State $bestMotif\gets s$
+				    	\EndIf
+				    	\If{$s=(1,1,\dots,1)$}
+				    		\State \textbf{return} $bestMotif$
+				    	\EndIf
+				    \EndWhile
+			    \EndProcedure
+		    \end{algorithmic}
+	    \end{center}
+	\end{frame}
+	
+	\begin{frame}{Simple motif search}{Complessità}
+		Quante iterazioni fa l'algoritmo?
+		\begin{itemize}
+			\item vengono esaminate tutte le possibili combinazioni
+			\begin{itemize}
+				\item $(n-l+1)$ possibili scelte per ogni posizione iniziale
+				\item $t$ posizioni iniziali (una per ogni sequenza)
+			\end{itemize}
+			\item $(n-l+1)^t$ possibili combinazioni di posizioni iniziali
+		\end{itemize}
+		Quanti passi per calcolare \textit{Score}?
+		\begin{itemize}
+			\item $tl$ per calcolare la matrice Profilo
+			\item $4l$ per calcolare \textit{Score}
+		\end{itemize}
+		\begin{block}{Costo}
+			$$\mathcal{O}(tln^t)$$
+		\end{block}
+	\end{frame}
+	
+	\begin{frame}{Branch \& bound}
+		\begin{block}{L'idea}
+			Ottimizza \textit{Simple Motif Search} evitando di analizzare sequenze non ottimali
+			\begin{itemize}
+				\item enumerazione delle sequenze tramite \alert{\textbf{alberi}}
+				\item funzione di \textit{Score ottimistico}
+				\begin{itemize}
+					\item \textit{Score parziale} su un nodo interno
+					\item \textit{Score ideale} per le restanti posizioni
+				\end{itemize}
+			\end{itemize}
+		\end{block}
+	\end{frame}
+	
+	\begin{frame}{Branch \& bound}{Un esempio}
+		\begin{center}
+			\includegraphics[scale=0.4]{albero.png}
+		\end{center}
+	\end{frame}
+	
+	\begin{frame}{Branch \& bound}{Un esempio}
+		\begin{center}
+			\includegraphics[scale=0.4]{albero2.png}
+		\end{center}
+	\end{frame}
+	
+	\begin{frame}{Branch \& bound}
+		Si esegue una visita in profondità dell'albero
+		\begin{itemize}
+			\item calcola lo \textit{Score ottimistico} per ogni nodo
+			\item scarta i sottoalberi con \textit{Score ottimistico} sub-ottimo
+		\end{itemize}
+		\begin{block}{Score ottimistico}
+			$$\mbox{Score ottimistico}=Score(s,i,DNA)+(t-i)\cdot l$$
+			\begin{itemize}
+				\item $Score(s,i,DNA)$: \textit{Score parziale} relativo alle prime $i$ sequenze di DNA
+				\item $(t-i)\cdot l$: \textit{Score parziale} delle restanti posizioni (supponendole identiche)
+			\end{itemize}
+		\end{block}
+		\begin{itemize}
+			\item $NextVertex$ per passare al prossimo vertice (DFS)
+			\item $Skip$ per passare al prossimo vertice saltando il sottoalbero attuale
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Branch \& bound}{Pseudocodice}
+		\begin{center}\scriptsize
+		    \begin{algorithmic}[1]
+			    \Procedure{BranchAndBoundMotifSearch}{$DNA,t,n,l$}
+				    \State $s\gets (1,1,\dots,1)$
+				    \State $bestScore\gets 0$
+				    \State $i\gets 1$
+				    \While{$i>0$}
+						\If{$i<t$}
+							\State $optimisticScore\gets Score(s,i,DNA)+(t-i)l$
+							\If{$optimisticScore<bestScore$}
+								\State $(s,i)\gets Skip(s,i,(n-l+1))$
+							\Else
+								\State $(s,i)\gets NextVertex(s,i,t,(n-l+1))$
+							\EndIf
+						\Else
+							\If{$Score(s,DNA)>bestScore$}
+								\State $bestScore\gets Score(s,DNA)$
+								\State $bestMotif\gets s$
+							\EndIf
+							\State $(s,i)\gets NextVertex(s,i,t,(n-l+1))$
+						\EndIf
+				    \EndWhile
+				    \State \textbf{return} $bestMotif$
+			    \EndProcedure
+		    \end{algorithmic}
+	    \end{center}
+	\end{frame}
+	
+	\begin{frame}{Branch \& bound}{Complessità}
+		Quante iterazioni?
+		\begin{itemize}
+			\item una per ogni nodo interno/foglia (caso pessimo)
+			\begin{itemize}
+				\item $N=\frac{(n-l+1)^t-1}{(n-l+1)-1}$ nodi interni
+				\item $L=(n-l+1)^t$ foglie
+			\end{itemize}
+			\item $N+L$ passi totali
+		\end{itemize}
+		Quanto passi per calcolare \textit{Score}?
+		\begin{itemize}
+			\item come prima!
+		\end{itemize}
+		\begin{block}{Costo}
+			$$\mathcal{O}(tln^t)$$
+		\end{block}
+		Come prima!
+		\begin{itemize}
+			\item più costoso nel caso pessimo
+			\item conveniente se esegue tanti \textit{Skip}
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Algoritmi greedy}
+	\end{frame}
+	
+	\begin{frame}{Algoritmi randomizzati}
+	\end{frame}
+	
+	\begin{frame}{Conclusioni}
+	\end{frame}
+	
+	\begin{frame}
+		\begin{center}
+			\textbf{\calligra\Huge Fine.}\\
+			\includegraphics[width=5cm]{img/ornament.eps}\\[1cm]
+			\pause
+			{\huge\calligra Domande?\pause{} Grazie!}
+		\end{center}
+	\end{frame}
 
-\begin{frame}{Score: l'esempio di prima}
-	\begin{center}
-		\begin{tabular}{l l l l l l l l l l}
-			\multirow{8}{*}{\textbf{Allineamento}} & & A & T & C & C & A & G & C & T\\
-			& & G & G & G & C & A & A & C & T\\
-			& & A & T & G & G & A & T & C & T\\
-			& & A & A & G & C & A & A & C & C\\
-			& & T & T & G & G & A & A & C & T\\
-			& & A & T & G & C & C & A & T & T\\
-			& & A & T & G & G & C & A & C & T\\
-			\hline
-			\multirow{4}{*}{\textbf{Profilo}} & \textbf{A} & 5 & 1 & 0 & 0 & 5 & 5 & 0 & 0\\
-			& \textbf{T} & 1 & 5 & 0 & 0 & 0 & 1 & 1 & 6\\
-			& \textbf{G} & 1 & 1 & 6 & 3 & 0 & 1 & 0 & 0\\
-			& \textbf{C} & 0 & 0 & 1 & 4 & 2 & 0 & 6 & 1\\
-			\hline
-			\textbf{Consenso} & & A & T & G & C & A & A & C & T 
-		\end{tabular}
-	\end{center}
-	$Score(s,DNA) = 5+5+6+4+5+5+6+6=42$
-\end{frame}
-
-\begin{frame}{Score}
-	Quanto può valere lo score?
-	\begin{equation*}
-		Score(s,DNA) = \begin{cases}
-			l\cdot t, & \mbox{nel caso migliore}\\
-			\frac{l\cdot t}{4}, & \mbox{nel caso peggiore}
-		\end{cases}
-	\end{equation*}
-	\begin{itemize}
-		\item $lt$ corrisponde al caso in cui tutti gli l-mer sono identici
-		\item $\frac{lt}{4}$ corrisponde al caso in cui gli l-mer siano diversi in tutte le posizioni
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Algoritmi brute force}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Algoritmi greedy}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Algoritmi randomizzati}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Conclusioni}
-\end{frame}
-
-\begin{frame}
-  \begin{center}
-	\textbf{\calligra\Huge Fine.}\\
-  \includegraphics[width=5cm]{img/ornament.eps}\\[1cm]
-	\pause
-	{\huge\calligra Domande?\pause{} Grazie!}
-  \end{center}
-\end{frame}
 \end{document}
