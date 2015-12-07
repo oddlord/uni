@@ -31,8 +31,8 @@ def get_promo2_distance(store_features, store_id, date):
         if date >= promo2_since:
             promo2_interval = store_features[store_id]['PromoInterval']
             promo2_starts = [datetime(year - 1, promo2_interval[3], 1)]
-            promo2_starts += [datetime(year, month, 1) for month in promo2_interval]
-            promo2_starts += [datetime(year + 1, promo2_interval[0], 1)]
+            promo2_starts.extend([datetime(year, month, 1) for month in promo2_interval])
+            promo2_starts.append(datetime(year + 1, promo2_interval[0], 1))
             for i in range(0, len(promo2_starts) - 1):
                 if date >= promo2_starts[i] and date < promo2_starts[i+1]:
                     promo2_distance = (date - promo2_starts[i]).days
@@ -112,7 +112,7 @@ def parse_promo_interval(promo_interval):
     intervals = []
     months = promo_interval.split(',')
     for month in months:
-        intervals += [months_map[month]]
+        intervals.append(months_map[month])
     return intervals
 
 fields = {

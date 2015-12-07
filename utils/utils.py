@@ -17,6 +17,29 @@ def compute_rmspe(Y_target, Y_pred):
     rmspe = math.sqrt(numpy.mean([pow((y_t-y_p)/y_t, 2) for y_t, y_p in zip(Y_target, Y_pred) if y_t != 0]))
     return rmspe
 
+def print_rmspe(Y_target, Y_pred, dataset):
+    rmspe = compute_rmspe(Y_target, Y_pred)
+    best_rmspe = rmspe
+    if isfile(data['rmspe'][dataset]):
+        with open(data['rmspe'][dataset], 'r') as f_rmspe:
+            best_rmspe = float(f_rmspe.readline())
+    delta_rmspe = float("%.5f" % (rmspe)) - best_rmspe
+    start_format = ''
+    end_format = ''
+    sign = '+-'
+    if delta_rmspe <= 0:
+        with open(data['rmspe'][dataset], 'w+') as f_rmspe:
+            f_rmspe.write("%.5f" % (rmspe))
+    if delta_rmspe < 0:
+        start_format = '\033[1m\033[92m'
+        end_format = '\033[0m'
+        sign = ''
+    elif delta_rmspe > 0:
+        start_format = '\033[1m\033[91m'
+        end_format = '\033[0m'
+        sign = '+'
+    print "*\tRMSPE on %s data: %s%.5f%s (%s%.5f)" % (dataset, start_format, rmspe, end_format, sign, delta_rmspe)
+
 @contextmanager
 def task(task_name):
     sys.stdout.write("*\n* %s... " % (task_name))

@@ -3,7 +3,10 @@ data = {
     'store': 'data/store.csv',
     'test': 'data/test.csv',
     'pred': 'data/predictions.csv',
-    'best_rmspe': 'best_rmspe.tmp'
+    'rmspe': {
+        'training': 'rmspe_train.tmp',
+        'validation': 'rmspe_vali.tmp'
+    }
 }
 
 options = {

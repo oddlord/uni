@@ -66,8 +66,8 @@ def extract_train_features():
             X_train[store_id] = []
             Y_train[store_id] = []
         x, y = extract_instance(line, Dataset.Train)
-        X_train[store_id] += [x]
-        Y_train[store_id] += [y]
+        X_train[store_id].append(x)
+        Y_train[store_id].append(y)
     return X_train, Y_train
 
 def extract_validation_features():
@@ -77,12 +77,12 @@ def extract_validation_features():
         is_open = get_field(line, 'Open', Dataset.Train)
         store_id = get_field(line, 'Store', Dataset.Train) if options['per_store_training'] else 1
         x, y = extract_instance(line, Dataset.Train)
-        X_vali += [{
+        X_vali.append({
             'store_id': store_id,
             'open': is_open,
             'x': x
-        }]
-        Y_vali_target += [y]
+        })
+        Y_vali_target.append(y)
     return X_vali, Y_vali_target
 
 def extract_test_features():
@@ -92,12 +92,12 @@ def extract_test_features():
         store_id = get_field(line, 'Store', Dataset.Test) if options['per_store_training'] else 1
         instance_id = get_field(line, 'Id', Dataset.Test)
         x, y = extract_instance(line, Dataset.Test)
-        X_test += [{
+        X_test.append({
             'id': instance_id,
             'store_id': store_id,
             'open': is_open,
             'x': x
-        }]
+        })
     return X_test
 
 def predict_instance(x):
@@ -133,37 +133,22 @@ def main():
     # Training
     with task('Training model(s)'):
         models = {}
+        Y_train_target = []
+        Y_train_pred = []
         for store_id in X_train.keys():
             models[store_id] = get_model()
             models[store_id].fit(X_train[store_id], Y_train[store_id])
+            Y_train_target.extend(Y_train[store_id])
+            Y_train_pred.extend(models[store_id].predict(X_train[store_id]))
+    print_rmspe(Y_train_target, Y_train_pred, 'training')
 
     # Validation
     if options['validation']:
         with task('Testing validation data'):
             Y_vali_pred = []
             for x in X_vali:
-                Y_vali_pred += [predict_instance(x)]
-            rmspe = compute_rmspe(Y_vali_target, Y_vali_pred)
-            best_rmspe = rmspe
-            if os.path.isfile(data['best_rmspe']):
-                with open(data['best_rmspe'], 'r') as f_rmspe:
-                    best_rmspe = float(f_rmspe.readline())
-            delta_rmspe = float("%.5f" % (rmspe)) - best_rmspe
-            start_format = ''
-            end_format = ''
-            sign = '+-'
-            if delta_rmspe <= 0:
-                with open(data['best_rmspe'], 'w+') as f_rmspe:
-                    f_rmspe.write("%.5f" % (rmspe))
-            if delta_rmspe < 0:
-                start_format = '\033[1m\033[92m'
-                end_format = '\033[0m'
-                sign = ''
-            elif delta_rmspe > 0:
-                start_format = '\033[1m\033[91m'
-                end_format = '\033[0m'
-                sign = '+'
-        print "*\tRMSPE on validation data: %s%.5f%s (%s%.5f)" % (start_format, rmspe, end_format, sign, delta_rmspe)
+                Y_vali_pred.append(predict_instance(x))
+        print_rmspe(Y_vali_target, Y_vali_pred, 'validation')
         if options['plot']:
             store_id = 1
             Y_plot_target = [y for (x,y) in zip(X_vali, Y_vali_target) if x['store_id'] == store_id]
