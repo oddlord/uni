@@ -31,9 +31,9 @@
 	\begin{frame}{Un po' di background}
 		DNA:
 		\begin{itemize}
-			\item sequenza di nucleotidi
-			\item 4 tipi di nucleotide: A, T, C, G
-			\item \textit{l-mer}: sottosequenza di DNA di lunghezza $l$
+			\item[$\bullet$] sequenza di \alert{\textbf{nucleotidi}}
+			\item[$\bullet$] 4 tipi di nucleotide: A, T, C, G
+			\item[$\bullet$] \alert{\textbf{\textit{l-mer}}}: sottosequenza di DNA di lunghezza $l$
 		\end{itemize}
 		\begin{block}{Motifs}
 			In biologia può essere necessario ricavare certe sequenze di DNA ``nascoste''
@@ -48,15 +48,15 @@
 	\end{frame}
 	
 	\begin{frame}{Il problema del Motif Finding}
-		Il problema del Motif Finding consiste nel ricavare un set di $t$ \textbf{l-mer} da un insieme di $t$ sequenze di DNA.
+		Il problema del \alert{\textbf{Motif Finding}} consiste nel ricavare un set di $t$ \alert{\textbf{l-mer}} da un insieme di $t$ sequenze di DNA.
 		\begin{block}{Input}
 			\begin{itemize}
-				\item $DNA$: matrice di nucleotidi $t \times n$
+				\item[$\bullet$] $DNA$: matrice di nucleotidi $t \times n$
 				\begin{itemize}
 					\item $t$ sequenze di DNA
 					\item ognuna di lunghezza $n$
 				\end{itemize}
-				\item $l$: lunghezza del motif cercato
+				\item[$\bullet$] $l$: lunghezza del motif cercato
 			\end{itemize}
 		\end{block}
 		\begin{block}{Output}
@@ -127,7 +127,7 @@
 	\begin{frame}{Score}
 		Come definire la ``bontà'' di un set di l-mer?
 		\begin{block}{Funzione score}
-			Si definisce una funzione score sul vettore $s=(s_1,s_2,\dots,s_t)$ di posizioni iniziali:
+			Si definisce una funzione \alert{\textbf{score}} sul vettore $s=(s_1,s_2,\dots,s_t)$ di posizioni iniziali:
 			\begin{equation*}
 				Score(s,DNA)=\sum_{j=1}^{l}M_{P(s)}(j)
 			\end{equation*}
@@ -137,7 +137,7 @@
 				\item $M_{P(s)}(j)$: elemento massimo nella colonna $j$-esima di $P(s)$
 			\end{itemize}
 		\end{block}
-		Si cerca il set di posizioni iniziali $s$ che massimizzi $Score(s,DNA)$!
+		Si cerca il set di posizioni iniziali $s$ che \alert{\textbf{massimizzi}} $Score(s,DNA)$!
 	\end{frame}
 	
 	\begin{frame}{Score: l'esempio di prima}
@@ -167,9 +167,12 @@
 		\begin{equation*}
 			Score(s,DNA) = \begin{cases}
 				l\cdot t, & \mbox{nel caso migliore}\\
+				\\
 				\frac{l\cdot t}{4}, & \mbox{nel caso peggiore}
 			\end{cases}
 		\end{equation*}
+		\begin{flushleft}
+		\end{flushleft}
 		\begin{itemize}
 			\item $lt$ corrisponde al caso in cui tutti gli l-mer sono identici
 			\item $\frac{lt}{4}$ corrisponde al caso in cui gli l-mer siano diversi in tutte le posizioni
@@ -183,55 +186,71 @@
 	\end{frame}
 	
 	\begin{frame}{Simple motif search}
-		\begin{block}{L'idea}
-			Esamina tutte le possibili combinazioni delle posizioni di partenza $s$ e prendi quella con maggior \textit{Score}.
-		\end{block}
+		\begin{flushleft}
+			\begin{block}{L'idea}
+				Esamina tutte le possibili combinazioni delle posizioni di partenza $s$ e prendi quella con maggior \textit{Score}.
+			\end{block}
+		\end{flushleft}
+	\begin{flushleft}
 		\begin{itemize}
-			\item Posizioni iniziali: $s=(1,\dots,1)$
-			\item Posizioni  finali: $s=((n-l+1),\dots,(n-l+1))$
+			\item[$\bullet$] Posizioni iniziali: $s=(1,\dots,1)$
+			\item[$\bullet$] Posizioni  finali: $s=((n-l+1),\dots,(n-l+1))$
 		\end{itemize}
+	\end{flushleft}
+	\begin{flushleft}
 		Si utilizza il metodo $NextElement$ per passare da un elemento al successivo in ordine alfabetico.
+	\end{flushleft}
 	\end{frame}
 	
 	\begin{frame}{Simple motif search}{Pseudocodice}
 		\begin{center}
-		    \begin{algorithmic}[1]
-			    \Procedure{SimpleMotifSearch}{$DNA,t,n,l$}
-				    \State $s\gets (1,1,\dots,1)$
-				    \State $bestScore\gets Score(s,DNA)$
-				    \While{$true$}
-				    	\State $s\gets NextElement(s,t,n-l+1)$
-				    	\If{$Score(s,DNA)>bestScore$}
-				    		\State $bestScore\gets Score(s,DNA)$
-				    		\State $bestMotif\gets s$
-				    	\EndIf
-				    	\If{$s=(1,1,\dots,1)$}
-				    		\State \textbf{return} $bestMotif$
-				    	\EndIf
-				    \EndWhile
-			    \EndProcedure
-		    \end{algorithmic}
+			\begin{minipage}{7.7cm}
+			    \begin{algorithmic}[1]
+				    \Procedure{SimpleMotifSearch}{$DNA,t,n,l$}
+					    \State $s\gets (1,1,\dots,1)$
+					    \State $bestScore\gets Score(s,DNA)$
+					    \While{$true$}
+					    	\State $s\gets NextElement(s,t,n-l+1)$
+					    	\If{$Score(s,DNA)>bestScore$}
+					    		\State $bestScore\gets Score(s,DNA)$
+					    		\State $bestMotif\gets s$
+					    	\EndIf
+					    	\If{$s=(1,1,\dots,1)$}
+					    		\State \textbf{return} $bestMotif$
+					    	\EndIf
+					    \EndWhile
+				    \EndProcedure
+			    \end{algorithmic}
+			\end{minipage}
 	    \end{center}
 	\end{frame}
 	
 	\begin{frame}{Simple motif search}{Complessità}
-		Quante iterazioni fa l'algoritmo?
-		\begin{itemize}
-			\item vengono esaminate tutte le possibili combinazioni
+		Quante \alert{\textbf{iterazioni}} fa l'algoritmo?
+		\begin{flushleft}
 			\begin{itemize}
-				\item $(n-l+1)$ possibili scelte per ogni posizione iniziale
-				\item $t$ posizioni iniziali (una per ogni sequenza)
+				\item vengono esaminate tutte le possibili combinazioni
+				\begin{itemize}
+					\item $(n-l+1)$ possibili scelte per ogni posizione iniziale
+					\item $t$ posizioni iniziali (una per ogni sequenza)
+				\end{itemize}
+				\item $(n-l+1)^t$ possibili combinazioni di posizioni iniziali
 			\end{itemize}
-			\item $(n-l+1)^t$ possibili combinazioni di posizioni iniziali
-		\end{itemize}
-		Quanti passi per calcolare \textit{Score}?
-		\begin{itemize}
-			\item $tl$ per calcolare la matrice Profilo
-			\item $4l$ per calcolare \textit{Score}
-		\end{itemize}
-		\begin{block}{Costo}
-			$$\mathcal{O}(tln^t)$$
-		\end{block}
+		\end{flushleft}
+		\begin{flushleft}
+			Quanti \alert{\textbf{passi}} per calcolare \textit{Score}?
+			\begin{itemize}
+				\item $tl$ per calcolare la matrice Profilo
+				\item $4l$ per calcolare \textit{Score}
+			\end{itemize}
+		\end{flushleft}
+		\begin{center}
+			\begin{minipage}{3cm}
+				\begin{block}{Costo}
+					$$\mathcal{O}(tln^t)$$
+				\end{block}
+			\end{minipage}
+		\end{center}
 	\end{frame}
 	
 	\begin{frame}{Branch \& bound}
@@ -281,35 +300,37 @@
 	
 	\begin{frame}{Branch \& bound}{Pseudocodice}
 		\begin{center}\scriptsize
-		    \begin{algorithmic}[1]
-			    \Procedure{BranchAndBoundMotifSearch}{$DNA,t,n,l$}
-				    \State $s\gets (1,1,\dots,1)$
-				    \State $bestScore\gets 0$
-				    \State $i\gets 1$
-				    \While{$i>0$}
-						\If{$i<t$}
-							\State $optimisticScore\gets Score(s,i,DNA)+(t-i)l$
-							\If{$optimisticScore<bestScore$}
-								\State $(s,i)\gets Skip(s,i,(n-l+1))$
+			\begin{minipage}{7.5cm}
+			    \begin{algorithmic}[1]
+				    \Procedure{BranchAndBoundMotifSearch}{$DNA,t,n,l$}
+					    \State $s\gets (1,1,\dots,1)$
+					    \State $bestScore\gets 0$
+					    \State $i\gets 1$
+					    \While{$i>0$}
+							\If{$i<t$}
+								\State $optimisticScore\gets Score(s,i,DNA)+(t-i)l$
+								\If{$optimisticScore<bestScore$}
+									\State $(s,i)\gets Skip(s,i,(n-l+1))$
+								\Else
+									\State $(s,i)\gets NextVertex(s,i,t,(n-l+1))$
+								\EndIf
 							\Else
+								\If{$Score(s,DNA)>bestScore$}
+									\State $bestScore\gets Score(s,DNA)$
+									\State $bestMotif\gets s$
+								\EndIf
 								\State $(s,i)\gets NextVertex(s,i,t,(n-l+1))$
 							\EndIf
-						\Else
-							\If{$Score(s,DNA)>bestScore$}
-								\State $bestScore\gets Score(s,DNA)$
-								\State $bestMotif\gets s$
-							\EndIf
-							\State $(s,i)\gets NextVertex(s,i,t,(n-l+1))$
-						\EndIf
-				    \EndWhile
-				    \State \textbf{return} $bestMotif$
-			    \EndProcedure
-		    \end{algorithmic}
+					    \EndWhile
+					    \State \textbf{return} $bestMotif$
+				    \EndProcedure
+			    \end{algorithmic}
+			\end{minipage}
 	    \end{center}
 	\end{frame}
 	
 	\begin{frame}{Branch \& bound}{Complessità}
-		Quante iterazioni?
+		Quante \alert{\textbf{iterazioni}}?
 		\begin{itemize}
 			\item una per ogni nodo interno/foglia (caso pessimo)
 			\begin{itemize}
@@ -318,13 +339,17 @@
 			\end{itemize}
 			\item $N+L$ passi totali
 		\end{itemize}
-		Quanto passi per calcolare \textit{Score}?
+		Quanto \alert{\textbf{passi}} per calcolare \textit{Score}?
 		\begin{itemize}
 			\item come prima!
 		\end{itemize}
-		\begin{block}{Costo}
-			$$\mathcal{O}(tln^t)$$
-		\end{block}
+		\begin{center}
+			\begin{minipage}{3cm}
+				\begin{varblock}{Costo}
+					$$\mathcal{O}(tln^t)$$
+				\end{varblock}
+			\end{minipage}
+		\end{center}
 		Come prima!
 		\begin{itemize}
 			\item più costoso nel caso pessimo
