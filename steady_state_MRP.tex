@@ -68,38 +68,38 @@
 	
 	\begin{frame}{Un primo esempio}
 		\begin{center}
-			CGGGGCT\spot<2->[fill=yellow]{ATGCAACT}GGGTCGTCACATTCCCCTTTCGATA\\
-			TTTGAGGGTGCCCAATAA\spot<2->[fill=yellow]{ATGCAACT}CCAAAGCGGACAAA\\
-			GG\spot<2->[fill=yellow]{ATGCAACT}GATGCCGTTTGACGACCTAAATCAACGGCC\\
-			AAGG\spot<2->[fill=yellow]{ATGCAACT}CCAGGAGCGCCTTTGCTGGTTCTACCTG\\
-			AATTTTCTAAAAAGATTATAATGTCGGTCC\spot<2->[fill=yellow]{ATGCAACT}TC\\
-			CTGCTGTACAACTGAGATCATGCTGC\spot<2->[fill=yellow]{ATGCAACT}TTCAAC\\
-			TACATGATCTTTTG\spot<2->[fill=yellow]{ATGCAACT}TGGATGAGGGAATGATGC
+			\onslide<1>CGGGGCT\onslide<1,2>ATGCAACT\onslide<1>GGGTCGTCACATTCCCCTTTCGATA\\
+			TTTGAGGGTGCCCAATAA\onslide<1,2>ATGCAACT\onslide<1>CCAAAGCGGACAAA\\
+			GG\onslide<1,2>ATGCAACT\onslide<1>GATGCCGTTTGACGACCTAAATCAACGGCC\\
+			AAGG\onslide<1,2>ATGCAACT\onslide<1>CCAGGAGCGCCTTTGCTGGTTCTACCTG\\
+			AATTTTCTAAAAAGATTATAATGTCGGTCC\onslide<1,2>ATGCAACT\onslide<1>TC\\
+			CTGCTGTACAACTGAGATCATGCTGC\onslide<1,2>ATGCAACT\onslide<1>TTCAAC\\
+			TACATGATCTTTTG\onslide<1,2>ATGCAACT\onslide<1>TGGATGAGGGAATGATGC
 		\end{center}
 	\end{frame}
 	
 	\begin{frame}{Mutazioni random}
-		\begin{center}
-			CGGGGCT\spot<1->[fill=yellow]{ATcCAgCT}GGGTCGTCACATTCCCCTTTCGATA\\
-			TTTGAGGGTGCCCAATAA\spot<1->[fill=yellow]{ggGCAACT}CCAAAGCGGACAAA\\
-			GG\spot<1->[fill=yellow]{ATGgAtCT}GATGCCGTTTGACGACCTAAATCAACGGCC\\
-			AAGG\spot<1->[fill=yellow]{AaGCAACc}CCAGGAGCGCCTTTGCTGGTTCTACCTG\\
-			AATTTTCTAAAAAGATTATAATGTCGGTCC\spot<1->[fill=yellow]{tTGgAACT}TC\\
-			CTGCTGTACAACTGAGATCATGCTGC\spot<1->[fill=yellow]{ATGCcAtT}TTCAAC\\
-			TACATGATCTTTTG\spot<1->[fill=yellow]{ATGgcACT}TGGATGAGGGAATGATGC
+		\begin{center}						
+			\onslide<.>CGGGGCT\onslide<1>ATcCAgCT\onslide<.>GGGTCGTCACATTCCCCTTTCGATA\\
+			TTTGAGGGTGCCCAATAA\onslide<1>ggGCAACT\onslide<.>CCAAAGCGGACAAA\\
+			GG\onslide<1>ATGgAtCT\onslide<.>GATGCCGTTTGACGACCTAAATCAACGGCC\\
+			AAGG\onslide<1>AaGCAACc\onslide<.>CCAGGAGCGCCTTTGCTGGTTCTACCTG\\
+			AATTTTCTAAAAAGATTATAATGTCGGTCC\onslide<1>tTGgAACT\onslide<.>TC\\
+			CTGCTGTACAACTGAGATCATGCTGC\onslide<1>ATGCcAtT\onslide<.>TTCAAC\\
+			TACATGATCTTTTG\onslide<1>ATGgcACT\onslide<.>TGGATGAGGGAATGATGC
 		\end{center}
-		Come trovare l'l-mer più simile tra tutti?
+		\onslide<1>Come trovare l'l-mer più simile tra tutti?
 	\end{frame}
 	
-	\begin{frame}{Allineamento}
-		\tiny\begin{align*}
-			CGGGGCT&\spot<1->[fill=yellow]{ATcCAgCT}GGGTCGTCACATTCCCCTTTCGATA\\
-			TTTGAGGGTGCCCAATAA&\spot<1->[fill=yellow]{ggGCAACT}CCAAAGCGGACAAA\\
-			GG&\spot<1->[fill=yellow]{ATGgAtCT}GATGCCGTTTGACGACCTAAATCAACGGCC\\
-			AAGG&\spot<1->[fill=yellow]{AaGCAACc}CCAGGAGCGCCTTTGCTGGTTCTACCTG\\
-			AATTTTCTAAAAAGATTATAATGTCGGTCC&\spot<1->[fill=yellow]{tTGgAACT}TC\\
-			CTGCTGTACAACTGAGATCATGCTGC&\spot<1->[fill=yellow]{ATGCcAtT}TTCAAC\\
-			TACATGATCTTTTG&\spot<1->[fill=yellow]{ATGgcACT}TGGATGAGGGAATGATGC
+	\begin{frame}{Allineamento}\tiny
+		\begin{align*}					
+			\onslide<.>CGGGGCT&\onslide<1>ATcCAgCT\onslide<.>GGGTCGTCACATTCCCCTTTCGATA\\
+			TTTGAGGGTGCCCAATAA&\onslide<1>ggGCAACT\onslide<.>CCAAAGCGGACAAA\\
+			GG&\onslide<1>ATGgAtCT\onslide<.>GATGCCGTTTGACGACCTAAATCAACGGCC\\
+			AAGG&\onslide<1>AaGCAACc\onslide<.>CCAGGAGCGCCTTTGCTGGTTCTACCTG\\
+			AATTTTCTAAAAAGATTATAATGTCGGTCC&\onslide<1>tTGgAACT\onslide<.>TC\\
+			CTGCTGTACAACTGAGATCATGCTGC&\onslide<1>ATGCcAtT\onslide<.>TTCAAC\\
+			TACATGATCTTTTG&\onslide<1>ATGgcACT\onslide<.>TGGATGAGGGAATGATGC
 		\end{align*}
 	\end{frame}
 	
