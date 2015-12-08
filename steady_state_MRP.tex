@@ -16,14 +16,6 @@
 		\end{center}
 	}
 	
-	\titlegraphic{
-		\vspace{-0.5cm}
-		\tiny
-		\href{http://creativecommons.org/licenses/by-sa/4.0/}{\includegraphics[width=1cm]{img/logoCC.png}}
-		This work is licensed under a
-		\href{http://creativecommons.org/licenses/by-sa/4.0/}{Creative Commons Attribution-ShareAlike 4.0 International License}.
-	}
-	
 	\begin{frame}[plain]
 		\titlepage
 	\end{frame}
@@ -94,12 +86,12 @@
 	\begin{frame}{Allineamento}\tiny
 		\begin{align*}					
 			\onslide<.>CGGGGCT&\onslide<1>ATcCAgCT\onslide<.>GGGTCGTCACATTCCCCTTTCGATA\\
-			TTTGAGGGTGCCCAATAA&\onslide<1>ggGCAACT\onslide<.>CCAAAGCGGACAAA\\
-			GG&\onslide<1>ATGgAtCT\onslide<.>GATGCCGTTTGACGACCTAAATCAACGGCC\\
-			AAGG&\onslide<1>AaGCAACc\onslide<.>CCAGGAGCGCCTTTGCTGGTTCTACCTG\\
-			AATTTTCTAAAAAGATTATAATGTCGGTCC&\onslide<1>tTGgAACT\onslide<.>TC\\
-			CTGCTGTACAACTGAGATCATGCTGC&\onslide<1>ATGCcAtT\onslide<.>TTCAAC\\
-			TACATGATCTTTTG&\onslide<1>ATGgcACT\onslide<.>TGGATGAGGGAATGATGC
+			\onslide<.>TTTGAGGGTGCCCAATAA&\onslide<1>ggGCAACT\onslide<.>CCAAAGCGGACAAA\\
+			\onslide<.>GG&\onslide<1>ATGgAtCT\onslide<.>GATGCCGTTTGACGACCTAAATCAACGGCC\\
+			\onslide<.>AAGG&\onslide<1>AaGCAACc\onslide<.>CCAGGAGCGCCTTTGCTGGTTCTACCTG\\
+			\onslide<.>AATTTTCTAAAAAGATTATAATGTCGGTCC&\onslide<1>tTGgAACT\onslide<.>TC\\
+			\onslide<.>CTGCTGTACAACTGAGATCATGCTGC&\onslide<1>ATGCcAtT\onslide<.>TTCAAC\\
+			\onslide<.>TACATGATCTTTTG&\onslide<1>ATGgcACT\onslide<.>TGGATGAGGGAATGATGC
 		\end{align*}
 	\end{frame}
 	
@@ -358,20 +350,242 @@
 	\end{frame}
 	
 	\begin{frame}{Algoritmi greedy}
+		\begin{block}{Greedy}
+			Un algoritmo greedy è un algoritmo che cerca di ottenere una soluzione ottima da un punto di vista globale attraverso la scelta della soluzione più golosa ad ogni passo locale
+		\end{block}
+	\end{frame}
+	
+	\begin{frame}{Greedy motif search}
+		\begin{block}{L'idea}
+			Scansiona ogni sequenza di DNA una sola volta e prendi l'l-mer che massimizza lo \textit{Score parziale}
+		\end{block}
+		\begin{itemize}
+			\item ciclo di inizializzazione per calcolare i primi due l-mer
+			\begin{itemize}
+				\item brute force
+			\end{itemize}
+			\item i restanti l-mer scelti secondo lo \textit{Score parziale}
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Greedy motif search}{Pseudocodice}
+		\begin{center}\scriptsize
+			\begin{minipage}{8.6cm}
+			    \begin{algorithmic}[1]
+				    \Procedure{GreedyMotifSearch}{$DNA,t,n,l$}
+				    	\State $bestMotif\gets (1,1,\dots,1)$
+					    \State $s\gets (1,1,\dots,1)$
+					    \For{$s[1]\gets 1$ \textbf{to} $n-l+1$}
+					    	\For{$s[2]\gets 1$ \textbf{to} $n-l+1$}
+					    		\If{$Score(S,2,DNA)>Score(bestMotif,2,DNA)$}
+					    			\State $bestMotif[1]\gets s[1]$
+					    			\State $bestMotif[2]\gets s[2]$
+					    		\EndIf
+					    	\EndFor
+					    \EndFor
+					    \State $s\gets bestMotif$
+					    \For{$i\gets 3$ \textbf{to} $t$}
+					    	\For{$s[i]\gets 1$ \textbf{to} $n-l+1$}
+					    		\If{$Score(S,i,DNA)>Score(bestMotif,i,DNA)$}
+					    			\State $bestMotif[i]\gets s[i]$
+					    		\EndIf
+					    	\EndFor
+					    	\State $s[i]\gets bestMotif[i]$
+					    \EndFor
+					    \State \textbf{return} $bestMotif$
+				    \EndProcedure
+			    \end{algorithmic}
+			\end{minipage}
+	    \end{center}
+	\end{frame}
+	
+	\begin{frame}{Greedy motif search}{Complessità}
+		Quanti passi fanno i primi due cicli?
+		\begin{itemize}
+			\item $(n-l+1)$ cicli ognuno
+			\item in ogni ciclo si invoca \textit{Score} due volte
+			\begin{itemize}
+				\item $2(tl+4l)$ passi
+			\end{itemize}
+		\end{itemize}
+		Quanti passi fanno i secondi due cicli?
+		\begin{itemize}
+			\item $(t-3)$ passi il ciclo esterno
+			\item $(n-l+1)$ passi il ciclo interno
+			\item in ogni ciclo si invoca \textit{Score} due volte
+			\begin{itemize}
+				\item come prima!
+			\end{itemize}
+		\end{itemize}
+		\begin{center}
+			\begin{minipage}{4cm}		
+				\begin{varblock}{Costo}
+					\begin{align*}
+						&\mathcal{O}(tln^2 + t^2ln) \uncover<2->{=}\\
+						\uncover<2->{=\;} & \uncover<2->{\mathcal{O}(tln(n+t))}\\
+					\end{align*}
+				\end{varblock}
+			\end{minipage}
+		\end{center}
+	\end{frame}
+	
+	\begin{frame}{Greedy motif search}{Esattezza e approssimazione}
+		\textit{GreedyMotifSearch} potrebbe non calcolare la soluzione ottima!
+		\begin{itemize}
+			\item algoritmo greedy approssimato (non esatto)
+		\end{itemize}
+		Di quanto viene approssimata la soluzione trovata?
+		\begin{itemize}
+			\item fattore di approssimazione sconosciuto!
+		\end{itemize}
+		\begin{block}{CONSENSUS}
+			Esiste un'implementazione (CONSENSUS) di \textit{GreedyMotifSearch}
+			\begin{itemize}
+				\item risultati spesso vicini all'ottimo
+				\item complessità molto bassa
+			\end{itemize}
+		\end{block}
 	\end{frame}
 	
 	\begin{frame}{Algoritmi randomizzati}
+		\begin{block}{Random}
+			Gli algoritmi randomizzati sono algoritmi che impiegano un certo grado di casualità durante la loro esecuzione al fine di ottenere delle buone prestazioni nel caso medio
+		\end{block}
+	\end{frame}
+	
+	\begin{frame}{Greedy profile motif search}
+		\begin{block}{L'idea}
+			Crea un profilo su un vettore $s$ casuale, calcola, per ogni sequenza, l'l-mer che ha più probabilità di aver generato tale profilo e ripeti sul nuovo profilo ottenuto
+		\end{block}
+		Come si definisce la  probabilità che un l-mer $a$ abbia generato un profilo $P$?
+		\begin{itemize}
+			\item $Prob(a|P)=\prod_{i=1}^{l}p_{a_i,i}$
+			\item con $P(s)=(p_{ij})$ matrice profilo costruita su $s$ 
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Greedy profile motif search}{Pseudocodice}
+		\begin{center}
+			\begin{minipage}{10.5cm}
+			    \begin{algorithmic}[1]
+				    \Procedure{GreedyProfileMotifSearch}{$DNA,t,n,l$}
+				    	\State $s\gets$  vettore casuale di posizioni iniziali in $DNA$
+				    	\State $P\gets P(s)$
+				    	\State $bestScore\gets 0$
+				    	\While{$Score(s,DNA)>bestScore$}
+				    		\State $bestScore\gets Score(s,DNA)$
+				    		\For{$i\gets 1$ \textbf{to} $t$}
+				    			\State $a\gets $ l-mer dell'i-esima sequenza più probabile per $P$
+				    			\State $s[i]\gets $ posizione iniziale di $a$
+				    		\EndFor
+				    	\EndWhile
+				    	\State \textbf{return} $s$
+				    \EndProcedure
+			    \end{algorithmic}
+			\end{minipage}
+	    \end{center}
+	\end{frame}
+	
+	\begin{frame}{Greedy profile motif search}{Complessità}
+		Quante iterazioni esegue il \textit{while}?
+		\begin{itemize}
+			\item al più $t\cdot(n-l+1)$
+			\item in ogni ciclo si calcola \textit{Score} due volte
+			\begin{itemize}
+				\item $2(tl+4l)$ passi
+			\end{itemize}
+			\item ciclo \textit{for}
+			\begin{itemize}
+				\item $t$ passi totali
+				\item in ogni passo  si cerca l'l-mer con probabilità  più alta
+				\begin{itemize}
+					\item $(n-l+1)$ l-mer da controllare
+					\item il calcolo di ogni probabilità richiede $l$ passi
+				\end{itemize}
+			\end{itemize}
+		\end{itemize}
+		\begin{center}
+			\begin{minipage}{3cm}
+				\begin{varblock}{Costo}
+					$$\mathcal{O}(ln^2t^2)$$
+				\end{varblock}
+			\end{minipage}
+		\end{center}
+	\end{frame}
+	
+	\begin{frame}{Gibbs sampling}
+		\begin{block}{L'idea}
+			Simile a \textit{GreedyProfileMotifSearch} ma aggiornando ad ogni passo una sola sequenza (scelta in modo casuale) anziché tutte e scegliendo l'l-mer migliore in modo  probabilistico e non greedy
+		\end{block}
+	\end{frame}
+	
+	\begin{frame}{Gibbs sampling}{Pseudocodice}
+		\begin{center}
+			\begin{minipage}{11.5cm}
+			    \begin{algorithmic}[1]
+				    \Procedure{GibbsSampling}{$DNA,t,n,l$}
+				    	\State $s\gets$  vettore casuale di posizioni iniziali in $DNA$
+				    	\Repeat
+				    		\State $x\gets$ indice di una sequenza di DNA scelta casualmente
+				    		\State $P\gets P(s)$ calcolata sulle restanti $t-1$ sequenze
+				    		\For{$i\gets 1$ \textbf{to} $n-l+1$}
+				    			\State $a\gets$ l-mer della sequenza $x$-esima con posizione iniziale $i$
+				    			\State $p_i\gets $ probabilità che $a$ abbia generato $P$
+				    		\EndFor
+				    		\State $j\gets$ scelta casuale sulla distribuzione $(p_1,p_2,\dots,p_{n-l+1})$
+				    		\State $s[x]\gets j$
+				    	\Until{convergenza}
+				    	\State \textbf{return} $s$
+				    \EndProcedure
+			    \end{algorithmic}
+			\end{minipage}
+	    \end{center}
+	\end{frame}
+	
+	\begin{frame}{Gibbs sampling}{Complessità}
+		Assumendo la stessa funzione obiettivo di \textit{GreedyProfileMotifSearch}:
+		\begin{itemize}
+			\item stessi passi di prima
+			\item eccetto il ciclo sulle sequenze
+			\begin{itemize}
+				\item viene analizzata una sola sequenza per ciclo
+			\end{itemize}
+		\end{itemize}
+		\begin{center}
+			\begin{minipage}{3cm}
+				\begin{varblock}{Costo}
+					$$\mathcal{O}(ln^2t)$$
+				\end{varblock}
+			\end{minipage}
+		\end{center}
 	\end{frame}
 	
 	\begin{frame}{Conclusioni}
+		\renewcommand{\arraystretch}{2.3}
+		\definecolor{darkgreen}{HTML}{008000}
+		\begin{center}
+			\begin{tabular}{ll|c|c|}
+				&  & Costo & Esattezza\\
+				\hline
+				\multirow{2}{*}{\textbf{Forza bruta}} & \textbf{Simple MS} & $\mathcal{O}(tln^t)$ & {\Large \color{darkgreen} \checkmark}\\
+				\cline{2-4}
+				& \textbf{Branch \& Bound} & $\mathcal{O}(tln^t)$ & {\Large \color{darkgreen} \checkmark}\\
+				\hline
+				\textbf{Greedy} & \textbf{Greedy MS} & $\mathcal{O}(tln(n+t))$ & \\
+				\hline
+				\multirow{2}{*}{\textbf{Randomizzati}} & \textbf{Greedy Profile MS} & $\mathcal{O}(ln^2t^2)$ & \\
+				\cline{2-4}
+				& \textbf{Gibbs Sampling} & $\mathcal{O}(ln^2t)$ & \\
+				\hline
+			\end{tabular}
+		\end{center}
 	\end{frame}
 	
 	\begin{frame}
 		\begin{center}
-			\textbf{\calligra\Huge Fine.}\\
-			\includegraphics[width=5cm]{img/ornament.eps}\\[1cm]
+			\textbf{\Huge Fine!}\\[1cm]
 			\pause
-			{\huge\calligra Domande?\pause{} Grazie!}
+			{\huge Domande?}
 		\end{center}
 	\end{frame}
 
