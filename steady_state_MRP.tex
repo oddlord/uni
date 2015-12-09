@@ -27,6 +27,7 @@
 			\item[$\bullet$] 4 tipi di nucleotide: A, T, C, G
 			\item[$\bullet$] \alert{\textbf{\textit{l-mer}}}: sottosequenza di DNA di lunghezza $l$
 		\end{itemize}
+		\pause
 		\begin{block}{Motifs}
 			In biologia può essere necessario ricavare certe sequenze di DNA ``nascoste''
 			\begin{itemize}
@@ -41,6 +42,7 @@
 	
 	\begin{frame}{Il problema del Motif Finding}
 		Il problema del \alert{\textbf{Motif Finding}} consiste nel ricavare un set di $t$ \alert{\textbf{l-mer}} da un insieme di $t$ sequenze di DNA.
+		\pause
 		\begin{block}{Input}
 			\begin{itemize}
 				\item[$\bullet$] $DNA$: matrice di nucleotidi $t \times n$
@@ -51,6 +53,7 @@
 				\item[$\bullet$] $l$: lunghezza del motif cercato
 			\end{itemize}
 		\end{block}
+		\pause
 		\begin{block}{Output}
 			\begin{itemize}
 				\item $s=(s_1,s_2,\dots,s_t)$: lista di $t$ posizioni iniziali di l-mer il più simili tra loro
@@ -118,6 +121,7 @@
 	
 	\begin{frame}{Score}
 		Come definire la ``bontà'' di un set di l-mer?
+		\pause
 		\begin{block}{Funzione score}
 			Si definisce una funzione \alert{\textbf{score}} sul vettore $s=(s_1,s_2,\dots,s_t)$ di posizioni iniziali:
 			\begin{equation*}
@@ -129,6 +133,7 @@
 				\item $M_{P(s)}(j)$: elemento massimo nella colonna $j$-esima di $P(s)$
 			\end{itemize}
 		\end{block}
+		\pause
 		Si cerca il set di posizioni iniziali $s$ che \alert{\textbf{massimizzi}} $Score(s,DNA)$!
 	\end{frame}
 	
@@ -151,11 +156,12 @@
 				\textbf{Consenso} & & A & T & G & C & A & A & C & T 
 			\end{tabular}
 		\end{center}
-		$Score(s,DNA) = 5+5+6+4+5+5+6+6=42$
+	\pause	$Score(s,DNA) = 5+5+6+4+5+5+6+6=42$
 	\end{frame}
 	
 	\begin{frame}{Score}
-		Quanto può valere lo score?
+		Quanto può valere lo \alert{\textbf{score}}?
+		\pause
 		\begin{equation*}
 			Score(s,DNA) = \begin{cases}
 				l\cdot t, & \mbox{nel caso migliore}\\
@@ -165,6 +171,7 @@
 		\end{equation*}
 		\begin{flushleft}
 		\end{flushleft}
+		\pause
 		\begin{itemize}
 			\item $lt$ corrisponde al caso in cui tutti gli l-mer sono identici
 			\item $\frac{lt}{4}$ corrisponde al caso in cui gli l-mer siano diversi in tutte le posizioni
@@ -173,7 +180,7 @@
 	
 	\begin{frame}{Algoritmi brute force}
 		\begin{block}{Forza bruta}
-			In informatica il metodo ``forza bruta'' (o ricerca esaustiva della soluzione) è un algoritmo di risoluzione di un problema dato che consiste nel verificare tutte le soluzioni teoricamente possibili fino a che si trova quella effettivamente corretta.
+			In informatica il metodo ``\alert{\textbf{forza bruta}}'' (o ricerca esaustiva della soluzione) è un algoritmo di risoluzione di un problema dato che consiste nel verificare tutte le soluzioni teoricamente possibili fino a che si trova quella effettivamente corretta.
 		\end{block}
 	\end{frame}
 	
@@ -183,15 +190,17 @@
 				Esamina tutte le possibili combinazioni delle posizioni di partenza $s$ e prendi quella con maggior \textit{Score}.
 			\end{block}
 		\end{flushleft}
-	\begin{flushleft}
-		\begin{itemize}
-			\item[$\bullet$] Posizioni iniziali: $s=(1,\dots,1)$
-			\item[$\bullet$] Posizioni  finali: $s=((n-l+1),\dots,(n-l+1))$
-		\end{itemize}
-	\end{flushleft}
-	\begin{flushleft}
-		Si utilizza il metodo $NextElement$ per passare da un elemento al successivo in ordine alfabetico.
-	\end{flushleft}
+		\pause
+		\begin{flushleft}
+			\begin{itemize}
+				\item[$\bullet$] Posizioni iniziali: $s=(1,\dots,1)$
+				\item[$\bullet$] Posizioni  finali: $s=((n-l+1),\dots,(n-l+1))$
+			\end{itemize}
+		\end{flushleft}
+		\pause
+		\begin{flushleft}
+			Si utilizza il metodo $NextElement$ per passare da un elemento al successivo in ordine alfabetico.
+		\end{flushleft}
 	\end{frame}
 	
 	\begin{frame}{Simple motif search}{Pseudocodice}
@@ -219,6 +228,7 @@
 	
 	\begin{frame}{Simple motif search}{Complessità}
 		Quante \alert{\textbf{iterazioni}} fa l'algoritmo?
+		\pause
 		\begin{flushleft}
 			\begin{itemize}
 				\item vengono esaminate tutte le possibili combinazioni
@@ -226,16 +236,21 @@
 					\item $(n-l+1)$ possibili scelte per ogni posizione iniziale
 					\item $t$ posizioni iniziali (una per ogni sequenza)
 				\end{itemize}
+				\pause
 				\item $(n-l+1)^t$ possibili combinazioni di posizioni iniziali
 			\end{itemize}
+			\pause
 		\end{flushleft}
 		\begin{flushleft}
 			Quanti \alert{\textbf{passi}} per calcolare \textit{Score}?
+			\pause
 			\begin{itemize}
 				\item $tl$ per calcolare la matrice Profilo
+				\pause
 				\item $4l$ per calcolare \textit{Score}
 			\end{itemize}
 		\end{flushleft}
+		\pause
 		\begin{center}
 			\begin{minipage}{3cm}
 				\begin{block}{Costo}
@@ -273,10 +288,13 @@
 	
 	\begin{frame}{Branch \& bound}
 		Si esegue una visita in profondità dell'albero
+		\pause
 		\begin{itemize}
 			\item calcola lo \textit{Score ottimistico} per ogni nodo
+			\pause
 			\item scarta i sottoalberi con \textit{Score ottimistico} sub-ottimo
 		\end{itemize}
+		\pause
 		\begin{block}{Score ottimistico}
 			$$\mbox{Score ottimistico}=Score(s,i,DNA)+(t-i)\cdot l$$
 			\begin{itemize}
@@ -284,6 +302,7 @@
 				\item $(t-i)\cdot l$: \textit{Score parziale} delle restanti posizioni (supponendole identiche)
 			\end{itemize}
 		\end{block}
+		\pause
 		\begin{itemize}
 			\item $NextVertex$ per passare al prossimo vertice (DFS)
 			\item $Skip$ per passare al prossimo vertice saltando il sottoalbero attuale
@@ -323,18 +342,24 @@
 	
 	\begin{frame}{Branch \& bound}{Complessità}
 		Quante \alert{\textbf{iterazioni}}?
+		\pause
 		\begin{itemize}
 			\item una per ogni nodo interno/foglia (caso pessimo)
+			\pause
 			\begin{itemize}
 				\item $N=\frac{(n-l+1)^t-1}{(n-l+1)-1}$ nodi interni
 				\item $L=(n-l+1)^t$ foglie
+				\pause
 			\end{itemize}
 			\item $N+L$ passi totali
 		\end{itemize}
+		\pause
 		Quanto \alert{\textbf{passi}} per calcolare \textit{Score}?
+		\pause
 		\begin{itemize}
 			\item come prima!
 		\end{itemize}
+		\pause
 		\begin{center}
 			\begin{minipage}{3cm}
 				\begin{varblock}{Costo}
@@ -342,6 +367,7 @@
 				\end{varblock}
 			\end{minipage}
 		\end{center}
+		\pause
 		Come prima!
 		\begin{itemize}
 			\item più costoso nel caso pessimo
@@ -351,7 +377,7 @@
 	
 	\begin{frame}{Algoritmi greedy}
 		\begin{block}{Greedy}
-			Un algoritmo greedy è un algoritmo che cerca di ottenere una soluzione ottima da un punto di vista globale attraverso la scelta della soluzione più golosa ad ogni passo locale
+			Un algoritmo \alert{\textbf{greedy}} è un algoritmo che cerca di ottenere una soluzione ottima da un punto di vista globale attraverso la scelta della soluzione più golosa ad ogni passo locale
 		\end{block}
 	\end{frame}
 	
@@ -359,11 +385,13 @@
 		\begin{block}{L'idea}
 			Scansiona ogni sequenza di DNA una sola volta e prendi l'l-mer che massimizza lo \textit{Score parziale}
 		\end{block}
+		\pause
 		\begin{itemize}
 			\item ciclo di inizializzazione per calcolare i primi due l-mer
 			\begin{itemize}
 				\item brute force
 			\end{itemize}
+			\pause
 			\item i restanti l-mer scelti secondo lo \textit{Score parziale}
 		\end{itemize}
 	\end{frame}
@@ -400,28 +428,36 @@
 	\end{frame}
 	
 	\begin{frame}{Greedy motif search}{Complessità}
-		Quanti passi fanno i primi due cicli?
+		Quanti \alert{\textbf{passi}} fanno i primi due cicli?
+		\pause
 		\begin{itemize}
 			\item $(n-l+1)$ cicli ognuno
+			\pause
 			\item in ogni ciclo si invoca \textit{Score} due volte
 			\begin{itemize}
 				\item $2(tl+4l)$ passi
 			\end{itemize}
+			\pause
 		\end{itemize}
-		Quanti passi fanno i secondi due cicli?
+		Quanti \alert{\textbf{passi}} fanno i secondi due cicli?
+		\pause
 		\begin{itemize}
 			\item $(t-3)$ passi il ciclo esterno
+			\pause
 			\item $(n-l+1)$ passi il ciclo interno
+			\pause
 			\item in ogni ciclo si invoca \textit{Score} due volte
 			\begin{itemize}
 				\item come prima!
 			\end{itemize}
+			\pause
 		\end{itemize}
 		\begin{center}
 			\begin{minipage}{4cm}		
 				\begin{varblock}{Costo}
 					\begin{align*}
 						&\mathcal{O}(tln^2 + t^2ln) \uncover<2->{=}\\
+						\pause
 						\uncover<2->{=\;} & \uncover<2->{\mathcal{O}(tln(n+t))}\\
 					\end{align*}
 				\end{varblock}
@@ -434,10 +470,12 @@
 		\begin{itemize}
 			\item algoritmo greedy approssimato (non esatto)
 		\end{itemize}
+		\pause
 		Di quanto viene approssimata la soluzione trovata?
 		\begin{itemize}
 			\item fattore di approssimazione sconosciuto!
 		\end{itemize}
+		\pause
 		\begin{block}{CONSENSUS}
 			Esiste un'implementazione (CONSENSUS) di \textit{GreedyMotifSearch}
 			\begin{itemize}
@@ -449,7 +487,7 @@
 	
 	\begin{frame}{Algoritmi randomizzati}
 		\begin{block}{Random}
-			Gli algoritmi randomizzati sono algoritmi che impiegano un certo grado di casualità durante la loro esecuzione al fine di ottenere delle buone prestazioni nel caso medio
+			Gli algoritmi \alert{\textbf{randomizzati}} sono algoritmi che impiegano un certo grado di casualità durante la loro esecuzione al fine di ottenere delle buone prestazioni nel caso medio
 		\end{block}
 	\end{frame}
 	
@@ -457,7 +495,9 @@
 		\begin{block}{L'idea}
 			Crea un profilo su un vettore $s$ casuale, calcola, per ogni sequenza, l'l-mer che ha più probabilità di aver generato tale profilo e ripeti sul nuovo profilo ottenuto
 		\end{block}
+		\pause
 		Come si definisce la  probabilità che un l-mer $a$ abbia generato un profilo $P$?
+		\pause
 		\begin{itemize}
 			\item $Prob(a|P)=\prod_{i=1}^{l}p_{a_i,i}$
 			\item con $P(s)=(p_{ij})$ matrice profilo costruita su $s$ 
@@ -487,21 +527,27 @@
 	\end{frame}
 	
 	\begin{frame}{Greedy profile motif search}{Complessità}
-		Quante iterazioni esegue il \textit{while}?
+		Quante \alert{\textbf{iterazioni}} esegue il \textit{while}?
+		\pause
 		\begin{itemize}
 			\item al più $t\cdot(n-l+1)$
+			\pause
 			\item in ogni ciclo si calcola \textit{Score} due volte
 			\begin{itemize}
 				\item $2(tl+4l)$ passi
 			\end{itemize}
+			\pause
 			\item ciclo \textit{for}
+			\pause
 			\begin{itemize}
 				\item $t$ passi totali
 				\item in ogni passo  si cerca l'l-mer con probabilità  più alta
+				\pause
 				\begin{itemize}
 					\item $(n-l+1)$ l-mer da controllare
 					\item il calcolo di ogni probabilità richiede $l$ passi
 				\end{itemize}
+				\pause
 			\end{itemize}
 		\end{itemize}
 		\begin{center}
@@ -551,6 +597,7 @@
 				\item viene analizzata una sola sequenza per ciclo
 			\end{itemize}
 		\end{itemize}
+		\pause
 		\begin{center}
 			\begin{minipage}{3cm}
 				\begin{varblock}{Costo}
@@ -583,10 +630,75 @@
 	
 	\begin{frame}
 		\begin{center}
-			\textbf{\Huge Fine!}\\[1cm]
+			\textbf{\fontsize{50}{60}\selectfont Fine!}\\[1cm]
 			\pause
+			\begin{flushleft}
+			\end{flushleft}
+			\begin{flushleft}
+			\end{flushleft}
 			{\huge Domande?}
 		\end{center}
 	\end{frame}
+	
+	\begin{frame}{Appendice}{NextElement}
+		\begin{center}
+			\begin{minipage}{5.8cm}
+				\begin{algorithmic}[1]
+					\Procedure{NextElement}{$a, L, k$}
+					\For{$i\gets L$ \textbf{to} $1$}
+						\If{$a[i] < k$}
+							\State $a[i] \gets a[i] + 1$
+							\State \textbf{return} $a$
+						\EndIf
+						\State $a[i] \gets 1$
+					\EndFor
+					\State \textbf{return} $a$				
+					\EndProcedure
+				\end{algorithmic}
+			\end{minipage}
+		\end{center}	
+	\end{frame}
+	
+	\begin{frame}{Appendice}{NextVertex}
+		\begin{center}
+			\begin{minipage}{5.8cm}
+				\begin{algorithmic}[1]
+					\Procedure{NextVertex}{$a, i, L, k$}
+					\If{$i < L$}
+						\State $a[i+1] \gets 1$
+						\State \textbf{return} $(a, i+1)$
+					\Else
+						\For{$j \gets L$ \textbf{to} $1$}
+							\If{$a[j] < k $}
+								\State $a[j] \gets a[j] + 1$
+								\State \textbf{return} $(a, j)$
+							\EndIf
+						\EndFor
+					\EndIf
+					\State \textbf{return} $(a, 0)$				
+					\EndProcedure
+				\end{algorithmic}
+			\end{minipage}
+		\end{center}	
+	\end{frame}	
+
+	\begin{frame}{Appendice}{Skip}
+		\begin{center}
+			\begin{minipage}{4.8cm}
+				\begin{algorithmic}[1]
+					\Procedure{Skip}{$a, i, k$}
+						\For{$j \gets i$ \textbf{to} $1$}
+							\If{$a[j] < k$}
+								\State $a[j] \gets a[j] + 1$
+								\State \textbf{return} $(a,j)$
+							\EndIf
+						\EndFor										
+						\State \textbf{return} $(a, 0)$				
+					\EndProcedure
+				\end{algorithmic}
+			\end{minipage}
+		\end{center}	
+	\end{frame}	
+
 
 \end{document}
