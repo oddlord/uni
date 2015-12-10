@@ -42,7 +42,7 @@
 	\end{frame}
 	
 	\begin{frame}{Il problema del Motif Finding}
-		Il problema del \alert{\textbf{Motif Finding}} consiste nel ricavare un set di $t$ \alert{\textbf{l-mer}} da un insieme di $t$ sequenze di DNA.
+		Il problema del \alert{\textbf{Motif Finding}} consiste nel ricavare un set di $t$ \alert{\textbf{l-mer}} simili tra loro da un insieme di $t$ sequenze di DNA.
 		\only<2,3>{
 			\begin{block}{Input}
 				\begin{itemize}
@@ -110,14 +110,14 @@
 				& & A & A & G & C & A & A & C & C\\
 				& & T & T & G & G & A & A & C & T\\
 				& & A & T & G & C & C & A & T & T\\
-				& & A & T & G & G & C & A & C & T\\
+				& & A & T & G & G & C & A & C & T\only<2->{\\
 				\hline
 				\multirow{4}{*}{\textbf{Profilo}} & \textbf{A} & 5 & 1 & 0 & 0 & 5 & 5 & 0 & 0\\
 				& \textbf{T} & 1 & 5 & 0 & 0 & 0 & 1 & 1 & 6\\
 				& \textbf{G} & 1 & 1 & 6 & 3 & 0 & 1 & 0 & 0\\
-				& \textbf{C} & 0 & 0 & 1 & 4 & 2 & 0 & 6 & 1\\
+				& \textbf{C} & 0 & 0 & 1 & 4 & 2 & 0 & 6 & 1}\only<3->{\\
 				\hline
-				\textbf{Consenso} & & A & T & G & C & A & A & C & T 
+				\textbf{Consenso} & & A & T & G & C & A & A & C & T}
 			\end{tabular}
 		\end{center}
 	\end{frame}
@@ -161,7 +161,7 @@
 				\textbf{Consenso} & & A & T & G & C & A & A & C & T 
 			\end{tabular}
 		\end{center}
-	\pause	$Score(s,DNA) = 5+5+6+4+5+5+6+6=42$
+		\only<2->{$Score(s,DNA) = 5+5+6+4+5+5+6+6=42$}
 	\end{frame}
 	
 	\begin{frame}{Score}
@@ -169,9 +169,9 @@
 		\only<2,3>{
 			\begin{equation*}
 				Score(s,DNA) = \begin{cases}
-					l\cdot t, & \mbox{nel caso migliore}\\
+					t\cdot l, & \mbox{nel caso migliore}\\
 					\\
-					\frac{l\cdot t}{4}, & \mbox{nel caso peggiore}
+					\lceil\frac{t}{4}\rceil\cdot l, & \mbox{nel caso peggiore}
 				\end{cases}
 			\end{equation*}
 			\begin{flushleft}
@@ -179,8 +179,8 @@
 		}
 		\only<3>{
 			\begin{itemize}
-				\item $lt$ corrisponde al caso in cui tutti gli l-mer sono identici
-				\item $\frac{lt}{4}$ corrisponde al caso in cui gli l-mer siano diversi in tutte le posizioni
+				\item $tl$ corrisponde al caso in cui tutti gli l-mer sono identici
+				\item $\lceil\frac{t}{4}\rceil l$ corrisponde al caso in cui gli l-mer siano diversi in tutte le posizioni
 			\end{itemize}
 		}
 	\end{frame}
@@ -516,7 +516,7 @@
 		}
 		\only<3->{
 			\begin{itemize}
-				\item $Prob(a|P)=\prod_{i=1}^{l}p_{a_i,i}$
+				\item $Prob(a|P(s))=\prod_{i=1}^{l}p_{a_i,i}$
 				\item con $P(s)=(p_{ij})$ matrice profilo costruita su $s$ 
 			\end{itemize}
 		}
@@ -628,18 +628,18 @@
 		\renewcommand{\arraystretch}{2.3}
 		\definecolor{darkgreen}{HTML}{008000}
 		\begin{center}
-			\begin{tabular}{ll|c|c|}
-				&  & Costo & Esattezza\\
+			\begin{tabular}{ll|c|c|c|}
+				&  & Costo & Esattezza & $\rho$\\
 				\hline
-				\multirow{2}{*}{\textbf{Forza bruta}} & \textbf{Simple MS} & $\mathcal{O}(tln^t)$ & {\Large \color{darkgreen} \checkmark}\\
-				\cline{2-4}
-				& \textbf{Branch \& Bound} & $\mathcal{O}(tln^t)$ & {\Large \color{darkgreen} \checkmark}\\
+				\multirow{2}{*}{\textbf{Forza bruta}} & \textbf{Simple MS} & $\mathcal{O}(tln^t)$ & {\Large \color{darkgreen} \checkmark} & 1\\
+				\cline{2-5}
+				& \textbf{Branch \& Bound} & $\mathcal{O}(tln^t)$ & {\Large \color{darkgreen} \checkmark} & 1\\
 				\hline
-				\textbf{Greedy} & \textbf{Greedy MS} & $\mathcal{O}(tln(n+t))$ & \\
+				\textbf{Greedy} & \textbf{Greedy MS} & $\mathcal{O}(tln(n+t))$ & & ???\\
 				\hline
-				\multirow{2}{*}{\textbf{Randomizzati}} & \textbf{Greedy Profile MS} & $\mathcal{O}(ln^2t^2)$ & \\
-				\cline{2-4}
-				& \textbf{Gibbs Sampling} & $\mathcal{O}(ln^2t)$ & \\
+				\multirow{2}{*}{\textbf{Randomizzati}} & \textbf{Greedy Profile MS} & $\mathcal{O}(ln^2t^2)$ & & ???\\
+				\cline{2-5}
+				& \textbf{Gibbs Sampling} & $\mathcal{O}(ln^2t)$ & & ???\\
 				\hline
 			\end{tabular}
 		\end{center}
