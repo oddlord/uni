@@ -522,6 +522,29 @@
 		}
 	\end{frame}
 	
+	\begin{frame}{Probabilità: l'esempio di prima}
+		\begin{center}
+			\begin{tabular}{l l l l l l l l l l}
+				\multirow{8}{*}{\textbf{Allineamento}} & & A & T & C & C & A & G & C & T\\
+				& & G & G & G & C & A & A & C & T\\
+				& & A & T & G & G & A & T & C & T\\
+				& & A & A & G & C & A & A & C & C\\
+				& & T & T & G & G & A & A & C & T\\
+				& & A & T & G & C & C & A & T & T\\
+				& & A & T & G & G & C & A & C & T\\
+				\hline
+				\multirow{4}{*}{\textbf{Profilo}} & \textbf{A} & 5 & 1 & 0 & 0 & 5 & 5 & 0 & 0\\
+				& \textbf{T} & 1 & 5 & 0 & 0 & 0 & 1 & 1 & 6\\
+				& \textbf{G} & 1 & 1 & 6 & 3 & 0 & 1 & 0 & 0\\
+				& \textbf{C} & 0 & 0 & 1 & 4 & 2 & 0 & 6 & 1\\
+				\hline
+				\textbf{Consenso} & & A & T & G & C & A & A & C & T 
+			\end{tabular}
+		\end{center}
+		$a = ATCCCACT$\\
+		\only<2->{$Prob(a|P) = 5\cdot 5\cdot 1\cdot 4\cdot 2\cdot 5\cdot 6\cdot 6=36000$}
+	\end{frame}
+	
 	\begin{frame}{Greedy profile motif search}{Pseudocodice}
 		\begin{center}
 			\begin{minipage}{10.5cm}
@@ -716,7 +739,18 @@
 				\end{algorithmic}
 			\end{minipage}
 		\end{center}	
-	\end{frame}	
+	\end{frame}
+	
+	\begin{frame}{Riferimenti}
+		\begin{itemize}
+			\item An Introduction to Bioinformatics Algorithms
+			\begin{itemize}
+				\item N. C. Jones, P. A. Pevzner
+				\item Bradford
+				\item 2004
+			\end{itemize}
+		\end{itemize}
+	\end{frame}
 
 
 \end{document}
