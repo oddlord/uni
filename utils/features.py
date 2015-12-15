@@ -56,6 +56,13 @@ def get_open_tomorrow(date_index, store_id, date, trainset, testset):
 def add_feature(x, feature):
     x.append(feature)
 
+def add_binary_feature(x, feature, values):
+    for value in values:
+        binary_feature = 0
+        if feature == value:
+            binary_feature = 1
+        x.append(binary_feature)
+
 def build_store_features(storeset):
     store_features = {}
     headers = storeset[0].replace('"', '').replace('Store,', '').rstrip('\n').split(',')
@@ -67,10 +74,6 @@ def build_store_features(storeset):
     return store_features
 
 def build_date_index(trainset, testset):
-    first_train_date = datetime(2013, 1, 1)
-    last_train_date = datetime(2015, 7, 31)
-    first_test_date = datetime(2015, 8, 1)
-    last_test_date = datetime(2015, 9, 17)
     date_index = {}
     for (lines, dataset) in [(trainset, Dataset.Train), (testset, Dataset.Test)]:
         line_count = 0
@@ -83,6 +86,22 @@ def build_date_index(trainset, testset):
                 date_index[date]['dataset'] = dataset
             date_index[date][store_id] = line_count
     return date_index
+
+def build_store_mean(trainset):
+    store_mean = {}
+    for line in trainset[1:]:
+        store_id = get_field(line, 'Store', Dataset.Train)
+        if store_id not in store_mean.keys():
+            store_mean[store_id] = {
+                'sum': 0,
+                'n': 0
+            }
+        sales = get_field(line, 'Sales', Dataset.Train)
+        store_mean[store_id]['sum'] += sales
+        store_mean[store_id]['n'] += 1
+    for store_id in store_mean.keys():
+        store_mean[store_id]['mean'] = store_mean[store_id]['sum']/store_mean[store_id]['n']
+    return store_mean
 
 def map_category(cat):
     categories_map = {

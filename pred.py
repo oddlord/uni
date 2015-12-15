@@ -9,7 +9,7 @@ import shutil
 from sklearn import tree
 import sys
 
-global data, options, trainset, testset, storeset, store_features, date_index, models
+global data, options, trainset, testset, storeset, store_features, date_index, store_mean, models
 
 def get_model():
     return tree.DecisionTreeRegressor()
@@ -23,19 +23,21 @@ def extract_instance(line, dataset):
     if not options['per_store_training']:
         add_feature(x, store_id)
 
-    features = ['DayOfWeek', 'Promo', 'CompetitionDistance', 'OpenTomorrow']
+    features = ['DayOfWeek', 'Promo', 'CompetitionDistance', 'OpenTomorrow', 'Year']
 
     for feature in features:
         if feature == 'Assortment':
             add_feature(x, store_features[store_id]['Assortment'])
         elif feature == 'CompetitionDistance':
             add_feature(x, get_competition_distance(store_features, store_id, date))
+        elif feature == 'Date':
+            add_feature(x, date.toordinal())
         elif feature == 'DayOfYear':
             add_feature(x, int(date.strftime('%j')))
         elif feature == 'DayOfWeek':
             add_feature(x, get_field(line, 'DayOfWeek', dataset))
         elif feature == 'MonthOfYear':
-            add_feature(x, int(date.strftime('%m')))
+            add_binary_feature(x, int(date.strftime('%m')), range(1,13))
         elif feature == 'OpenTomorrow':
             add_feature(x, get_open_tomorrow(date_index, store_id, date, trainset, testset))
         elif feature == 'Promo':
@@ -48,10 +50,21 @@ def extract_instance(line, dataset):
             add_feature(x, get_field(line, 'StateHoliday', dataset))
         elif feature == 'StoreType':
             add_feature(x, store_features[store_id]['StoreType'])
+        elif feature == 'Year':
+            add_binary_feature(x, int(date.strftime('%Y')), range(2013, 2016))
 
     if dataset == Dataset.Train:
         y = get_field(line, 'Sales', dataset)
     return x, y
+
+def is_outlier(line):
+    store_id = get_field(line, 'Store', Dataset.Train)
+    mean = store_mean[store_id]['mean']
+    sales = get_field(line, 'Sales', Dataset.Train)
+    if abs(sales - mean)*100/mean > 250:
+        return True
+    else:
+        return False
 
 def extract_train_features():
     X_train = {}
@@ -60,7 +73,7 @@ def extract_train_features():
     for line in trainset[start:]:
         is_open = get_field(line, 'Open', Dataset.Train)
         store_id = get_field(line, 'Store', Dataset.Train) if options['per_store_training'] else 1
-        if not is_open:
+        if not is_open or is_outlier(line):
             continue
         if not store_id in X_train:
             X_train[store_id] = []
@@ -104,7 +117,7 @@ def predict_instance(x):
     return 0 if not x['open'] else models[x['store_id']].predict([x['x']])
 
 def main():
-    global trainset, testset, storeset, store_features, date_index, models
+    global trainset, testset, storeset, store_features, date_index, store_mean, models
     data, options = parse_args()
 
     # Reading datasets
@@ -120,6 +133,7 @@ def main():
     with task('Extracting features'):
         store_features = build_store_features(storeset)
         date_index = build_date_index(trainset, testset)
+        store_mean = build_store_mean(trainset)
         X_train, Y_train = extract_train_features()
         if options['validation']:
             X_vali, Y_vali_target = extract_validation_features()
@@ -138,9 +152,6 @@ def main():
         for store_id in X_train.keys():
             models[store_id] = get_model()
             models[store_id].fit(X_train[store_id], Y_train[store_id])
-            Y_train_target.extend(Y_train[store_id])
-            Y_train_pred.extend(models[store_id].predict(X_train[store_id]))
-    print_rmspe(Y_train_target, Y_train_pred, 'training')
 
     # Validation
     if options['validation']:
