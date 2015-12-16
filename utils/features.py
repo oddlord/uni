@@ -1,3 +1,5 @@
+from utils import week_toordinal
+
 from datetime import datetime, timedelta
 import sys
 
@@ -53,6 +55,12 @@ def get_open_tomorrow(date_index, store_id, date, trainset, testset):
     tmr_open = get_field(line, 'Open', tmr_at)
     return tmr_open
 
+def get_week_mean(store_means, store_id, week):
+    if week in store_means[store_id].keys():
+        return store_means[store_id][week]['mean']
+    else:
+        return store_means[store_id]['global']['mean']
+
 def add_feature(x, feature):
     x.append(feature)
 
@@ -87,21 +95,38 @@ def build_date_index(trainset, testset):
             date_index[date][store_id] = line_count
     return date_index
 
-def build_store_mean(trainset):
-    store_mean = {}
+def update_store_mean(store_means, store_id, key, sales):
+    store_means[store_id][key]['sum'] += sales
+    store_means[store_id][key]['n'] += 1
+    store_means[store_id][key]['mean'] = store_means[store_id][key]['sum']/store_means[store_id][key]['n']
+
+def build_store_means(trainset):
+    store_means = {}
+    for store_id in range(1,1116):
+        store_means[store_id] = {}
+        store_means[store_id]['global'] = {
+            'sum': 0,
+            'n': 0,
+            'mean': 0
+        }
+        for week in range(week_toordinal(datetime(2013,1,1)), week_toordinal(datetime(2015,9,17))+1):
+            store_means[store_id][week] = {
+                'sum': 0,
+                'n': 0,
+                'mean': 0
+            }
     for line in trainset[1:]:
         store_id = get_field(line, 'Store', Dataset.Train)
-        if store_id not in store_mean.keys():
-            store_mean[store_id] = {
-                'sum': 0,
-                'n': 0
-            }
+        date = get_field(line, 'Date', Dataset.Train)
+        week = week_toordinal(date)
         sales = get_field(line, 'Sales', Dataset.Train)
-        store_mean[store_id]['sum'] += sales
-        store_mean[store_id]['n'] += 1
-    for store_id in store_mean.keys():
-        store_mean[store_id]['mean'] = store_mean[store_id]['sum']/store_mean[store_id]['n']
-    return store_mean
+        update_store_mean(store_means, store_id, 'global', sales)
+        update_store_mean(store_means, store_id, week, sales)
+    for store_id in store_means.keys():
+        for key in store_means[store_id].keys():
+            if store_means[store_id][key]['mean'] == 0:
+                store_means[store_id][key]['mean'] = store_means[store_id]['global']['mean']
+    return store_means
 
 def map_category(cat):
     categories_map = {

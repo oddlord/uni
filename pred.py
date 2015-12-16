@@ -9,7 +9,7 @@ import shutil
 from sklearn import tree
 import sys
 
-global data, options, trainset, testset, storeset, store_features, date_index, store_mean, models
+global data, options, trainset, testset, storeset, store_features, date_index, store_means, models
 
 def get_model():
     return tree.DecisionTreeRegressor()
@@ -23,7 +23,7 @@ def extract_instance(line, dataset):
     if not options['per_store_training']:
         add_feature(x, store_id)
 
-    features = ['DayOfWeek', 'Promo', 'CompetitionDistance', 'OpenTomorrow', 'Year']
+    features = ['DayOfWeek', 'Promo', 'CompetitionDistance', 'OpenTomorrow']
 
     for feature in features:
         if feature == 'Assortment':
@@ -57,9 +57,19 @@ def extract_instance(line, dataset):
         y = get_field(line, 'Sales', dataset)
     return x, y
 
+def add_progressive_features(line, dataset, x):
+    store_id = get_field(line, 'Store', dataset)
+    date = get_field(line, 'Date', dataset)
+
+    features = ['LastWeekMean']
+
+    for feature in features:
+        if feature == 'LastWeekMean':
+            add_feature(x, get_week_mean(store_means, store_id, week_toordinal(date)-1))
+
 def is_outlier(line):
     store_id = get_field(line, 'Store', Dataset.Train)
-    mean = store_mean[store_id]['mean']
+    mean = store_means[store_id]['global']['mean']
     sales = get_field(line, 'Sales', Dataset.Train)
     if abs(sales - mean)*100/mean > 250:
         return True
@@ -79,6 +89,7 @@ def extract_train_features():
             X_train[store_id] = []
             Y_train[store_id] = []
         x, y = extract_instance(line, Dataset.Train)
+        add_progressive_features(line, Dataset.Train, x)
         X_train[store_id].append(x)
         Y_train[store_id].append(y)
     return X_train, Y_train
@@ -90,6 +101,7 @@ def extract_validation_features():
         is_open = get_field(line, 'Open', Dataset.Train)
         store_id = get_field(line, 'Store', Dataset.Train) if options['per_store_training'] else 1
         x, y = extract_instance(line, Dataset.Train)
+        add_progressive_features(line, Dataset.Train, x)
         X_vali.append({
             'store_id': store_id,
             'open': is_open,
@@ -108,6 +120,7 @@ def extract_test_features():
         X_test.append({
             'id': instance_id,
             'store_id': store_id,
+            'line': line,
             'open': is_open,
             'x': x
         })
@@ -117,7 +130,7 @@ def predict_instance(x):
     return 0 if not x['open'] else models[x['store_id']].predict([x['x']])
 
 def main():
-    global trainset, testset, storeset, store_features, date_index, store_mean, models
+    global trainset, testset, storeset, store_features, date_index, store_means, models
     data, options = parse_args()
 
     # Reading datasets
@@ -133,7 +146,7 @@ def main():
     with task('Extracting features'):
         store_features = build_store_features(storeset)
         date_index = build_date_index(trainset, testset)
-        store_mean = build_store_mean(trainset)
+        store_means = build_store_means(trainset)
         X_train, Y_train = extract_train_features()
         if options['validation']:
             X_vali, Y_vali_target = extract_validation_features()
@@ -173,8 +186,12 @@ def main():
     # Prediction
     with task('Predicting test data'), open(data['pred'], 'w+') as f_pred:
         f_pred.write('"Id","Sales"\n')
-        for x in X_test:
-            f_pred.write("%s,%.8f\n" % (x['id'], predict_instance(x)))
+        for x in reversed(X_test):
+            add_progressive_features(x['line'], Dataset.Test, x['x'])
+            y = predict_instance(x)
+            f_pred.write("%s,%.8f\n" % (x['id'], y))
+            week = week_toordinal(get_field(x['line'], 'Date', Dataset.Test))
+            update_store_mean(store_means, x['store_id'], week, y)
     print "*\tPredictions saved to '%s'" % (data['pred'])
     if options['compress']:
         with open(data['pred'], 'r') as f_pred, gzip.open(data['pred_gz'], 'w') as f_gz:

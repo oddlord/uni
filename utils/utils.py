@@ -40,6 +40,9 @@ def print_rmspe(Y_target, Y_pred, dataset):
         sign = '+'
     print "*\tRMSPE on %s data: %s%.5f%s (%s%.5f)" % (dataset, start_format, rmspe, end_format, sign, delta_rmspe)
 
+def week_toordinal(date):
+    return (date.toordinal()-1)/7
+
 @contextmanager
 def task(task_name):
     sys.stdout.write("*\n* %s... " % (task_name))
