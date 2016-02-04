@@ -5,6 +5,9 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[italian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancybox}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{multirow}
@@ -17,16 +20,22 @@
 % geometry
 \usepackage{geometry}
 \geometry{
-	a4paper,
-	ignoremp,
-	bindingoffset = 1cm, 
-	textwidth     = 13.5cm,
-	textheight    = 21.5cm,
-	lmargin       = 1cm,
-	rmargin		  = 1cm,
-	tmargin       = 2cm,
-	bmargin       = 3cm
+    a4paper,
+    ignoremp,
+    bindingoffset = 1cm, 
+    textwidth     = 13.5cm,
+    textheight    = 21.5cm,
+    lmargin       = 1cm,
+    rmargin		  = 3cm,
+    tmargin       = 2cm,
+    bmargin       = 3cm
 }
 
 % graphicx
 \graphicspath{{img/}}
+
+%********************************************************************
+% New commands
+%********************************************************************
+
+\newcommand{\enunciato}[1]{\doublebox{\begin{minipage}{\textwidth}\centering#1\end{minipage}}\\}

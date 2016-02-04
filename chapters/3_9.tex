@@ -1,1 +1,67 @@
 \section*{Esercizio 3.9}
+
+    \enunciato{Scrivere una grammatica dipendente da contesto per il linguaggio $L \triangleq \{a^nba^nca^n | n \geq 1\}$.}
+    
+    La grammatica $G$ che genera il linguaggio $L$ richiesto è una quadrupla $G \triangleq \;<A,V,S,P>$.\\
+    Seguendo la convenzione nota per rappresentare le grammatiche in forma compatta\footnote{Le lettere minuscole indicano simboli terminali, le maiuscole indicano nonterminali ed il nonterminale nel lato sinistro della prima produzione rappresenta il simbolo iniziale (solitamente $S$).}, proponiamo di seguito le produzioni della grammatica $G$ di interesse:
+
+    \begin{minipage}{0.33\textwidth}
+        \begin{align}
+            S &::= AF\\
+            A &::= abTC|aABC\\
+            TF &::= Tc \label{eq:TF::=Tc}\\
+            Tc &::= ac \label{eq:Tc::=ac}
+        \end{align}
+    \end{minipage}
+    \begin{minipage}{0.33\textwidth}
+        \begin{align}
+            & swap(C,B) \label{eq:swap(C,B)}\\
+            & swap(T,B) \label{eq:swap(T,B)}\\
+            & swap(C,F) \label{eq:swap(C,F)}
+        \end{align}
+    \end{minipage}
+    \begin{minipage}{0.33\textwidth}
+        \begin{align}
+            bB &::= ba \label{eq:bB::=ba}\\
+            aB &::= aa \label{eq:aB::=aa}\\
+            cC &::= ca \label{eq:cC::=ca}\\
+            aC &::= aa
+        \end{align}
+    \end{minipage}\\
+    
+    L'idea generale è quella di usare due nonterminali segnaposto $B$ e $C$ che, intuitivamente, rappresentano il numero di $a$ dopo la $b$ e dopo la $c$, rispettivamente. Per riordinare le $B$ e le $C$ e farle andare nella loro posizione finale (ovvero prima tutte le $B$ e poi tutte le $C$) si usano due nonterminali delimitatori, $T$ ed $F$: la $T$ rappresenta l'ultima $a$ dopo la $b$ e serve a spostare tutte le $B$ verso sinistra, mentre la $F$ rappresenta il simbolo $c$ ed ha lo scopo di spostare tutte le $C$ verso destra. Una volta che le $B$ risulteranno a sinistra della $T$, esse saranno nella loro posizione finale e potranno trasformarsi in una $a$ (regole (\ref{eq:bB::=ba}) e (\ref{eq:aB::=aa}). Analogamente per le $C$, con la differenza che per trasformarsi in $a$ avranno bisogno del simbolo $c$ (regola (\ref{eq:cC::=ca})), che comparirà solo dopo aver messo tutte le $B$ e le $C$ in ordine (ovvero quando i delimitatori $T$ ed $F$ si toccano, regola (\ref{eq:TF::=Tc})). Una volta riordinate tutte le $B$ e le $C$, esse potranno essere trasformate in $a$ (si osservi che le $B$ possono essere trasformate anche prima di questo punto, ma questo non ci disturba), mentre i delimitatori $T$ ed $F$ potranno essere trasformati in $a$ e $c$, rispettivamente (regole (\ref{eq:TF::=Tc}) e (\ref{eq:Tc::=ac}).\\
+    \\
+    Le regole (\ref{eq:swap(C,B)}), (\ref{eq:swap(T,B)}) e (\ref{eq:swap(C,F)}) servono, intuitivamente, a scambiare nonterminali tra loro, sfruttando la potenza delle \textit{grammatiche context-sensitive} (questo trucco non sarebbe infatti possibile usando \textit{grammatiche context-free}). La regola (\ref{eq:swap(C,B)}) serve a riordinare le coppie $CB$ in $BC$, mettendole nell'ordine corretto. La regola (\ref{eq:swap(T,B)}) serve a ``mettere al sicuro'' una $B$ ogni volta che viene trovata dal delimitatore $T$. Analogamente per la regola (\ref{eq:swap(C,F)}).\\
+    \\
+    Le regole dalla (\ref{eq:swap(C,B)}) alla (\ref{eq:swap(C,F)}) sono state proposte in questa forma compatta per migliorare la chiarezza e la leggibilità dell'insieme di produzioni della grammatica. Di seguito, la loro implementazione formale con grammatiche context-sensitive:
+    
+    \begin{align}
+        & swap(C,B) = \{ \notag\\
+        &\hphantom{{}swap(C,B) }\begin{aligned}
+            CB &::= XB\\
+            XB &::= XY\\
+            XY &::= BY\\
+            BY &::= BC
+        \end{aligned}\\
+        &\} \notag
+    \end{align}
+    \begin{align}
+        & swap(T,B) = \{ \notag\\
+        &\hphantom{{}swap(T,B) }\begin{aligned}
+            TB &::= MB\\
+            MB &::= MN\\
+            MN &::= BN\\
+            BN &::= BT
+        \end{aligned}\\
+        &\} \notag
+    \end{align}
+    \begin{align}
+        & swap(C,F) = \{ \notag\\
+        &\hphantom{{}swap(C,F) }\begin{aligned}
+            CF &::= IF\\
+            IF &::= IJ\\
+            IJ &::= FJ\\
+            FJ &::= FC
+        \end{aligned}\\
+        &\} \notag
+    \end{align}

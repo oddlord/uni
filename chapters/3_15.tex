@@ -1,1 +1,33 @@
 \section*{Esercizio 3.15}
+
+    \enunciato{
+        Dimostrare che, per ogni espressione aritmetica $E$ descritta nella Sezione 3.3,
+        $$E \rightarrow E_1, E \rightarrow E_2 \;\mbox{ implica }\; E_1 \twoheadrightarrow n, E_2 \twoheadrightarrow n.$$
+    }
+    
+    Quello che si richiede in questo esercizio è di dimostrare che quando una stessa espresione aritmetica $E$ (generata tramite la grammatica in Tabella 3.3) viene \textit{computata} in due modi distinti, producendo le nuove espressioni $E_1$ ed $E_2$, allora possiamo dire che queste due nuove espressioni vengono \textit{valutate} entrambe lo stesso numero $n$.\\
+    \\
+    Procediamo per casi. I modi con cui si può eseguire un passo di computazione sono descritti dalle regole di inferenza in Tabella 3.4. Immaginiamoci quindi di aver applicato ognuna di queste regole per la computazione $E \rightarrow E_1$.
+    
+    \begin{itemize}
+        \item regola \textit{(op)}\\
+            Caso banale. Se si è applicato l'assioma \textit{(op)} allora significa che quella era l'unica regola applicabile e quindi risulta $E_1=E_2=n$. Per la prima regola di valutazione della Tabella 3.5, banalmente $n \twoheadrightarrow n$.
+        \item regola \textit{(redl)}\\
+            Consideriamo il caso in cui $E_1$ sia stata computata tramite \textit{(redl)} ed $E_2$ tramite \textit{(redr)} (il caso in cui vengono computate entrambe da \textit{(redl)} è banale, come visto prima).\\
+            L'espressione $E$ ha quindi la forma:
+            $$E=E_a \mbox{ \textit{op} } E_b$$
+            Di conseguenza $E_1$ ed $E_2$ hanno una forma:
+            \begin{align*}
+                E_1 &= E_a' \mbox{ \textit{op} } E_b\\
+                E_2 &= E_a \mbox{ \textit{op} } E_b'
+            \end{align*}
+            In altre parole, il problema si riduce a dimostrare che ogni espressione aritmetica viene valutata allo stesso modo indifferentemente da quale argomento viene computato per primo.\\
+            \\
+            Per convincersi che questo è vero basta osservare che quando si computa un'espressione $E$ con operatore binario (regole \textit{(redl)} e \textit{(redr)}) la sua computazione va a ``modificare'' soltanto la struttura dell'argomento computato, lasciando invariati sia l'operatore che l'altro argomento. Quindi, indifferentemente dall'ordine in cui vengono computati i vari argomenti, alla fine l'espressione assumerà obbligatoriamente la forma $a \mbox{ \textit{op} } b$. I simboli $a$ e $b$ saranno sempre gli stessi numeri indipendentemente dall'ordine di computazione proprio perché la computazione di un argomento è indipendente dall'altro, per come abbiamo definito le regole \textit{(redl)} e \textit{(redr)}. Quindi, sia $a \mbox{ \textit{op} } b = n$, possiamo conludere che:
+            \begin{align*}
+                E_1 &\rightarrow a \mbox{ \textit{op} } b \rightarrow n \twoheadrightarrow n\\
+                E_2 &\rightarrow a \mbox{ \textit{op} } b \rightarrow n \twoheadrightarrow n
+            \end{align*}
+        \item regola \textit{(redr)}\\
+            Dimostrazione speculare a quella di \textit{(redl)}.
+    \end{itemize}
