@@ -10,7 +10,10 @@
 \usepackage{fancybox}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{packages/mathpartir}
 \usepackage{multirow}
+\usepackage{pgf}
+\usepackage{tikz}
 \usepackage{titlesec}
 
 %********************************************************************
@@ -33,6 +36,10 @@
 
 % graphicx
 \graphicspath{{img/}}
+
+% tikz
+\usetikzlibrary{shapes,shapes.geometric,arrows,fit,calc,positioning,automata}
+\tikzset{elliptic state/.style={draw,ellipse}}
 
 %********************************************************************
 % New commands

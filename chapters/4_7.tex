@@ -1,1 +1,145 @@
 \section*{Esercizio 4.7}
+
+    \enunciato{Costruire gli automi associati alle espressioni regolari $a;b+c$ e $a;b+a;c$.}
+    
+    L'automa a stati finiti relativo all'espressione regolare $a;b+c$ è rappresentato in Figura \ref{fig:a;b+c}.
+    
+    \begin{figure}[h!]
+        \centering
+        \begin{tikzpicture}[->, >=stealth', shorten >=1pt, auto, node distance=2.8cm, semithick, align=center]
+            \node[initial, elliptic state] 		(A)              {$a;b+c$};
+            \node[elliptic state]          		(B) [right of=A] {$1;b+c$};
+            \node[elliptic state]          		(C) [right of=B] {$b+c$};
+            \node[accepting, elliptic state]	(D) [right of=C] {$1$};
+            \path	(A) edge              	node {$a$}				(B)
+                    (B) edge			  	node {$\varepsilon$}	(C)
+                    (C) edge [bend left]  	node {$b$}				(D)
+                        edge [bend right]	node {$c$}				(D)
+                    (D) edge [loop right]	node {$\varepsilon$}	(D);
+        \end{tikzpicture}
+        \caption{Automa a stati finiti dell'espressione regolare $a;b+c$.}
+        \label{fig:a;b+c}
+    \end{figure}
+    
+    Le transizioni dell'automa in Figura \ref{fig:a;b+c} sono giustificate dalle seguenti derivazioni:\\
+    
+    \begin{minipage}{0.5\textwidth}
+        \begin{align}
+            \inferrule* [Right=(Seq1)]
+                {\inferrule* [Right=(Atom)]
+                    { }
+                    {a \;\xrightarrow{a}\; 1}
+                }
+                {a;b+c \;\xrightarrow{a}\; 1;b+c}&\\
+            \notag\\
+            \inferrule* [Right=(Seq2)]
+                {\inferrule* [Right=(Tic)]
+                    { }
+                    {1 \;\xrightarrow{\varepsilon}\; 1}
+                }
+                {1;b+c \;\xrightarrow{\varepsilon}\; b+c}&\\
+            \notag\\
+            \inferrule* [Right=(Sum1)]
+                {\inferrule* [Right=(Atom)]
+                    { }
+                    {b \;\xrightarrow{b}\; 1}
+                }
+                {b+c \;\xrightarrow{b}\; 1}&
+        \end{align}
+    \end{minipage}
+    \begin{minipage}{0.5\textwidth}
+        \begin{align}
+            \inferrule* [Right=(Sum2)]
+                {\inferrule* [Right=(Atom)]
+                    { }
+                    {c \;\xrightarrow{c}\; 1}
+                }
+                {b+c \;\xrightarrow{c}\; 1}&\\
+            \notag\\
+            \inferrule* [Right=(Tic)]
+                { }
+                {1 \;\xrightarrow{\varepsilon}\; 1}&
+        \end{align}\\
+    \end{minipage}\\
+    \\
+    
+    Vediamo adesso in Figura \ref{fig:a;b+a;c} l'automa relativo all'espressione $a;b+a;c$.
+    
+    \begin{figure}[h!]
+        \centering
+        \begin{tikzpicture}[->, >=stealth', shorten >=1pt, auto, node distance=2.8cm, semithick, align=center]
+            \node[initial, elliptic state] 		(A)              {$a;b+a;c$};
+            \node[elliptic state]          		(B) [right=1cm of A] {$1;b+a;c$};
+            \node[elliptic state]          		(C) [right=1cm of B] {$b+a;c$};
+            \node[elliptic state]				(D) [below=1.5cm of C] {$1;c$};
+            \node[elliptic state]				(E) [left=1cm of D] {$c$};
+            \node[accepting, elliptic state]	(F) [left=1cm of E] {$1$};
+            \path	(A) edge              	node {$a$}				(B)
+                    (B) edge			  	node {$\varepsilon$}	(C)
+                    (C) edge [bend left]  	node {$b$}				(D)
+                        edge [bend right]	node {$a$}				(D)
+                    (D) edge 				node {$\varepsilon$}	(E)
+                    (E) edge				node {$c$}				(F)
+                    (F) edge [loop left]	node {$\varepsilon$}	(F);
+        \end{tikzpicture}
+        \caption{Automa a stati finiti dell'espressione regolare $a;b+a;c$.}
+        \label{fig:a;b+a;c}
+    \end{figure}
+    
+    Come prima, proponiamo di seguito le derivazioni che giustificano le transizioni del secondo automa:
+    
+    \begin{minipage}{0.5\textwidth}
+        \begin{align}
+            \inferrule* [Right=(Seq1)]
+                {\inferrule* [Right=(Atom)]
+                    { }
+                    {a \;\xrightarrow{a}\; 1}
+                }
+                {a;b+a;c \;\xrightarrow{a}\; a;b+a;c}&\\
+            \notag\\
+            \inferrule* [Right=(Seq2)]
+                {\inferrule* [Right=(Tic)]
+                    { }
+                    {1 \;\xrightarrow{\varepsilon}\; 1}
+                }
+                {1;b+a;c \;\xrightarrow{\varepsilon}\; b+a;c}&\\
+            \notag\\
+            \inferrule* [Right=(Seq1)]
+                {\inferrule* [Right=(Sum1)]
+                    {\inferrule* [Right=(Atom)]
+                        { }
+                        {b \;\xrightarrow{b}\; 1}
+                    }
+                    {b+a \;\xrightarrow{b}\; 1}
+                }
+                {b+a;c \;\xrightarrow{b}\; 1;c}&
+        \end{align}
+    \end{minipage}
+    \begin{minipage}{0.5\textwidth}
+        \begin{align}
+            \inferrule* [Right=(Seq1)]
+                {\inferrule* [Right=(Sum2)]
+                    {\inferrule* [Right=(Atom)]
+                        { }
+                        {a \;\xrightarrow{a}\; 1}
+                    }
+                    {b+a \;\xrightarrow{a}\; 1}
+                }
+                {b+a;c \;\xrightarrow{a}\; 1;c}&\\
+            \notag\\
+            \inferrule* [Right=(Seq2)]
+                {\inferrule* [Right=(Tic)]
+                    { }
+                    {1 \;\xrightarrow{\varepsilon}\; 1}
+                }
+                {1;c \;\xrightarrow{\varepsilon}\; c}&\\
+            \notag\\
+            \inferrule* [Right=(Atom)]
+                { }
+                {c \;\xrightarrow{c}\; 1}&\\
+            \notag\\
+            \inferrule* [Right=(Tic)]
+                { }
+                {1 \;\xrightarrow{\varepsilon}\; 1}
+        \end{align}
+    \end{minipage}
