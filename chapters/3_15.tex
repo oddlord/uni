@@ -7,27 +7,37 @@
     
     Quello che si richiede in questo esercizio è di dimostrare che quando una stessa espresione aritmetica $E$ (generata tramite la grammatica in Tabella 3.3) viene \textit{computata} in due modi distinti, producendo le nuove espressioni $E_1$ ed $E_2$, allora possiamo dire che queste due nuove espressioni vengono \textit{valutate} entrambe lo stesso numero $n$.\\
     \\
-    Procediamo per casi. I modi con cui si può eseguire un passo di computazione sono descritti dalle regole di inferenza in Tabella 3.4. Immaginiamoci quindi di aver applicato ognuna di queste regole per la computazione $E \rightarrow E_1$.
-    
+    Ragioniamo per induzione sul numero di operatori in $E$:
     \begin{itemize}
-        \item regola \textit{(op)}\\
-            Caso banale. Se si è applicato l'assioma \textit{(op)} allora significa che quella era l'unica regola applicabile e quindi risulta $E_1=E_2=n$, per un qualche $n$. Per la prima regola di valutazione della Tabella 3.5, banalmente $n \twoheadrightarrow n$.
-        \item regola \textit{(redl)}\\
-            Consideriamo il caso in cui $E_1$ sia stata computata tramite \textit{(redl)} ed $E_2$ tramite \textit{(redr)} (il caso in cui vengono computate entrambe da \textit{(redl)} è banale, come visto prima).\\
-            L'espressione $E$ ha quindi la forma:
-            $$E=E_a \mbox{ \textit{op} } E_b$$
-            Di conseguenza $E_1$ ed $E_2$ hanno una forma:
-            \begin{align*}
-                E_1 &= E_a' \mbox{ \textit{op} } E_b\\
-                E_2 &= E_a \mbox{ \textit{op} } E_b'
-            \end{align*}
-            In altre parole, il problema si riduce a dimostrare che ogni espressione aritmetica viene valutata allo stesso modo indifferentemente da quale argomento viene computato per primo.\\
+        \item \textbf{Caso base:}\\
+            Supponiamo che in $E$ ci sia un solo operatore (se non ci fossero operatori allora $E$ sarebbe composto da un solo numero e non potrebbe essere computato in un'altra espressione, ma soltanto valutato), allora l'unica regola applicabile è \textit{(op)}. Dal fatto che l'unica regola applicabile è \textit{(op)}, segue che $E_1=E_2=n$, per un $n$ opportuno. Allora per la prima regola in Tabella 3.5 si ottiene banalmente:
+            $$E_1 = n \twoheadrightarrow n$$
+            $$E_2 = n \twoheadrightarrow n$$
+        \item \textbf{Passo induttivo:}\\
+            Supponiamo che in $E$ ci siano $k+1$ operatori, con $k \geq 1$, e che la proposizione valga per tutte le espressioni con $k$ operatori. Allora $E$ sarà della forma $E=E_a\; op\; E_b$, per $E_a$, $E_b$ e $op$ opportuni, e potrà essere computata tramite \textit{(redl)} oppure \textit{(redr)}.\\
             \\
-            Per convincersi che questo è vero basta osservare che quando si computa un'espressione $E$ con operatore binario (regole \textit{(redl)} e \textit{(redr)}) la sua computazione va a ``modificare'' soltanto la struttura dell'argomento computato, lasciando invariati sia l'operatore che l'altro argomento. Quindi, indifferentemente dall'ordine in cui vengono computati i vari argomenti, alla fine l'espressione assumerà obbligatoriamente la forma $a \mbox{ \textit{op} } b$. I simboli $a$ e $b$ saranno sempre gli stessi numeri indipendentemente dall'ordine di computazione proprio perché la computazione di un argomento è indipendente dall'altro, per come abbiamo definito le regole \textit{(redl)} e \textit{(redr)}. Quindi, sia $a \mbox{ \textit{op} } b = n$, possiamo conludere che:
-            \begin{align*}
-                E_1 &\xrightarrow{*} a \mbox{ \textit{op} } b \rightarrow n \twoheadrightarrow n\\
-                E_2 &\xrightarrow{*} a \mbox{ \textit{op} } b \rightarrow n \twoheadrightarrow n
-            \end{align*}
-        \item regola \textit{(redr)}\\
-            Dimostrazione speculare a quella di \textit{(redl)}.
+            Se $E_1$ ed $E_2$ sono state computate tramite la stessa regola, allora per quanto detto prima esse risultano uguali e banalmente vengono valutate nello stesso numero.\\
+            Supponiamo allora di aver ottenuto $E_1$ tramite \textit{(redl)} e $E_2$ tramite \textit{(redr)}. Questo significa che se $E_a \rightarrow E_a'$ ed $E_b \rightarrow E_b'$, allora $E_1$ ed $E_2$ hanno la forma:
+            $$E_1 = E_a'\; op\; E_b$$
+            $$E_2 = E_a\; op\; E_b'$$
+            Possiamo osservare come ogni computazione tramite le tre regole fornite implichi sempre il decremento unitario del numero di operatori rispetto all'espressione originale. Ovvero ogni regola elimina sempre uno ed un solo operatore. Questo implica che la proposizione risulta vera, per ipotesi induttiva, per $E_1$, $E_2$, $E_a$, $E_b$, $E_a'$ e $E_b'$. Questo ci assicura che, indipendentemente da quali regole di computazione verranno utilizzate, queste espressioni verranno valutate sempre nello stesso numero.\\
+            Possiamo quindi dire che $E_a' \twoheadrightarrow x$ e $E_b' \twoheadrightarrow y$, per certi $x$ e $y$.\\
+            \\
+            Sfruttando adesso l'equivalenza tra semantica di computazione e semantica di valutazione\footnote{Questo risultato verrà dato per buono ai fini di questo esercizio in quanto la sua dimostrazione è già obiettivo di un altro esercizio, l'Esercizio 3.14} notiamo che, avendo $E_a' \twoheadrightarrow x$, allora $E_a \xrightarrow{*} x$. Ricordiamo anche che per definizione $E_a \rightarrow E_a'$, ovvero $E_a \xrightarrow{*} x$ e quindi, applicando nuovamente l'equivalenza tra le due semantiche, otteniamo che $E_a \twoheadrightarrow x$. Ovvero sia $E_a$ che $E_a'$ vengono valutate entrambe $x$.\\
+            Lo stesso discorso si applica ad $E_b$ e $E_b'$, ricavando che entrambi sono valutati in $y$.\\
+            \\
+            Sia quindi $x\; op\; y = n$, allora
+            \begin{equation*}
+                \inferrule* [Right={$(x\; op\; y = n)$}]
+                    {E_a' \twoheadrightarrow x \\ E_b \twoheadrightarrow y}
+                    {E_a'\; op\; E_b \twoheadrightarrow n}
+            \end{equation*}
+            \begin{equation*}
+                \inferrule* [Right={$(x\; op\; y = n)$}]
+                    {E_a \twoheadrightarrow x \\ E_b' \twoheadrightarrow y}
+                    {E_a\; op\; E_b' \twoheadrightarrow n}
+            \end{equation*}
+            da cui la tesi ricordando la forma di $E_1$ ed $E_2$.\\
+            \\
+            Se, alternativamente, $E_1$ fosse stato ottenuto tramite \textit{(redr)} ed $E_2$ tramite \textit{(redl)} i passaggi sarebbero stati del tutto analoghi.
     \end{itemize}

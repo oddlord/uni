@@ -25,22 +25,22 @@
     
     \begin{minipage}{0.5\textwidth}
         \begin{align}
-            \inferrule* [Right=(Seq1)]
-                {\inferrule* [Right=(Atom)]
+            \inferrule* [Right={$(Seq1)$}]
+                {\inferrule* [Right={$(Atom)$}]
                     { }
                     {a \;\xrightarrow{a}\; 1}
                 }
                 {a;b+c \;\xrightarrow{a}\; 1;b+c}&\\
             \notag\\
-            \inferrule* [Right=(Seq2)]
-                {\inferrule* [Right=(Tic)]
+            \inferrule* [Right={$(Seq2)$}]
+                {\inferrule* [Right={$(Tic)$}]
                     { }
                     {1 \;\xrightarrow{\varepsilon}\; 1}
                 }
                 {1;b+c \;\xrightarrow{\varepsilon}\; b+c}&\\
             \notag\\
-            \inferrule* [Right=(Sum1)]
-                {\inferrule* [Right=(Atom)]
+            \inferrule* [Right={$(Sum1)$}]
+                {\inferrule* [Right={$(Atom)$}]
                     { }
                     {b \;\xrightarrow{b}\; 1}
                 }
@@ -49,14 +49,14 @@
     \end{minipage}
     \begin{minipage}{0.5\textwidth}
         \begin{align}
-            \inferrule* [Right=(Sum2)]
-                {\inferrule* [Right=(Atom)]
+            \inferrule* [Right={$(Sum2)$}]
+                {\inferrule* [Right={$(Atom)$}]
                     { }
                     {c \;\xrightarrow{c}\; 1}
                 }
                 {b+c \;\xrightarrow{c}\; 1}&\\
             \notag\\
-            \inferrule* [Right=(Tic)]
+            \inferrule* [Right={$(Tic)$}]
                 { }
                 {1 \;\xrightarrow{\varepsilon}\; 1}&
         \end{align}\\
@@ -90,23 +90,23 @@
     
     \begin{minipage}{0.5\textwidth}
         \begin{align}
-            \inferrule* [Right=(Seq1)]
-                {\inferrule* [Right=(Atom)]
+            \inferrule* [Right={$(Seq1)$}]
+                {\inferrule* [Right={$(Atom)$}]
                     { }
                     {a \;\xrightarrow{a}\; 1}
                 }
                 {a;b+a;c \;\xrightarrow{a}\; a;b+a;c}&\\
             \notag\\
-            \inferrule* [Right=(Seq2)]
-                {\inferrule* [Right=(Tic)]
+            \inferrule* [Right={$(Seq2)$}]
+                {\inferrule* [Right={$(Tic)$}]
                     { }
                     {1 \;\xrightarrow{\varepsilon}\; 1}
                 }
                 {1;b+a;c \;\xrightarrow{\varepsilon}\; b+a;c}&\\
             \notag\\
-            \inferrule* [Right=(Seq1)]
-                {\inferrule* [Right=(Sum1)]
-                    {\inferrule* [Right=(Atom)]
+            \inferrule* [Right={$(Seq1)$}]
+                {\inferrule* [Right={$(Sum1)$}]
+                    {\inferrule* [Right={$(Atom)$}]
                         { }
                         {b \;\xrightarrow{b}\; 1}
                     }
@@ -117,9 +117,9 @@
     \end{minipage}
     \begin{minipage}{0.5\textwidth}
         \begin{align}
-            \inferrule* [Right=(Seq1)]
-                {\inferrule* [Right=(Sum2)]
-                    {\inferrule* [Right=(Atom)]
+            \inferrule* [Right={$(Seq1)$}]
+                {\inferrule* [Right={$(Sum2)$}]
+                    {\inferrule* [Right={$(Atom)$}]
                         { }
                         {a \;\xrightarrow{a}\; 1}
                     }
@@ -127,18 +127,18 @@
                 }
                 {b+a;c \;\xrightarrow{a}\; 1;c}&\\
             \notag\\
-            \inferrule* [Right=(Seq2)]
-                {\inferrule* [Right=(Tic)]
+            \inferrule* [Right={$(Seq2)$}]
+                {\inferrule* [Right={$(Tic)$}]
                     { }
                     {1 \;\xrightarrow{\varepsilon}\; 1}
                 }
                 {1;c \;\xrightarrow{\varepsilon}\; c}&\\
             \notag\\
-            \inferrule* [Right=(Atom)]
+            \inferrule* [Right={$(Atom)$}]
                 { }
                 {c \;\xrightarrow{c}\; 1}&\\
             \notag\\
-            \inferrule* [Right=(Tic)]
+            \inferrule* [Right={$(Tic)$}]
                 { }
                 {1 \;\xrightarrow{\varepsilon}\; 1}
         \end{align}
