@@ -1,1 +1,34 @@
 \section*{Esercizio 7.6}
+
+    \enunciato{Fornire semantica operazionale e denotazionale del programma
+        $$\mbox{\textbf{letrec}}\; f(x) \Leftarrow f(x)\; \mbox{\textbf{in}}\; f(5).$$
+    }
+    
+    Informalmente, possiamo già intuire che il programma presentato diverge, in quanto, indipendentemente dall'argomento passato, l'unica funzione definita $f(x)$ non fa altro che richiamare ricorsivamente se stessa, senza possibilità di arresto.\\
+    \\
+    In particolare, definendo l'insieme di dichiarazioni $D = \{f(x) \Leftarrow f(x)\}$, la \textit{semantica operazionale} con \textit{call-by-name} applicherà un numero infinito di volte la clausola (Fun) in Tabella 7.2:
+    $$f(5) \xrightarrow{\mbox{\scriptsize(Fun)}}_D f(5) \xrightarrow{\mbox{\scriptsize(Fun)}}_D \dots f(5) \xrightarrow{\mbox{\scriptsize(Fun)}}_D \dots.$$
+    La semantica operazionale con \textit{call-by-value} risulterà del tutto analoga, in quanto i termini presenti che rappresentano la chiamata a una funzione sono già invocati su rappresentazioni di naturali (in particolare del numero $5$) e quindi verrà applicata la clausola (Fun') in Tabella 7.3 all'infinito:
+    $$f(5) \dotxrightarrow{\mbox{\scriptsize(Fun\textquotesingle)}}_D f(5) \dotxrightarrow{\mbox{\scriptsize(Fun\textquotesingle)}}_D \dots f(5) \dotxrightarrow{\mbox{\scriptsize(Fun\textquotesingle)}}_D \dots.$$
+    Vediamo adesso come si ricava il significato del programma attraverso la \textit{semantica denotazionale}, ricordando la definizione della funzione $\Omega \equiv \lambda x.\bot$:
+    \begin{align*}
+        &\mathcal{P}\llbracket\mbox{\textbf{letrec}}\; f(x) \Leftarrow f(x)\; \mbox{\textbf{in}}\; f(5)\rrbracket &&\\
+        &= \mathcal{T}\llbracket f(5)\rrbracket\mathcal{D}\llbracket f(x)\Leftarrow f(f)\rrbracket 0 &&\mbox{per la clausola (Prg)}\\
+        &= \mathcal{T}\llbracket f(5)\rrbracket fix(\lambda f.\mathcal{T}\llbracket f(x)\rrbracket f)0 &&\mbox{per la clausola (Dec)}\\
+        &= \mathcal{T}\llbracket f(5)\rrbracket fix(\lambda f. (\lambda \overline{f}.\lambda x. \overline{f}(\mathcal{T}\llbracket x\rrbracket\overline{f}x)f))0 &&\mbox{per la clausola (Fun)}\\
+        &= \mathcal{T}\llbracket f(5)\rrbracket fix(\lambda f. (\lambda \overline{f}.\lambda x. \overline{f}((\lambda\hat{f}.\lambda \hat{x}.x)\overline{f}x)f))0 &&\mbox{per la clausola (Var)}\\
+        &= \mathcal{T}\llbracket f(5)\rrbracket fix(\lambda f. (\lambda \overline{f}.\lambda x. \overline{f}(x)f))0 &&\mbox{per $\beta$-riduzione}\\
+        &= \mathcal{T}\llbracket f(5)\rrbracket fix(\lambda f.\lambda x.f(x))0 &&\mbox{per $\beta$-riduzione}\\
+        &= \mathcal{T}\llbracket f(5)\rrbracket\; \mbox{\textbf{sup}}\{\lambda f.f^i\Omega |i\in\mathbb{N}\}0 &&\mbox{per definizione di minimo punto fisso}\\
+        &= \mathcal{T}\llbracket f(5)\rrbracket\Omega 0 &&\mbox{essendo $(\lambda f.(\lambda x.fx))\Omega = \Omega$}\footnotemark\\
+        &= (\lambda f.\lambda x. f(\mathcal{T}\llbracket 5\rrbracket fx))\Omega 0 &&\mbox{per la clausola (Fun)}\\
+        &= (\lambda f.\lambda x. f((\lambda\hat{f}.\lambda\hat{x}.5) fx))\Omega 0 &&\mbox{per la clausola (Nat)}\\
+        &= (\lambda f.\lambda x. f(5)\Omega 0 &&\mbox{per $\beta$-riduzione}\\
+        &= \Omega(5) &&\mbox{per $\beta$-riduzione}\\
+        &= (\lambda x.\bot)5 &&\mbox{per definizione di $\Omega$}\\
+        &= \bot &&\mbox{per $\beta$-riduzione}
+    \end{align*}
+    %-------- FOOTNOTES --------
+    \footnotetext{Ovvero, il funzionale su $f$ applicato ad $\Omega$ da sempre $\Omega$, il che rende $\Omega$ un punto fisso. Equivale a concludere che l'applicazione di una $f$ non rende le approssimazioni successive più definite, in quanto non aggiunge informazione sul significato della funzione.}
+    %-------- end FOOTNOTES --------
+    Grazie alla semantica denotazionale abbiamo quindi una conferma più formale della divergenza del programma. Infatti interpretare un programma come $\bot$ equivale a dire che esso è privo di significato.

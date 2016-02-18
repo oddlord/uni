@@ -8,11 +8,14 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{fancybox}
+\usepackage[bottom, para]{footmisc}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{packages/mathpartir}
 \usepackage{multirow}
 \usepackage{pgf}
+\usepackage{stmaryrd}
+\usepackage{textcomp}
 \usepackage{tikz}
 \usepackage{titlesec}
 
@@ -46,3 +49,12 @@
 %********************************************************************
 
 \newcommand{\enunciato}[1]{\doublebox{\begin{minipage}{\textwidth}\centering#1\end{minipage}}\\}
+
+\newcommand{\dotxrightarrow}[1]{\;\bullet\!\!\!\xrightarrow{#1}}
+
+\newcommand{\footnoteOP}[1]{
+	~\begin{minipage}[b]{4mm}
+		~\footnotemark\\
+		\(#1\)
+	\end{minipage}
+}
