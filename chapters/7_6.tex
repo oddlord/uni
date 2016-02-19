@@ -12,16 +12,16 @@
     $$f(5) \dotxrightarrow{\mbox{\scriptsize(Fun\textquotesingle)}}_D f(5) \dotxrightarrow{\mbox{\scriptsize(Fun\textquotesingle)}}_D \dots f(5) \dotxrightarrow{\mbox{\scriptsize(Fun\textquotesingle)}}_D \dots.$$
     Vediamo adesso come si ricava il significato del programma attraverso la \textit{semantica denotazionale}, ricordando la definizione della funzione $\Omega \equiv \lambda x.\bot$:
     \begin{align*}
-        &\mathcal{P}\llbracket\mbox{\textbf{letrec}}\; f(x) \Leftarrow f(x)\; \mbox{\textbf{in}}\; f(5)\rrbracket &&\\
-        &= \mathcal{T}\llbracket f(5)\rrbracket\mathcal{D}\llbracket f(x)\Leftarrow f(f)\rrbracket 0 &&\mbox{per la clausola (Prg)}\\
-        &= \mathcal{T}\llbracket f(5)\rrbracket fix(\lambda f.\mathcal{T}\llbracket f(x)\rrbracket f)0 &&\mbox{per la clausola (Dec)}\\
-        &= \mathcal{T}\llbracket f(5)\rrbracket fix(\lambda f. (\lambda \overline{f}.\lambda x. \overline{f}(\mathcal{T}\llbracket x\rrbracket\overline{f}x)f))0 &&\mbox{per la clausola (Fun)}\\
-        &= \mathcal{T}\llbracket f(5)\rrbracket fix(\lambda f. (\lambda \overline{f}.\lambda x. \overline{f}((\lambda\hat{f}.\lambda \hat{x}.x)\overline{f}x)f))0 &&\mbox{per la clausola (Var)}\\
-        &= \mathcal{T}\llbracket f(5)\rrbracket fix(\lambda f. (\lambda \overline{f}.\lambda x. \overline{f}(x)f))0 &&\mbox{per $\beta$-riduzione}\\
-        &= \mathcal{T}\llbracket f(5)\rrbracket fix(\lambda f.\lambda x.f(x))0 &&\mbox{per $\beta$-riduzione}\\
-        &= \mathcal{T}\llbracket f(5)\rrbracket\; \mbox{\textbf{sup}}\{\lambda f.f^i\Omega |i\in\mathbb{N}\}0 &&\mbox{per definizione di minimo punto fisso}\\
-        &= \mathcal{T}\llbracket f(5)\rrbracket\Omega 0 &&\mbox{essendo $(\lambda f.(\lambda x.fx))\Omega = \Omega$}\footnotemark\\
-        &= (\lambda f.\lambda x. f(\mathcal{T}\llbracket 5\rrbracket fx))\Omega 0 &&\mbox{per la clausola (Fun)}\\
+        &\mathcal{P}\doublebracket{\mbox{\textbf{letrec}}\; f(x) \Leftarrow f(x)\; \mbox{\textbf{in}}\; f(5)} &&\\
+        &= \mathcal{T}\doublebracket{ f(5)}\mathcal{D}\doublebracket{ f(x)\Leftarrow f(f)} 0 &&\mbox{per la clausola (Prg)}\\
+        &= \mathcal{T}\doublebracket{ f(5)} fix(\lambda f.\mathcal{T}\doublebracket{ f(x)} f)0 &&\mbox{per la clausola (Dec)}\\
+        &= \mathcal{T}\doublebracket{ f(5)} fix(\lambda f. (\lambda \overline{f}.\lambda x. \overline{f}(\mathcal{T}\doublebracket{ x}\overline{f}x)f))0 &&\mbox{per la clausola (Fun)}\\
+        &= \mathcal{T}\doublebracket{ f(5)} fix(\lambda f. (\lambda \overline{f}.\lambda x. \overline{f}((\lambda\hat{f}.\lambda \hat{x}.x)\overline{f}x)f))0 &&\mbox{per la clausola (Var)}\\
+        &= \mathcal{T}\doublebracket{ f(5)} fix(\lambda f. (\lambda \overline{f}.\lambda x. \overline{f}(x)f))0 &&\mbox{per $\beta$-riduzione}\\
+        &= \mathcal{T}\doublebracket{ f(5)} fix(\lambda f.\lambda x.f(x))0 &&\mbox{per $\beta$-riduzione}\\
+        &= \mathcal{T}\doublebracket{ f(5)}\; \mbox{\textbf{sup}}\{\lambda f.f^i\Omega |i\in\mathbb{N}\}0 &&\mbox{per definizione di minimo punto fisso}\\
+        &= \mathcal{T}\doublebracket{ f(5)}\Omega 0 &&\mbox{essendo $(\lambda f.(\lambda x.fx))\Omega = \Omega$}\footnotemark\\
+        &= (\lambda f.\lambda x. f(\mathcal{T}\doublebracket{ 5} fx))\Omega 0 &&\mbox{per la clausola (Fun)}\\
         &= (\lambda f.\lambda x. f((\lambda\hat{f}.\lambda\hat{x}.5) fx))\Omega 0 &&\mbox{per la clausola (Nat)}\\
         &= (\lambda f.\lambda x. f(5)\Omega 0 &&\mbox{per $\beta$-riduzione}\\
         &= \Omega(5) &&\mbox{per $\beta$-riduzione}\\
