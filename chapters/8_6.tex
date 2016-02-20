@@ -7,18 +7,6 @@
         \end{align*}
     }
     
-%    A seconda del valore assegnato dalla memoria all'identificatore di variabile $x$ si avrà la divergenza o meno del comando proposto. Si nota inoltre che, non comparendo mai l'espressione \textbf{read} o il comando \textbf{output} $e$, i valori di input e di output dello stato saranno indifferenti per lo studio della divergenza.\\
-%    Sia quindi $C$ il comando proposto e sia $\sigma = <i,o,m>$ lo stato in esame, con $mx=v$, procediamo allora per casi, distinguendo in base ai possibili valori assegnati ad $x$ nella memoria:
-%    \begin{itemize}
-%        \item $v = unbound$\\
-%            Banalmente, se ad $x$ è assegnato il valore \textit{unbound}, significa che $x$ non è legato ad alcun valore in memoria ed il risultato è la situazione di errore.\\
-%            Formalmente, la sola espressione $x$ viene interpretata come segue:
-%            $$\mathcal{E}\doublebracket{ x } \sigma = error,$$
-%            per definizione di $\mathcal{E}\doublebracket{ x }$ e per il fatto che $mx=unbound$ in $\sigma$. Quindi l'interpretazione della condizione $x>0$, essendo un'operazione tra naturali, risulta essere:
-%            $$\mathcal{E}\doublebracket{ x>0 } \sigma = error,$$
-%            dovuto al fatto che se l'interpretazione del primo argomento risulta dar luogo a un errore, allora viene propagato l'errore, secondo la definizione di $\mathcal{E}\doublebracket{ e_1\; nop\; n_2 }$.
-%    \end{itemize}
-    
     Per semplicità, analizziamo le interpretazioni semantiche di espressioni e comandi che formano il comando while proposto prima di passare alla prova vera e propria. Inoltre considereremo tutte le interpretazioni semantiche depurate dai controlli d'errore: non è difficile infatti vedere che ogni volta che si verifica un errore il sistema di interpretazione semantica delle dispense non fa altro che propagare l'errore, garantendo quindi convergenza. Infine si assume che lo stato $\sigma_k$ sia equivalente allo stato in forma estesa $<i_k, o_k, m_k>$, quindi ad esempio se scriviamo $m_2$ sappiamo che questo indica la funzione memoria dello stato $\sigma_2$, senza bisogno di appesantire la dimostrazione.\\
     \\
     Tutte le interpretazioni verranno calcolate già in un generico stato $\sigma$, per semplicità di scrittura.\\
@@ -105,7 +93,7 @@
         LT_{a,b,\sigma} \rightarrow (LT_{a,c,\sigma} \rightarrow \alpha, \gamma), \beta &= LT_{a,b,\sigma} \rightarrow \alpha, \beta, &&\mbox{con $b\leq c$}
     \end{align*}
     
-    Le tre proprietà esposte sopra valgono anche quando il comando $if$ interno fa parte di espressioni o comandi più complessi.\\
+    Le proprietà esposte sopra valgono anche quando il comando $if$ interno fa parte di espressioni o comandi più complessi.\\
     \\
     Banalmente il comando \textbf{noaction} viene interpretato come:
     
@@ -176,7 +164,7 @@
         =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow (LT_{mx,3,\sigma}\rightarrow (GT_{mx,1,\sigma} \rightarrow \sigma[M_{mx,2,\sigma}/x], \sigma[M_{mx,1,\sigma}/x]), \bot), \sigma
     \end{align*}
     
-    Questa terza approssimazione è molto interessante! Quello che ci dice è che per $0$ il comando non fa niente, per valori maggiori o uguali a $3$ diverge senza modificare alcun valore, altrimenti decrementa $x$ di $2$ o di $1$ a seconda che il valore di $x$ sia $2$ o $1$, rispettivamente. Intuitivamente, questa è proprio la descrizione che ci viene in mente quando pensiamo all'interpretazione di questo comando \textbf{while}.
+    Questa terza approssimazione è molto interessante! Quello che ci dice è che per $0$ il comando non fa niente, per valori maggiori o uguali a $3$ diverge senza modificare alcun valore, altrimenti decrementa $x$ di $2$ o di $1$ a seconda che il valore di $x$ sia $2$ o $1$, rispettivamente. Intuitivamente, questa è proprio la descrizione che ci viene in mente quando pensiamo all'interpretazione di questo comando \textbf{while}. Proviamo a vedere se riusciamo a fare di meglio con un'altra approssimazione, ovvero se riusciamo a rendere l'interpretazione del comando ancora più definita:
     
     \begin{align*}
         F^4\Omega =\;& F(F^3\Omega)\\
@@ -189,6 +177,6 @@
         =\;& F^3\Omega
     \end{align*}
     
-    Abbiamo trovato un punto fisso! La terza approssimazione calcolata prima risulta essere un punto fisso (il minimo in particolare) in quanto $F(F^3\Omega)=F^3\Omega$. Questo ci dice che la descrizione informale data prima del comando è \textit{esattamente} l'interpretazione del comando e non una semplice approssimazione.\\
+    Abbiamo trovato un punto fisso! La terza approssimazione calcolata prima risulta essere un punto fisso del funzionale $F$ (il minimo, grazie al Teorema di Kleene) in quanto $F(F^3\Omega)=F^3\Omega$. Questo ci dice che la descrizione informale data prima del comando è \textit{esattamente} l'interpretazione del comando e non una semplice approssimazione.\\
     \\
     Quindi, ricapitolando, possiamo dedurre che l'insieme degli stati che fanno divergere il comando proposto sono tutti queli stati che fanno finire l'interpretazione semantica del \textbf{while} nel ramo contenente $\bot$, ovvero tutti quegli stati con input e output qualsiasi e con valori in memoria associati alla variabile $x$ maggiori o uguali a $3$. Come già detto all'inizio, è facile vedere come i valori per $x$ che causano errore, quali valori booleani o \textit{unbound}, garantiscano la convergenza, in quanto generano un errore che viene subito propagato, bloccando l'esecuzione del programma.
