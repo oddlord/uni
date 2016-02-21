@@ -1,10 +1,13 @@
 \section*{Esercizio 8.6}
 
-    \enunciato{Si calcoli formalmente, usando la semantica denotazionale di TINY, l'insieme degli stati a partire dai quali eseguendo il comando seguente si ha divergenza:
-        \begin{align*}
-            \mbox{\textbf{while}}\;& x>0\; \mbox{\textbf{do}}\\
-            & \mbox{\textbf{if}}\; x<3\; \mbox{\textbf{then}}\; x:=x-1\; \mbox{\textbf{else noaction}}.
-        \end{align*}
+    \enunciato{1}{
+        Si calcoli formalmente, usando la semantica denotazionale di TINY, l'insieme degli stati a partire dai quali eseguendo il comando seguente si ha divergenza:\\
+        \begin{center}
+            $\begin{aligned}
+                \mbox{\textbf{while}}\;& x>0\; \mbox{\textbf{do}}\\
+                & \mbox{\textbf{if}}\; x<3\; \mbox{\textbf{then}}\; x:=x-1\; \mbox{\textbf{else noaction}}.
+            \end{aligned}$
+        \end{center}
     }
     
     Per semplicità, analizziamo le interpretazioni semantiche di espressioni e comandi che formano il comando while proposto prima di passare alla prova vera e propria. Inoltre considereremo tutte le interpretazioni semantiche depurate dai controlli d'errore: non è difficile infatti vedere che ogni volta che si verifica un errore il sistema di interpretazione semantica delle dispense non fa altro che propagare l'errore, garantendo quindi convergenza. Infine si assume che lo stato $\sigma_k$ sia equivalente allo stato in forma estesa $<i_k, o_k, m_k>$, quindi ad esempio se scriviamo $m_2$ sappiamo che questo indica la funzione memoria dello stato $\sigma_2$, senza bisogno di appesantire la dimostrazione.\\
@@ -64,7 +67,7 @@
         LT_{i,j,\sigma} &\equiv <i,\sigma>\; \mbox{lt}\; <j, \sigma>
     \end{align*}
     
-    Inoltre useremo la notazione, in forma compatta, $\sigma[v/x] \equiv <i,o,m[v/x]>$.\\
+    Inoltre useremo la notazione, in forma compatta, $\sigma[v/x] \equiv\; <i,o,m[v/x]>$.\\
     \\
     Calcoliamo adesso l'interpretazione del comando di assegnazione $x:=x-1$ nello stato $\sigma$:
     
@@ -77,8 +80,13 @@
     
     Si può facilmente dimostrare che:
     
+    \begin{equation*}
+        GT_{mx,j,\sigma[M_{mx,h,\sigma}/x]} = GT_{mx, (j+h), \sigma}
+    \end{equation*}
+    
+    Ovvero valutare se $x-h$ è maggiore o meno di $j$ equivale a valutare se $x$ è maggiore o meno di $j+h$. Sulla stessa linea di principio, abbiamo le seguenti proprietà:
+    
     \begin{align*}
-        GT_{mx,j,\sigma[M_{mx,h,\sigma}/x]} &= GT_{mx, (j+h), \sigma}\\
         M_{mx,j,\sigma[M_{mx,h,\sigma}/x]} &= M_{mx, (j+h), \sigma}\\
         LT_{mx,j,\sigma[M_{mx,h,\sigma}/x]} &= LT_{mx, (j+h), \sigma}\\
         \sigma[M_{mx,a,\sigma}/x][M_{mx,b,\sigma[M_{mx,a,\sigma}/x]}/x] &= \sigma[M_{mx,(a+b),\sigma}/x]
@@ -87,13 +95,18 @@
     Inoltre risulta intuitivo che:
     
     \begin{align*}
-        GT_{a,b,\sigma} \rightarrow (GT_{a,c,\sigma} \rightarrow \alpha, \gamma), \beta &= GT_{a,b,\sigma} \rightarrow \alpha, \beta, &&\mbox{con $b\geq c$}\\
+        GT_{a,b,\sigma} \rightarrow (GT_{a,c,\sigma} \rightarrow \alpha, \gamma), \beta &= GT_{a,b,\sigma} \rightarrow \alpha, \beta, &&\mbox{con $b\geq c$}
+    \end{align*}
+    
+    Ovvero, se la valutazione di $a>b$ risulta $true$, finendo nel primo ramo del primo condizionale, allora sicuramente anche $a>c$, con $b \geq c$, risulterà $true$, quindi possiamo sostituire il secondo condizionale col suo ramo $true$. Analogamente, valgono le seguenti proprietà:
+    
+    \begin{align*}
         LT_{a,b,\sigma} \rightarrow (GT_{a,c,\sigma} \rightarrow \alpha, \gamma), \beta &= LT_{a,b,\sigma} \rightarrow \gamma, \beta, &&\mbox{con $b > c+1$}\\
         LT_{a,b,\sigma} \rightarrow \alpha, (GT_{a,c,\sigma} \rightarrow \beta, \gamma) &= LT_{a,b,\sigma} \rightarrow \alpha, \beta, &&\mbox{con $b > c$}\\
         LT_{a,b,\sigma} \rightarrow (LT_{a,c,\sigma} \rightarrow \alpha, \gamma), \beta &= LT_{a,b,\sigma} \rightarrow \alpha, \beta, &&\mbox{con $b\leq c$}
     \end{align*}
     
-    Le proprietà esposte sopra valgono anche quando il comando $if$ interno fa parte di espressioni o comandi più complessi.\\
+    Le proprietà appena esposte sui condizionali valgono anche quando il comando $if$ interno fa parte di espressioni o comandi più complessi. Esse saranno utili successivamente per semplificare i risultati e provare la tesi.\\
     \\
     Banalmente il comando \textbf{noaction} viene interpretato come:
     
@@ -109,7 +122,13 @@
         =\;& LT_{mx,3,\sigma}\rightarrow \sigma[M_{mx,1,\sigma}/x], \sigma
     \end{align*}
     
-    Definiamo ora il funzionale della specifica ricorsiva del comando \textbf{while} in esame, depurato da controlli d'errore, in modo simile a quanto fatto nelle dispense a pag. 187.:
+    Prima di passare alla parte finale della dimostrazione, mostriamo un'altra intuitiva proprietà del metalinguaggio che ci sarà utile in seguito, ovvero che l'applicazione è distributiva rispetto al condizionale:
+    
+    \begin{equation*}
+        (\lambda \sigma. \mathcal{C}\doublebracket{c}\sigma)(v \rightarrow \sigma_1, \sigma_2) = v \rightarrow \mathcal{C}\doublebracket{c}\sigma_1, \mathcal{C}\doublebracket{c}\sigma_2
+    \end{equation*}
+    
+    Definiamo ora il funzionale della specifica ricorsiva del comando \textbf{while} in esame, depurato da controlli d'errore, in modo simile a quanto fatto nelle dispense a pag. 187:
     
     \begin{equation*}
         F \equiv \lambda\Theta.\lambda\sigma.\; \mbox{let} <v_1,\sigma_1> \mbox{be}\; \mathbb{E}\doublebracket{x>0}\sigma\; \mbox{in}\; v_1 \rightarrow \Theta(\mathbb{C}\doublebracket{IF}\sigma_1), \sigma_1
@@ -148,32 +167,78 @@
     \begin{align*}
         F^2\Omega =\;& F(F^1\Omega)\\
         =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow (\lambda\sigma_1. GT_{mx,0,\sigma_1} \rightarrow \bot, \sigma_1)(LT_{mx,3,\sigma}\rightarrow \sigma[M_{mx,1,\sigma}/x], \sigma), \sigma\\
-        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow (LT_{mx,3,\sigma}\rightarrow (GT_{mx,1,\sigma} \rightarrow \bot, \sigma[M_{mx,1,\sigma}/x]), (GT_{mx,0,\sigma} \rightarrow \bot, \sigma)), \sigma\\
-        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow (LT_{mx,3,\sigma}\rightarrow (GT_{mx,1,\sigma} \rightarrow \bot, \sigma[M_{mx,1,\sigma}/x]), \bot), \sigma
+        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
+            &\tb{1} LT_{mx,3,\sigma}\rightarrow\\
+                &\tb{2} GT_{mx,1,\sigma} \rightarrow \bot, \sigma[M_{mx,1,\sigma}/x],\\
+                &\tb{2} GT_{mx,0,\sigma} \rightarrow \bot, \sigma,\\
+            &\tb{1} \sigma\\
+        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
+            &\tb{1} LT_{mx,3,\sigma}\rightarrow\\
+                &\tb{2} GT_{mx,1,\sigma} \rightarrow \bot, \sigma[M_{mx,1,\sigma}/x],\\
+                &\tb{2} \bot,\\
+            &\tb{1} \sigma
     \end{align*}
     
-    L'interpretazione del comando \textbf{while} inizia a prendere forma: l'approssimazione appena calcolata ci dice che se il valore associato ad $x$ è $2$, allora decrementa il suo valore in memoria, altrimenti o diverge o non fa niente. Calcoliamo la prossima approssimazione:
+    L'interpretazione del comando \textbf{while} inizia a prendere forma: l'approssimazione appena calcolata ci dice che se il valore associato ad $x$ è $2$ (o meglio, maggiore di $0$, minore di $3$ e maggiore di $1$), allora decrementa il suo valore in memoria, altrimenti o diverge o non fa niente. Calcoliamo la prossima approssimazione:
     
     \begin{align*}
         F^3\Omega =\;& F(F^2\Omega)\\
-        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow (\lambda\sigma_1. GT_{mx,0,\sigma_1} \rightarrow (LT_{mx,3,\sigma_1}\rightarrow (GT_{mx,1,\sigma_1} \rightarrow \bot, \sigma_1[M_{mx,1,\sigma_1}/x]), \bot), \sigma_1)\\
-        &(LT_{mx,3,\sigma}\rightarrow \sigma[M_{mx,1,\sigma}/x], \sigma), \sigma\\
-        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow (LT_{mx,3,\sigma}\rightarrow (GT_{mx,0,\sigma[M_{mx,1,\sigma}/x]} \rightarrow (LT_{mx,3,\sigma[M_{mx,1,\sigma}/x]}\rightarrow\\
-        &(GT_{mx,1,\sigma[M_{mx,1,\sigma}/x]} \rightarrow \bot, \sigma[M_{mx,1,\sigma}/x][M_{mx,1,\sigma[M_{mx,1,\sigma}/x]}/x]), \bot), \sigma[M_{mx,1,\sigma}/x]),\\
-        &(GT_{mx,0,\sigma} \rightarrow (LT_{mx,3,\sigma}\rightarrow (GT_{mx,1,\sigma} \rightarrow \bot, \sigma[M_{mx,1,\sigma}/x]), \bot), \sigma)), \sigma\\
-        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow (LT_{mx,3,\sigma}\rightarrow (GT_{mx,1,\sigma} \rightarrow \sigma[M_{mx,2,\sigma}/x], \sigma[M_{mx,1,\sigma}/x]), \bot), \sigma
+        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
+            &\tb{1} (\lambda\sigma_1. GT_{mx,0,\sigma_1} \rightarrow\\
+                &\tb{2} LT_{mx,3,\sigma_1}\rightarrow\\
+                    &\tb{3} GT_{mx,1,\sigma_1} \rightarrow \bot, \sigma_1[M_{mx,1,\sigma_1}/x],\\
+                    &\tb{3} \bot,\\
+                &\tb{2} \sigma_1\\
+            &\tb{1} )(LT_{mx,3,\sigma}\rightarrow \sigma[M_{mx,1,\sigma}/x], \sigma),\\
+            &\tb{1} \sigma\\
+        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
+            &\tb{1} LT_{mx,3,\sigma}\rightarrow\\
+                &\tb{2} GT_{mx,0,\sigma[M_{mx,1,\sigma}/x]} \rightarrow\\
+                    &\tb{3} LT_{mx,3,\sigma[M_{mx,1,\sigma}/x]}\rightarrow\\
+                        &\tb{4} GT_{mx,1,\sigma[M_{mx,1,\sigma}/x]} \rightarrow \bot, \sigma[M_{mx,1,\sigma}/x][M_{mx,1,\sigma[M_{mx,1,\sigma}/x]}/x],\\
+                        &\tb{4} \bot,\\
+                    &\tb{3} \sigma[M_{mx,1,\sigma}/x],\\
+                &\tb{2} GT_{mx,0,\sigma} \rightarrow\\
+                    &\tb{3} LT_{mx,3,\sigma}\rightarrow (GT_{mx,1,\sigma} \rightarrow \bot, \sigma[M_{mx,1,\sigma}/x]), \bot,\\
+                    &\tb{3} \sigma,\\
+            &\tb{1} \sigma\\
+        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
+            &\tb{1} LT_{mx,3,\sigma}\rightarrow\\
+                &\tb{2} GT_{mx,1,\sigma} \rightarrow \sigma[M_{mx,2,\sigma}/x], \sigma[M_{mx,1,\sigma}/x],\\
+                &\tb{2} \bot,\\
+            &\tb{1} \sigma
     \end{align*}
     
-    Questa terza approssimazione è molto interessante! Quello che ci dice è che per $0$ il comando non fa niente, per valori maggiori o uguali a $3$ diverge senza modificare alcun valore, altrimenti decrementa $x$ di $2$ o di $1$ a seconda che il valore di $x$ sia $2$ o $1$, rispettivamente. Intuitivamente, questa è proprio la descrizione che ci viene in mente quando pensiamo all'interpretazione di questo comando \textbf{while}. Proviamo a vedere se riusciamo a fare di meglio con un'altra approssimazione, ovvero se riusciamo a rendere l'interpretazione del comando ancora più definita:
+    Questa terza approssimazione è molto interessante! Quello che ci dice è che per $0$ il comando non fa niente, per valori maggiori o uguali a $3$ (o meglio, non minori di $3$) diverge senza modificare alcun valore, altrimenti decrementa $x$ di $2$ o di $1$ a seconda che il valore di $x$ sia $2$ o $1$, rispettivamente. Intuitivamente, questa è proprio la descrizione che ci viene in mente quando pensiamo all'interpretazione di questo comando \textbf{while}. Proviamo a vedere se riusciamo a fare di meglio con un'altra approssimazione, ovvero se riusciamo a rendere l'interpretazione del comando ancora più definita:
     
     \begin{align*}
         F^4\Omega =\;& F(F^3\Omega)\\
-        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow (\lambda\sigma_1. GT_{mx,0,\sigma_1} \rightarrow (LT_{mx,3,\sigma_1}\rightarrow (GT_{mx,1,\sigma_1} \rightarrow \sigma_1[M_{mx,2,\sigma_1}/x],\\
-        &\sigma_1[M_{mx,1,\sigma_1}/x]), \bot), \sigma_1)(LT_{mx,3,\sigma}\rightarrow \sigma[M_{mx,1,\sigma}/x], \sigma), \sigma\\
-        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow (LT_{mx,3,\sigma}\rightarrow (GT_{mx,1,\sigma} \rightarrow (LT_{mx,4,\sigma}\rightarrow\\
-        &(GT_{mx,2,\sigma} \rightarrow \sigma[M_{mx,3,\sigma}/x],\sigma[M_{mx,2,\sigma}/x]), \bot), \sigma[M_{mx,1,\sigma}/x]),(GT_{mx,0,\sigma} \rightarrow\\
-        &(LT_{mx,3,\sigma}\rightarrow (GT_{mx,1,\sigma} \rightarrow \sigma[M_{mx,2,\sigma}/x],\sigma[M_{mx,1,\sigma}/x]), \bot), \sigma)), \sigma\\
-        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow (LT_{mx,3,\sigma}\rightarrow (GT_{mx,1,\sigma} \rightarrow \sigma[M_{mx,2,\sigma}/x], \sigma[M_{mx,1,\sigma}/x]), \bot), \sigma\\
+        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
+            &\tb{1} (\lambda\sigma_1. GT_{mx,0,\sigma_1} \rightarrow\\
+                &\tb{2} LT_{mx,3,\sigma_1}\rightarrow\\
+                    &\tb{3} GT_{mx,1,\sigma_1} \rightarrow \sigma_1[M_{mx,2,\sigma_1}/x], \sigma_1[M_{mx,1,\sigma_1}/x],\\
+                    &\tb{3} \bot,\\
+                &\tb{2} \sigma_1\\
+            &\tb{1} )(LT_{mx,3,\sigma}\rightarrow \sigma[M_{mx,1,\sigma}/x], \sigma),\\
+            &\tb{1} \sigma\\
+        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
+            &\tb{1} LT_{mx,3,\sigma}\rightarrow\\
+                &\tb{2} GT_{mx,1,\sigma} \rightarrow\\
+                    &\tb{3} LT_{mx,4,\sigma}\rightarrow\\
+                        &\tb{4} GT_{mx,2,\sigma} \rightarrow \sigma[M_{mx,3,\sigma}/x],\sigma[M_{mx,2,\sigma}/x],\\
+                        &\tb{4} \bot,\\
+                    &\tb{3} \sigma[M_{mx,1,\sigma}/x],\\
+                &\tb{2} GT_{mx,0,\sigma} \rightarrow\\
+                    &\tb{3} LT_{mx,3,\sigma} \rightarrow\\
+                        &\tb{4} GT_{mx,1,\sigma} \rightarrow \sigma[M_{mx,2,\sigma}/x],\sigma[M_{mx,1,\sigma}/x],\\
+                        &\tb{4} \bot,\\
+                    &\tb{3} \sigma,\\
+            &\tb{1} \sigma\\
+        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
+            &\tb{1} LT_{mx,3,\sigma} \rightarrow\\
+                &\tb{2} GT_{mx,1,\sigma} \rightarrow \sigma[M_{mx,2,\sigma}/x], \sigma[M_{mx,1,\sigma}/x],\\
+                &\tb{2} \bot,\\
+            &\tb{1} \sigma\\
         =\;& F^3\Omega
     \end{align*}
     

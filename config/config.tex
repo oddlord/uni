@@ -48,12 +48,14 @@
 % New commands
 %********************************************************************
 
-\newcommand{\enunciato}[1]{
-    \doublebox{
-        \begin{minipage}{\textwidth}
-            \centering#1
-        \end{minipage}
-    }\\
+\newcommand{\enunciato}[2]{
+    \begin{center}
+        \doublebox{
+            \begin{minipage}{#1\textwidth}
+                #2
+            \end{minipage}
+        }
+    \end{center}
 }
 
 \newcommand{\dotxrightarrow}[1]{\;\bullet\!\!\!\xrightarrow{#1}}
@@ -70,4 +72,14 @@
             \end{minipage}
         }
     \end{center}
+}
+
+\newcount\tabs
+\newcommand{\tb}[1]{
+    \tabs=0
+    \loop
+        \advance\tabs by 1
+        \qquad
+        \ifnum\tabs<#1
+    \repeat
 }
