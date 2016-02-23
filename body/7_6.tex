@@ -3,7 +3,7 @@
     \enunciato{0.65}{
         Fornire semantica operazionale e denotazionale del programma\\
         \begin{center}
-            $\mbox{\textbf{letrec}}\; f(x) \Leftarrow f(x)\; \mbox{\textbf{in}}\; f(5).$
+            $\mbox{\textbf{letrec}}\ f(x) \Leftarrow f(x)\ \mbox{\textbf{in}}\ f(5).$
         \end{center}
     }
     
@@ -11,18 +11,18 @@
     \\
     In particolare, definendo l'insieme di dichiarazioni $D = \{f(x) \Leftarrow f(x)\}$, la \textit{semantica operazionale} con \textit{call-by-name} applicherà un numero infinito di volte la clausola (Fun) in Tabella 7.2:
     $$f(5) \xrightarrow{\mbox{\scriptsize(Fun)}}_D f(5) \xrightarrow{\mbox{\scriptsize(Fun)}}_D \dots f(5) \xrightarrow{\mbox{\scriptsize(Fun)}}_D \dots.$$
-    La semantica operazionale con \textit{call-by-value} risulterà del tutto analoga, in quanto i termini presenti che rappresentano la chiamata a una funzione sono già invocati su rappresentazioni di naturali (in particolare del numero $5$) e quindi verrà applicata la clausola (Fun') in Tabella 7.3 all'infinito:
+    La semantica operazionale con \textit{call-by-value} risulterà del tutto analoga, in quanto i termini presenti che rappresentano la chiamata a una funzione sono già invocati su rappresentazioni di naturali (in particolare del numero $5$) e quindi verrà applicata la clausola (Fun\textquotesingle) in Tabella 7.3 all'infinito:
     $$f(5) \dotxrightarrow{\mbox{\scriptsize(Fun\textquotesingle)}}_D f(5) \dotxrightarrow{\mbox{\scriptsize(Fun\textquotesingle)}}_D \dots f(5) \dotxrightarrow{\mbox{\scriptsize(Fun\textquotesingle)}}_D \dots.$$
     Vediamo adesso come si ricava il significato del programma attraverso la \textit{semantica denotazionale}, ricordando la definizione della funzione $\Omega \equiv \lambda x.\bot$:
     \begin{align*}
-        &\mathcal{P}\doublebracket{\mbox{\textbf{letrec}}\; f(x) \Leftarrow f(x)\; \mbox{\textbf{in}}\; f(5)} &&\\
+        &\mathcal{P}\doublebracket{\mbox{\textbf{letrec}}\ f(x) \Leftarrow f(x)\ \mbox{\textbf{in}}\ f(5)} &&\\
         &= \mathcal{T}\doublebracket{ f(5)}\mathcal{D}\doublebracket{ f(x)\Leftarrow f(f)} 0 &&\mbox{per la clausola (Prg)}\\
         &= \mathcal{T}\doublebracket{ f(5)} fix(\lambda f.\mathcal{T}\doublebracket{ f(x)} f)0 &&\mbox{per la clausola (Dec)}\\
         &= \mathcal{T}\doublebracket{ f(5)} fix(\lambda f. (\lambda \overline{f}.\lambda x. \overline{f}(\mathcal{T}\doublebracket{ x}\overline{f}x)f))0 &&\mbox{per la clausola (Fun)}\\
         &= \mathcal{T}\doublebracket{ f(5)} fix(\lambda f. (\lambda \overline{f}.\lambda x. \overline{f}((\lambda\hat{f}.\lambda \hat{x}.x)\overline{f}x)f))0 &&\mbox{per la clausola (Var)}\\
         &= \mathcal{T}\doublebracket{ f(5)} fix(\lambda f. (\lambda \overline{f}.\lambda x. \overline{f}(x)f))0 &&\mbox{per $\beta$-riduzione}\\
         &= \mathcal{T}\doublebracket{ f(5)} fix(\lambda f.\lambda x.f(x))0 &&\mbox{per $\beta$-riduzione}\\
-        &= \mathcal{T}\doublebracket{ f(5)}\; \mbox{\textbf{sup}}\{\lambda f.f^i\Omega |i\in\mathbb{N}\}0 &&\mbox{per definizione di minimo punto fisso}\\
+        &= \mathcal{T}\doublebracket{ f(5)}\ \mbox{\textbf{sup}}\{\lambda f.f^i\Omega |i\in\mathbb{N}\}0 &&\mbox{per definizione di minimo punto fisso}\\
         &= \mathcal{T}\doublebracket{ f(5)}\Omega 0 &&\mbox{essendo $(\lambda f.(\lambda x.fx))\Omega = \Omega$}\footnotemark\\
         &= (\lambda f.\lambda x. f(\mathcal{T}\doublebracket{ 5} fx))\Omega 0 &&\mbox{per la clausola (Fun)}\\
         &= (\lambda f.\lambda x. f((\lambda\hat{f}.\lambda\hat{x}.5) fx))\Omega 0 &&\mbox{per la clausola (Nat)}\\

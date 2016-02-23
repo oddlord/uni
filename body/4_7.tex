@@ -30,23 +30,23 @@
             \inferrule* [Right={$(Seq1)$}]
                 {\inferrule* [Right={$(Atom)$}]
                     { }
-                    {a \;\xrightarrow{a}\; 1}
+                    {a \ \xrightarrow{a}\ 1}
                 }
-                {a;b+c \;\xrightarrow{a}\; 1;b+c}&\\
+                {a;b+c \ \xrightarrow{a}\ 1;b+c}&\\
             \\
             \inferrule* [Right={$(Seq2)$}]
                 {\inferrule* [Right={$(Tic)$}]
                     { }
-                    {1 \;\xrightarrow{\varepsilon}\; 1}
+                    {1 \ \xrightarrow{\varepsilon}\ 1}
                 }
-                {1;b+c \;\xrightarrow{\varepsilon}\; b+c}&\\
+                {1;b+c \ \xrightarrow{\varepsilon}\ b+c}&\\
             \\
             \inferrule* [Right={$(Sum1)$}]
                 {\inferrule* [Right={$(Atom)$}]
                     { }
-                    {b \;\xrightarrow{b}\; 1}
+                    {b \ \xrightarrow{b}\ 1}
                 }
-                {b+c \;\xrightarrow{b}\; 1}&
+                {b+c \ \xrightarrow{b}\ 1}&
         \end{align*}
     \end{minipage}
     \begin{minipage}{0.5\textwidth}
@@ -54,13 +54,13 @@
             \inferrule* [Right={$(Sum2)$}]
                 {\inferrule* [Right={$(Atom)$}]
                     { }
-                    {c \;\xrightarrow{c}\; 1}
+                    {c \ \xrightarrow{c}\ 1}
                 }
-                {b+c \;\xrightarrow{c}\; 1}&\\
+                {b+c \ \xrightarrow{c}\ 1}&\\
             \\
             \inferrule* [Right={$(Tic)$}]
                 { }
-                {1 \;\xrightarrow{\varepsilon}\; 1}&
+                {1 \ \xrightarrow{\varepsilon}\ 1}&
         \end{align*}\\
     \end{minipage}\\
     \\
@@ -95,26 +95,26 @@
             \inferrule* [Right={$(Seq1)$}]
                 {\inferrule* [Right={$(Atom)$}]
                     { }
-                    {a \;\xrightarrow{a}\; 1}
+                    {a \ \xrightarrow{a}\ 1}
                 }
-                {a;b+a;c \;\xrightarrow{a}\; a;b+a;c}&\\
+                {a;b+a;c \ \xrightarrow{a}\ a;b+a;c}&\\
             \\
             \inferrule* [Right={$(Seq2)$}]
                 {\inferrule* [Right={$(Tic)$}]
                     { }
-                    {1 \;\xrightarrow{\varepsilon}\; 1}
+                    {1 \ \xrightarrow{\varepsilon}\ 1}
                 }
-                {1;b+a;c \;\xrightarrow{\varepsilon}\; b+a;c}&\\
+                {1;b+a;c \ \xrightarrow{\varepsilon}\ b+a;c}&\\
             \\
             \inferrule* [Right={$(Seq1)$}]
                 {\inferrule* [Right={$(Sum1)$}]
                     {\inferrule* [Right={$(Atom)$}]
                         { }
-                        {b \;\xrightarrow{b}\; 1}
+                        {b \ \xrightarrow{b}\ 1}
                     }
-                    {b+a \;\xrightarrow{b}\; 1}
+                    {b+a \ \xrightarrow{b}\ 1}
                 }
-                {b+a;c \;\xrightarrow{b}\; 1;c}&
+                {b+a;c \ \xrightarrow{b}\ 1;c}&
         \end{align*}
     \end{minipage}
     \begin{minipage}{0.5\textwidth}
@@ -123,25 +123,25 @@
                 {\inferrule* [Right={$(Sum2)$}]
                     {\inferrule* [Right={$(Atom)$}]
                         { }
-                        {a \;\xrightarrow{a}\; 1}
+                        {a \ \xrightarrow{a}\ 1}
                     }
-                    {b+a \;\xrightarrow{a}\; 1}
+                    {b+a \ \xrightarrow{a}\ 1}
                 }
-                {b+a;c \;\xrightarrow{a}\; 1;c}&\\
+                {b+a;c \ \xrightarrow{a}\ 1;c}&\\
             \\
             \inferrule* [Right={$(Seq2)$}]
                 {\inferrule* [Right={$(Tic)$}]
                     { }
-                    {1 \;\xrightarrow{\varepsilon}\; 1}
+                    {1 \ \xrightarrow{\varepsilon}\ 1}
                 }
-                {1;c \;\xrightarrow{\varepsilon}\; c}&\\
+                {1;c \ \xrightarrow{\varepsilon}\ c}&\\
             \\
             \inferrule* [Right={$(Atom)$}]
                 { }
-                {c \;\xrightarrow{c}\; 1}&\\
+                {c \ \xrightarrow{c}\ 1}&\\
             \\
             \inferrule* [Right={$(Tic)$}]
                 { }
-                {1 \;\xrightarrow{\varepsilon}\; 1}
+                {1 \ \xrightarrow{\varepsilon}\ 1}
         \end{align*}
     \end{minipage}

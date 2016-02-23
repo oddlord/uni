@@ -4,13 +4,13 @@
         Scrivere una grammatica dipendente da contesto per il linguaggio $L \triangleq \{a^nba^nca^n | n \geq 1\}$.
     }
     
-    La grammatica $G$ che genera il linguaggio $L$ richiesto è una quadrupla $G \triangleq \;<A,V,S,P>$.\\
+    La grammatica $G$ che genera il linguaggio $L$ richiesto è una quadrupla $G \triangleq \ <A,V,S,P>$.\\
     Seguendo la convenzione nota per rappresentare le grammatiche in forma compatta\footnote{Le lettere minuscole indicano simboli terminali, le maiuscole indicano nonterminali ed il nonterminale nel lato sinistro della prima produzione rappresenta il simbolo iniziale (solitamente $S$).}, proponiamo di seguito le produzioni della grammatica $G$ di interesse:
 
     \begin{minipage}{0.33\textwidth}
         \begin{align}
             S &::= AF\\
-            A &::= abTC|aABC\\
+            A &::= abTC \orbar aABC\\
             TF &::= Tc \label{eq:TF::=Tc}\\
             Tc &::= ac \label{eq:Tc::=ac}
         \end{align}
@@ -37,33 +37,33 @@
     \\
     Le regole dalla (\ref{eq:swap(C,B)}) alla (\ref{eq:swap(C,F)}) sono state proposte in questa forma compatta per migliorare la chiarezza e la leggibilità dell'insieme di produzioni della grammatica. Di seguito, la loro implementazione formale con grammatiche context-sensitive:
     
-    \begin{align}
-        & swap(C,B) = \{ \notag\\
-        &\hphantom{{}swap(C,B) }\begin{aligned}
-            CB &::= XB\\
-            XB &::= XY\\
-            XY &::= BY\\
-            BY &::= BC
-        \end{aligned}\\
-        &\} \notag
-    \end{align}
-    \begin{align}
-        & swap(T,B) = \{ \notag\\
-        &\hphantom{{}swap(T,B) }\begin{aligned}
-            TB &::= MB\\
-            MB &::= MN\\
-            MN &::= BN\\
-            BN &::= BT
-        \end{aligned}\\
-        &\} \notag
-    \end{align}
-    \begin{align}
-        & swap(C,F) = \{ \notag\\
-        &\hphantom{{}swap(C,F) }\begin{aligned}
-            CF &::= IF\\
-            IF &::= IJ\\
-            IJ &::= FJ\\
-            FJ &::= FC
-        \end{aligned}\\
-        &\} \notag
-    \end{align}
+    \begin{align*}
+        & swap(C,B) = \{\\
+            &\tb{1}\begin{aligned}
+                CB &::= XB\\
+                XB &::= XY\\
+                XY &::= BY\\
+                BY &::= BC
+            \end{aligned}\\
+        &\}
+    \end{align*}
+    \begin{align*}
+        & swap(T,B) = \{\\
+            &\tb{1}\begin{aligned}
+                TB &::= MB\\
+                MB &::= MN\\
+                MN &::= BN\\
+                BN &::= BT
+            \end{aligned}\\
+        &\}
+    \end{align*}
+    \begin{align*}
+        & swap(C,F) = \{\\
+            &\tb{1}\begin{aligned}
+                CF &::= IF\\
+                IF &::= IJ\\
+                IJ &::= FJ\\
+                FJ &::= FC
+            \end{aligned}\\
+        &\}
+    \end{align*}

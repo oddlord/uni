@@ -4,8 +4,8 @@
         Si calcoli formalmente, usando la semantica denotazionale di TINY, l'insieme degli stati a partire dai quali eseguendo il comando seguente si ha divergenza:\\
         \begin{center}
             $\begin{aligned}
-                \mbox{\textbf{while}}\;& x>0\; \mbox{\textbf{do}}\\
-                & \mbox{\textbf{if}}\; x<3\; \mbox{\textbf{then}}\; x:=x-1\; \mbox{\textbf{else noaction}}.
+                \mbox{\textbf{while}}\ & x>0\ \mbox{\textbf{do}}\\
+                & \mbox{\textbf{if}}\ x<3\ \mbox{\textbf{then}}\ x:=x-1\ \mbox{\textbf{else noaction}}.
             \end{aligned}$
         \end{center}
     }
@@ -35,10 +35,10 @@
     Vediamo adesso l'interpretazione di $x>0$, sostituendo opportunamente le interpretazioni già calcolate:
     
     \begin{align*}
-        \mathbb{E}\doublebracket{x>0}\sigma =\;& \mbox{let} <v_1,\sigma_1> \mbox{be}\; \mathbb{E}\doublebracket{x}\sigma\; \mbox{in}\;\\
-        &\mbox{let} <v_2,\sigma_2> \mbox{be}\; \mathbb{E}\doublebracket{0}\sigma_1\; \mbox{in}\;\\
-        &<v_1\; \mbox{gt}\; v_2, \sigma_2>\\
-        =\;& <<mx,\sigma>\; \mbox{gt}\; <0, \sigma>, \sigma>
+        \mathbb{E}\doublebracket{x>0}\sigma =\ & \mbox{let} <v_1,\sigma_1> \mbox{be}\ \mathbb{E}\doublebracket{x}\sigma\ \mbox{in}\\
+        &\mbox{let} <v_2,\sigma_2> \mbox{be}\ \mathbb{E}\doublebracket{0}\sigma_1\ \mbox{in}\\
+        &<v_1\ \mbox{gt}\ v_2, \sigma_2>\\
+        =\ & <<mx,\sigma>\ \mbox{gt}\ <0, \sigma>, \sigma>
     \end{align*}
     
     Il simbolo $gt$ (greater than) è il simbolo semantico corrispondente al simbolo sintattico $-$, nonnché un'istanza di $nop$. Si noti come, grazie al fatto che nessuna delle due valutazioni modifica lo stato, possiamo utilizzare lo stesso $\sigma$, alleggerendo così la notazione.\\
@@ -46,36 +46,36 @@
     Procediamo in modo analogo per $x-1$ e per $x<3$, altre due operazioni tra naturali:
     
     \begin{align*}
-        \mathbb{E}\doublebracket{x-1}\sigma =\;& \mbox{let} <v_1,\sigma_1> \mbox{be}\; \mathbb{E}\doublebracket{x}\sigma\; \mbox{in}\;\\
-        &\mbox{let} <v_2,\sigma_2> \mbox{be}\; \mathbb{E}\doublebracket{1}\sigma_1\; \mbox{in}\;\\
-        &<v_1\; \mbox{minus}\; v_2, \sigma_2>\\
-        =\;& <<mx,\sigma>\; \mbox{minus}\; <1, \sigma>, \sigma>
+        \mathbb{E}\doublebracket{x-1}\sigma =\ & \mbox{let} <v_1,\sigma_1> \mbox{be}\ \mathbb{E}\doublebracket{x}\sigma\ \mbox{in}\\
+        &\mbox{let} <v_2,\sigma_2> \mbox{be}\  \mathbb{E}\doublebracket{1}\sigma_1\ \mbox{in}\\
+        &<v_1\ \mbox{minus}\ v_2, \sigma_2>\\
+        =\ & <<mx,\sigma>\ \mbox{minus}\ <1, \sigma>, \sigma>
     \end{align*}
     
     \begin{align*}
-        \mathbb{E}\doublebracket{x<3}\sigma =\;& \mbox{let} <v_1,\sigma_1> \mbox{be}\; \mathbb{E}\doublebracket{x}\sigma\; \mbox{in}\;\\
-        &\mbox{let} <v_2,\sigma_2> \mbox{be}\; \mathbb{E}\doublebracket{3}\sigma_1\; \mbox{in}\;\\
-        &<v_1\; \mbox{lt}\; v_2, \sigma_2>\\
-        =\;& <<mx,\sigma>\; \mbox{lt}\; <3, \sigma>, \sigma>
+        \mathbb{E}\doublebracket{x<3}\sigma =\ & \mbox{let} <v_1,\sigma_1> \mbox{be}\ \mathbb{E}\doublebracket{x}\sigma\ \mbox{in}\\
+        &\mbox{let} <v_2,\sigma_2> \mbox{be}\ \mathbb{E}\doublebracket{3}\sigma_1\ \mbox{in}\\
+        &<v_1\ \mbox{lt}\ v_2, \sigma_2>\\
+        =\ & <<mx,\sigma>\ \mbox{lt}\ <3, \sigma>, \sigma>
     \end{align*}
     
     Permettendoci un piccolo abuso di notazione, definiamo le tre notazioni seguenti, relative a due valori naturali e ad uno stato, delle operazioni ``maggiore di'', ``meno'' e ``minore di'', che intuitivamente rappresentano il solo valore ottenuto dall'esecuzione di quelle operazioni su quei valori e su quello stato:
     
     \begin{align*}
-        GT_{i,j,\sigma} &\equiv <i,\sigma>\; \mbox{gt}\; <j, \sigma>\\
-        M_{i,j,\sigma} &\equiv <i,\sigma>\; \mbox{minus}\; <j, \sigma>\\
-        LT_{i,j,\sigma} &\equiv <i,\sigma>\; \mbox{lt}\; <j, \sigma>
+        GT_{i,j,\sigma} &\equiv <i,\sigma>\ \mbox{gt}\ <j, \sigma>\\
+        M_{i,j,\sigma} &\equiv <i,\sigma>\ \mbox{minus}\ <j, \sigma>\\
+        LT_{i,j,\sigma} &\equiv <i,\sigma>\ \mbox{lt}\ <j, \sigma>
     \end{align*}
     
-    Inoltre useremo la notazione, in forma compatta, $\sigma[v/x] \equiv\; <i,o,m[v/x]>$.\\
+    Inoltre useremo la notazione, in forma compatta, $\sigma[v/x] \equiv\ <i,o,m[v/x]>$.\\
     \\
     Calcoliamo adesso l'interpretazione del comando di assegnazione $x:=x-1$ nello stato $\sigma$:
     
     \begin{align*}
-        \mathbb{C}\doublebracket{x:=x-1}\sigma =\;& \mbox{let} <v_1,\sigma_1> \mbox{be}\; \mathbb{E}\doublebracket{x-1}\; \mbox{in}\\
+        \mathbb{C}\doublebracket{x:=x-1}\sigma =\ & \mbox{let} <v_1,\sigma_1> \mbox{be}\ \mathbb{E}\doublebracket{x-1}\ \mbox{in}\\
         &<i_1,o_1,m_1[v_1/x]>\\
-        =\;& <i,o,m[M_{mx,1,\sigma}/x]>\\
-        =\;& \sigma[M_{mx,1,\sigma}/x]
+        =\ & <i,o,m[M_{mx,1,\sigma}/x]>\\
+        =\ & \sigma[M_{mx,1,\sigma}/x]
     \end{align*}
     
     Si può facilmente dimostrare che:
@@ -114,12 +114,12 @@
         \mathbb{C}\doublebracket{\mbox{\textbf{noaction}}}\sigma = \sigma
     \end{equation*}
     
-    Definiamo adesso l'intero comando $if$ presente, $IF \equiv \mbox{\textbf{if}}\; x<3\; \mbox{\textbf{then}}\; x:=x-1\; \mbox{\textbf{else noaction}}$. La sua interpretazione semantica sarà quindi:
+    Definiamo adesso l'intero comando $if$ presente, $IF \equiv \mbox{\textbf{if}}\ x<3\ \mbox{\textbf{then}}\ x:=x-1\ \mbox{\textbf{else noaction}}$. La sua interpretazione semantica sarà quindi:
     
     \begin{align*}
-        \mathbb{C}\doublebracket{IF}\sigma =\;& \mbox{let} <v_1,\sigma_1> \mbox{be}\; \mathbb{E}\doublebracket{x<3}\sigma\; \mbox{in}\\
+        \mathbb{C}\doublebracket{IF}\sigma =\ & \mbox{let} <v_1,\sigma_1> \mbox{be}\ \mathbb{E}\doublebracket{x<3}\sigma\ \mbox{in}\\
         & v_1\rightarrow\mathbb{C}\doublebracket{x:=x-1}\sigma_1,\mathbb{C}\doublebracket{\mbox{\textbf{noaction}}}\sigma_1\\
-        =\;& LT_{mx,3,\sigma}\rightarrow \sigma[M_{mx,1,\sigma}/x], \sigma
+        =\ & LT_{mx,3,\sigma}\rightarrow \sigma[M_{mx,1,\sigma}/x], \sigma
     \end{align*}
     
     Prima di passare alla parte finale della dimostrazione, mostriamo un'altra intuitiva proprietà del metalinguaggio che ci sarà utile in seguito, ovvero che l'applicazione è distributiva rispetto al condizionale:
@@ -131,7 +131,7 @@
     Definiamo ora il funzionale della specifica ricorsiva del comando \textbf{while} in esame, depurato da controlli d'errore, in modo simile a quanto fatto nelle dispense a pag. 187:
     
     \begin{equation*}
-        F \equiv \lambda\Theta.\lambda\sigma.\; \mbox{let} <v_1,\sigma_1> \mbox{be}\; \mathbb{E}\doublebracket{x>0}\sigma\; \mbox{in}\; v_1 \rightarrow \Theta(\mathbb{C}\doublebracket{IF}\sigma_1), \sigma_1
+        F \equiv \lambda\Theta.\lambda\sigma.\ \mbox{let} <v_1,\sigma_1> \mbox{be}\ \mathbb{E}\doublebracket{x>0}\sigma\ \mbox{in}\ v_1 \rightarrow \Theta(\mathbb{C}\doublebracket{IF}\sigma_1), \sigma_1
     \end{equation*}
     
     Sostituendo le interpretazioni semantiche già calcolate otteniamo:
@@ -143,36 +143,36 @@
     Per definizione, sappiamo che l'interpretazione del comando \textbf{while} è data da:
     
     \begin{equation*}
-        \mathbb{C}\doublebracket{\mbox{\textbf{while}}\; x>0\; \mbox{\textbf{do}}\; \mbox{\textbf{if}}\; x<3\; \mbox{\textbf{then}}\; x:=x-1\; \mbox{\textbf{else noaction}}} = fix(F)
+        \mathbb{C}\doublebracket{\mbox{\textbf{while}}\ x>0\ \mbox{\textbf{do}}\ \mbox{\textbf{if}}\ x<3\ \mbox{\textbf{then}}\ x:=x-1\ \mbox{\textbf{else noaction}}} = fix(F)
     \end{equation*}
     
     Calcoliamo allora il punto fisso del funzionale $F$ per approssimazioni successive:
     
     \begin{align*}
-        F^0\Omega =\;& \Omega\\
-        =\;& \lambda x.\bot
+        F^0\Omega =\ & \Omega\\
+        =\ & \lambda x.\bot
     \end{align*}
     
-    La prima approssimazione è la meno definita, infatti ci sta dicendo che il comando diverge sempre. Tuttavia noi stiamo cercando un punto fisso, quindi andiamo avanti:
+    Questa è l'approssimazione base ed è la meno definita, infatti ci sta dicendo che il comando diverge sempre. Tuttavia noi stiamo cercando un punto fisso, quindi andiamo avanti:
     
     \begin{align*}
-        F^1\Omega =\;& F(F^0\Omega)\\
-        =\;& F\Omega\\
-        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow \Omega(LT_{mx,3,\sigma}\rightarrow \sigma[M_{mx,1,\sigma}/x], \sigma), \sigma\\
-        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow \bot, \sigma
+        F^1\Omega =\ & F(F^0\Omega)\\
+        =\ & F\Omega\\
+        =\ & \lambda\sigma. GT_{mx,0,\sigma} \rightarrow \Omega(LT_{mx,3,\sigma}\rightarrow \sigma[M_{mx,1,\sigma}/x], \sigma), \sigma\\
+        =\ & \lambda\sigma. GT_{mx,0,\sigma} \rightarrow \bot, \sigma
     \end{align*}
     
     Il comando è già più definito, in quanto adesso sappiamo che non diverge se il valore assegnato ad $x$ non è maggiore di $0$ (comprendendo anche i vari errori che non abbiamo incluso, quali valori booleani assegnati alla $x$ o \textit{unbound}). Vediamo come si comporta la seconda approssimazione:
     
     \begin{align*}
-        F^2\Omega =\;& F(F^1\Omega)\\
-        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow (\lambda\sigma_1. GT_{mx,0,\sigma_1} \rightarrow \bot, \sigma_1)(LT_{mx,3,\sigma}\rightarrow \sigma[M_{mx,1,\sigma}/x], \sigma), \sigma\\
-        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
+        F^2\Omega =\ & F(F^1\Omega)\\
+        =\ & \lambda\sigma. GT_{mx,0,\sigma} \rightarrow (\lambda\sigma_1. GT_{mx,0,\sigma_1} \rightarrow \bot, \sigma_1)(LT_{mx,3,\sigma}\rightarrow \sigma[M_{mx,1,\sigma}/x], \sigma), \sigma\\
+        =\ & \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
             &\tb{1} LT_{mx,3,\sigma}\rightarrow\\
                 &\tb{2} GT_{mx,1,\sigma} \rightarrow \bot, \sigma[M_{mx,1,\sigma}/x],\\
                 &\tb{2} GT_{mx,0,\sigma} \rightarrow \bot, \sigma,\\
             &\tb{1} \sigma\\
-        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
+        =\ & \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
             &\tb{1} LT_{mx,3,\sigma}\rightarrow\\
                 &\tb{2} GT_{mx,1,\sigma} \rightarrow \bot, \sigma[M_{mx,1,\sigma}/x],\\
                 &\tb{2} \bot,\\
@@ -182,8 +182,8 @@
     L'interpretazione del comando \textbf{while} inizia a prendere forma: l'approssimazione appena calcolata ci dice che se il valore associato ad $x$ è $2$ (o meglio, maggiore di $0$, minore di $3$ e maggiore di $1$), allora decrementa il suo valore in memoria, altrimenti o diverge o non fa niente. Calcoliamo la prossima approssimazione:
     
     \begin{align*}
-        F^3\Omega =\;& F(F^2\Omega)\\
-        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
+        F^3\Omega =\ & F(F^2\Omega)\\
+        =\ & \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
             &\tb{1} (\lambda\sigma_1. GT_{mx,0,\sigma_1} \rightarrow\\
                 &\tb{2} LT_{mx,3,\sigma_1}\rightarrow\\
                     &\tb{3} GT_{mx,1,\sigma_1} \rightarrow \bot, \sigma_1[M_{mx,1,\sigma_1}/x],\\
@@ -191,7 +191,7 @@
                 &\tb{2} \sigma_1\\
             &\tb{1} )(LT_{mx,3,\sigma}\rightarrow \sigma[M_{mx,1,\sigma}/x], \sigma),\\
             &\tb{1} \sigma\\
-        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
+        =\ & \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
             &\tb{1} LT_{mx,3,\sigma}\rightarrow\\
                 &\tb{2} GT_{mx,0,\sigma[M_{mx,1,\sigma}/x]} \rightarrow\\
                     &\tb{3} LT_{mx,3,\sigma[M_{mx,1,\sigma}/x]}\rightarrow\\
@@ -202,7 +202,7 @@
                     &\tb{3} LT_{mx,3,\sigma}\rightarrow (GT_{mx,1,\sigma} \rightarrow \bot, \sigma[M_{mx,1,\sigma}/x]), \bot,\\
                     &\tb{3} \sigma,\\
             &\tb{1} \sigma\\
-        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
+        =\ & \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
             &\tb{1} LT_{mx,3,\sigma}\rightarrow\\
                 &\tb{2} GT_{mx,1,\sigma} \rightarrow \sigma[M_{mx,2,\sigma}/x], \sigma[M_{mx,1,\sigma}/x],\\
                 &\tb{2} \bot,\\
@@ -212,8 +212,8 @@
     Questa terza approssimazione è molto interessante! Quello che ci dice è che per $0$ il comando non fa niente, per valori maggiori o uguali a $3$ (o meglio, non minori di $3$) diverge senza modificare alcun valore, altrimenti decrementa $x$ di $2$ o di $1$ a seconda che il valore di $x$ sia $2$ o $1$, rispettivamente. Intuitivamente, questa è proprio la descrizione che ci viene in mente quando pensiamo all'interpretazione di questo comando \textbf{while}. Proviamo a vedere se riusciamo a fare di meglio con un'altra approssimazione, ovvero se riusciamo a rendere l'interpretazione del comando ancora più definita:
     
     \begin{align*}
-        F^4\Omega =\;& F(F^3\Omega)\\
-        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
+        F^4\Omega =\ & F(F^3\Omega)\\
+        =\ & \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
             &\tb{1} (\lambda\sigma_1. GT_{mx,0,\sigma_1} \rightarrow\\
                 &\tb{2} LT_{mx,3,\sigma_1}\rightarrow\\
                     &\tb{3} GT_{mx,1,\sigma_1} \rightarrow \sigma_1[M_{mx,2,\sigma_1}/x], \sigma_1[M_{mx,1,\sigma_1}/x],\\
@@ -221,7 +221,7 @@
                 &\tb{2} \sigma_1\\
             &\tb{1} )(LT_{mx,3,\sigma}\rightarrow \sigma[M_{mx,1,\sigma}/x], \sigma),\\
             &\tb{1} \sigma\\
-        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
+        =\ & \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
             &\tb{1} LT_{mx,3,\sigma}\rightarrow\\
                 &\tb{2} GT_{mx,1,\sigma} \rightarrow\\
                     &\tb{3} LT_{mx,4,\sigma}\rightarrow\\
@@ -234,12 +234,12 @@
                         &\tb{4} \bot,\\
                     &\tb{3} \sigma,\\
             &\tb{1} \sigma\\
-        =\;& \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
+        =\ & \lambda\sigma. GT_{mx,0,\sigma} \rightarrow\\
             &\tb{1} LT_{mx,3,\sigma} \rightarrow\\
                 &\tb{2} GT_{mx,1,\sigma} \rightarrow \sigma[M_{mx,2,\sigma}/x], \sigma[M_{mx,1,\sigma}/x],\\
                 &\tb{2} \bot,\\
             &\tb{1} \sigma\\
-        =\;& F^3\Omega
+        =\ & F^3\Omega
     \end{align*}
     
     Abbiamo trovato un punto fisso! La terza approssimazione calcolata prima risulta essere un punto fisso del funzionale $F$ (il minimo, grazie al Teorema di Kleene) in quanto $F(F^3\Omega)=F^3\Omega$. Questo ci dice che la descrizione informale data prima del comando è \textit{esattamente} l'interpretazione del comando e non una semplice approssimazione.\\

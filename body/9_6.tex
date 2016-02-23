@@ -6,8 +6,8 @@
     
     Banalmente, essendo \textbf{stop} un nuovo comando, per aggiornare la semantica di SMALL basta aggiungere una nuova clausola per i comandi contenente \textbf{stop}, quindi si avrà la sintassi dei comandi come segue:
     \begin{align*}
-        c \quad ::= \quad & e:=e_1 \orbar c_1;c_2 \orbar \mbox{\textbf{if}}\; e \;\mbox{\textbf{then}}\; c_1\; \mbox{\textbf{else}}\; c_2 \orbar \mbox{\textbf{while}}\; e\; \mbox{\textbf{do}}\; c \orbar \mbox{\textbf{output}}\; e \\
-        &\orbar \mbox{\textbf{begin}}\; d;c\; \mbox{\textbf{end}}\; \orbar e(e_1) \orbar \mbox{\textbf{stop}}
+        c \quad ::= \quad & e:=e_1 \orbar c_1;c_2 \orbar \mbox{\textbf{if}}\ e \ \mbox{\textbf{then}}\ c_1\ \mbox{\textbf{else}}\ c_2 \orbar \mbox{\textbf{while}}\ e\ \mbox{\textbf{do}}\ c \orbar \mbox{\textbf{output}}\ e \\
+        &\orbar \mbox{\textbf{begin}}\ d;c\ \mbox{\textbf{end}}\ \orbar e(e_1) \orbar \mbox{\textbf{stop}}
     \end{align*}
     
     Ci possono essere varie soluzioni per definire la semantica del nuovo comando \textbf{stop}. La più semplice è quella di far produrre al comando \textbf{stop} un nuovo elemento, che chiameremo \textit{stop}, e trattarlo im modo simile all'elemento \textit{error}. Infatti se ci pensiamo bene, un errore fa quello che vorrebbe fare il comando \textbf{stop}, ovvero terminare il programma senza eseguire altri comandi. L'unica differenza è che, mentre \textit{error} propaga l'errore anche come output del programma stesso, utilizzando \textbf{stop} ci aspettiamo invece di fornire comunque un qualche tipo di output, in particolare il contenuto della memoria nella locazione riservata $lout$.\\
@@ -16,15 +16,15 @@
     \\
     Se $f : D_1 \rightarrow (D_2 + \{error\} + \{<stop, \sigma>\})$ e $g : D_2 \rightarrow (D_3 + \{error\} + \{<stop, \sigma>\})$, allora
     \begin{equation*}
-        f\; \overline{\star}\; g : D_1 \rightarrow (D_3 + \{error\} + \{<stop, \sigma>\})
+        f\ \overline{\star}\ g : D_1 \rightarrow (D_3 + \{error\} + \{<stop, \sigma>\})
     \end{equation*}
     è definita come segue:
     \begin{align*}
-        f\; \overline{\star}\; g =\; &\lambda x.\; \begin{aligned}[t]& cases\; fx\; of\\
-            & d : gd;\\
-            & error : error;\\
-            & <stop, \sigma> : <stop, \sigma>
-        \end{aligned}\\
+        f\ \overline{\star}\ g =\ &\lambda x.\ cases\ fx\ of\\
+            &\tb{1} d : gd;\\
+            &\tb{1} error : error;\\
+            &\tb{1} <stop, \sigma> : <stop, \sigma>
+        \\
         & endcases
     \end{align*}
     
@@ -33,11 +33,10 @@
     La semantica dei programmi diventa quindi:
     
     \boxedaligned{0.7}{
-        \mathcal{P}\doublebracket{\mbox{\textbf{program}}\; c}in =\; & ca\begin{aligned}[t] & \! ses\; (\mathcal{C}\doublebracket{c}\rho_0(\lambda x.unused)[in/lin][nil/lout])\; of\\
-            & \sigma: \sigma\; lout;\\
-            & error: error;\\
-            & <stop, \sigma>: \sigma\; lout
-        \end{aligned}\\
+        \mathcal{P}\doublebracket{\mbox{\textbf{program}}\ c}in =\ & cases\ (\mathcal{C}\doublebracket{c}\rho_0(\lambda x.unused)[in/lin][nil/lout])\ of\\
+            &\tb{1} \sigma: \sigma\ lout;\\
+            &\tb{1} error: error;\\
+            &\tb{1} <stop, \sigma>: \sigma\ lout\\
         & endcases
     }
     
@@ -47,7 +46,7 @@
         \mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho = \lambda\sigma. <stop, \sigma>
     }
     
-    Risulta chiaro quindi che è necessario modificare il dominio semantico della funzione d'interpretazione, aggiungendo il caso in cui l'interpretazione di un comando produce la coppia $<stop,\sigma>$, ovvero:
+    Risulta chiaro quindi che è necessario modificare il dominio semantico della funzione d'interpretazione dei comandi $\mathcal{C}$, aggiungendo il caso in cui l'interpretazione di un comando produce la coppia $<stop,\sigma>$, ovvero:
     
     \begin{equation*}
         \mathcal{C} : Com \rightarrow \mathbb{AMB} \rightarrow \mathbb{MEM} \rightarrow (\mathbb{MEM} + \{error\} + (\{stop\} \times \mathbb{MEM}))
@@ -60,17 +59,17 @@
     \begin{itemize}
         \item $c_1$ non contiene \textbf{stop} e produce la memoria $\sigma_1$:
             \begin{align*}
-                \mathcal{C}\doublebracket{c_1;\mbox{\textbf{stop}}}\rho\sigma =\;& \mathcal{C}\doublebracket{c_1}\rho\sigma\; \overline{\star}\; (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\\
-                =\;& \sigma_1\; \overline{\star}\; (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\\
-                =\;& (\lambda\sigma'.(\lambda\sigma''.<stop,\sigma''>)\sigma')\sigma_1 &\mbox{il valore viene fatto passare da $\overline{\star}$}\\
-                =\;& <stop,\sigma_1>
+                \mathcal{C}\doublebracket{c_1;\mbox{\textbf{stop}}}\rho\sigma =\ & \mathcal{C}\doublebracket{c_1}\rho\sigma\ \overline{\star}\ (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\\
+                =\ & \sigma_1\ \overline{\star}\ (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\\
+                =\ & (\lambda\sigma'.(\lambda\sigma''.<stop,\sigma''>)\sigma')\sigma_1 &\mbox{il valore viene fatto passare da $\overline{\star}$}\\
+                =\ & <stop,\sigma_1>
             \end{align*}
             \begin{align*}
-                \mathcal{C}\doublebracket{c_1;\mbox{\textbf{stop}};c_2}\rho\sigma =\;& \mathcal{C}\doublebracket{c_1}\rho\sigma\; \overline{\star}\; (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\; \overline{\star}\; (\lambda\overline{\sigma}.\mathcal{C}\doublebracket{c_2}\rho\overline{\sigma})\\
-                =\;& \sigma_1\; \overline{\star}\; (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\; \overline{\star}\; (\lambda\overline{\sigma}.\mathcal{C}\doublebracket{c_2}\rho\overline{\sigma})\\
-                =\;& (\lambda\sigma'.(\lambda\sigma''.<stop,\sigma''>)\sigma')\sigma_1\; \overline{\star}\; (\lambda\overline{\sigma}.\mathcal{C}\doublebracket{c_2}\rho\overline{\sigma})\\
-                =\;& <stop,\sigma_1> \overline{\star}\; (\lambda\overline{\sigma}.\mathcal{C}\doublebracket{c_2}\rho\overline{\sigma})\\
-                =\;& <stop,\sigma_1> &\mbox{lo \textit{stop} viene propagato da $\overline{\star}$}
+                \mathcal{C}\doublebracket{c_1;\mbox{\textbf{stop}};c_2}\rho\sigma =\ & \mathcal{C}\doublebracket{c_1}\rho\sigma\ \overline{\star}\ (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\ \overline{\star}\ (\lambda\overline{\sigma}.\mathcal{C}\doublebracket{c_2}\rho\overline{\sigma})\\
+                =\ & \sigma_1\ \overline{\star}\ (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\ \overline{\star}\ (\lambda\overline{\sigma}.\mathcal{C}\doublebracket{c_2}\rho\overline{\sigma})\\
+                =\ & (\lambda\sigma'.(\lambda\sigma''.<stop,\sigma''>)\sigma')\sigma_1\ \overline{\star}\ (\lambda\overline{\sigma}.\mathcal{C}\doublebracket{c_2}\rho\overline{\sigma})\\
+                =\ & <stop,\sigma_1> \overline{\star}\ (\lambda\overline{\sigma}.\mathcal{C}\doublebracket{c_2}\rho\overline{\sigma})\\
+                =\ & <stop,\sigma_1> &\mbox{\textit{stop} viene propagato da $\overline{\star}$}
             \end{align*}
             
             Sfruttando le proprietà del nuovo operatore, abbiamo dimostrato che, dati un ambiente ed una memoria qualsiasi, i due comandi producono la stessa coppia, ovvero sono semanticamente equivalenti.\\
@@ -78,30 +77,30 @@
             
         \item $c_1$ contiene \textbf{stop} e produce la coppia $<stop, \sigma_1>$:
             \begin{align*}
-                \mathcal{C}\doublebracket{c_1;\mbox{\textbf{stop}}}\rho\sigma =\;& \mathcal{C}\doublebracket{c_1}\rho\sigma\; \overline{\star}\; (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\\
-                =\;& <stop, \sigma_1> \overline{\star}\; (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\\
-                =\;& <stop,\sigma_1> &\mbox{lo \textit{stop} viene propagato da $\overline{\star}$}
+                \mathcal{C}\doublebracket{c_1;\mbox{\textbf{stop}}}\rho\sigma =\ & \mathcal{C}\doublebracket{c_1}\rho\sigma\ \overline{\star}\ (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\\
+                =\ & <stop, \sigma_1> \overline{\star}\ (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\\
+                =\ & <stop,\sigma_1> &\mbox{\textit{stop} viene propagato da $\overline{\star}$}
             \end{align*}
             \begin{align*}
-                \mathcal{C}\doublebracket{c_1;\mbox{\textbf{stop}};c_2}\rho\sigma =\;& \mathcal{C}\doublebracket{c_1}\rho\sigma\; \overline{\star}\; (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\; \overline{\star}\; (\lambda\overline{\sigma}.\mathcal{C}\doublebracket{c_2}\rho\overline{\sigma})\\
-                =\;& <stop,\sigma_1> \overline{\star}\; (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\; \overline{\star}\; (\lambda\overline{\sigma}.\mathcal{C}\doublebracket{c_2}\rho\overline{\sigma})\\
-                =\;& <stop,\sigma_1> \overline{\star}\; (\lambda\overline{\sigma}.\mathcal{C}\doublebracket{c_2}\rho\overline{\sigma}) &\mbox{lo \textit{stop} viene propagato da $\overline{\star}$}\\
-                =\;& <stop,\sigma_1> &\mbox{lo \textit{stop} viene propagato da $\overline{\star}$}
+                \mathcal{C}\doublebracket{c_1;\mbox{\textbf{stop}};c_2}\rho\sigma =\ & \mathcal{C}\doublebracket{c_1}\rho\sigma\ \overline{\star}\ (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\ \overline{\star}\ (\lambda\overline{\sigma}.\mathcal{C}\doublebracket{c_2}\rho\overline{\sigma})\\
+                =\ & <stop,\sigma_1> \overline{\star}\ (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\ \overline{\star}\ (\lambda\overline{\sigma}.\mathcal{C}\doublebracket{c_2}\rho\overline{\sigma})\\
+                =\ & <stop,\sigma_1> \overline{\star}\ (\lambda\overline{\sigma}.\mathcal{C}\doublebracket{c_2}\rho\overline{\sigma}) &\mbox{\textit{stop} viene propagato da $\overline{\star}$}\\
+                =\ & <stop,\sigma_1> &\mbox{\textit{stop} viene propagato da $\overline{\star}$}
             \end{align*}
             
             Anche in questo caso risultano semanticamente equivalenti.\\
             Rimane da far vedere che in caso d'errore, l'operatore $\overline{\star}$ si comporta esattamente come $\star$.
         \item $c_1$ produce $error$:
             \begin{align*}
-                \mathcal{C}\doublebracket{c_1;\mbox{\textbf{stop}}}\rho\sigma =\;& \mathcal{C}\doublebracket{c_1}\rho\sigma\; \overline{\star}\; (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\\
-                =\;& error\; \overline{\star}\; (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\\
-                =\;& error &\mbox{\textit{error} viene propagato da $\overline{\star}$}
+                \mathcal{C}\doublebracket{c_1;\mbox{\textbf{stop}}}\rho\sigma =\ & \mathcal{C}\doublebracket{c_1}\rho\sigma\ \overline{\star}\ (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\\
+                =\ & error\ \overline{\star}\ (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\\
+                =\ & error &\mbox{\textit{error} viene propagato da $\overline{\star}$}
             \end{align*}
             \begin{align*}
-                \mathcal{C}\doublebracket{c_1;\mbox{\textbf{stop}};c_2}\rho\sigma =\;& \mathcal{C}\doublebracket{c_1}\rho\sigma\; \overline{\star}\; (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\; \overline{\star}\; (\lambda\overline{\sigma}.\mathcal{C}\doublebracket{c_2}\rho\overline{\sigma})\\
-                =\;& error\; \overline{\star}\; (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\; \overline{\star}\; (\lambda\overline{\sigma}.\mathcal{C}\doublebracket{c_2}\rho\overline{\sigma})\\
-                =\;& error\; \overline{\star}\; (\lambda\overline{\sigma}.\mathcal{C}\doublebracket{c_2}\rho\overline{\sigma}) &\mbox{\textit{error} viene propagato da $\overline{\star}$}\\
-                =\;& error\; &\mbox{\textit{error} viene propagato da $\overline{\star}$}
+                \mathcal{C}\doublebracket{c_1;\mbox{\textbf{stop}};c_2}\rho\sigma =\ & \mathcal{C}\doublebracket{c_1}\rho\sigma\ \overline{\star}\ (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\ \overline{\star}\ (\lambda\overline{\sigma}.\mathcal{C}\doublebracket{c_2}\rho\overline{\sigma})\\
+                =\ & error\ \overline{\star}\ (\lambda\sigma'.\mathcal{C}\doublebracket{\mbox{\textbf{stop}}}\rho\sigma')\ \overline{\star}\ (\lambda\overline{\sigma}.\mathcal{C}\doublebracket{c_2}\rho\overline{\sigma})\\
+                =\ & error\ \overline{\star}\ (\lambda\overline{\sigma}.\mathcal{C}\doublebracket{c_2}\rho\overline{\sigma}) &\mbox{\textit{error} viene propagato da $\overline{\star}$}\\
+                =\ & error\ &\mbox{\textit{error} viene propagato da $\overline{\star}$}
             \end{align*}
     \end{itemize}
     

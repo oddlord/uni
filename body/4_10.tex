@@ -4,16 +4,16 @@
         Si dimostrino le seguenti uguaglianze usando il sistema di inferenza della semantica assiomatica:\\
         \\
         $\begin{aligned}
-            c)& \; E=F \Longrightarrow E^* = F^*\\
-            d)& \; E^* +1=E^*\\
-            e)& \; E^* + E = E^*
+            c)& \ E=F \Longrightarrow E^* = F^*\\
+            d)& \ E^* +1=E^*\\
+            e)& \ E^* + E = E^*
         \end{aligned}$
     }
     
     Sfruttando gli assiomi e le due regole in Tabella 4.4 delle dispense, si dimostrano le uguaglianze proposte.\\
     
     \begin{description}
-        \item[$c) \; E=F \Longrightarrow E^* = F^*$] \hfill \\
+        \item[$c) \ E=F \Longrightarrow E^* = F^*$] \hfill \\
             Come già mostrato nelle dispense, si può dimostrare che l'uguaglianza $=$ è riflessiva e simmetrica:
             \begin{equation}
                 \inferrule* [Right={$(regola1)$}]
@@ -41,7 +41,7 @@
                     }
                     {E^* = F^*}
             \end{equation}
-        \item[$d) \; E^* +1=E^*$] \hfill \\
+        \item[$d) \ E^* +1=E^*$] \hfill \\
             Dimostriamo innanzitutto la sostitutività rispetto alla somma (che indicheremo con $(sost+)$) come suggerito dalla Proposizione 4.13 delle dispense:
             \begin{equation}
                 \inferrule* [Right={$(simm)$}]
@@ -120,7 +120,7 @@
                 \label{eq:E^*+1=E^*}
             \end{equation}
             In parole povere, si è fatto un primo passo di unfolding di $E^*$, ci si è sommato $1$ e si è fatto vedere che i due $1$ si riducono ad un solo $1$. Quindi abbiamo rimesso le cose a posto per avere la formulazione finale richiesta.
-        \item[$e) \; E^* + E = E^*$] \hfill \\
+        \item[$e) \ E^* + E = E^*$] \hfill \\
             L'idea di quest'ultima dimostrazione è sulla falsariga della dimostrazione precedente, ovvero si dimostra facendo un passo di unfolding e poi rimettendo tutto a posto. Ad un certo punto sarà molto utile anche sfruttare il risultato della dimostrazione precedente.
             \begin{equation}
                 \scriptsize

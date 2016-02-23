@@ -1,0 +1,57 @@
+\section*{Esercizio 11.3}
+
+    \enunciato{1}{
+        Utilizzando la caratterizzazione delle simulazioni forti vista nell'Esercizio 11.1, si provi che $Id$ è una simulazione e che se $R$ ed $S$ sono simulazioni allora $R \cup S$ ed $RS$ sono simulazioni.
+    }
+    
+    Dato un LTS $<Q,A,\rightarrow\ >$, una relazione $R \subseteq Q \times Q$ è una \textit{simulazione (forte)} se, dati $p,q\in Q$ t.c. $<p,q>\in R$, allora vale
+    \begin{equation*}
+        \forall a\in A, p' \in Q:\ \mbox{se}\ p\xrightarrow{a}p'\ \mbox{allora}\ \exists q'\in Q:\ q\xrightarrow{a}q'\ \mbox{e}\ <p',q'>\in R,
+    \end{equation*}
+    per definizione.\\
+    \\
+    Tuttavia non è facile dimostrare quanto richiesto utilizando questa definizione, quindi si sfrutta la proposizione esposta nell'Esercizio 11.1, la quale afferma che la relazione $R$ è una simulazione (forte) se e solo se
+    \begin{equation*}
+        \forall a\in A:\ R^{-1}\xrightarrow{a} \ \subseteq \ \xrightarrow{a} R^{-1}.
+    \end{equation*}
+    
+    Essendo sia $R$ (e quindi $R^{-1}$) che $\xrightarrow{a}$ delle relazioni binarie tra stati in $Q$, applicando la definizione di composizione di relazioni otteniamo che una coppia di stati $<p,q>$, con $p,q\in Q$, è messa in relazione da $R^{-1}\xrightarrow{a}$ se e solo se
+    \begin{equation*}
+        \exists r\in Q:\ <p,r>\in R^{-1}\ \mbox{e}\ <r,q>\in\xrightarrow{a},
+    \end{equation*}
+    ovvero
+    \begin{equation*}
+        \exists r\in Q:\ <r,p>\in R\ \mbox{e}\ <r,q>\in\xrightarrow{a}.
+    \end{equation*}
+    Analogamente per la seconda relazione composta, otteniamo che $<p,q>\in \xrightarrow{a}R^{-1}$ se e solo se
+    \begin{equation*}
+        \exists r'\in Q:\ <p,r'>\in\xrightarrow{a}\ \mbox{e}\ <q,r'>\in R.
+    \end{equation*}
+    
+    Risulta allora chiaro che dimostrare la caratterizzazione dell'Esercizio 11.1 corrisponde a dimostrare che, dati $p,q\in Q$, vale che
+    \begin{equation}
+        \exists r\in Q:\ <r,p>\in R\ \mbox{e}\ <r,q>\in\xrightarrow{a}\ \mbox{implica}\ \exists r'\in Q:\ <p,r'>\in\xrightarrow{a}\ \mbox{e}\ <q,r'>\in R,
+        \label{eq:simulazione}
+    \end{equation}
+    con $r$ ed $r'$ non necessariamente lo stesso stato.\\
+    \\
+    Dimostriamo allora i tre casi richiesti.
+    
+    \begin{itemize}
+        \item $Id$ è una simulazione\\
+            Per dimostrare che la (\ref{eq:simulazione}) vale quando $R=Id$, basta prendere $r=p$ ed $r'=q$. Infatti, per definizione d'identità, $p\ Id\ p$ e $q\ Id\ q$, ed assumendo, per ipotesi, che $p \xrightarrow{a} q$, si ottiene il membro destro della (\ref{eq:simulazione}). Inoltre osserviamo che $Id=Id^{-1}$. Quindi abbiamo dimostrato che con $R=Id$, $p\ Id^{-1}\xrightarrow{a} q$ implica $p \xrightarrow{a}Id^{-1}\ q$.
+        \item $R \cup S$ è una simulazione\\
+            Siano $R$ ed $S$ due simulazioni, per ipotesi. Quindi la (\ref{eq:simulazione}) vale per $R$ ed $S$. Scrivendo la (\ref{eq:simulazione}) per $R \cup S$ si ha che dobbiamo dimostrare che
+            \begin{equation*}
+                \exists r\in Q:\ <r,p>\in (R \cup S)\ \mbox{e}\ <r,q>\in\xrightarrow{a}\ \mbox{implica}\ \exists r'\in Q:\ <p,r'>\in\xrightarrow{a}\ \mbox{e}\ <q,r'>\in (R \cup S).
+            \end{equation*}
+            Ricordiamo che un certo elemento $x$ appartiene ad un insieme unione $A \cup B$ quando $x$ appartiene ad $A$ oppure a $B$. Quindi, in questo caso, se nel membro sinistro abbiamo $<r,p>\in R$, basterà prendere $<q,r'>\in R$, per un certo $r'$ che sappiamo esistere e sappiamo verificare la (\ref{eq:simulazione}), per l'ipotesi che $R$ è una simulazione. Analogamente nel caso in cui $<r,p> \in S$. Questo compre tutti i casi possibili, per definizione di insieme unione, e quindi dimostra la tesi.
+        \item $RS$ è una simulazione\\
+            Come nel caso precedente, dobbiamo dimostrare che
+            \begin{equation*}
+                \exists r\in Q:\ <r,p>\in RS\ \mbox{e}\ <r,q>\in\xrightarrow{a}\ \mbox{implica}\ \exists r'\in Q:\ <p,r'>\in\xrightarrow{a}\ \mbox{e}\ <q,r'>\in RS.
+            \end{equation*}
+            Per la definizione di composizione di funzioni, dire che $r\ RS\ p$ equivale a dire che $\exists k:\ r\ R\ k\ S\ p$. Da $r\ R\ k$ e dall'ipotesi che $R$ è una simulazione (e che $r \xrightarrow{a} q$), si deduce che esiste un $k'$ tale che $k \xrightarrow{a} k'$ e $q\ R\ k'$. Da $k\ S\ p$ e dall'ipotesi che $S$ è una simulazione (e da $k \xrightarrow{a} k'$ dedotto prima) si deduce invece che esiste un $r'$ tale che $p \xrightarrow{a} r'$ e $k'\ S\ r'$.\\
+            Mettendo adesso insieme $q\ R\ k'$ e $k'\ S\ r'$ otteniamo che $q\ RS\ r'$, il quale, assieme a $p \xrightarrow{a} r'$ ricavato prima, costituisce la dimostrazione della tesi.
+    \end{itemize}
+    
