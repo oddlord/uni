@@ -7,8 +7,8 @@
     Per dimostrare che l'intersezione di due bisimulazioni forti non è necessariamente una bisimulazione, mostriamo un esempio minimale, in modo da capire meglio quando ciò accade.\\
     \\
     Consideriamo il seguente LTS:
-    \begin{figure}[h!]
-        \centering
+        
+    \begin{center}
         \begin{tikzpicture}[->, >=stealth', shorten >=1pt, auto, node distance=2cm, semithick, align=center]
             \node[state]	(A)              						{$p_0$};
             \node[state]    (B) [above right=0.5cm and 3cm of A]	{$p_1$};
@@ -16,7 +16,7 @@
             \path	(A) edge	node {$a$}	(B)
                     (A) edge	node {$a$}	(C);
         \end{tikzpicture}
-    \end{figure}
+    \end{center}
     
     Quindi consideriamo le seguenti due relazioni sugli stati dell'LTS mostrato:
     \begin{align*}
