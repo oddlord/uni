@@ -7,3 +7,16 @@
         \end{equation*}
         è derivabile dall'insieme $E_4$ definito in Tabella 12.9.
     }
+    
+    Per derivare questa legge l'idea è quella di ricondursi alla legge $(\tau 2)$, ovvero eliminare il primo sommando lasciando soltanto il secondo che, per definizione, deve poter eseguire l'azione $\tau$ e poi comportarsi come $p+q$. Questa legge però richiede che il primo sommando ed il processo che segue l'azione $\tau$ nel secondo siano lo stesso processo. Sono necessarie allora alcune manipolazioni aggiuntive, sfruttando anche gli assiomi in Tabella 12.6 introdotte per l'assiomatizzazione di $\sim$ del solo CCS base, che però sappiamo essere corrette anche per CCS finito ed anche per l'assiomatizzazione di $\cong$ (infatti sono incluse nella Tabella 12.9).\\
+    \\
+    Vediamo nel dettaglio la sequenza di derivazioni che portano alla regola richiesta:
+    \begin{align*}
+    	p+\tau.(p+q) &= p+((p+q)+\tau.(p+q)) &&\mbox{per la $(\tau 2)$ simmetrica}\\
+    	&= (p+(p+q))+\tau.(p+q) &&\mbox{per la $(A2)$}\\
+    	&= ((p+p)+q)+\tau.(p+q) &&\mbox{per la $(A2)$}\\
+    	&= (p+q)+\tau.(p+q) &&\mbox{per la $(A4)$}\\
+    	&= \tau.(p+q) &&\mbox{per la $(\tau 2)$}
+    \end{align*}
+    
+    Quindi applicando solo regole dell'insieme $E_4$ abbiamo dimostrato che è possibile ricavare la regola $(\tau 4)$ richiesta. Ovvero possiamo affermare che $E_4 \vdash p+\tau.(p+q)=\tau.(p+q)$.
