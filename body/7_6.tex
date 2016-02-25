@@ -22,7 +22,7 @@
         &= \mathcal{T}\doublebracket{ f(5)} fix(\lambda f. (\lambda \overline{f}.\lambda x. \overline{f}((\lambda\hat{f}.\lambda \hat{x}.x)\overline{f}x)f))0 &&\mbox{per la clausola (Var)}\\
         &= \mathcal{T}\doublebracket{ f(5)} fix(\lambda f. (\lambda \overline{f}.\lambda x. \overline{f}(x)f))0 &&\mbox{per $\beta$-riduzione}\\
         &= \mathcal{T}\doublebracket{ f(5)} fix(\lambda f.\lambda x.f(x))0 &&\mbox{per $\beta$-riduzione}\\
-        &= \mathcal{T}\doublebracket{ f(5)}\ \mbox{\textbf{sup}}\{\lambda f.f^i\Omega |i\in\mathbb{N}\}0 &&\mbox{per definizione di minimo punto fisso}\\
+        &= \mathcal{T}\doublebracket{ f(5)}\ \mbox{\textbf{sup}}\{f^i\Omega |i\in\mathbb{N}\}0 &&\mbox{per definizione di minimo punto fisso}\\
         &= \mathcal{T}\doublebracket{ f(5)}\Omega 0 &&\mbox{essendo $(\lambda f.(\lambda x.fx))\Omega = \Omega$}\footnotemark\\
         &= (\lambda f.\lambda x. f(\mathcal{T}\doublebracket{ 5} fx))\Omega 0 &&\mbox{per la clausola (Fun)}\\
         &= (\lambda f.\lambda x. f((\lambda\hat{f}.\lambda\hat{x}.5) fx))\Omega 0 &&\mbox{per la clausola (Nat)}\\
