@@ -10,17 +10,18 @@
     \end{equation*}
     per definizione.\\
     \\
-    Tuttavia non è facile dimostrare quanto richiesto utilizando questa definizione, quindi si sfrutta la proposizione esposta nell'Esercizio 11.1, la quale afferma che la relazione $R$ è una simulazione (forte) se e solo se
+    Tuttavia non è facile dimostrare quanto richiesto utilizzando questa definizione, quindi si sfrutta la proposizione esposta nell'Esercizio 11.1, la quale afferma che la relazione $R$ è una simulazione (forte) se e solo se
     \begin{equation*}
         \forall a\in A:\ R^{-1}\xrightarrow{a} \ \subseteq \ \xrightarrow{a} R^{-1}.
     \end{equation*}
     
-    Questo equivale a dire che $R$ è una simulazione se e solo se, $\forall p,q\in Q$ e $a\in A$,
+    Questo equivale a dire, per definizione di inclusione di relazioni, che $R$ è una simulazione se e solo se, $\forall p,q\in Q$ e $a\in A$,
     \begin{equation}
         p\ R^{-1} \xrightarrow{a} q \ \mbox{implica}\ p \xrightarrow{a} R^{-1}\ q.
         \label{eq:simulazione_alt}
-    \end{equation}    
-    
+    \end{equation}  
+    Quindi dimostrare la (\ref{eq:simulazione_alt}) è equivalente a dimostrare che $R$ è una simulazione.\\ 
+    \\
     Essendo sia $R$ (e quindi $R^{-1}$) che $\xrightarrow{a}$ delle relazioni binarie tra stati in $Q$, applicando la definizione di composizione di relazioni otteniamo che una coppia di stati $<p,q>$, con $p,q\in Q$, è messa in relazione da $R^{-1}\xrightarrow{a}$ se e solo se
     \begin{equation*}
         \exists r\in Q:\ p\ R^{-1}\ r \xrightarrow{a} q,
@@ -40,9 +41,9 @@
         &\mbox{implica} \label{eq:simulazione_alt2}\\
         \exists r'\in Q:\ &(p \xrightarrow{a} r')\ \mbox{e}\ (q\ R\ r'), \notag
     \end{align}
-    con $r$ ed $r'$ non necessariamente lo stesso stato.\\
+    con $r$ ed $r'$ non necessariamente lo stesso stato. Quindi dimostrare la (\ref{eq:simulazione_alt2}) equivale a dimostrare la (\ref{eq:simulazione_alt}), la quale equivale a dimostrare che $R$ è una simulazione.\\
     \\
-    Dimostriamo allora i tre casi richiesti.
+    Dimostriamo allora la (\ref{eq:simulazione_alt2}) per i tre casi richiesti.
     
     \begin{itemize}
         \item $Id$ è una simulazione\\
@@ -61,4 +62,6 @@
             Per la definizione di composizione di funzioni, dire che $r\ RS\ p$ equivale a dire che $\exists k:\ r\ R\ k\ S\ p$. Da $(r\ R\ k)$ e dall'ipotesi che $R$ è una simulazione (e che $(r \xrightarrow{a} q)$), si deduce che esiste un $k'$ tale che $(k \xrightarrow{a} k')$ e $(q\ R\ k')$. Da $(k\ S\ p)$ e dall'ipotesi che $S$ è una simulazione (e da $(k \xrightarrow{a} k')$ dedotto prima) si deduce invece che esiste un $r'$ tale che $(p \xrightarrow{a} r')$ e $(k'\ S\ r')$.\\
             Mettendo adesso insieme $(q\ R\ k')$ e $(k'\ S\ r')$ otteniamo che $(q\ RS\ r')$, il quale, assieme a $(p \xrightarrow{a} r')$ ricavato prima, costituisce la dimostrazione della tesi.
     \end{itemize}
+    
+    Con questo si concludono i tre casi richiesti, per i quali abbiamo dimostrato che la (\ref{eq:simulazione_alt2}) vale e quindi che le relazioni richieste sono effettivamente delle simulazioni.
     

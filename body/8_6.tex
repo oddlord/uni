@@ -41,7 +41,7 @@
         =\ & <<mx,\sigma>\ \mbox{gt}\ <0, \sigma>, \sigma>
     \end{align*}
     
-    Il simbolo $gt$ (greater than) è il simbolo semantico corrispondente al simbolo sintattico $-$, nonnché un'istanza di $nop$. Si noti come, grazie al fatto che nessuna delle due valutazioni modifica lo stato, possiamo utilizzare lo stesso $\sigma$, alleggerendo così la notazione.\\
+    Il simbolo $gt$ (greater than) è il simbolo semantico corrispondente al simbolo sintattico $-$, nonché un'istanza di $nop$. Si noti come, grazie al fatto che nessuna delle due valutazioni modifica lo stato, possiamo utilizzare lo stesso $\sigma$, alleggerendo così la notazione.\\
     \\
     Procediamo in modo analogo per $x-1$ e per $x<3$, altre due operazioni tra naturali:
     
@@ -244,4 +244,4 @@
     
     Abbiamo trovato un punto fisso! La terza approssimazione calcolata prima risulta essere un punto fisso del funzionale $F$ (il minimo, grazie al Teorema di Kleene) in quanto $F(F^3\Omega)=F^3\Omega$. Questo ci dice che la descrizione informale data prima del comando è \textit{esattamente} l'interpretazione del comando e non una semplice approssimazione.\\
     \\
-    Quindi, ricapitolando, possiamo dedurre che l'insieme degli stati che fanno divergere il comando proposto sono tutti queli stati che fanno finire l'interpretazione semantica del \textbf{while} nel ramo contenente $\bot$, ovvero tutti quegli stati con input e output qualsiasi e con valori in memoria associati alla variabile $x$ maggiori o uguali a $3$. Come già detto all'inizio, è facile vedere come i valori per $x$ che causano errore, quali valori booleani o \textit{unbound}, garantiscano la convergenza, in quanto generano un errore che viene subito propagato, bloccando l'esecuzione del programma.\\
+    Quindi, ricapitolando, possiamo dedurre che l'insieme degli stati che fanno divergere il comando proposto sono tutti quelli stati che fanno finire l'interpretazione semantica del \textbf{while} nel ramo contenente $\bot$, ovvero tutti quegli stati con input e output qualsiasi e con valori in memoria associati alla variabile $x$ maggiori o uguali a $3$. Come già detto all'inizio, è facile vedere come i valori per $x$ che causano errore, quali valori booleani o \textit{unbound}, garantiscano la convergenza, in quanto generano un errore che viene subito propagato, bloccando l'esecuzione del programma.\\
