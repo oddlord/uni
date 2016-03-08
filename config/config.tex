@@ -13,6 +13,22 @@
 \usepackage{marginnote}
 
 %********************************************************************
+% classicthesis strings
+%********************************************************************
+
+\newcommand{\myTitle}{Il Progetto Indico KT\xspace}
+\newcommand{\mySubtitle}{Migliorare l'impatto a livello mondiale di Indico\xspace}
+\newcommand{\myDegree}{Corso di Laurea Magistrale in Informatica\xspace}
+\newcommand{\myName}{Tommaso Papini\xspace}
+\newcommand{\myProf}{Pierluigi Crescenzi\xspace}
+\newcommand{\mySupervisor}{Pedro Ferreira\xspace}
+\newcommand{\myFaculty}{Facoltà di Scienze Matematiche, Fisiche e Naturali\xspace}
+\newcommand{\myDepartment}{Dipartimento di Sistemi e Informatica\xspace}
+\newcommand{\myUni}{\protect{Università degli Studi di Firenze}\xspace}
+\newcommand{\myLocation}{Firenze\xspace}
+\newcommand{\myTime}{Anno Accademico 2014-2015\xspace}
+
+%********************************************************************
 % Packages options
 %********************************************************************
 
@@ -28,13 +44,69 @@
 	tmargin       = 4cm
 }
 
+% listings
+\renewcommand*{\lstlistingname}{Codice}
+\newcommand*{\noaddvspace}{\renewcommand*{\addvspace}[1]{}}
+\addtocontents{lol}{\protect\noaddvspace}
+\let\oldlstlistoflistings\lstlistoflistings
+\renewcommand{\lstlistoflistings}{%
+    \begingroup%
+        \let\oldnumberline\numberline%
+        \renewcommand{\numberline}{\!\!\!\!\!\!\!\!\!\lstlistingname~\oldnumberline}%
+        \oldlstlistoflistings%
+    \endgroup
+}
+%\lstset{
+%    keywordstyle=\color{RoyalBlue},%\bfseries,
+%    basicstyle=\small\ttfamily,
+%    %identifierstyle=\color{NavyBlue},
+%    commentstyle=\color{Green}\ttfamily,
+%    stringstyle=\rmfamily,
+%    numbers=none,%left,%
+%    numberstyle=\scriptsize,%\tiny
+%    stepnumber=5,
+%    numbersep=8pt,
+%    showstringspaces=false,
+%    breaklines=true,
+%    frameround=ftff,
+%    frame=single
+%    %frame=L
+%}
+\lstset{
+    basicstyle=\small\sffamily,
+    numbers=none,
+    numberstyle=\tiny,
+    numbersep=3pt,
+    frame=tb,
+    columns=fullflexible,
+    backgroundcolor=\color{yellow!20}
+}
+\lstset{
+    numberbychapter=false,
+    showstringspaces=false
+}
+
 % perpage
 \usepackage{perpage}
 \MakePerPage{footnote}
 
 % hyperref
-\hypersetup{
-	hidelinks
+\hypersetup{%
+    %draft, % = no hyperlinking at all (useful in b/w printouts)
+    colorlinks=true, linktocpage=true, pdfstartpage=3, pdfstartview=FitV,%
+    % uncomment the following line if you want to have black links (e.g., for printing)
+    colorlinks=false, linktocpage=false, pdfstartpage=3, pdfstartview=FitV, pdfborder={0 0 0},%
+    breaklinks=true, pdfpagemode=UseNone, pageanchor=true, pdfpagemode=UseOutlines,%
+    plainpages=false, bookmarksnumbered, bookmarksopen=true, bookmarksopenlevel=1,%
+    hypertexnames=true, pdfhighlight=/O,%nesting=true,%frenchlinks,%
+    urlcolor=webbrown, linkcolor=RoyalBlue, citecolor=webgreen, %pagecolor=RoyalBlue,%
+    %urlcolor=Black, linkcolor=Black, citecolor=Black, %pagecolor=Black,%
+    pdftitle={\myTitle},%
+    pdfauthor={\textcopyright\ \myName, \myUni, \myFaculty},%
+    pdfsubject={},%
+    pdfkeywords={},%
+    pdfcreator={pdfLaTeX},%
+    pdfproducer={LaTeX with hyperref and classicthesis}%
 }
 
 % caption
@@ -42,20 +114,6 @@
 
 % graphicx
 \graphicspath{{img/}}
-
-%********************************************************************
-% classicthesis strings
-%********************************************************************
-
-\newcommand{\myTitle}{Indico KT Project: migliorare l'impatto mondiale di Indico\xspace}
-\newcommand{\myDegree}{Corso di Laurea Magistrale in Informatica\xspace}
-\newcommand{\myName}{Tommaso Papini\xspace}
-\newcommand{\myProf}{Pierluigi Crescenzi\xspace}
-\newcommand{\myFaculty}{Facoltà di Scienze Matematiche, Fisiche e Naturali\xspace}
-\newcommand{\myDepartment}{Dipartimento di Sistemi e Informatica\xspace}
-\newcommand{\myUni}{\protect{Università degli Studi di Firenze}\xspace}
-\newcommand{\myLocation}{Firenze\xspace}
-\newcommand{\myTime}{Anno Accademico 2014-2015\xspace}
 
 %********************************************************************
 % (Re)new commands & styles
@@ -81,3 +139,6 @@
 \renewcommand{\backrefcitedmultistring}[1]{(Citato alle pagine~#1.)} 
 \renewcommand{\backreftwosep}{ e~} 
 \renewcommand{\backreflastsep}{ e~}
+
+\newcommand{\bash}[1]{\lstinline[language=bash]{#1}}
+\newcommand{\python}[1]{\lstinline[language=python]{#1}}

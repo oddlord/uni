@@ -55,7 +55,8 @@
 %\RequirePackage{ellipsis} % ... ;-)                  
 \RequirePackage{relsize} % scale font up or down                                        
 \RequirePackage[smaller]{acronym} % nice macros for handling all acronyms in the thesis
-\renewcommand{\bflabel}[1]{{#1}\hfill} % fix the list of acronyms
+% \renewcommand{\bflabel}[1]{{#1}\hfill} % fix the list of acronyms
+\renewcommand*{\aclabelfont}[1]{\acsfont{#1}}
 %\RequirePackage{natbib}
 
 % ********************************************************************
@@ -157,23 +158,7 @@
 % really nasty, if you know of a better way, please let me know
 % ********************************************************************
 %\lstset{emph={trueIndex,root},emphstyle=\color{BlueViolet}}%\underbar} % for special keywords
-% ********************************************************************
-\lstset{language=[LaTeX]Tex,%C++,
-    keywordstyle=\color{RoyalBlue},%\bfseries,
-    basicstyle=\small\ttfamily,
-    %identifierstyle=\color{NavyBlue},
-    commentstyle=\color{Green}\ttfamily,
-    stringstyle=\rmfamily,
-    numbers=none,%left,%
-    numberstyle=\scriptsize,%\tiny
-    stepnumber=5,
-    numbersep=8pt,
-    showstringspaces=false,
-    breaklines=true,
-    frameround=ftff,
-    frame=single
-    %frame=L
-}    
+% ********************************************************************   
 
 \RequirePackage{ifpdf}
 \ifpdf

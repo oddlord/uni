@@ -13,13 +13,13 @@
 % Front matter
 %********************************************************************
 
-	\input{frontmatter/title}
+	\input{front/title}
 	
 	\pagestyle{scrheadings}
 	
-	\input{frontmatter/abstract}
-%	\input{frontmatter/aknowledgements}
-	\input{frontmatter/contents}
+	\input{front/abstract}
+%	\input{front/aknowledgements}
+	\input{front/contents}
 	
 %********************************************************************
 % Body matter
@@ -28,25 +28,24 @@
 	\pagenumbering{arabic}
 	
 	\part{CERN e Indico}  \label{part:CERN_indico}
-		\input{chapters/cern}
-		\input{chapters/indico}
+		\input{body/cern_indico/cern}
+		\input{body/cern_indico/indico}
 	
 	\part{Indico KT Project} \label{part:indico_KT_project}
-		\input{chapters/panoramica}
-		\input{chapters/strumenti_e_linguaggi}
-		\input{chapters/cloud_deployment}
-		\input{chapters/distribuzione_packaging}
-		\input{chapters/instance_tracker}
-		\input{chapters/conference_customization_prototype}
+		\input{body/indico_kt_project/panoramica}
+		\input{body/indico_kt_project/cloud_deployment}
+		\input{body/indico_kt_project/distribuzione_packaging}
+		\input{body/indico_kt_project/instance_tracker}
+		\input{body/indico_kt_project/conference_customization_prototype}
 	
 	\part{Note e conclusioni} \label{part:note_conclusioni}
-		\input{chapters/altri_progetti}
-		\input{chapters/conclusioni}
+		\input{body/note_conclusioni/altri_progetti}
+		\input{body/note_conclusioni/conclusioni}
 		
 %********************************************************************
 % Back matter
 %********************************************************************
 	
-	\input{backmatter/bibliography}
+	\input{back/bibliography}
 
 \end{document}

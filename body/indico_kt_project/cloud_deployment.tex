@@ -1,0 +1,127 @@
+\chapter{Cloud Deployment} \label{chap:cloud_deployment}
+
+    I concetti di \textit{cloud} e \textit{virtualizzazione} stanno prendendo sempre più piede, nel corso degli ultimi anni, nel settore informatico ed in particolare nel campo di sviluppo software.
+    
+    L'idea alla base del cloud  si basa sul semplice fatto che molte volte un utente, o un amministratore di sistema, può voler essere in grado di eseguire una certa applicazione, senza però doversi preoccupare dell'hardware necessario. L'unica cosa che interessa è poter eseguire il software desiderato senza bisogno di doversi preoccupare dei dettagli tecnici quali installare un server, configurarlo, o anche pensare alle varie problematiche relative all'hardware come la capacità degli hard disk necessaria, di quanti processori ha bisogno, di quanta banda per la trasmissione dei dati, ecc. Per rispondere a questa esigenza, sono nati i \textit{Cloud Service Provider}, ovvero aziende in possesso di un grandissimo numero di macchine, molto capienti, molto potenti e molto veloci. In parole povere, quello che offrono i Cloud Service Provider, è di affittare le loro macchine per un certo costo mensile (o annuale, dipende dal tipo di contratto). Questi provider fanno scegliere all'utente il tipo di profilo desiderato: ci saranno ad esempio i bassi profili, che forniscono risorse limitate in cambio di un pagamento minimo, oppure alti profili, che forniscono all'utente un'altissima potenza di calcolo in cambio, ovviamente, di un pagamento più alto. L'utente si limita quindi a scegliere il profilo che più gli è consono e a ``lanciare'' (in inglese, \textit{deploy}) la propria applicazione sulla macchina appena affittata. Non sarà necessario quindi fare alcuna installazione fisica di macchine o hardware, né tanto meno mantenerle: il Cloud Service Provider scelto si occuperà di tutto questo, mentre l'utente potrà concentrarsi sulla gestione e sull'utilizzo della propria applicazione. Ovviamente, dato che facendo così l'utente si ``astrae'' dal concetto di macchina fisica, egli non saprà mai con certezza su che specifiche hardware viene effettivamente eseguita la sua applicazione. La sua applicazione potrebbe venire eseguita su un supercomputer molto potente, o magari su un una macchina più semplice dedicata solo a quell'applicazione. L'utente non lo sa ma, d'altro canto, nemmeno gli interessa, avendo scelto di lanciare la sua applicazione sul cloud. Addirittura spesso può anche capitare che, a seconda del carico di lavoro delle varie macchine del provider, l'applicazione venga prima eseguita su delle macchine e in un secondo momento su delle altre. Da questo il cloud prende il suo nome: un'applicazione lanciata sul cloud non risiede necessariamente in una macchina specifica, ma la possiamo immaginare all'interno di una sorta di ``nuvola'', ovvero in uno spazio indefinito all'interno del quale però l'applicazione ha accesso a tutte le risorse hardware richieste.
+    
+    L'idea della virtualizzazione è molto simile a quella del cloud ma orientata più al sistema operativo di una macchina. Sappiamo che spesso un'applicazione è ottimizzata per un certo sistema operativo o, addirittura, funziona soltanto se eseguita su determinati sistemi operativi. Per gli sviluppatori, spesso, è una scelta obbligata quella di prediligere alcuni sistemi operativi rispetto ad altri: infatti alcuni sistemi operativi possono essere talmente diversi tra loro che garantire la compatibilità dell'applicazione su tutti i sistemi operativi comporterebbe dover riprogettare e riscrivere l'applicazione da capo, il che non è sempre possibile, a seconda delle risorse disponibili per lo sviluppo. Per ovviare a questi problemi sono stati sviluppati degli appositi tools di virtualizzazione, come il ben noto Virtualbox di Oracle\footnote{\url{https://www.virtualbox.org/}}. I tool di virtualizzazione permettono di simulare un sistema operativo eseguendolo su una macchina fisica sulla quale è installato un altro sistema operativo. Quindi è come se il tool di virtualizzazione simulasse un hardware che in realtà non c'è per dar modo all'utente di utilizzare un sistema operativo a sua scelta senza bisogno di doverlo installare sul disco fisso della macchina fisica. Questo permette di installare in modo molto veloce molti sistemi operativi diversi, qualora se ne avesse il bisogno. Ogni istanza creata tramite un tool di virtualizzazione prende il nome di \textit{macchina virtuale} e vengono spesso archiviate in appositi file (la cui estensione varia a seconda dello strumento di virtualizzazione scelto) che prendono il nome di \textit{immagini virtuali}. Un altro vantaggio delle macchine virtuali è quindi la loro portabilità: se un utente volesse, infatti, utilizzare una certa macchina virtuale su un'altra macchina fisica, non dovrà far altro che copiarvi l'immagine virtuale relativa ed eseguirla sulla nuova macchina fisica tramite lo strumento di virtualizzazione.
+    
+    Le tecniche di cloud e virtualizzazione sono quindi molto utili in quei frangenti in cui l'utente vuole solo occuparsi di poter eseguire la propria applicazione senza dover stare a preoccuparsi della configurazione hardware o del sistema operativo.
+    
+    Con queste idee in mente, il primo obiettivo dell'Indico KT Project è stato proprio quello di poter adattare il software di Indico alle tecnologie di cloud e virtualizzazione. Può capitare, infatti, che un utente voglia installare ed utilizzare Indico per un breve periodo, senza stare a configurare un intero web server: a volte possono capitare utenti che vogliono utilizzare Indico per un solo evento o anche associazioni che intendono utilizzare Indico in modo continuativo ma che sono troppo piccole per occuparsi di installare e mantenere un server per conto proprio. Tutto questo era possibile già prima, ma se un utente aveva la necessità di installare Indico sul cloud doveva occuparsi personalmente di tutta la parte tediosa di installazione e configurazione, sia della macchina che di Indico, prima di poterne usufruire. Inoltre ogni interazione con la macchina sul cloud richiedeva l'utente di effettuare il login sulla macchina remota ed interagire tramite terminale. Analogamente, se un utente avesse voluto installare Indico su una macchina virtuale, non avrebbe avuto altra scelta che farlo manualmente, dovendosi occupare personalmente dell'installazione e della configurazione sia della macchina virtuale che di Indico.
+    
+    I principali obiettivi di questo progetto erano quindi di automatizzare il deployment su struttura cloud, da un lato, e la creazione di immagini virtuali, dall'altro. Successivamente è stato anche creato uno script in Python Fabric per la gestione remota (ad esempio sul cloud) di una macchina con installato Indico.
+    
+    Il progetto, disponibile sulla pagina Github ufficiale di Indico\footnote{\url{https://github.com/indico/indico-cloud-images}.}, è strutturato come segue:
+    
+    \begin{itemize}
+        \item all'interno della cartella \bash{usr/} sono presenti lo script per la generazione del file \bash{user-data} e lo script fabric per la gestione remota dei server cloud;
+        \item nella cartella \bash{dev/} è presente lo script fabric per la generazione di immagini virtuali;
+        \item la cartella \bash{tpl/} raccoglie tutti i template necessari ai vari script;
+        \item nella cartella \bash{conf/} sono presenti alcuni file di configurazione.
+    \end{itemize}
+    
+    Dal momento che al \ac{CERN} Indico è installato su una macchina con sistema operativo \ac{SL6}\footnote{\url{https://www.scientificlinux.org/}.}, ovvero una distribuzione di Linux sviluppata dal \ac{FNAL}, si è deciso, per motivi pratici, di basare gli script di cloud deployment proprio su questa distribuzione di Linux. In linea teorica, gli script dovrebbero funzionare senza problemi anche per altre distribuzioni basate, come \ac{SL6}, su \ac{RHEL}. Per altre distribuzioni Linux potrebbero esser necessarie delle modifiche agli script, come ad esempio quando vengono invocati i comandi per l'installazione di pacchetti\footnote{Il comando per sistemi \ac{RHEL} è \bash{yum} mentre per sistemi, ad esempio, Ubuntu Linux è necessario utilizzare il comando \bash{apt-get}.}.
+
+    \section{Deployment con cloud-init} \label{sec:cd;deployment_cloud-init}
+    
+        Il primo obiettivo del progetto di cloud deployment di Indico era appunto quello di automatizzare l'installazione e la configurazione di un server sul cloud e di Indico. Per fare ciò abbiamo sfruttato le potenzialità di uno strumento di cloud configuration molto diffuso in ambiente Linux: il modulo cloud-init.
+        Abbiamo già introdotto cloud-init in Sezione \ref{sec:p;strumenti_linguaggi}, a pagina \pageref{subsec:p;sl;cloud-init}, quindi eviteremo di ripetere qui a cosa serve cloud-init e quali sono le sue funzionalità. Parleremo invece di come è stato utilizzato cloud-init per il cloud deployment automatizzato di Indico.
+        
+        Le idee alla base dell'automatizzazione del cloud deployment di Indico possono essere riassunte dalle seguente necessità che un utente, in procinto di installare Indico su un nuovo server cloud, si trova a voler soddisfare:
+        
+        \begin{itemize}
+            \item la necessità di configurare da zero, in poco tempo, un nuovo server cloud con Indico già installato e pronto all'uso;
+            \item la necessità di poter ripetere questo processo in modo automatico;
+            \item la necessità di parametrizzare alcune parti del processo di configurazione (sia del server che dell'applicazione);
+            \item la necessità di fare tutto questo in modo sicuro e affidabile.
+        \end{itemize}
+        
+        Come abbiamo già accennato in Sezione \ref{sec:p;strumenti_linguaggi}, la risposta a queste necessità è cloud-init.
+        
+        Abbiamo già detto che cloud-init funziona passando un apposito file, o ricetta, detto \bash{user-data}, al comando che si occupa di avviare il server cloud in remoto. Ovviamente il comando specifico varia a seconda del Cloud Service Provider scelto, ma solitamente i comandi dei provider che supportano cloud-init presentano un'opzione tramite la quale è possibile specificare il file \bash{user-data} contenente tutte le informazioni ed istruzioni necessarie a configurare la nuova macchina cloud.
+        
+        Il lavoro necessario, quindi, per automatizzare il tutto, si è risolto con lo scrivere uno script per la generazione del file \bash{user-data}. Andiamo ad analizzare come è composto questo script ed il file \bash{user-data} risultante.
+        
+        Il file \bash{user-data} necessario ai nostri fini è un file \ac{MIME} multiparti, ovvero un file in grado di raggruppare una serie di altri file. Il file \ac{MIME} generato è così composto:
+        
+        \begin{itemize}
+            \item uno script bash per eseguire le istruzioni richieste;
+            \item un file cloud-config per copiare i file necessari.
+        \end{itemize}
+        
+        Lo script python che genera il file \bash{user-data}, denominato \bash{gen-user-data.py}, è quindi suddiviso in quattro fasi principali: la fase di configurazione, le fasi di generazione dello script bash e del file cloud-config ed infine la fase di generazione del file \bash{user-data} vero e proprio.
+        
+        \subsection{Fase di configurazione} \label{subsec:cd;dci;fase_configurazione}
+        
+            La fase di configurazione consiste semplicemente in una serie di domande mostrate su linea di comando, ognuna delle quali serve a far scegliere all'utente tutti quei parametri necessari per personalizzare la propria installazione di Indico sul nuovo server cloud. Tra i parametri che l'utente può scegliere ci sono ad esempio i percorsi delle varie directory di installazione di Indico, o le porte e gli indirizzi ai quali il web server di Indico sarà raggiungibile, o ancora i certificati \acr{SSL} da utilizzare.
+            
+            L'utente potrà scegliere, ad ogni domanda, di utilizzare il valore di default suggerito, oppure di specificare un nuovo valore per quel parametro. Inoltre, potrà anche scegliere di generare un file di configurazione, contenente tutti i valori scelti, in modo da poter rieffettuare, in futuro, lo stesso processo di deployment utilizzando gli stessi valori senza bisogno di doverli reinserire una seconda volta.
+            
+            Al termine del processo, i valori vengono comunque salvati all'interno di un dizionario python, che sarà poi utilizzato, assieme ai vari template, per generare i file necessari.
+        
+        \subsection{Generazione dello script bash} \label{subsec:cd;dci;generazione_script_bash}
+        
+            Come già accennato, la generazione dello script bash da includere nel file \bash{user-data} si basa su un template, chiamato \bash{user-data-script.sh}, e sui valori dei parametri scelti dall'utente. Questo è necessario in quanto alcune parti dello script sono parametrizzate e devono essere compilate in base alle scelte dell'utente.
+            
+            Per ottenere lo script finale, basterà allora eseguire il comando python \python{.format()} su ogni linea del template passando come unico argomento il dizionario, creato nella fase precedente, dei parametri. In particolare il template dello script è composto da tutte le istruzioni dello script finale ma in corrispondenza di ogni parametro vi sarà invece un particolare placeholder che sta a indicare dove il comando \python{.format()} dovrà andare a sostituire i valori effettivi dei parametri.
+            
+            Le principali azioni intraprese dallo script, una volta avviata la macchina per la prima volta, sono:
+            
+            \begin{itemize}
+                \item scaricare e installare tutti i pacchetti necessari ad Indico;
+                \item installare e configurare Indico;
+                \item installare i certificati \ac{SSL};
+                \item aprire le porte scelte per il web server;
+                \item copiare i file di configurazione nelle cartelle corrispondenti.
+            \end{itemize}
+            
+            Avendo basato lo script su \ac{SL6}, l'installazione di pacchetti aggiuntivi avviene invocando il comando \bash{yum}. L'installazione e la configurazione di Indico avvengono tramite i comandi \bash{easy\_install indico} e \bash{indico\_initial\_setup}, rispettivamente. La copia dei certificati \ac{SSL} e dei file di configurazione e l'apertura delle porte, invece, avvengono tramite semplici comandi per la manipolazione di file in ambiente Linux.
+            
+            I problemi principali riscontrati durante la stesura dello script riguardavano tutti l'impossibilità (apparente) di rendere automatiche alcune azioni. Per alcune parti dello script sono stati infatti necessari alcuni accorgimenti per rendere il procedimento pienamente automatico.
+            
+            Per quanto riguarda l'istallazione tramite comando \bash{yum}, ad esempio, si è dovuta aggiungere l'opzione \bash{-y} da linea di comando, per evitare che \bash{yum} chiedesse conferma all'utente di voler effettivamente installare i pacchetti scelti, rimanendo ad aspettare all'infinito.
+            
+            Un'altra problematica era legata al comando di configurazione di Indico, \bash{indico\_initial\_setup}, che richiede all'utente di scegliere alcuni valori per configurare correttamente Indico. Nel nostro caso questi valori sono già stati scelti durante la fase di configurazione esposta prima, quindi devono essere passati in modo automatico al comando \bash{indico\_initial\_setup}. La soluzione è far stampare questi valori al terminale tramite il comando \bash{echo} e quindi concatenare \bash{echo} con \bash{indico\_initial\_setup}. Il risultato è il comando seguente:
+            
+            \begin{center}
+                \begin{minipage}{\linewidth}
+                    \begin{lstlisting}[language=bash, gobble=22]
+                        $ echo -e "{indico_inst_dir}\nc\ny\n{db_inst_dir}" | indico_initial_setup
+                    \end{lstlisting}
+                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                    \captionof{lstlisting}[Configurazione automatica di Indico]{Configurazione automatica di Indico con template.}
+                \end{minipage}
+            \end{center}
+            
+            Si notino i due template \bash{\{indico\_inst\_dir\}} e \bash{\{db\_inst\_dir\}} che stanno a indicare, rispettivamente, il percorso in cui l'utente vuole installare Indico e in cui vuole installare il \ac{DB}.
+            
+            Infine è sorto il problema di dover far eseguire alcune istruzioni allo script come utente root, ovvero tramite il comando \bash{sudo}. Il problema è che lo script non viene eseguito dall'utente, ma dal modulo cloud-init all'avvio della macchina sul cloud, senza possibilità di avere permessi da root. La soluzione è stata trovata utilizzando il comando \bash{visudo} e andando a modificare il file \bash{etc/sudoers} per permettere di eseguire \bash{sudo} anche in assenza di \acr{TTY}, ovvero una console. Il risultato\footnote{Si vedano \url{http://serverfault.com/questions/324415/running-sudo-commands-in-cloud-init-script} e \url{http://stackoverflow.com/questions/323957/how-do-i-edit-etc-sudoers-from-a-script}.} è il seguente frammento di codice che abilita il comando \bash{sudo} anche all'interno di script cloud-init:
+            
+            \begin{center}
+                \begin{minipage}{\linewidth}
+                    \begin{lstlisting}[language=bash, gobble=22]
+                        touch /etc/sudoers.tmp
+                        cp /etc/sudoers /tmp/sudoers.new
+                        find_replace /tmp/sudoers.new "Defaults    requiretty" "Defaults    !requiretty"
+                        visudo -c -f /tmp/sudoers.new
+                        if [ "$?" -eq "0" ]; then
+                            cp /tmp/sudoers.new /etc/sudoers
+                        fi
+                        rm /etc/sudoers.tmp
+                    \end{lstlisting}
+                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                    \captionof{lstlisting}[Abilitazione di \bash{sudo} per script cloud-init]{Abilitazione del comando \bash{sudo} per script cloud-init senza console.}
+                \end{minipage}
+            \end{center}
+            
+            Ricapitolando, dopo aver generato lo script effettivo sostituendo i parametri ai rispettivi placeholder nel template, e con le dovute accortezze per rendere il tutto completamente automatico, il risultato è uno script che, durante il primo avvio della macchina sul cloud, si occuperà di effettuare tutte le azioni necessarie ad installare e configurare Indico, senza che l'utente debba fare niente. L'unica cosa di cui ha bisogno lo script è che i vari file di configurazione necessari ad Indico siano già stati copiati sulla macchina: a questo penserà il file cloud-config, generato nella prossima fase.
+        
+        \subsection{Generazione del file cloud-config} \label{subsec:cd;dci;generazione_cloud-config}
+        
+        \subsection{Generazione del file \bash{user-data}} \label{subsec:cd;dci;generazione_user-data}
+
+    \section{Creazione di immagini virtuali} \label{sec:cd;creazione_immagini_virtuali}
+    
+    \section{Script di gestione remota} \label{sec:cd;script_gestione_remota}
+    

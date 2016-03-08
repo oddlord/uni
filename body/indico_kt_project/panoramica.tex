@@ -1,0 +1,84 @@
+\chapter{KT Project: una panoramica} \label{chap:panoramica}
+
+	In questo capitolo introdurremo i principali obiettivi del Progetto KT per Indico in modo da dare una panoramica generale dei sottoprogetti di cui il progetto principale è composto. Inoltre verranno esposti i principali strumenti e linguaggi utilizzati durante lo sviluppo del progetto.
+	
+	\section{Progetti principali} \label{sec:p;progetti_principali}
+    	
+    	Il progetto finanziato dal gruppo \ac{KT} per Indico, oggetto principale del programma di Technical Student a cui ha partecipato il sottoscritto, è nato come co-progetto tra i gruppi \ac{IT} e \ac{KT}. L'obiettivo principale di questo progetto è quello di migliorare la visibilità e l'impatto di Indico in tutto il mondo, in particolare al di fuori della comunità \acr{HEP}, all'interno della quale Indico si è già ampiamente affermato.
+    	
+    	Come si è già accennato nel Capitolo \ref{chap:CERN}, il concetto di \ac{KT} si basa sull'idea della diffusione e condivisione della conoscenza e degli strumenti necessari per ottenerla. L'idea alla base del progetto era quindi quella di modificare e migliorare il software Indico in modo da permettere una miglior diffusione dello stesso nel mondo. Per fare questo, il KT Project si era prefissato tre obiettivi generali da raggiungere:
+    	
+    	\begin{itemize}
+        	\item rendere Indico più accessibile agli utenti
+        	\item rendere Indico più semplice da utilizzare e personalizzare
+        	\item rendere Indico, in generale, più moderno e visivamente ``attraente''
+    	\end{itemize}
+    	
+    	Gli obiettivi prefissati col Progetto KT erano quindi molto ampi e generali e, come ci può immaginare, anche piuttosto complessi da mettere in pratica. Per questa ragione il progetto che è stato assegnato al sottoscritto non era che il primo di una serie di progetti, finanziati dal gruppo \ac{KT}, al fine di migliorare l'impatto a livello mondiale del software Indico. Infatti, al durante il periodo di 14 mesi passati a Ginevra dal sottoscritto, erano stati approvati e finanziati già due progetti dal gruppo \ac{KT} per Indico: il primo, assegnato al sottoscritto, ed un secondo da assegnare ad un futuro membro del team Indico, molto probabilmente un altro Techical Student.
+    	
+    	Il primo Progetto KT per Indico è stato quindi pianificato e suddiviso in una serie di sotto-progetti, i quali dovevano essere terminati durante i 14 mesi del programma Technical Student. Quattro di questi sotto-progetti sono risultati essere più importanti e complessi degli altri ed sono andati ad occupare gran parte del periodo di Technical Student. Di seguito ne parleremo brevemente per avere un'idea generale dei progetti principali del KT Project, mentre nei Capitoli successivi vedremo in dettaglio ognuno di essi.
+    	
+    	\subsection{Cloud Deployment} \label{subsec:p;pp;cloud}
+    	
+    	\subsection{Distribuzione e Packaging} \label{subsec:p;pp:distribuzione}
+    	
+    	\subsection{Instance Tracker} \label{subsec:p;pp;instance_tracker}
+    	
+    	\subsection{Conference Customization Prototype} \label{subsec:p;pp;conference_customization_prototype}
+    	
+    \section{Strumenti e linguaggi} \label{sec:p;strumenti_linguaggi}
+    
+        Con questa ultima Sezione introduttiva, intendiamo fornire al lettore una serie di conoscenze e nozioni di base utili a capire il lavoro svolto con questo progetto. Indico infatti è composto da molti linguaggi diversi ed utilizza molti strumenti, sviluppati da terzi, senza i quali non potrebbe funzionare. È necessario quindi sapere quali sono e cosa fanno ognuno di questi strumenti, nonché essere a conoscenza dei linguaggi utilizzati.
+    
+        \subsection{Python} \label{subsec:p;sl;python}
+        
+            DA FARE: DESCRIZIONE PYTHON!!!
+        
+            Un importante comando offerto da python è \python{.format()}: questa funzione sostituisce a degli speciali \textit{placeholder} (o segnaposti, in italiano), presenti nell'oggetto stringa sul quale viene eseguito, i valori associati ad ogni placeholder tramite un particolare dizionario, passato come unico argomento. I placeholder sono parole chiave, che identificano un parametro in modo univoco, racchiuse tra parentesi graffe. Il comando \python{.format()} funziona quindi come segue:
+            
+            \begin{center}
+                \begin{minipage}{\linewidth}
+                    \begin{lstlisting}[language=python, gobble=22]
+                        data = {'first': 'Hodor', 'last': 'Hodor!'}
+                        template = '{first} {last}'
+                        result = template.format(**data)
+                    \end{lstlisting}
+                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                    \captionof{lstlisting}[Comando \python{.format()} (esempio)]{Esempio del funzionamento del comando \python{.format()}.}
+                \end{minipage}
+            \end{center}
+            
+            Il risultato salvato in \python{result} sarà quindi la stringa \python{'Hodor Hodor!'}.
+        
+        \subsection{Cloud-init} \label{subsec:p;sl;cloud-init}
+        
+            Cloud-init\footnote{\url{https://launchpad.net/cloud-init}} è uno degli strumenti più utilizzati per l'inizializzazione e configurazione di server cloud. Tramite la compilazione di alcune semplici impostazioni, l'utente sarà in grado di avviare un nuovo server cloud specificando una serie di azioni da eseguire in automatico durante il primo avvio, come ad esempio eseguire determinati script, copiare alcuni file da remoto, installare pacchetti ed applicazioni necessarie, e così via. Cloud-init è installato di default su molte distribuzioni Linux, come Ubuntu, Fedora, Debian, CentOS, ecc. \cite{cloud-init:readthedocs}
+            
+            In poche parole, Cloud-init è un modulo che viene eseguito all'avvio di una macchina virtuale e permette di specificare delle azioni da eseguire tramite un file detto \textit{user-data}. Un file di questo tipo, ovvero che permette di specificare una serie di azioni che verranno eseguite in automatico, viene detto \textit{recipe} (ovvero ``ricetta'' in inglese). Infatti si parla di \textit{cloud-init recipe} riferendosi ad una particolare configurazione da passare a cloud-init.
+            
+            Per utilizzare una cloud-init recipe, è sufficiente specificare il file \bash{user-data} generato quando si avvia il server sul cloud per la prima volta. Il comando da usare varia a seconda del Cloud Service Provider scelto. Per infrastrutture cloud basate su tecnologia OpenStack, ad esempio, è sufficiente eseguire il seguente comando da terminale:
+            
+            \begin{center}
+                \begin{minipage}{\linewidth}
+                    \begin{lstlisting}[language=bash, gobble=22]
+                        $ nova boot --image ubuntu-cloudimage --flavor 1 --user-data user-data
+                    \end{lstlisting}
+                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                    \captionof{lstlisting}[Boot con cloud-init (esempio OpenStack)]{Esempio di comando di boot con cloud-init per infrastrutture basate su OpenStack.}
+                \end{minipage}
+            \end{center}
+            
+            Tramite il file \bash{user-data} è possibile passare al modulo cloud-init una serie di file in diversi formati supportati, tra i quali:
+            
+            \begin{itemize}
+                \item file compresso in formato \bash{.gzip};
+                \item file \acr{MIME} multiparti;
+                \item bash script;
+                \item file cloud-config.
+            \end{itemize}
+            
+            In particolare, i file gzip possono essere utili per ridurre le dimensioni del file \bash{user-data}, essendo questo limitato a 16KB. I file MIME servono a raggruppare tanti altri file dei tipi sopra citati in un unico file. I file di script servono ad eseguire una serie di comandi subito dopo il primo boot, mentre i file cloud-config sono particolari file utilizzati per copiare file in remoto sulla macchina sul cloud oppure per installare tutti i pacchetti aggiuntivi necessari.
+            
+            Come vedremo nel Capitolo \ref{chap:cloud_deployment}, le recipe cloud-init sono state molto utili per la fase di cloud deployment di Indico.
+                    
+        \subsection{Fabric} \label{subsec:p;sl;fabric}
