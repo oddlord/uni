@@ -4,13 +4,13 @@
     
     L'idea alla base del cloud  si basa sul semplice fatto che molte volte un utente, o un amministratore di sistema, può voler essere in grado di eseguire una certa applicazione, senza però doversi preoccupare dell'hardware necessario. L'unica cosa che interessa è poter eseguire il software desiderato senza bisogno di doversi preoccupare dei dettagli tecnici quali installare un server, configurarlo, o anche pensare alle varie problematiche relative all'hardware come la capacità degli hard disk necessaria, di quanti processori ha bisogno, di quanta banda per la trasmissione dei dati, ecc. Per rispondere a questa esigenza, sono nati i \textit{Cloud Service Provider}, ovvero aziende in possesso di un grandissimo numero di macchine, molto capienti, molto potenti e molto veloci. In parole povere, quello che offrono i Cloud Service Provider, è di affittare le loro macchine per un certo costo mensile (o annuale, dipende dal tipo di contratto). Questi provider fanno scegliere all'utente il tipo di profilo desiderato: ci saranno ad esempio i bassi profili, che forniscono risorse limitate in cambio di un pagamento minimo, oppure alti profili, che forniscono all'utente un'altissima potenza di calcolo in cambio, ovviamente, di un pagamento più alto. L'utente si limita quindi a scegliere il profilo che più gli è consono e a ``lanciare'' (in inglese, \textit{deploy}) la propria applicazione sulla macchina appena affittata. Non sarà necessario quindi fare alcuna installazione fisica di macchine o hardware, né tanto meno mantenerle: il Cloud Service Provider scelto si occuperà di tutto questo, mentre l'utente potrà concentrarsi sulla gestione e sull'utilizzo della propria applicazione. Ovviamente, dato che facendo così l'utente si ``astrae'' dal concetto di macchina fisica, egli non saprà mai con certezza su che specifiche hardware viene effettivamente eseguita la sua applicazione. La sua applicazione potrebbe venire eseguita su un supercomputer molto potente, o magari su un una macchina più semplice dedicata solo a quell'applicazione. L'utente non lo sa ma, d'altro canto, nemmeno gli interessa, avendo scelto di lanciare la sua applicazione sul cloud. Addirittura spesso può anche capitare che, a seconda del carico di lavoro delle varie macchine del provider, l'applicazione venga prima eseguita su delle macchine e in un secondo momento su delle altre. Da questo il cloud prende il suo nome: un'applicazione lanciata sul cloud non risiede necessariamente in una macchina specifica, ma la possiamo immaginare all'interno di una sorta di ``nuvola'', ovvero in uno spazio indefinito all'interno del quale però l'applicazione ha accesso a tutte le risorse hardware richieste.
     
-    L'idea della virtualizzazione è molto simile a quella del cloud ma orientata più al sistema operativo di una macchina. Sappiamo che spesso un'applicazione è ottimizzata per un certo sistema operativo o, addirittura, funziona soltanto se eseguita su determinati sistemi operativi. Per gli sviluppatori, spesso, è una scelta obbligata quella di prediligere alcuni sistemi operativi rispetto ad altri: infatti alcuni sistemi operativi possono essere talmente diversi tra loro che garantire la compatibilità dell'applicazione su tutti i sistemi operativi comporterebbe dover riprogettare e riscrivere l'applicazione da capo, il che non è sempre possibile, a seconda delle risorse disponibili per lo sviluppo. Per ovviare a questi problemi sono stati sviluppati degli appositi tools di virtualizzazione, come il ben noto Virtualbox di Oracle\footnote{\url{https://www.virtualbox.org/}}. I tool di virtualizzazione permettono di simulare un sistema operativo eseguendolo su una macchina fisica sulla quale è installato un altro sistema operativo. Quindi è come se il tool di virtualizzazione simulasse un hardware che in realtà non c'è per dar modo all'utente di utilizzare un sistema operativo a sua scelta senza bisogno di doverlo installare sul disco fisso della macchina fisica. Questo permette di installare in modo molto veloce molti sistemi operativi diversi, qualora se ne avesse il bisogno. Ogni istanza creata tramite un tool di virtualizzazione prende il nome di \textit{macchina virtuale} e vengono spesso archiviate in appositi file (la cui estensione varia a seconda dello strumento di virtualizzazione scelto) che prendono il nome di \textit{immagini virtuali}. Un altro vantaggio delle macchine virtuali è quindi la loro portabilità: se un utente volesse, infatti, utilizzare una certa macchina virtuale su un'altra macchina fisica, non dovrà far altro che copiarvi l'immagine virtuale relativa ed eseguirla sulla nuova macchina fisica tramite lo strumento di virtualizzazione.
+    L'idea della virtualizzazione è molto simile a quella del cloud ma orientata più al sistema operativo di una macchina. Sappiamo che spesso un'applicazione è ottimizzata per un certo sistema operativo o, addirittura, funziona soltanto se eseguita su determinati sistemi operativi. Per gli sviluppatori, spesso, è una scelta obbligata quella di prediligere alcuni sistemi operativi rispetto ad altri: infatti alcuni sistemi operativi possono essere talmente diversi tra loro che garantire la compatibilità dell'applicazione su tutti i sistemi operativi comporterebbe dover riprogettare e riscrivere l'applicazione da capo, il che non è sempre possibile, a seconda delle risorse disponibili per lo sviluppo. Per ovviare a questi problemi sono stati sviluppati degli appositi tools di virtualizzazione, come il ben noto Virtualbox di Oracle\footnote{\url{https://www.virtualbox.org/}}. I tool di virtualizzazione permettono di simulare un sistema operativo eseguendolo su una macchina fisica sulla quale è installato un altro sistema operativo. Quindi è come se il tool di virtualizzazione simulasse un hardware che in realtà non c'è per dar modo all'utente di utilizzare un sistema operativo a sua scelta senza bisogno di doverlo installare sul disco fisso della macchina fisica. Questo permette di installare in modo molto veloce molti sistemi operativi diversi, qualora se ne avesse il bisogno. Ogni istanza creata tramite un tool di virtualizzazione prende il nome di \textit{macchina virtuale}, detta anche \ac{VM} in inglese, e vengono spesso archiviate in appositi file (la cui estensione varia a seconda dello strumento di virtualizzazione scelto) che prendono il nome di \textit{immagini virtuali}. Un altro vantaggio delle macchine virtuali è quindi la loro portabilità: se un utente volesse, infatti, utilizzare una certa macchina virtuale su un'altra macchina fisica, non dovrà far altro che copiarvi l'immagine virtuale relativa ed eseguirla sulla nuova macchina fisica tramite lo strumento di virtualizzazione.
     
     Le tecniche di cloud e virtualizzazione sono quindi molto utili in quei frangenti in cui l'utente vuole solo occuparsi di poter eseguire la propria applicazione senza dover stare a preoccuparsi della configurazione hardware o del sistema operativo.
     
     Con queste idee in mente, il primo obiettivo dell'Indico KT Project è stato proprio quello di poter adattare il software di Indico alle tecnologie di cloud e virtualizzazione. Può capitare, infatti, che un utente voglia installare ed utilizzare Indico per un breve periodo, senza stare a configurare un intero web server: a volte possono capitare utenti che vogliono utilizzare Indico per un solo evento o anche associazioni che intendono utilizzare Indico in modo continuativo ma che sono troppo piccole per occuparsi di installare e mantenere un server per conto proprio. Tutto questo era possibile già prima, ma se un utente aveva la necessità di installare Indico sul cloud doveva occuparsi personalmente di tutta la parte tediosa di installazione e configurazione, sia della macchina che di Indico, prima di poterne usufruire. Inoltre ogni interazione con la macchina sul cloud richiedeva l'utente di effettuare il login sulla macchina remota ed interagire tramite terminale. Analogamente, se un utente avesse voluto installare Indico su una macchina virtuale, non avrebbe avuto altra scelta che farlo manualmente, dovendosi occupare personalmente dell'installazione e della configurazione sia della macchina virtuale che di Indico.
     
-    I principali obiettivi di questo progetto erano quindi di automatizzare il deployment su struttura cloud, da un lato, e la creazione di immagini virtuali, dall'altro. Successivamente è stato anche creato uno script in Python Fabric per la gestione remota (ad esempio sul cloud) di una macchina con installato Indico.
+    I principali obiettivi di questo progetto erano quindi di automatizzare il deployment su struttura cloud, da un lato, e la creazione di immagini virtuali, dall'altro. Successivamente è stato anche creato uno script in python fabric per la gestione remota (ad esempio sul cloud) di una macchina con installato Indico.
     
     Il progetto, disponibile sulla pagina Github ufficiale di Indico\footnote{\url{https://github.com/indico/indico-cloud-images}.}, è strutturato come segue:
     
@@ -21,7 +21,7 @@
         \item nella cartella \bash{conf/} sono presenti alcuni file di configurazione.
     \end{itemize}
     
-    Dal momento che al \ac{CERN} Indico è installato su una macchina con sistema operativo \ac{SL6}\footnote{\url{https://www.scientificlinux.org/}.}, ovvero una distribuzione di Linux sviluppata dal \ac{FNAL}, si è deciso, per motivi pratici, di basare gli script di cloud deployment proprio su questa distribuzione di Linux. In linea teorica, gli script dovrebbero funzionare senza problemi anche per altre distribuzioni basate, come \ac{SL6}, su \ac{RHEL}. Per altre distribuzioni Linux potrebbero esser necessarie delle modifiche agli script, come ad esempio quando vengono invocati i comandi per l'installazione di pacchetti\footnote{Il comando per sistemi \ac{RHEL} è \bash{yum} mentre per sistemi, ad esempio, Ubuntu Linux è necessario utilizzare il comando \bash{apt-get}.}.
+    Dal momento che al \ac{CERN} Indico è installato su una macchina con sistema operativo \ac{SLC6}\footnote{\url{http://linux.web.cern.ch/linux/scientific6/}.}, ovvero una distribuzione di Linux sviluppata al \ac{CERN} basata su \ac{SL6}\footnote{Una distribuzione di Linux sviluppata dal \ac{FNAL}, disponibile all'indirizzo: \url{https://www.scientificlinux.org/}.}, si è deciso, per motivi pratici, di basare gli script di cloud deployment proprio su questa distribuzione di Linux. In linea teorica, gli script dovrebbero funzionare senza problemi anche per altre distribuzioni basate, come \ac{SLC6} e \ac{SL6}, su \ac{RHEL}. Per altre distribuzioni Linux potrebbero esser necessarie delle modifiche agli script, come ad esempio quando vengono invocati i comandi per l'installazione di pacchetti\footnote{Il comando per sistemi \ac{RHEL} è \bash{yum} mentre per sistemi, ad esempio, Ubuntu Linux è necessario utilizzare il comando \bash{apt-get}.}.
 
     \section{Deployment con cloud-init} \label{sec:cd;deployment_cloud-init}
     
@@ -58,6 +58,42 @@
             
             L'utente potrà scegliere, ad ogni domanda, di utilizzare il valore di default suggerito, oppure di specificare un nuovo valore per quel parametro. Inoltre, potrà anche scegliere di generare un file di configurazione, contenente tutti i valori scelti, in modo da poter rieffettuare, in futuro, lo stesso processo di deployment utilizzando gli stessi valori senza bisogno di doverli reinserire una seconda volta.
             
+            Eseguendo lo script \bash{gen-user-data.py} l'utente si troverà quindi a dover impostare i seguenti parametri (si noti che per ogni voce è presentato un valore di default, per il quale basta premere Enter):
+            
+            \begin{center}
+                \begin{minipage}{\linewidth}
+                    \begin{lstlisting}[language=bash, gobble=22]
+                        $ python gen-user-data.py 
+                        Do you want to use a configuration file [y/N]? 
+                        Insert the Indico installation directory path [/opt/indico]: 
+                        Insert the Indico DB installation directory path [/opt/indico/db]: 
+                        Insert the Apache conf directory [/etc/httpd/conf]: 
+                        Insert the Apache confd directory [/etc/httpd/conf.d]: 
+                        Insert the SSL cert directory [/etc/ssl/certs]: 
+                        Insert the SSL private directory [/etc/ssl/private]: 
+                        Do you want to load a personal SSL certificate [y/N]? 
+                        Insert the http port [80]: 
+                        Insert the https port [443]: 
+                        Insert the hostname: 
+                        Insert the iptables path [/etc/sysconfig/iptables]: 
+                        Insert the Redis hostname [localhost]: 
+                        Insert the Redis port [6379]: 
+                        Insert the Redis password: 
+                        Do you want to use Postfix as mail server [Y/n]? 
+                        Insert the SMTP server port [25]: 
+                        Insert the SMTP login: 
+                        Insert the SMTP password: 
+                        Insert the YUM repositories directory [/etc/yum.repos.d]: 
+                        Insert the priority for the puias-unsupported repository [19]: 
+                        Do you want to generate a configuration file [Y/n]? 
+                        Specify the configuration file path [gen-user-data.conf]: 
+                        Choose a path for the MIME file [user-data]:
+                    \end{lstlisting}
+                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                    \captionof{lstlisting}[Configurazione cloud-init]{Configurazione dei parametri per la recipe cloud-init.}
+                \end{minipage}
+            \end{center}
+            
             Al termine del processo, i valori vengono comunque salvati all'interno di un dizionario python, che sarà poi utilizzato, assieme ai vari template, per generare i file necessari.
         
         \subsection{Generazione dello script bash} \label{subsec:cd;dci;generazione_script_bash}
@@ -68,13 +104,13 @@
             
             Le principali azioni intraprese dallo script, una volta avviata la macchina per la prima volta, sono:
             
-            \begin{itemize}
+            \begin{enumerate}
                 \item scaricare e installare tutti i pacchetti necessari ad Indico;
                 \item installare e configurare Indico;
                 \item installare i certificati \ac{SSL};
                 \item aprire le porte scelte per il web server;
                 \item copiare i file di configurazione nelle cartelle corrispondenti.
-            \end{itemize}
+            \end{enumerate}
             
             Avendo basato lo script su \ac{SL6}, l'installazione di pacchetti aggiuntivi avviene invocando il comando \bash{yum}. L'installazione e la configurazione di Indico avvengono tramite i comandi \bash{easy\_install indico} e \bash{indico\_initial\_setup}, rispettivamente. La copia dei certificati \ac{SSL} e dei file di configurazione e l'apertura delle porte, invece, avvengono tramite semplici comandi per la manipolazione di file in ambiente Linux.
             
@@ -119,9 +155,174 @@
         
         \subsection{Generazione del file cloud-config} \label{subsec:cd;dci;generazione_cloud-config}
         
+            Dopo aver generato lo script bash da inserire nel file \ac{MIME} multiparti finale, lo script \bash{gen-user-data.py} si occupa di generare il file cloud-config, necessario a copiare file sulla macchina cloud che vogliamo avviare. Come per lo script generato nella fase precedente, anche la generazione del file cloud-config si basa su dei template e sull'uso del comando \python{.format()}.
+            
+            Il template del file cloud-config ha la seguente struttura:
+            
+            \begin{center}
+                \begin{minipage}{\linewidth}
+                    \begin{lstlisting}[language=bash, gobble=22]
+                        #cloud-config
+                        
+                        write_files:
+                        -   content: |
+                        {puias_repo_content}
+                            path: /puias.repo
+                        -   content: |
+                        {indico_httpd_conf_content}
+                            path: /indico_httpd.conf
+                        -   content: |
+                        {indico_indico_conf_content}
+                            path: /indico_indico.conf
+                        -   content: |
+                        {redis_conf_content}
+                            path: /redis.conf
+                        -   content: |
+                        {ssl_conf_content}
+                            path: /ssl.conf
+                        {ssl_files}
+                    \end{lstlisting}
+                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                    \captionof{lstlisting}[Struttura del template per cloud-config]{Struttura del file di template per il file cloud-config.}
+                \end{minipage}
+            \end{center}
+            
+            Si vede quindi che per ogni file che dev'essere copiato è presente, nel template, una riga \python{-   content: |}, che serve a delimitare l'inizio di un nuovo file. A seguito è presente un placeholder, che verrà sostituito con il contenuto del file in questione, ed infine la voce \python{path:}, nella quale si indica in che percorso della macchina cloud vorremmo copiare il file. La struttura del file cloud-config è riconosciuta tramite l'indentazione: la stringa \python{-   content: |} non dev'essere indentata, il contenuto del file dev'essere indentato di 8 spazi mentre il percorso finale del file dev'essere indentato di 4 spazi.
+            
+            Per comodità, tutti i file vengono inizialmente copiati nella cartella root \bash{/} del sistema: ci penserà poi lo script bash generato alla fase precedente a copiare i file nelle rispettive cartelle lavorando direttamente sulla macchina cloud.
+            
+            Dal momento che alcuni dei parametri scelti durante la prima fase potrebbero essere necessari anche all'interno dei file da copiare, sono stati scritti dei template per ognuno di questi file. Prima di generare il file cloud-config vero e proprio è quindi necessario generare i vari file che si vogliono copiare, tramite i corrispettivi template ed il comando \python{.format()}, come visto prima.
+            
+            I file da copiare sono file di configurazione, come il file di configurazione di Indico, quello per la configurazione di Apache, o i certificati \ac{SSL}.
+            
+            Una volta generati tutti i file necessari a partire dai template e dai parametri scelti nella prima fase, lo script leggerà il contenuto di ogni file e lo scriverà, con la dovuta indentazione, al posto del placeholder corrispondente nel template del file cloud-config. Il risultato finale sarà quindi il file cloud-config, riempito con il contenuto dei vari file che vogliamo copiare i quali, a loro volta, sono stati compilati con i parametri scelti dall'utente.
+        
         \subsection{Generazione del file \bash{user-data}} \label{subsec:cd;dci;generazione_user-data}
+        
+            Quando finalmente sono stati generati sia lo script bash che il file cloud-init, lo script principale può procedere all'ultima fase, ovvero mettere i due file insieme scrivendoli in un file \ac{MIME} multiparti, che rappresenterà il file \bash{user-data} finale.
+            
+            Per generare \bash{user-data}, creando un nuovo file \ac{MIME} multiparti a partire dai due file generati nelle fasi precedenti, si è usato uno script reso disponibile dagli sviluppatori di cloud-init\footnote{Reperibile all'indirizzo \url{https://github.com/lovelysystems/cloud-init/blob/master/tools/write-mime-multipart}}, detto \bash{write-mime-multipart}.
+            
+            Questo comando, molto semplice, prende come input tutti i file che vogliamo includere nel file finale e richiede anche di specificare il nome e percorso del file che vogliamo venga generato. Quindi, nel nostro caso, il comando finale sarà il seguente:
+            
+            \begin{center}
+                \begin{minipage}{\linewidth}
+                    \begin{lstlisting}[language=bash, gobble=22]
+                        $ ./write-mime-multipart --output user-data user-data-script.sh cloud-config
+                    \end{lstlisting}
+                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                    \captionof{lstlisting}[Comando per la generazione del file MIME multiparti]{Comando per la generazione del file \ac{MIME} multiparti \bash{user-data}.}
+                \end{minipage}
+            \end{center}
+            
+            Chiaramente, lo script principale per la generazione del file \bash{user-data} si occuperà di invocare il comando precedente, assicurandosi di passargli i valori corretti per i vari input. Dopodiché lo script terminerà.
+            
+            Una volta che lo script avrà terminato con successo, l'utente potrà utilizzare il file \bash{user-data} generato per inizializzare e configurare una nuova macchina su cloud in modo completamente automatico, semplicemente specificando il file \bash{user-data} come argomento del comando di boot. Come già accennato in Sezione \ref{sec:p;strumenti_linguaggi}, il comando di boot effettivo, ed il metodo in cui si passa il file \bash{user-data}, cambia a seconda del Cloud Service Provider scelto.
 
     \section{Creazione di immagini virtuali} \label{sec:cd;creazione_immagini_virtuali}
     
+        Il secondo obiettivo del progetto di Cloud Deployment è stato scrivere uno script per la creazione automatica di immagini virtuali già configurate per poter eseguire Indico.
+        
+        Lo script in questione è uno script python fabric che si occuperà di avviare una nuova macchina virtuale, usando due strumenti di virtualizzazione (\ac{QEMU} e \ac{KVM}), e di effettuare le necessarie operazioni all'interno di essa. Tutte i parametri che l'utente può scegliere, come nome e percorso dell'immagine di base o le porte da aprire sulla macchina virtuale, sono raccolti all'interno di un file esterno allo script, chiamato \bash{fabfile.conf}, in modo che l'utente li possa cambiare in modo semplice e veloce.
+        
+        Le task specificate da questo script fabric sono le seguenti:
+        
+        \begin{itemize}
+            \item \python{create_vm_image}: crea un'immagine virtuale con Indico installato e configurato;
+            \item \python{run_vm_debug}: avvia la macchina virtuale e Indico (in modalità debug);
+            \item \python{config_no_cloud}: configura il file di configurazioni ``fasullo'' no-cloud;
+            \item \python{launch_vm}: avvia la macchina virtuale;
+            \item \python{start}: avvia Indico;
+            \item \python{deploy}: esegue tutte le installazioni e configurazioni necessarie per far funzionare Indico sulla macchina virtuale;
+            \item \python{config}: configura Indico e la macchina virtuale;
+            \item \python{vm_config}: configura la macchina virtuale;
+            \item \python{indico_config}: configura Indico;
+            \item \python{indico_inst}: installazione e setup di indico;
+            \item \python{dependencies_inst}: installazione delle dipendenze.
+        \end{itemize}
+        
+        La task principale è ovviamente \python{create_vm_image}, che restituisce un'immagine virtuale con indico Installato e funzionante pronta ad essere avviata o caricata su una struttura cloud. Tutte le altre task sono sotto-task di \python{create_vm_image} che, all'occorrenza, possono essere invocate in modo autonomo.
+        
+        \python{create_vm_image} è divisa in due fasi: nella prima fase si avvia una nuova macchina virtuale a partire da un'immagine virtuale di base; nella seconda si fanno tutte le installazioni e configurazioni necessarie per poter usare Indico sulla macchina virtuale.
+        
+        \subsection{Avvio della macchina virtuale} \label{subsec:cd;civ;avvio_macchina_virtuale}
+        
+            La fase di avvio della macchina virtuale si divide, a sua volta, in due parti: configurazione di un'immagine \bash{.iso} no-cloud e boot della macchina virtuale.
+            
+            La fase no-cloud serve creare un'immagine \bash{.iso} di configurazione per poter avviare la macchina virtuale anche al di fuori da una struttura cloud. Questa fase è necessaria in quanto il sistema operativo \ac{SLC6}, che è stato utilizzato per sviluppare e testare lo script di creazione di immagini virtuali, è un sistema operativo pensato per operare in ambiente cloud e non su ambienti di virtualizzazione locali. Nel nostro caso, invece, l'idea è di avviare una nuova macchina virtuale in locale (usando uno strumento di virtualizzazione) e di effettuare tutte le operazioni necessarie tramite uno script fabric. Quindi è necessario, quando si avvia per la prima volta questa macchina virtuale, ``ingannarla'' in qualche modo, facendole ignorare il fatto che non viene eseguita in ambiente cloud. Per fare questo utilizziamo la funzionalità no-cloud offerta dal modulo cloud-init\footnote{Si veda \url{http://cloudinit.readthedocs.org/en/latest/topics/datasources.html\#no-cloud}.} che abbiamo descritto nella Sezione precedente. Senza scendere nel dettaglio, questa fase genera due file, \bash{user-data} e \bash{meta-data}, e li archivia all'interno di un'immagine in formato \bash{.iso}. Quest'immagine, che chiameremo \bash{init.iso}, verrà passata, nella fase successiva, al comando di boot della macchina virtuale per poterla avviare senza problemi anche in ambienti di virtualizzazione locali.
+            
+            Una volta creato il file \bash{init.iso} per attivare la funzionalità no-cloud, lo script potrà finalmente avviare la macchina virtuale. Il comando per l'avvio è il seguente:
+            
+            \begin{center}
+                \begin{minipage}{\linewidth}
+                    \begin{lstlisting}[language=bash, gobble=22]
+                        $ kvm -m 256 -redir tcp:2222::22 -net nic -net user, -drive file=slc6_cern_x86_64.qcow2,if=virtio -drive file=init.iso,if=virtio -serial file:qemu-output.log &
+                    \end{lstlisting}
+                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                    \captionof{lstlisting}[Avvio della macchina virtuale]{Comando per l'avvio della macchina virtuale utilizzando \ac{QEMU} e \ac{KVM}.}
+                \end{minipage}
+            \end{center}
+            
+            Con l'opzione \bash{-drive file=} si specificano le immagini virtuali da usare come input: in questo caso utilizziamo \bash{slc6_cern_x86_64.qcow2}, che è l'immagine virtuale di base con installato \ac{SLC6}, e \bash{init.iso}, che permette di attivare il no-cloud. L'opzione \bash{-redir} serve ad associare le porte specificate, in modo da permettere la comunicazione tra la macchina locale e la macchina virtuale tramite quelle porte (nello specifico quelle sono le porte relative al protocollo \ac{SSH}). Infine, l'opzione \bash{-serial file:} permette di specificare un file di log, dove verrà salvato l'output del terminale della macchina virtuale, mentre il simbolo \bash{&} finale serve a lanciare il comando in background, in modo da lasciare la shell libera e non bloccare l'esecuzione dello script.
+            
+            Il file di log passato al comando \bash{kvm} è molto importante, in quanto consente allo script fabric di sapere quando la macchina virtuale ha terminato la fase di booting, in modo da poter proseguire ed effettuare le azioni sulla macchina necessarie. Lo script fabric, infatti, non può eseguire azioni come installare pacchetti aggiuntivi o installare Indico finché la macchina si sta ancora avviando. D'altro canto, la macchina virtuale non ha alcun modo diretto per comunicare allo script fabric quando la fase di booting è finita. L'idea è stata quindi quella di far loggare l'output del terminale della macchina virtuale sul file di log specificato e far leggere il file allo script fabric in continuazione finché non viene rilevata la fine del boot, nel qual caso lo script può continuare la sua esecuzione. Nello specifico, per capire quando la fase di boot è terminata o meno, è bastato fare un boot di prova e andare a vedere qual era l'ultima riga scritta sul file di log durante la fase di booting e quindi far controllare allo script fabric se tale stringa è presente o meno nel file di log: se la stringa compare nel log, allora lo script può procedere con l'esecuzione, altrimenti aspetta 5 secondi e poi ricontrolla. Il comando relativo a questa procedura è il seguente:
+            
+            \begin{center}
+                \begin{minipage}{\linewidth}
+                    \begin{lstlisting}[language=bash, gobble=22]
+                        $ while ! grep -q "Starting atd:.*[.*OK.*]" "qemu-output.log"; do sleep 5; done
+                    \end{lstlisting}
+                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                    \captionof{lstlisting}[Comando di attesa della terminazione del boot]{Comando di attesa della terminazione del boot della macchina virtuale.}
+                \end{minipage}
+            \end{center}
+            
+            Prima di passare alla fase successiva, osserviamo che l'immagine di base, nell'esempio \bash{slc6_cern_x86_64.qcow2}, deve essere ottenuta dall'utente in maniera autonoma, ad esempio scaricandola tramite il sito ufficiale del sistema operativo scelto.
+            
+        \subsection{Configurazione della macchina virtuale} \label{subsec:cd;civ;configurazione_macchina_virtuale}
+        
+            Durante la fase di configurazione della macchina virtuale lo script esegue tutte quelle istruzioni necessarie ad installare pacchetti aggiuntivi e ad installare e configurare Indico e la macchina virtuale affinché Indico sia pienamente utilizzabile al termine.
+            
+            Le istruzioni eseguite in questa fase dallo script fabric sono quindi del tutto analoghe e speculari a quelle eseguite dallo script bash che avevamo descritto nella Sezione \ref{sec:cd;deployment_cloud-init} per il deployment di Indico su cloud tramite cloud-init. Non staremo quindi a ripetere le azioni intraprese dallo script in questa fase, essendo del tutto uguali a quelle dello script bash già descritto.
+            
+            Le uniche differenze riguardano il fatto che, in questo caso, le istruzioni sono eseguite tramite uno script fabric. Quindi tutte le istruzioni eseguite dallo script bash in modo diretto dovranno adesso essere eseguite dallo script fabric in remoto, ovvero tramite il comando \python{run()}. Inoltre, non sarà più necessario, come prima, aver bisogno di copiare i file sulla macchina virtuale tramite meccanismi come cloud-config (sempre visto nella Sezione precedente): in questo caso, grazie a Fabric, sarà sufficiente eseguite il comando \python{put()} che si occuperà si copiare i file richiesti al momento in cui lo script lo richiede.
+            
+            Riguardo al comando \python{put()} è stata tuttavia necessaria una modifica in quanto esso non supporta, al momento, di passare un link simbolico come percorso di destinazione del file. Per aggiungere il supporto a link simbolici, abbiamo inserito la seguente variante del comando, da utilizzare al posto di \python{put()}:
+            
+            \begin{center}
+                \begin{minipage}{\linewidth}
+                    \begin{lstlisting}[language=python, gobble=22]
+                        def _putl(source_file, dest_dir):
+                            """
+                            To be used instead of put, since it doesn't support symbolic links
+                            """
+                        
+                            put(source_file, '/')
+                            run("mkdir -p {0}".format(dest_dir))
+                            run("mv -f /{0} {1}".format(os.path.basename(source_file), dest_dir))
+                    \end{lstlisting}
+                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                    \captionof{lstlisting}[Comando \python{put()} per link simbolici]{Variante del comando \python{put()} per l'utilizzo di link simbolici come destinazione.}
+                \end{minipage}
+            \end{center}
+            
+            Al termine dell'esecuzione dello script, l'immagine virtuale di base risulterà aggiornata con l'installazione e la configurazione di Indico (e di tutte le componenti necessarie ad Indico) e sarà pronta per essere utilizzata in locale (tramite strumenti di virtualizzazione) o su una struttura cloud.
+    
     \section{Script di gestione remota} \label{sec:cd;script_gestione_remota}
+    
+        L'ultima parte di questo progetto riguarda lo script di gestione remota di macchine cloud per l'esecuzione di Indico. Questo script non era previsto tra gli obiettivi iniziali del progetto, ma è stato scritto, per motivi pratici, durante la stesura degli altri due script e alla fine, data la sua utilità, si è deciso di includerlo nella versione finale del codice del progetto di Cloud Deployment.
+        
+        Lo script di gestione remota è uno script fabric che definisce delle task per la gestione e la configurazione in remoto di Indico e di tutte le componenti ad esso connesse. Può capitare, ad esempio, che l'utente decida, in un certo momento, di voler cambiare l'indirizzo del web server su cui gira Indico, o le porte tramite le quali si accede ai vari servizi, o magari vuol semplicemente arrestare Indico e farlo ripartire in un secondo momento. Tutto questo sarebbe già possibile, ma sarebbe necessario che l'utente acceda alla macchina remota, ad esempio tramite \ac{SSH}, e dal terminale esegua i vari comandi manualmente. Questa procedura può essere tediosa e complicata e potrebbe anche dar luogo a errori. Per questo motivo è stato scritto questo script di gestione remota che definisce una serie di task, che l'utente può eseguire, che rappresentano i comandi principali che l'utente può voler eseguire sulla macchina remota e su Indico.
+        
+        Di seguito elenchiamo le task implementate, senza scendere ulteriormente in dettaglio:
+        
+        \begin{itemize}
+            \item \python{restart}: permette di riavviare una o più componenti di Indico (valori accettati sono \python{redis}, \python{db}, \python{httpd} e \python{postfix});
+            \item \python{start}: avvia una o più componenti di Indico (accetta gli stessi valori di \python{restart});
+            \item \python{config}: configura la macchina virtuale con tutte le informazioni necessarie;
+            \item \python{update_smtp}: aggiorna la configurazione di Indico per \acr{SMTP};
+            \item \python{update_redis}: aggiorna la configurazione di Indico riguardante Redis;
+            \item \python{update_server}: aggiorna le configurazioni del web server (come hostname e porte);
+            \item \python{load_ssl}: carica dei nuovi certificati \ac{SSL}.
+        \end{itemize}
     

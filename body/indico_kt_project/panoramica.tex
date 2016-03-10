@@ -20,6 +20,10 @@
     	
     	\subsection{Cloud Deployment} \label{subsec:p;pp;cloud}
     	
+        	La prima fase del Progetto KT riguardava il Cloud Deployment di Indico, ovvero l'automatizzazione del processo di installazione e configurazione di Indico sia in ambiente cloud che in ambiente virtuale.
+        	
+        	Il progetto è durato circe un mese e mezzo, dal 23 Ottobre 2013 al 9 Dicembre 2013, ed ha portato alla scrittura di due script fabric, uno per la creazione di immagini virtuali ed uno di gestione remota, ed una recipe cloud-init, per il deployment su struttura cloud.
+    	
     	\subsection{Distribuzione e Packaging} \label{subsec:p;pp:distribuzione}
     	
     	\subsection{Instance Tracker} \label{subsec:p;pp;instance_tracker}
@@ -77,8 +81,52 @@
                 \item file cloud-config.
             \end{itemize}
             
-            In particolare, i file gzip possono essere utili per ridurre le dimensioni del file \bash{user-data}, essendo questo limitato a 16KB. I file MIME servono a raggruppare tanti altri file dei tipi sopra citati in un unico file. I file di script servono ad eseguire una serie di comandi subito dopo il primo boot, mentre i file cloud-config sono particolari file utilizzati per copiare file in remoto sulla macchina sul cloud oppure per installare tutti i pacchetti aggiuntivi necessari.
+            In particolare, i file gzip possono essere utili per ridurre le dimensioni del file \bash{user-data}, essendo questo limitato a 16KB. I file \ac{MIME} multiparti sono tipi di file composti che servono a raggruppare altri file, dei tipi sopra citati, in un unico file. I file di script servono ad eseguire una serie di comandi subito dopo il primo boot, mentre i file cloud-config sono particolari file utilizzati per copiare file in remoto sulla macchina sul cloud oppure per installare tutti i pacchetti aggiuntivi necessari.
             
-            Come vedremo nel Capitolo \ref{chap:cloud_deployment}, le recipe cloud-init sono state molto utili per la fase di cloud deployment di Indico.
+            Come vedremo nel Capitolo \ref{chap:cloud_deployment}, le recipe cloud-init sono state molto utili per la fase di Cloud Deployment di Indico.
                     
         \subsection{Fabric} \label{subsec:p;sl;fabric}
+        
+            Fabric è una ``libreria Python e uno strumento da linea di comando per rendere più semplice l'uso di \acr{SSH} per applicazioni di deployment o operazioni di amministrazione di sistema''. \cite{fabric:documentation}
+            
+        	\begin{figure}[h!]
+        		\begin{center}
+        			\includegraphics[scale=1]{fabric_logo.png}
+        		\end{center}
+        		\caption[Logo di Fabric]{Logo di Fabric.}
+        		\label{fig:fabric_logo}
+        	\end{figure}
+            
+            Fabric fornisce una serie di comandi per l'esecuzione sia locale che remota di comandi shell (normali o tramite \bash{sudo}), per l'upload o il download di file o per l'esecuzione di operazioni ausiliare, come richiedere un input all'utente o bloccare l'esecuzione di un'operazione in esecuzione.
+            
+            Uno script fabric è quindi un semplice script python, dove però si possono utilizzare tutti i comandi messi a disposizione da Fabric. Due comandi fabric molto importanti sono \python{local(cmd)} e \python{run(cmd)}. Entrambi i comandi eseguono il comando \python{cmd} passato come argomento come comando shell, l'unica differenza tra i due è che \python{local(cmd)} esegue \python{cmd} in locale, ovvero sulla macchina che sta eseguendo lo script fabric, mentre \python{run(cmd)} esegue \python{cmd} su una macchina remota, opportunamente specificata. Inoltre un altro comando molto utile è il comando \python{put(file, dest)} che permette di copiare il file \python{file}, che si trova sulla macchina locale, nella destinazione \python{dest} all'interno della macchina remota, quindi mimando il comportamento del comando \bash{scp} di bash.
+            
+            Per permettere una stesura più semplice e meno ridondante di uno script fabric, è possibile specificare alcune opzioni in un particolare dizionario, detto \textit{ambiente} e denotato dalla variabile \python{env}, in modo da non doverle ripetere ogni volta che si invoca un comando fabric. Ad esempio specificando un valore per il campo \python{env.hosts} possiamo definire una volta per tutte l'indirizzo di tutte le macchine remote su cui vogliamo eseguire i comandi passati a \python{run()}, senza dover stare a ripeterli inutilmente ogni volta.
+            
+            Ogni script fabric deve specificare delle operazioni, dette \textit{task}, che possono poi essere eseguite da linea di comando. Ogni task è una funzione python contrassegnata dal decoratore \python{@task}, che contrassegna le task (operazioni che possono essere eseguite dall'utente), da funzioni interne dello script.
+            
+            Per poter essere eseguito, uno script fabric deve essere chiamato \bash{fabfile.py}. Per eseguire quindi uno script fabric basta eseguire un comando della forma seguente:
+            
+            \begin{center}
+                \begin{minipage}{\linewidth}
+                    \begin{lstlisting}[language=bash, gobble=22]
+                        $ fab task1 task2
+                    \end{lstlisting}
+                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                    \captionof{lstlisting}[Esecuzione task fabric (esempio)]{Esempio dell'esecuzione di due task fabric.}
+                \end{minipage}
+            \end{center}
+            
+            Un comando come quello appena mostrato esegue prima la task \bash{task1} e quindi \bash{task2} definite nel file \bash{fabfile.py}.
+            
+            Fabric verrà utilizzato, all'interno del progetto di Cloud Deployment, per la stesura sia di uno script per la creazione automatica di immagini virtuali, che di uno script per la gestione remota di macchine cloud.
+        
+        \subsection{QEMU e KVM} \label{subsec:p;sl;qemu_kvm}
+        
+            \acr{QEMU} è un emulatore e strumento di virtualizzazione open source. \acr{KVM} invece è anch'esso uno strumento di virtualizzazione e fornisce anche delle funzionalità di accelerazione hardware per sistemi Linux.
+            
+            \ac{QEMU} e \ac{KVM} possono essere utilizzati in congiunzione, tant'è che \ac{KVM} viene distribuito da anni assieme a \ac{QEMU}. Si potrebbe pensare di utilizzare soltanto uno di questi due strumenti per lavorare con macchine virtuali, tuttavia, anche se \ac{QEMU} fornisce un sistema di virtualizzazione completo e a se stante, per applicazioni pratiche è spesso necessario affiancargli \ac{KVM} per migliorarne le performance. D'altro canto, \ac{KVM} soltanto non fornisce tutte le funzionalità di un ambiente di virtualizzazione completo come \ac{QEMU}.
+            
+            \ac{QEMU} e \ac{KVM} sono stati utilizzati durante la fase di Cloud Deployment del progetto, ed in particolare nello script di creazione di immagini virtuali, come vedremo all'interno del Capitolo \ref{chap:cloud_deployment}.
+            
+            Per maggiori informazioni su \ac{QEMU} e \ac{KVM} si consultino \cite{kvm:wiki} e \cite{qemu:wiki}.
