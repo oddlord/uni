@@ -16,7 +16,7 @@
     	
     	Gli obiettivi prefissati col Progetto KT erano quindi molto ampi e generali e, come ci può immaginare, anche piuttosto complessi da mettere in pratica. Per questa ragione il progetto che è stato assegnato al sottoscritto non era che il primo di una serie di progetti, finanziati dal gruppo \ac{KT}, al fine di migliorare l'impatto a livello mondiale del software Indico. Infatti, al durante il periodo di 14 mesi passati a Ginevra dal sottoscritto, erano stati approvati e finanziati già due progetti dal gruppo \ac{KT} per Indico: il primo, assegnato al sottoscritto, ed un secondo da assegnare ad un futuro membro del team Indico, molto probabilmente un altro Techical Student.
     	
-    	Il primo Progetto KT per Indico è stato quindi pianificato e suddiviso in una serie di sotto-progetti, i quali dovevano essere terminati durante i 14 mesi del programma Technical Student. Quattro di questi sotto-progetti sono risultati essere più importanti e complessi degli altri ed sono andati ad occupare gran parte del periodo di Technical Student. Di seguito ne parleremo brevemente per avere un'idea generale dei progetti principali del KT Project, mentre nei Capitoli successivi vedremo in dettaglio ognuno di essi.
+    	Il primo Progetto KT per Indico è stato quindi pianificato e suddiviso in una serie di sotto-progetti, i quali dovevano essere terminati durante i 12 (poi diventati 14) mesi del programma Technical Student (si veda \cite{pedro:gist} per la prima stesura del progetto). Quattro di questi sotto-progetti sono risultati essere più importanti e complessi degli altri ed sono andati ad occupare gran parte del periodo di Technical Student. Di seguito ne parleremo brevemente per avere un'idea generale dei progetti principali del KT Project, mentre nei Capitoli successivi vedremo in dettaglio ognuno di essi.
     	
     	\subsection{Cloud Deployment} \label{subsec:p;pp;cloud}
     	
@@ -33,23 +33,21 @@
     \section{Strumenti e linguaggi} \label{sec:p;strumenti_linguaggi}
     
         Con questa ultima Sezione introduttiva, intendiamo fornire al lettore una serie di conoscenze e nozioni di base utili a capire il lavoro svolto con questo progetto. Indico infatti è composto da molti linguaggi diversi ed utilizza molti strumenti, sviluppati da terzi, senza i quali non potrebbe funzionare. È necessario quindi sapere quali sono e cosa fanno ognuno di questi strumenti, nonché essere a conoscenza dei linguaggi utilizzati.
+        
+        \subsection{Github} \label{subsec:p;sl;github}
     
         \subsection{Python} \label{subsec:p;sl;python}
-        
-            DA FARE: DESCRIZIONE PYTHON!!!
         
             Un importante comando offerto da python è \python{.format()}: questa funzione sostituisce a degli speciali \textit{placeholder} (o segnaposti, in italiano), presenti nell'oggetto stringa sul quale viene eseguito, i valori associati ad ogni placeholder tramite un particolare dizionario, passato come unico argomento. I placeholder sono parole chiave, che identificano un parametro in modo univoco, racchiuse tra parentesi graffe. Il comando \python{.format()} funziona quindi come segue:
             
             \begin{center}
-                \begin{minipage}{\linewidth}
-                    \begin{lstlisting}[language=python, gobble=22]
-                        data = {'first': 'Hodor', 'last': 'Hodor!'}
-                        template = '{first} {last}'
-                        result = template.format(**data)
-                    \end{lstlisting}
-                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
-                    \captionof{lstlisting}[Comando \python{.format()} (esempio)]{Esempio del funzionamento del comando \python{.format()}.}
-                \end{minipage}
+                \begin{lstlisting}[language=python, gobble=18]
+                    data = {'first': 'Hodor', 'last': 'Hodor!'}
+                    template = '{first} {last}'
+                    result = template.format(**data)
+                \end{lstlisting}
+                \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                \captionof{lstlisting}[Comando \python{.format()} (esempio)]{Esempio del funzionamento del comando \python{.format()}.}
             \end{center}
             
             Il risultato salvato in \python{result} sarà quindi la stringa \python{'Hodor Hodor!'}.
@@ -63,13 +61,11 @@
             Per utilizzare una cloud-init recipe, è sufficiente specificare il file \bash{user-data} generato quando si avvia il server sul cloud per la prima volta. Il comando da usare varia a seconda del Cloud Service Provider scelto. Per infrastrutture cloud basate su tecnologia OpenStack, ad esempio, è sufficiente eseguire il seguente comando da terminale:
             
             \begin{center}
-                \begin{minipage}{\linewidth}
-                    \begin{lstlisting}[language=bash, gobble=22]
-                        $ nova boot --image ubuntu-cloudimage --flavor 1 --user-data user-data
-                    \end{lstlisting}
-                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
-                    \captionof{lstlisting}[Boot con cloud-init (esempio OpenStack)]{Esempio di comando di boot con cloud-init per infrastrutture basate su OpenStack.}
-                \end{minipage}
+                \begin{lstlisting}[language=bash, gobble=18]
+                    $ nova boot --image ubuntu-cloudimage --flavor 1 --user-data user-data
+                \end{lstlisting}
+                \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                \captionof{lstlisting}[Boot con cloud-init (esempio OpenStack)]{Esempio di comando di boot con cloud-init per infrastrutture basate su OpenStack.}
             \end{center}
             
             Tramite il file \bash{user-data} è possibile passare al modulo cloud-init una serie di file in diversi formati supportati, tra i quali:
@@ -108,13 +104,11 @@
             Per poter essere eseguito, uno script fabric deve essere chiamato \bash{fabfile.py}. Per eseguire quindi uno script fabric basta eseguire un comando della forma seguente:
             
             \begin{center}
-                \begin{minipage}{\linewidth}
-                    \begin{lstlisting}[language=bash, gobble=22]
-                        $ fab task1 task2
-                    \end{lstlisting}
-                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
-                    \captionof{lstlisting}[Esecuzione task fabric (esempio)]{Esempio dell'esecuzione di due task fabric.}
-                \end{minipage}
+                \begin{lstlisting}[language=bash, gobble=18]
+                    $ fab task1 task2
+                \end{lstlisting}
+                \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                \captionof{lstlisting}[Esecuzione task fabric (esempio)]{Esempio dell'esecuzione di due task fabric.}
             \end{center}
             
             Un comando come quello appena mostrato esegue prima la task \bash{task1} e quindi \bash{task2} definite nel file \bash{fabfile.py}.
@@ -130,3 +124,23 @@
             \ac{QEMU} e \ac{KVM} sono stati utilizzati durante la fase di Cloud Deployment del progetto, ed in particolare nello script di creazione di immagini virtuali, come vedremo all'interno del Capitolo \ref{chap:cloud_deployment}.
             
             Per maggiori informazioni su \ac{QEMU} e \ac{KVM} si consultino \cite{kvm:wiki} e \cite{qemu:wiki}.
+            
+        \subsection{Virtualenv} \label{subsec:p;sl;virtualenv}
+        
+        \subsection{Requests} \label{subsec:p;sl;requests}
+        
+        \subsection{Twitter Bootstrap} \label{subsec:p;sl;twitter_bootstrap}
+        
+        \subsection{Flask} \label{subsec:p;sl;flask}
+        
+            TODO: parlare di \python{route()} e \python{render_template()}
+        
+        \subsection{Celery} \label{subsec:p;sl;celery}
+        
+        \subsection{PostgreSQL e SQLAlchemy} \label{subsec:p;sl;postgreSQL_SQLAlchemy}
+        
+        \subsection{Jinja2} \label{subsec:p;sl;jinja2}
+        
+        \subsection{jqPlot} \label{subsec:p;sl;jqplot}
+        
+        \subsection{jVectorMap} \label{subsec:p;sl;jvectormap}

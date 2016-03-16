@@ -1,1 +1,52 @@
 \chapter{Distribuzione e Packaging} \label{chap:distribuzione_packaging}
+
+    Il software Indico, come già accennato, è un software open source, principalmente sviluppato al \ac{CERN}. Il codice di Indico viene aggiornato regolarmente, producendo ogni volta nuove versioni di Indico. Data la vastità della community di Indico, ogni volta che viene rilasciata una nuova versione il team di Indico al \ac{CERN} deve occuparsi di creare una distribuzione di Indico relativa a quella versione e quindi di distribuirla attraverso i principali canali di comunicazione. Non solo, un amministratore di una qualche istanza Indico, o magari uno sviluppatore esterno al gruppo Indico al \ac{CERN}, potrebbe sentire il bisogno di creare una distribuzione di una specifica versione di Indico per testarla o per caricarla dove più desidera. Inoltre uno sviluppatore potrebbe avere bisogno di creare diverse distribuzioni per diverse versioni di Python o anche distinguere tra distribuzione del codice sorgente e distribuzione binaria precompilata, pronto ad essere eseguita.
+    
+    Creare una nuova distribuzione ogni volta, personalizzandola alle proprie esigenze, e distribuirla su uno o più canali, risulta essere un processo tedioso e ripetitivo, specialmente se, per motivi di testing, si è costretti a generare molte distribuzioni in rapida successione.
+    
+    Con questa seconda fase del Progetto KT per Indico si è cercato proprio di risolvere questo problema, cercando di automatizzare e parametrizzare il processo di generazione e diffusione di una distribuzione Indico.
+    
+    L'obiettivo di questo progetto era quindi quello di scrivere uno script che automatizzasse:
+    
+    \begin{itemize}
+        \item la creazione di distribuzioni di diverse versioni di Indico,
+        \begin{itemize}
+            \item sia del codice sorgente (Tarball),
+            \item che precompilata (Python Egg);
+        \end{itemize}
+        \item la creazione di distribuzioni binarie per diverse versioni di Python;
+        \item l'upload della distribuzione
+        \begin{itemize}
+            \item su un server
+            \item e su Github.
+        \end{itemize}
+    \end{itemize}
+    
+    Lo script in questione è uno script Fabric (si veda la Sezione \ref{sec:p;strumenti_linguaggi}), denominato \bash{fabfile.py}, che è stato includo nel codice sorgente del progetto principale di Indico\footnote{\url{https://github.com/indico/indico}.}
+    L'esecuzione di questo script si divide in due fasi: nella prima si genera la distribuzione secondo i parametri richiesti, mentre nella seconda si effettua l'upload della distribuzione generata su un server specificato o su un repository Github. Vediamo, nelle Sezioni seguenti, come funzionano queste due fasi.
+    
+    \section{Generazione di una distribuzione} \label{sec:dp;generazione_distribuzione}
+    
+        Durante la prima fase dello script di packaging, viene effettuata la generazione della distribuzione. Ad ogni esecuzione lo script permette di specificare la versione di Indico rispetto alla quale vogliamo creare la distribuzione ed una o più versioni di Python rispetto alle quali vogliamo creare le distribuzioni binarie.
+        
+        Lo script, innanzitutto, si preoccupa di selezionare i file sorgenti relativi alla versione Indico selezionata. Per far questo effettua un \bash{git clone}, nel caso in cui il repository non sia presente in locale, oppure un semplice \bash{git checkout} nel caso contrario.
+        
+        Una volta selezionata la versione desiderata di Indico (\bash{master} se non viene indicato niente) lo script procede a generare la distribuzione dei sorgenti (tarball) e la/e distribuzione/i binaria/e per ogni versione Python selezionata (sotto forma di Python Egg).
+        
+        Per generare la distribuzione dei sorgenti, lo script installa e configura le dipendenze esterne di Indico e quindi procede con l'invocare il comando \python{sdist} del modulo \python{setuptools} \cite{python:sdist}, che si occupa di generare una distribuzione dei sorgenti (il formato di default è \bash{.tar.gz}, ovvero una tarball).
+        
+        La generazione delle distribuzioni binarie è molto simile, con l'unica differenza che viene generata una distribuzione per ogni versione Python selezionata. In particolare, lo script utilizzerà di volta in volta un compilatore Python differente, a seconda della versione scelta, e, per ognuno di essi, invocherà il comando \python{bdist_egg}, del modulo \python{setuptools} \cite{python:bdist}, che genera una nuova distribuzione binaria sotto forma di Python Egg.
+    
+    \section{Upload della distribuzione} \label{sec:dp;upload_distribuzione}
+    
+        Una volta generate le distribuzioni desiderate, l'utente può scegliere se caricarle su Github, su un server oppure su entrambi. Vediamo come sono stati implementati i due procedimenti.
+        
+        \subsection{Upload su Github} \label{subsec:dp;ud;upload_github}
+        
+            La fase di upload su repository Github prevede innanzitutto che l'utente specifichi un username e password validi per poter accedere al repository richiesto. Alternativamente alla password, l'utente può anche specificare un token OAuth valido.
+            
+            Una volta assicuratosi che le credenziali sono valide, lo script effettua dei controlli, tramite \python{requests}, per vedere se la release corrispondente alla versione Indico selezionata è già presente o meno sul repository. Nel caso in cui sia già presente, e l'utente abbia settato a \python{True} il parametro \python{overwrite}, allora si procede a sovrascrivere gli asset della release già esistente con le nuove distribuzioni generate. Altrimenti si crea una nuova release e si caricano tutte le distribuzioni direttamente.
+        
+        \subsection{Upload su un server} \label{subsec:dp;ud;upload_server}
+        
+            L'upload a server è ancora più semplice in quanto richiede soltanto di specificare l'indirizzo e la porta di accesso del server e i dati di autenticazione (username e chiave \ac{SSH}). Quindi lo script si limiterà ad invocare il comando \python{put()} di Fabric per copiare le distribuzioni generate nel percorso specificato sul server remoto.

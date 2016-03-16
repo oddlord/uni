@@ -61,37 +61,35 @@
             Eseguendo lo script \bash{gen-user-data.py} l'utente si troverà quindi a dover impostare i seguenti parametri (si noti che per ogni voce è presentato un valore di default, per il quale basta premere Enter):
             
             \begin{center}
-                \begin{minipage}{\linewidth}
-                    \begin{lstlisting}[language=bash, gobble=22]
-                        $ python gen-user-data.py 
-                        Do you want to use a configuration file [y/N]? 
-                        Insert the Indico installation directory path [/opt/indico]: 
-                        Insert the Indico DB installation directory path [/opt/indico/db]: 
-                        Insert the Apache conf directory [/etc/httpd/conf]: 
-                        Insert the Apache confd directory [/etc/httpd/conf.d]: 
-                        Insert the SSL cert directory [/etc/ssl/certs]: 
-                        Insert the SSL private directory [/etc/ssl/private]: 
-                        Do you want to load a personal SSL certificate [y/N]? 
-                        Insert the http port [80]: 
-                        Insert the https port [443]: 
-                        Insert the hostname: 
-                        Insert the iptables path [/etc/sysconfig/iptables]: 
-                        Insert the Redis hostname [localhost]: 
-                        Insert the Redis port [6379]: 
-                        Insert the Redis password: 
-                        Do you want to use Postfix as mail server [Y/n]? 
-                        Insert the SMTP server port [25]: 
-                        Insert the SMTP login: 
-                        Insert the SMTP password: 
-                        Insert the YUM repositories directory [/etc/yum.repos.d]: 
-                        Insert the priority for the puias-unsupported repository [19]: 
-                        Do you want to generate a configuration file [Y/n]? 
-                        Specify the configuration file path [gen-user-data.conf]: 
-                        Choose a path for the MIME file [user-data]:
-                    \end{lstlisting}
-                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
-                    \captionof{lstlisting}[Configurazione cloud-init]{Configurazione dei parametri per la recipe cloud-init.}
-                \end{minipage}
+                \begin{lstlisting}[language=bash, gobble=18]
+                    $ python gen-user-data.py 
+                    Do you want to use a configuration file [y/N]? 
+                    Insert the Indico installation directory path [/opt/indico]: 
+                    Insert the Indico DB installation directory path [/opt/indico/db]: 
+                    Insert the Apache conf directory [/etc/httpd/conf]: 
+                    Insert the Apache confd directory [/etc/httpd/conf.d]: 
+                    Insert the SSL cert directory [/etc/ssl/certs]: 
+                    Insert the SSL private directory [/etc/ssl/private]: 
+                    Do you want to load a personal SSL certificate [y/N]? 
+                    Insert the http port [80]: 
+                    Insert the https port [443]: 
+                    Insert the hostname: 
+                    Insert the iptables path [/etc/sysconfig/iptables]: 
+                    Insert the Redis hostname [localhost]: 
+                    Insert the Redis port [6379]: 
+                    Insert the Redis password: 
+                    Do you want to use Postfix as mail server [Y/n]? 
+                    Insert the SMTP server port [25]: 
+                    Insert the SMTP login: 
+                    Insert the SMTP password: 
+                    Insert the YUM repositories directory [/etc/yum.repos.d]: 
+                    Insert the priority for the puias-unsupported repository [19]: 
+                    Do you want to generate a configuration file [Y/n]? 
+                    Specify the configuration file path [gen-user-data.conf]: 
+                    Choose a path for the MIME file [user-data]:
+                \end{lstlisting}
+                \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                \captionof{lstlisting}[Configurazione cloud-init]{Configurazione dei parametri per la recipe cloud-init.}
             \end{center}
             
             Al termine del processo, i valori vengono comunque salvati all'interno di un dizionario python, che sarà poi utilizzato, assieme ai vari template, per generare i file necessari.
@@ -121,34 +119,30 @@
             Un'altra problematica era legata al comando di configurazione di Indico, \bash{indico\_initial\_setup}, che richiede all'utente di scegliere alcuni valori per configurare correttamente Indico. Nel nostro caso questi valori sono già stati scelti durante la fase di configurazione esposta prima, quindi devono essere passati in modo automatico al comando \bash{indico\_initial\_setup}. La soluzione è far stampare questi valori al terminale tramite il comando \bash{echo} e quindi concatenare \bash{echo} con \bash{indico\_initial\_setup}. Il risultato è il comando seguente:
             
             \begin{center}
-                \begin{minipage}{\linewidth}
-                    \begin{lstlisting}[language=bash, gobble=22]
-                        $ echo -e "{indico_inst_dir}\nc\ny\n{db_inst_dir}" | indico_initial_setup
-                    \end{lstlisting}
-                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
-                    \captionof{lstlisting}[Configurazione automatica di Indico]{Configurazione automatica di Indico con template.}
-                \end{minipage}
+                \begin{lstlisting}[language=bash, gobble=18]
+                    $ echo -e "{indico_inst_dir}\nc\ny\n{db_inst_dir}" | indico_initial_setup
+                \end{lstlisting}
+                \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                \captionof{lstlisting}[Configurazione automatica di Indico]{Configurazione automatica di Indico con template.}
             \end{center}
             
-            Si notino i due template \bash{\{indico\_inst\_dir\}} e \bash{\{db\_inst\_dir\}} che stanno a indicare, rispettivamente, il percorso in cui l'utente vuole installare Indico e in cui vuole installare il \ac{DB}.
+            Si notino i due placeholder \bash{\{indico\_inst\_dir\}} e \bash{\{db\_inst\_dir\}} che stanno a indicare, rispettivamente, il percorso in cui l'utente vuole installare Indico e in cui vuole installare il \ac{DB}.
             
             Infine è sorto il problema di dover far eseguire alcune istruzioni allo script come utente root, ovvero tramite il comando \bash{sudo}. Il problema è che lo script non viene eseguito dall'utente, ma dal modulo cloud-init all'avvio della macchina sul cloud, senza possibilità di avere permessi da root. La soluzione è stata trovata utilizzando il comando \bash{visudo} e andando a modificare il file \bash{etc/sudoers} per permettere di eseguire \bash{sudo} anche in assenza di \acr{TTY}, ovvero una console. Il risultato\footnote{Si vedano \url{http://serverfault.com/questions/324415/running-sudo-commands-in-cloud-init-script} e \url{http://stackoverflow.com/questions/323957/how-do-i-edit-etc-sudoers-from-a-script}.} è il seguente frammento di codice che abilita il comando \bash{sudo} anche all'interno di script cloud-init:
             
             \begin{center}
-                \begin{minipage}{\linewidth}
-                    \begin{lstlisting}[language=bash, gobble=22]
-                        touch /etc/sudoers.tmp
-                        cp /etc/sudoers /tmp/sudoers.new
-                        find_replace /tmp/sudoers.new "Defaults    requiretty" "Defaults    !requiretty"
-                        visudo -c -f /tmp/sudoers.new
-                        if [ "$?" -eq "0" ]; then
-                            cp /tmp/sudoers.new /etc/sudoers
-                        fi
-                        rm /etc/sudoers.tmp
-                    \end{lstlisting}
-                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
-                    \captionof{lstlisting}[Abilitazione di \bash{sudo} per script cloud-init]{Abilitazione del comando \bash{sudo} per script cloud-init senza console.}
-                \end{minipage}
+                \begin{lstlisting}[language=bash, gobble=18]
+                    touch /etc/sudoers.tmp
+                    cp /etc/sudoers /tmp/sudoers.new
+                    find_replace /tmp/sudoers.new "Defaults    requiretty" "Defaults    !requiretty"
+                    visudo -c -f /tmp/sudoers.new
+                    if [ "$?" -eq "0" ]; then
+                        cp /tmp/sudoers.new /etc/sudoers
+                    fi
+                    rm /etc/sudoers.tmp
+                \end{lstlisting}
+                \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                \captionof{lstlisting}[Abilitazione di \bash{sudo} per script cloud-init]{Abilitazione del comando \bash{sudo} per script cloud-init senza console.}
             \end{center}
             
             Ricapitolando, dopo aver generato lo script effettivo sostituendo i parametri ai rispettivi placeholder nel template, e con le dovute accortezze per rendere il tutto completamente automatico, il risultato è uno script che, durante il primo avvio della macchina sul cloud, si occuperà di effettuare tutte le azioni necessarie ad installare e configurare Indico, senza che l'utente debba fare niente. L'unica cosa di cui ha bisogno lo script è che i vari file di configurazione necessari ad Indico siano già stati copiati sulla macchina: a questo penserà il file cloud-config, generato nella prossima fase.
@@ -160,31 +154,29 @@
             Il template del file cloud-config ha la seguente struttura:
             
             \begin{center}
-                \begin{minipage}{\linewidth}
-                    \begin{lstlisting}[language=bash, gobble=22]
-                        #cloud-config
-                        
-                        write_files:
-                        -   content: |
-                        {puias_repo_content}
-                            path: /puias.repo
-                        -   content: |
-                        {indico_httpd_conf_content}
-                            path: /indico_httpd.conf
-                        -   content: |
-                        {indico_indico_conf_content}
-                            path: /indico_indico.conf
-                        -   content: |
-                        {redis_conf_content}
-                            path: /redis.conf
-                        -   content: |
-                        {ssl_conf_content}
-                            path: /ssl.conf
-                        {ssl_files}
-                    \end{lstlisting}
-                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
-                    \captionof{lstlisting}[Struttura del template per cloud-config]{Struttura del file di template per il file cloud-config.}
-                \end{minipage}
+                \begin{lstlisting}[language=bash, gobble=18]
+                    #cloud-config
+                    
+                    write_files:
+                    -   content: |
+                    {puias_repo_content}
+                        path: /puias.repo
+                    -   content: |
+                    {indico_httpd_conf_content}
+                        path: /indico_httpd.conf
+                    -   content: |
+                    {indico_indico_conf_content}
+                        path: /indico_indico.conf
+                    -   content: |
+                    {redis_conf_content}
+                        path: /redis.conf
+                    -   content: |
+                    {ssl_conf_content}
+                        path: /ssl.conf
+                    {ssl_files}
+                \end{lstlisting}
+                \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                \captionof{lstlisting}[Struttura del template per cloud-config]{Struttura del file di template per il file cloud-config.}
             \end{center}
             
             Si vede quindi che per ogni file che dev'essere copiato è presente, nel template, una riga \python{-   content: |}, che serve a delimitare l'inizio di un nuovo file. A seguito è presente un placeholder, che verrà sostituito con il contenuto del file in questione, ed infine la voce \python{path:}, nella quale si indica in che percorso della macchina cloud vorremmo copiare il file. La struttura del file cloud-config è riconosciuta tramite l'indentazione: la stringa \python{-   content: |} non dev'essere indentata, il contenuto del file dev'essere indentato di 8 spazi mentre il percorso finale del file dev'essere indentato di 4 spazi.
@@ -206,13 +198,11 @@
             Questo comando, molto semplice, prende come input tutti i file che vogliamo includere nel file finale e richiede anche di specificare il nome e percorso del file che vogliamo venga generato. Quindi, nel nostro caso, il comando finale sarà il seguente:
             
             \begin{center}
-                \begin{minipage}{\linewidth}
-                    \begin{lstlisting}[language=bash, gobble=22]
-                        $ ./write-mime-multipart --output user-data user-data-script.sh cloud-config
-                    \end{lstlisting}
-                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
-                    \captionof{lstlisting}[Comando per la generazione del file MIME multiparti]{Comando per la generazione del file \ac{MIME} multiparti \bash{user-data}.}
-                \end{minipage}
+                \begin{lstlisting}[language=bash, gobble=18]
+                    $ ./write-mime-multipart --output user-data user-data-script.sh cloud-config
+                \end{lstlisting}
+                \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                \captionof{lstlisting}[Comando per la generazione del file MIME multiparti]{Comando per la generazione del file \ac{MIME} multiparti \bash{user-data}.}
             \end{center}
             
             Chiaramente, lo script principale per la generazione del file \bash{user-data} si occuperà di invocare il comando precedente, assicurandosi di passargli i valori corretti per i vari input. Dopodiché lo script terminerà.
@@ -254,13 +244,11 @@
             Una volta creato il file \bash{init.iso} per attivare la funzionalità no-cloud, lo script potrà finalmente avviare la macchina virtuale. Il comando per l'avvio è il seguente:
             
             \begin{center}
-                \begin{minipage}{\linewidth}
-                    \begin{lstlisting}[language=bash, gobble=22]
-                        $ kvm -m 256 -redir tcp:2222::22 -net nic -net user, -drive file=slc6_cern_x86_64.qcow2,if=virtio -drive file=init.iso,if=virtio -serial file:qemu-output.log &
-                    \end{lstlisting}
-                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
-                    \captionof{lstlisting}[Avvio della macchina virtuale]{Comando per l'avvio della macchina virtuale utilizzando \ac{QEMU} e \ac{KVM}.}
-                \end{minipage}
+                \begin{lstlisting}[language=bash, gobble=18]
+                    $ kvm -m 256 -redir tcp:2222::22 -net nic -net user, -drive file=slc6_cern_x86_64.qcow2,if=virtio -drive file=init.iso,if=virtio -serial file:qemu-output.log &
+                \end{lstlisting}
+                \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                \captionof{lstlisting}[Avvio della macchina virtuale]{Comando per l'avvio della macchina virtuale utilizzando \ac{QEMU} e \ac{KVM}.}
             \end{center}
             
             Con l'opzione \bash{-drive file=} si specificano le immagini virtuali da usare come input: in questo caso utilizziamo \bash{slc6_cern_x86_64.qcow2}, che è l'immagine virtuale di base con installato \ac{SLC6}, e \bash{init.iso}, che permette di attivare il no-cloud. L'opzione \bash{-redir} serve ad associare le porte specificate, in modo da permettere la comunicazione tra la macchina locale e la macchina virtuale tramite quelle porte (nello specifico quelle sono le porte relative al protocollo \ac{SSH}). Infine, l'opzione \bash{-serial file:} permette di specificare un file di log, dove verrà salvato l'output del terminale della macchina virtuale, mentre il simbolo \bash{&} finale serve a lanciare il comando in background, in modo da lasciare la shell libera e non bloccare l'esecuzione dello script.
@@ -268,13 +256,11 @@
             Il file di log passato al comando \bash{kvm} è molto importante, in quanto consente allo script fabric di sapere quando la macchina virtuale ha terminato la fase di booting, in modo da poter proseguire ed effettuare le azioni sulla macchina necessarie. Lo script fabric, infatti, non può eseguire azioni come installare pacchetti aggiuntivi o installare Indico finché la macchina si sta ancora avviando. D'altro canto, la macchina virtuale non ha alcun modo diretto per comunicare allo script fabric quando la fase di booting è finita. L'idea è stata quindi quella di far loggare l'output del terminale della macchina virtuale sul file di log specificato e far leggere il file allo script fabric in continuazione finché non viene rilevata la fine del boot, nel qual caso lo script può continuare la sua esecuzione. Nello specifico, per capire quando la fase di boot è terminata o meno, è bastato fare un boot di prova e andare a vedere qual era l'ultima riga scritta sul file di log durante la fase di booting e quindi far controllare allo script fabric se tale stringa è presente o meno nel file di log: se la stringa compare nel log, allora lo script può procedere con l'esecuzione, altrimenti aspetta 5 secondi e poi ricontrolla. Il comando relativo a questa procedura è il seguente:
             
             \begin{center}
-                \begin{minipage}{\linewidth}
-                    \begin{lstlisting}[language=bash, gobble=22]
-                        $ while ! grep -q "Starting atd:.*[.*OK.*]" "qemu-output.log"; do sleep 5; done
-                    \end{lstlisting}
-                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
-                    \captionof{lstlisting}[Comando di attesa della terminazione del boot]{Comando di attesa della terminazione del boot della macchina virtuale.}
-                \end{minipage}
+                \begin{lstlisting}[language=bash, gobble=18]
+                    $ while ! grep -q "Starting atd:.*[.*OK.*]" "qemu-output.log"; do sleep 5; done
+                \end{lstlisting}
+                \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                \captionof{lstlisting}[Comando di attesa della terminazione del boot]{Comando di attesa della terminazione del boot della macchina virtuale.}
             \end{center}
             
             Prima di passare alla fase successiva, osserviamo che l'immagine di base, nell'esempio \bash{slc6_cern_x86_64.qcow2}, deve essere ottenuta dall'utente in maniera autonoma, ad esempio scaricandola tramite il sito ufficiale del sistema operativo scelto.
@@ -290,20 +276,18 @@
             Riguardo al comando \python{put()} è stata tuttavia necessaria una modifica in quanto esso non supporta, al momento, di passare un link simbolico come percorso di destinazione del file. Per aggiungere il supporto a link simbolici, abbiamo inserito la seguente variante del comando, da utilizzare al posto di \python{put()}:
             
             \begin{center}
-                \begin{minipage}{\linewidth}
-                    \begin{lstlisting}[language=python, gobble=22]
-                        def _putl(source_file, dest_dir):
-                            """
-                            To be used instead of put, since it doesn't support symbolic links
-                            """
-                        
-                            put(source_file, '/')
-                            run("mkdir -p {0}".format(dest_dir))
-                            run("mv -f /{0} {1}".format(os.path.basename(source_file), dest_dir))
-                    \end{lstlisting}
-                    \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
-                    \captionof{lstlisting}[Comando \python{put()} per link simbolici]{Variante del comando \python{put()} per l'utilizzo di link simbolici come destinazione.}
-                \end{minipage}
+                \begin{lstlisting}[language=python, gobble=18]
+                    def _putl(source_file, dest_dir):
+                        """
+                        To be used instead of put, since it doesn't support symbolic links
+                        """
+                    
+                        put(source_file, '/')
+                        run("mkdir -p {0}".format(dest_dir))
+                        run("mv -f /{0} {1}".format(os.path.basename(source_file), dest_dir))
+                \end{lstlisting}
+                \captionsetup{textformat=empty,labelformat=empty} \vspace{-2em}
+                \captionof{lstlisting}[Comando \python{put()} per link simbolici]{Variante del comando \python{put()} per l'utilizzo di link simbolici come destinazione.}
             \end{center}
             
             Al termine dell'esecuzione dello script, l'immagine virtuale di base risulterà aggiornata con l'installazione e la configurazione di Indico (e di tutte le componenti necessarie ad Indico) e sarà pronta per essere utilizzata in locale (tramite strumenti di virtualizzazione) o su una struttura cloud.

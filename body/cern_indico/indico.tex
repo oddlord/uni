@@ -2,6 +2,14 @@
 	
 	Indico è una web application che fornisce strumenti per l'organizzazione di eventi di qualsiasi dimensione, da semplici lezioni a grandi conferenze. Prese vita nel 2002 come progetto europeo, per poi venir adottato dal \ac{CERN} nel 2004 come software per la gestione di eventi. Dal 2004 ad oggi, il \ac{CERN} è stato il principale finanziatore del progetto Indico, dedicando un team al suo sviluppo e supporto.
 	
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[scale=1]{indico_logo.png}
+		\end{center}
+		\caption[Logo di Indico]{Logo di Indico.}
+		\label{fig:indico_logo}
+	\end{figure}
+	
 	Indico è uno strumento open source\footnote{Il codice aggiornato di Indico, e di tutti i progetti ad esso correlati, può essere trovato all'indirizzo \url{https://github.com/indico}.}, il che vuol dire non soltanto che è completamente gratuito, ma anche che altre istituzioni o individui al di fuori del \ac{CERN} possono ispezionarne il codice, contribuire allo sviluppo o modificarlo secondo le proprie preferenze.
 	
 	Indico viene quindi utilizzato da centinaia di istituzioni e organizzazioni in tutto il mondo, ma il principale utilizzatore rimane il \ac{CERN} stesso, che lo utilizza ogni giorno per gestire più di 300.000 eventi di diversa complessità e circa 200 stanze per conferenze e riunioni. L'istanza di Indico installata al \ac{CERN} prende il nome di Indico@CERN, raggiungibile all'indirizzo \url{http://indico.cern.ch/}. Inoltre, al \ac{CERN} è installata anche una seconda istanza minore di Indico utilizzata per prenotare gli uffici Burotel.
@@ -10,7 +18,7 @@
 	
 		Con Indico si possono gestire eventi di qualsiasi complessità: lezioni, riunioni, seminari e conferenze. Indico fornisce all'utente, durante tutta la fase di creazione e modifica di un evento, tutta una serie di strumenti per agevolare queste operazioni: l'utente può decidere secondo quali criteri far registrare terzi al suo evento, oppure come gestire l'invio di pubblicazioni o di materiale relativo all'evento.
 		
-		Indico\marginpar{UI} utilizza anche una potente e immediata interfaccia utente che si basa sul design \acr{WYSIWYG}. Grazie a questa \acr{UI} sarà facilissimo eseguire azioni altrimenti più complesse e tediose: la definizione di un form di registrazione per l'evento, la gestione delle timetables (Figura \ref{fig:indico_timetable}), che implementano un'intuitiva interfaccia drag-and-drop, oppure editor di testo che permettono l'utilizzo di rich text o formule matematiche.
+		\paragraph{UI}Indico utilizza anche una potente e immediata interfaccia utente che si basa sul design \acr{WYSIWYG}. Grazie a questa \acr{UI} sarà facilissimo eseguire azioni altrimenti più complesse e tediose: la definizione di un form di registrazione per l'evento, la gestione delle timetables (Figura \ref{fig:indico_timetable}), che implementano un'intuitiva interfaccia drag-and-drop, oppure editor di testo che permettono l'utilizzo di rich text o formule matematiche.
 
 		\begin{figure}[h!]
 			\begin{center}
@@ -20,7 +28,7 @@
 			\label{fig:indico_timetable}
 		\end{figure}
 		
-		Indico,\marginpar{Struttura} ed il suo sistema di protezione, è organizzato in una struttura ad albero per categorie. Indico è stato sviluppato principalmente per grandi aziende, per questo gli eventi, ed il materiale ad essi associato, sono organizzati secondo una struttura gerarchica di categorie. L'amministratore del sistema potrà decidere ed assegnare livelli di protezione alle varie categorie secondo diversi livelli di granularità.
+		\paragraph{Struttura}Indico, ed il suo sistema di protezione, è organizzato in una struttura ad albero per categorie. Indico è stato sviluppato principalmente per grandi aziende, per questo gli eventi, ed il materiale ad essi associato, sono organizzati secondo una struttura gerarchica di categorie. L'amministratore del sistema potrà decidere ed assegnare livelli di protezione alle varie categorie secondo diversi livelli di granularità.
 
 		\begin{figure}[h!]
 			\begin{center}
@@ -30,11 +38,11 @@
 			\label{fig:indico_category}
 		\end{figure}
 		
-		In\marginpar{Ricerca} Indico è incluso anche un potente sistema di ricerca, che permette di ricercare gli eventi desiderati tramite poche parole chiave o osservare gli eventi previsti per un determinato periodo di tempo. Inoltre, tramite la dashboard, è possibile accedere velocemente a tutti gli eventi a cui l'utente è iscritto o che sta osservando.
+		\paragraph{Ricerca}In Indico è incluso anche un potente sistema di ricerca, che permette di ricercare gli eventi desiderati tramite poche parole chiave o osservare gli eventi previsti per un determinato periodo di tempo. Inoltre, tramite la dashboard, è possibile accedere velocemente a tutti gli eventi a cui l'utente è iscritto o che sta osservando.
 		
-		Le\marginpar{Room Booking} compagnie e le organizzazioni, specialmente le più grandi, hanno spesso bisogno di gestire, limitare e tener traccia dell'utilizzo delle varie stanze e siti al loro interno. Per questo Indico include un potente ed intuitivo modulo per la prenotazione delle stanza (in inglese, room booking) che permette all'utente di specificare le caratteristiche di una stanza, approvare o meno la prenotazione di certe stanze e gestire strumenti e materiale messi a disposizione di certe stanza, come dispositivi audiovisivi per le video conferenze.
+		\paragraph{Room booking}Le compagnie e le organizzazioni, specialmente le più grandi, hanno spesso bisogno di gestire, limitare e tener traccia dell'utilizzo delle varie stanze e siti al loro interno. Per questo Indico include un potente ed intuitivo modulo per la prenotazione delle stanza (in inglese, room booking) che permette all'utente di specificare le caratteristiche di una stanza, approvare o meno la prenotazione di certe stanze e gestire strumenti e materiale messi a disposizione di certe stanza, come dispositivi audiovisivi per le video conferenze.
 		
-		Per\marginpar{Chat \& Video} rendere la gestione online di riunioni e conferenze ancora più efficiente, Indico integra perfettamente Vidyo\footnote{\url{http://it.vidyo.com/}.}, uno strumento per le videoconferenze, e permette di associare delle chatrooms Jabber/XMPP agli eventi.
+		\paragraph{Chat \& Video}Per rendere la gestione online di riunioni e conferenze ancora più efficiente, Indico integra perfettamente Vidyo\footnote{\url{http://it.vidyo.com/}.}, uno strumento per le videoconferenze, e permette di associare delle chatrooms Jabber/XMPP agli eventi.
 
 		\begin{figure}[h!]
 			\begin{center}
@@ -44,7 +52,7 @@
 			\label{fig:indico_meeting}
 		\end{figure}
 		
-		Dal\marginpar{API} momento che Indico è stato creato per agevolare la collaborazione e lo scambio di dati, tutte le informazioni contenute in Indico non sono esclusive di Indico stesso, ma possono essere recuperate (una volta accertato di avere l'accesso a quelle informazioni) tramite una semplice \acr{API}. Quest'\ac{API} è garantita essere RESTful  (dove \acs{REST} significa \aclu{REST}) ed è in costante aggiornamento.
+		\paragraph{API}Dal momento che Indico è stato creato per agevolare la collaborazione e lo scambio di dati, tutte le informazioni contenute in Indico non sono esclusive di Indico stesso, ma possono essere recuperate (una volta accertato di avere l'accesso a quelle informazioni) tramite una semplice \acr{API}. Quest'\ac{API} è garantita essere RESTful  (dove \acs{REST} significa \aclu{REST}) ed è in costante aggiornamento.
 		
 	\section{Dettagli tecnici} \label{sec:i;dettagli_tecnici}
 	
@@ -60,24 +68,21 @@
 		
 		Essendo un'applicazione web, Indico implementa un web server ed un \ac{DB} per gestire le richieste dell'utente e recuperare i dati richiesti.
 		
-		Indico\marginpar{WSGI} utilizza \acr{WSGI} per gestire il web server. \ac{WSGI} è un'interfaccia standard tra web server e applicazioni Python, ovvero un'astrazione per rendere la comunicazione tra le due parti più semplice e modulare. In questo modo il server e  l'applicazione sono completamente separati e seguono lo standard. Ad esempio per Indico@CERN si utilizza Apache come web server, ma un amministratore di un'altra istanza può scegliere un altro server se lo desidera, in quanto \ac{WSGI} si configura senza problemi con quasi tutti gli web server in circolazione. \cite{indico:wsgi}
+		\paragraph{WSGI}Indico utilizza \acr{WSGI} per gestire il web server. \ac{WSGI} è un'interfaccia standard tra web server e applicazioni Python, ovvero un'astrazione per rendere la comunicazione tra le due parti più semplice e modulare. In questo modo il server e  l'applicazione sono completamente separati e seguono lo standard. Ad esempio per Indico@CERN si utilizza Apache come web server, ma un amministratore di un'altra istanza può scegliere un altro server se lo desidera, in quanto \ac{WSGI} si configura senza problemi con quasi tutti gli web server in circolazione. \cite{indico:wsgi}
 		
-		Prima\marginpar{DB} dell'inizio del periodo di Techical Student, Indico utilizzava \acr{ZODB} come database. \ac{ZODB} è un database object-oriented che immagazzina oggetti Python. Dai primi del 2014 è invece stata iniziata una fase di migrazione, in  quanto \ac{ZODB} presentava alcuni svantaggi, come la difficoltà di eseguire query, la non indicizzazione dei record e il fatto di poter essere utilizzabile soltanto con Python. Dopo alcuni mesi di ricerca su quale potesse essere il miglior candidato per sostituire \ac{ZODB}, si è scelto PostgreSQL (spesso detto Postgres) come vincitore. Postgres è un \acr{ORDBMS}, ovvero un database relazionale a oggetti, che garantirà prestazioni più elevate durante l'utilizzo di Indico. Ovviamente passare da un database ad un altro non è una cosa semplice, in quanto tutto il codice dove si comunica con il \ac{DB} dev'essere adeguato al nuovo database. Migrare l'intero \ac{DB} di Indico@CERN in sol colpo era quindi un'impresa del tutto on fattibile. Si è optato quindi per una migrazione modulare: il processo di migrazione durerà circa un anno, durante il quale Indico utilizzerà un sistema di gestione del \ac{DB} ibrido \ac{ZODB}+Postgres, migrando modulo per modulo. \cite{indico:zodb}\cite{pedro:chep}
+		\paragraph{DB}Prima dell'inizio del periodo di Techical Student, Indico utilizzava \acr{ZODB} come database. \ac{ZODB} è un database object-oriented che immagazzina oggetti Python. Dai primi del 2014 è invece stata iniziata una fase di migrazione, in  quanto \ac{ZODB} presentava alcuni svantaggi, come la difficoltà di eseguire query, la non indicizzazione dei record e il fatto di poter essere utilizzabile soltanto con Python. Dopo alcuni mesi di ricerca su quale potesse essere il miglior candidato per sostituire \ac{ZODB}, si è scelto PostgreSQL (spesso detto Postgres) come vincitore. Postgres è un \acr{ORDBMS}, ovvero un database relazionale a oggetti, che garantirà prestazioni più elevate durante l'utilizzo di Indico. Ovviamente passare da un database ad un altro non è una cosa semplice, in quanto tutto il codice dove si comunica con il \ac{DB} dev'essere adeguato al nuovo database. Migrare l'intero \ac{DB} di Indico@CERN in sol colpo era quindi un'impresa del tutto on fattibile. Si è optato quindi per una migrazione modulare: il processo di migrazione durerà circa un anno, durante il quale Indico utilizzerà un sistema di gestione del \ac{DB} ibrido \ac{ZODB}+Postgres, migrando modulo per modulo. \cite{indico:zodb}\cite{pedro:chep}
 		
-		Flask\marginpar{Flask} è un micro framework per applicazioni web, scritto in Python e basato su Werkzeug e Jinja2. Uno dei principali vantaggi offerti da Flask è l'URL Routing, ovvero la  possibilità di gestire gli URL in modo dinamico. Si possono associare diversi template per ogni tipo di richiesta ricevuta dal server, in modo da generare una pagina dinamica a seconda degli argomenti passati da Flask al template engine. \cite{indico:flask}
+		\paragraph{Flask}Flask è un micro framework per applicazioni web, scritto in Python e basato su Werkzeug e Jinja2. Uno dei principali vantaggi offerti da Flask è l'URL Routing, ovvero la  possibilità di gestire gli URL in modo dinamico. Si possono associare diversi template per ogni tipo di richiesta ricevuta dal server, in modo da generare una pagina dinamica a seconda degli argomenti passati da Flask al template engine. \cite{indico:flask}
 		
-		Un\marginpar{Template\\engine(s)} template engine è uno strumento che permette di creare documenti personalizzati e dinamici a partire da un template (ovvero un modello) di base e dei dati di input. In questo caso, quando si parla di template engines, ci si riferisce a strumenti che generano pagine web secondo un certo modello inserendovi dei dati dinamici. Indico ha utilizzato per molti anni Mako come template engine ma in questi ultimi anni sta lentamente passando a Jinja2. \cite{indico:template_engines}
+		\paragraph{Template engine(s)}Un template engine è uno strumento che permette di creare documenti personalizzati e dinamici a partire da un template (ovvero un modello) di base e dei dati di input. In questo caso, quando si parla di template engines, ci si riferisce a strumenti che generano pagine web secondo un certo modello inserendovi dei dati dinamici. Indico ha utilizzato per molti anni Mako come template engine ma in questi ultimi anni sta lentamente passando a Jinja2. \cite{indico:template_engines}
 		
-		A parte queste tecnologie citate, Indico ha iniziato a impiegare, nel corso degli ultimi anni, altri strumenti degni di nota, come  ad esempio WTForms, per la gestione dei campi dei form (ad esempio form di registrazione), SQLAchemy, ovvero un toolkit open source SQL, ed Alembic, uno strumento per la migrazione di database da utilizzare con SQLAlchemy.
+		\paragraph{Altre}A parte queste tecnologie citate, Indico ha iniziato a impiegare, nel corso degli ultimi anni, altri strumenti degni di nota, come  ad esempio WTForms, per la gestione dei campi dei form (ad esempio form di registrazione), SQLAchemy, ovvero un toolkit open source SQL, ed Alembic, uno strumento per la migrazione di database da utilizzare con SQLAlchemy.
 		
 	\section{La community} \label{sec:i;community}
 	
-		Come già accennato,  Indico è un software open source. Il suo codice sorgente più aggiornato è infatti disponibile su Github, all'indirizzo \url{https://github.com/indico/indico}. Il fatto di essere open source ha portato centinaia di organizzazioni e istituzioni, soprattutto nel campo della fisica delle particelle (ad esempio \acs{INFN} e \acs{IHEP}), ad utilizzare Indico per la gestione dei propri eventi. Negli anni questo ha portato alla formazione di una vera e propria community di utilizzatori (user e admin) di Indico.
+		Come già accennato,  Indico è un software open source. Il suo codice sorgente più aggiornato è infatti disponibile su Github, all'indirizzo \url{https://github.com/indico/indico}. Il fatto di essere open source ha portato centinaia di organizzazioni e istituzioni, soprattutto nel campo della fisica delle particelle come ad esempio \acr{INFN} e \acr{IHEP}, ad utilizzare Indico per la gestione dei propri eventi. Negli anni questo ha portato alla formazione di una vera e propria community di utilizzatori (user e admin) di Indico.
 		
 		Questa commuity non soltanto utilizza Indico per i propri eventi, ma contribuisce anche allo sviluppo stesso del software,  inviando segnalazioni agli sviluppatori del team Indico  al \ac{CERN} sotto forma di ticket. Un ticket indica un problema da risolvere, o qualcosa da migliorare; risolvere il problema in questione o apportare la miglioria richiesta viene indicato con il termine di ``chiusura del ticket''.
 		
 		Altre volte invece, se chi si imbatte in un errore è uno sviluppatore a sua volta, può capitare che provi a risolvere il problema da solo, lavorando sul codice di Indico. Una volta  risolto, chi ha risolto il problema può inviare una cosiddetta \textit{pull request} tramite Github (il repository ufficiale che ospita il codice di Indico) agli sviluppatori di Indico al \ac{CERN}, in modo da indicare che  quel  problema è già stato risolto e possono includere (operazione di \textit{merge}) le modifiche apportate al codice principale di Indico.
-		
-    \section{IndicoUserGuide}
-        Use IndicoUserGuide.pdf!!!
 	
