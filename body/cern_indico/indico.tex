@@ -18,29 +18,53 @@
 	
 		Con Indico si possono gestire eventi di qualsiasi complessità: lezioni, riunioni, seminari e conferenze. Indico fornisce all'utente, durante tutta la fase di creazione e modifica di un evento, tutta una serie di strumenti per agevolare queste operazioni: l'utente può decidere secondo quali criteri far registrare terzi al suo evento, oppure come gestire l'invio di pubblicazioni o di materiale relativo all'evento.
 		
-		\paragraph{UI}Indico utilizza anche una potente e immediata interfaccia utente che si basa sul design \acr{WYSIWYG}. Grazie a questa \acr{UI} sarà facilissimo eseguire azioni altrimenti più complesse e tediose: la definizione di un form di registrazione per l'evento, la gestione delle timetables (Figura \ref{fig:indico_timetable}), che implementano un'intuitiva interfaccia drag-and-drop, oppure editor di testo che permettono l'utilizzo di rich text o formule matematiche.
-
+		\paragraph{Gestione d'eventi}La funzionalità principale di Indico è quella di poter creare, gestire e condividere svariati tipi d'eventi. I tipi possibili di eventi sono tre: conferenze (\textit{conferences}), riunioni (\textit{meetings}) e seminari (\textit{lectures}). Ogni evento può, sia in fase di creazione che in un momento successivo, essere personalizzato in molti modi. Gli eventi possono essere, ad esempio pubblici o privati. Per ogni evento possono essere definite le persone coinvolte, ad esempio i partecipanti all'evento, chi vi ha accesso o chi ha in programma un qualche tipo di intervento. Ogni tipo di evento permette inoltre l'upload di materiale direttamente sulla pagina dell'evento: in questo modo sarà molto semplice sia utilizzare che condividere il materiale che verrà utilizzato durante l'evento, come ad esempio una presentazione. Gli eventi, infine, permettono anche di suddividere l'evento principale in una serie di sotto-eventi, permettendo all'utente di visualizzare questa suddivisione in forma compatta, sotto forma di timetable (Figura \ref{fig:indico_timetable}).
+		
 		\begin{figure}[h!]
 			\begin{center}
 				\includegraphics[scale=0.3]{indico_timetable.png}
 			\end{center}
-			\caption[Timetable in Indico (esempio)]{Un esempio di timetable di una conferenza in Indico.}
+			\caption[Timetable in Indico (esempio)]{Un esempio di timetable di una conferenza in Indico (fonte \cite{indico:user_guide_1.9.6}).}
 			\label{fig:indico_timetable}
 		\end{figure}
 		
-		\paragraph{Struttura}Indico, ed il suo sistema di protezione, è organizzato in una struttura ad albero per categorie. Indico è stato sviluppato principalmente per grandi aziende, per questo gli eventi, ed il materiale ad essi associato, sono organizzati secondo una struttura gerarchica di categorie. L'amministratore del sistema potrà decidere ed assegnare livelli di protezione alle varie categorie secondo diversi livelli di granularità.
+		\paragraph{UI}Indico utilizza anche una potente e immediata interfaccia utente che si basa sul design \acr{WYSIWYG}. Grazie a questa \acr{UI} sarà facilissimo eseguire azioni altrimenti più complesse e tediose: la definizione di un form di registrazione per l'evento, la gestione delle timetable, che implementano un'intuitiva interfaccia drag-and-drop, oppure editor di testo che permettono l'utilizzo di rich text o formule matematiche.
+		
+		\paragraph{Struttura}Indico, ed il suo sistema di protezione, sono organizzati in una struttura ad albero per categorie. Indico è stato sviluppato principalmente per grandi aziende, per questo gli eventi, ed il materiale ad essi associato, sono organizzati secondo una struttura gerarchica di categorie. L'amministratore del sistema potrà decidere ed assegnare livelli di protezione alle varie categorie secondo diversi livelli di granularità.
 
 		\begin{figure}[h!]
 			\begin{center}
 				\includegraphics[scale=0.3]{indico_category.png}
 			\end{center}
-			\caption[Categoria in Indico (esempio)]{Un esempio di categoria con una serie di eventi al suo interno.}
+			\caption[Categoria in Indico (esempio)]{Un esempio di categoria con una serie di eventi al suo interno (fonte \cite{indico:user_guide_1.9.6}).}
 			\label{fig:indico_category}
 		\end{figure}
 		
 		\paragraph{Ricerca}In Indico è incluso anche un potente sistema di ricerca, che permette di ricercare gli eventi desiderati tramite poche parole chiave o osservare gli eventi previsti per un determinato periodo di tempo. Inoltre, tramite la dashboard, è possibile accedere velocemente a tutti gli eventi a cui l'utente è iscritto o che sta osservando.
 		
-		\paragraph{Room booking}Le compagnie e le organizzazioni, specialmente le più grandi, hanno spesso bisogno di gestire, limitare e tener traccia dell'utilizzo delle varie stanze e siti al loro interno. Per questo Indico include un potente ed intuitivo modulo per la prenotazione delle stanza (in inglese, room booking) che permette all'utente di specificare le caratteristiche di una stanza, approvare o meno la prenotazione di certe stanze e gestire strumenti e materiale messi a disposizione di certe stanza, come dispositivi audiovisivi per le video conferenze.
+		\paragraph{Room booking}Le compagnie e le organizzazioni, specialmente le più grandi, hanno spesso bisogno di gestire, limitare e tener traccia dell'utilizzo delle varie stanze e siti al loro interno. Per questo Indico include un potente ed intuitivo modulo per la prenotazione delle stanza (in inglese, \textit{Room Booking}) che permette all'utente di specificare le caratteristiche di una stanza, approvare o meno la prenotazione di certe stanze e gestire strumenti e materiale messi a disposizione di certe stanza, come dispositivi audiovisivi per le video conferenze.
+		
+		Cliccando sulla voce ``Room Booking'' nel menu principale di Indico, si verrà portati alla schermata principale del modulo di Room Booking, come possiamo vedere in Figura \ref{fig:rb_booking_a_room}.
+		
+		\begin{figure}[h!]
+			\begin{center}
+				\includegraphics[scale=0.4]{rb_booking_a_room.png}
+			\end{center}
+			\caption[Room Booking in Indico]{Interfaccia del modulo di Room Booking di Indico (fonte \cite{indico:user_guide_1.9.6}).}
+			\label{fig:rb_booking_a_room}
+		\end{figure}
+		
+		L'esempio in Figura \ref{fig:rb_booking_a_room} mostra chiaramente quanto sia intuitiva l'interfaccia di Indico: in questo caso è possibile ricercare una o più stanze e selezionare varie date o intervalli di tempo in modo semplice grazie all'interfaccia molto moderna di questo modulo. Un altro esempio, in questo frangente, della potenza dell'interfaccia di Indico, è dato dalla Figura \ref{fig:rb_conflicts}.
+		
+		\begin{figure}[h!]
+			\begin{center}
+				\includegraphics[scale=0.4]{rb_conflicts.png}
+			\end{center}
+			\caption[Conflitto di date con Room Booking]{Esempio di conflitto tra date nel modulo Room Booking (fonte \cite{indico:user_guide_1.9.6}).}
+			\label{fig:rb_conflicts}
+		\end{figure}
+		
+		La schermata in Figura \ref{fig:rb_conflicts} rappresenta lo step successivo all'esempio in Figura \ref{fig:rb_booking_a_room}, ovvero una volta selezionate stanze, date e orari, e mostra come vengono visualizzate le date e orari disponibili per le stanze scelte, evidenziando, eventualmente, i conflitti presenti con altre prenotazioni già effettuate.
 		
 		\paragraph{Chat \& Video}Per rendere la gestione online di riunioni e conferenze ancora più efficiente, Indico integra perfettamente Vidyo\footnote{\url{http://it.vidyo.com/}.}, uno strumento per le videoconferenze, e permette di associare delle chatrooms Jabber/XMPP agli eventi.
 
@@ -48,7 +72,7 @@
 			\begin{center}
 				\includegraphics[scale=0.5]{indico_meeting.png}
 			\end{center}
-			\caption[Meeting in Indico (esempio)]{Un esempio di riunione in Indico con una videoconference room Vidyo associata.}
+			\caption[Meeting in Indico (esempio)]{Un esempio di riunione in Indico con una videoconference room Vidyo associata (fonte \cite{indico:user_guide_1.9.6}).}
 			\label{fig:indico_meeting}
 		\end{figure}
 		
@@ -62,7 +86,7 @@
 			\begin{center}
 				\includegraphics[scale=0.6]{indico_languages.png}
 			\end{center}
-			\caption[Linguaggi di Indico]{Una statistica dei linguaggi utilizzati nel codice di Indico (come mostrata su Github).}
+			\caption[Linguaggi di Indico]{Una statistica dei linguaggi utilizzati nel codice di Indico (fonte GitHub).}
 			\label{fig:indico_languages}
 		\end{figure}
 		
@@ -72,7 +96,7 @@
 		
 		\paragraph{DB}Prima dell'inizio del periodo di Techical Student, Indico utilizzava \acr{ZODB} come database. \ac{ZODB} è un database object-oriented che immagazzina oggetti Python. Dai primi del 2014 è invece stata iniziata una fase di migrazione, in  quanto \ac{ZODB} presentava alcuni svantaggi, come la difficoltà di eseguire query, la non indicizzazione dei record e il fatto di poter essere utilizzabile soltanto con Python. Dopo alcuni mesi di ricerca su quale potesse essere il miglior candidato per sostituire \ac{ZODB}, si è scelto PostgreSQL (spesso detto Postgres) come vincitore. Postgres è un \acr{ORDBMS}, ovvero un database relazionale a oggetti, che garantirà prestazioni più elevate durante l'utilizzo di Indico. Ovviamente passare da un database ad un altro non è una cosa semplice, in quanto tutto il codice dove si comunica con il \ac{DB} dev'essere adeguato al nuovo database. Migrare l'intero \ac{DB} di Indico@CERN in sol colpo era quindi un'impresa del tutto on fattibile. Si è optato quindi per una migrazione modulare: il processo di migrazione durerà circa un anno, durante il quale Indico utilizzerà un sistema di gestione del \ac{DB} ibrido \ac{ZODB}+Postgres, migrando modulo per modulo. \cite{indico:zodb}\cite{pedro:chep}
 		
-		\paragraph{Flask}Flask è un micro framework per applicazioni web, scritto in Python e basato su Werkzeug e Jinja2. Uno dei principali vantaggi offerti da Flask è l'URL Routing, ovvero la  possibilità di gestire gli URL in modo dinamico. Si possono associare diversi template per ogni tipo di richiesta ricevuta dal server, in modo da generare una pagina dinamica a seconda degli argomenti passati da Flask al template engine. \cite{indico:flask}
+		\paragraph{Flask}Flask è un micro framework per applicazioni web, scritto in Python e basato su Werkzeug e Jinja2. Uno dei principali vantaggi offerti da Flask è l'\acr{URL} routing, ovvero la  possibilità di gestire gli \ac{URL} in modo dinamico. Si possono associare diversi template per ogni tipo di richiesta ricevuta dal server, in modo da generare una pagina dinamica a seconda degli argomenti passati da Flask al template engine. \cite{indico:flask}
 		
 		\paragraph{Template engine(s)}Un template engine è uno strumento che permette di creare documenti personalizzati e dinamici a partire da un template (ovvero un modello) di base e dei dati di input. In questo caso, quando si parla di template engines, ci si riferisce a strumenti che generano pagine web secondo un certo modello inserendovi dei dati dinamici. Indico ha utilizzato per molti anni Mako come template engine ma in questi ultimi anni sta lentamente passando a Jinja2. \cite{indico:template_engines}
 		
@@ -80,9 +104,9 @@
 		
 	\section{La community} \label{sec:i;community}
 	
-		Come già accennato,  Indico è un software open source. Il suo codice sorgente più aggiornato è infatti disponibile su Github, all'indirizzo \url{https://github.com/indico/indico}. Il fatto di essere open source ha portato centinaia di organizzazioni e istituzioni, soprattutto nel campo della fisica delle particelle come ad esempio \acr{INFN} e \acr{IHEP}, ad utilizzare Indico per la gestione dei propri eventi. Negli anni questo ha portato alla formazione di una vera e propria community di utilizzatori (user e admin) di Indico.
+		Come già accennato,  Indico è un software open source. Il suo codice sorgente più aggiornato è infatti disponibile su GitHub, all'indirizzo \url{https://github.com/indico/indico}. Il fatto di essere open source ha portato centinaia di organizzazioni e istituzioni, soprattutto nel campo della fisica delle particelle come ad esempio \acr{INFN} e \acr{IHEP}, ad utilizzare Indico per la gestione dei propri eventi. Negli anni questo ha portato alla formazione di una vera e propria community di utilizzatori (user e admin) di Indico.
 		
-		Questa commuity non soltanto utilizza Indico per i propri eventi, ma contribuisce anche allo sviluppo stesso del software,  inviando segnalazioni agli sviluppatori del team Indico  al \ac{CERN} sotto forma di ticket. Un ticket indica un problema da risolvere, o qualcosa da migliorare; risolvere il problema in questione o apportare la miglioria richiesta viene indicato con il termine di ``chiusura del ticket''.
+		Questa community non soltanto utilizza Indico per i propri eventi, ma contribuisce anche allo sviluppo stesso del software,  inviando segnalazioni agli sviluppatori del team Indico  al \ac{CERN} sotto forma di ticket. Un ticket indica un problema da risolvere, o qualcosa da migliorare; risolvere il problema in questione o apportare la miglioria richiesta viene indicato con il termine di ``chiusura del ticket''.
 		
-		Altre volte invece, se chi si imbatte in un errore è uno sviluppatore a sua volta, può capitare che provi a risolvere il problema da solo, lavorando sul codice di Indico. Una volta  risolto, chi ha risolto il problema può inviare una cosiddetta \textit{pull request} tramite Github (il repository ufficiale che ospita il codice di Indico) agli sviluppatori di Indico al \ac{CERN}, in modo da indicare che  quel  problema è già stato risolto e possono includere (operazione di \textit{merge}) le modifiche apportate al codice principale di Indico.
+		Altre volte invece, se chi si imbatte in un errore è uno sviluppatore a sua volta, può capitare che provi a risolvere il problema da solo, lavorando sul codice di Indico. Una volta  risolto, chi ha risolto il problema può inviare una cosiddetta \textit{pull request} tramite GitHub (il repository ufficiale che ospita il codice di Indico) agli sviluppatori di Indico al \ac{CERN}, in modo da indicare che  quel  problema è già stato risolto e possono includere (operazione di \textit{merge}) le modifiche apportate al codice principale di Indico.
 	

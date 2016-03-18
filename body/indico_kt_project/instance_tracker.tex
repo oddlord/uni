@@ -32,7 +32,7 @@
         
         \subsection{Installazione e configurazione} \label{subsec:it;cp;installazione_configurazione}
         
-            Per installare Cephalopod è necessario, innanzitutto, clonare il repository Github sul quale è archiviato il codice sorgente di Cephalopod e quindi posizionarsi nella cartella principale del codice. Per fare questo basta eseguire i seguenti due comandi da linea di comando:
+            Per installare Cephalopod è necessario, innanzitutto, clonare il repository GitHub sul quale è archiviato il codice sorgente di Cephalopod e quindi posizionarsi nella cartella principale del codice. Per fare questo basta eseguire i seguenti due comandi da linea di comando:
             
             \begin{center}
                 \begin{lstlisting}[language=bash, gobble=18]
@@ -310,7 +310,7 @@
         
         \subsection{Scheduler} \label{subsec:it;cp;scheduler}
         
-            Cephalopod utilizza Celery come scheduler, ovvero come modulo che si occupa di gestire eventi periodici. Le impostazioni di Celery sono controllare interamente dal file di configurazioni \bash{settings.cfg}. Se, ad esempio, l'amministratore di Cephalopod volesse impostare l'estrazione dei dati da tutte le istanze in modo che venga eseguita in automatico ogni giorno, basterebbe includere il seguente frammento di codice all'interno di \bash{settings.cfg}:
+            Cephalopod utilizza Celery\footnote{\url{http://www.celeryproject.org/}.} come scheduler, ovvero come modulo che si occupa di gestire eventi periodici. Le impostazioni di Celery sono controllare interamente dal file di configurazioni \bash{settings.cfg}. Se, ad esempio, l'amministratore di Cephalopod volesse impostare l'estrazione dei dati da tutte le istanze in modo che venga eseguita in automatico ogni giorno, basterebbe includere il seguente frammento di codice all'interno di \bash{settings.cfg}:
             
             \begin{center}
                 \begin{lstlisting}[language=python, gobble=18]
@@ -393,7 +393,7 @@
                 \item \python{id}: ID da utilizzare come chiave primaria;
                 \item \python{uuid}: identificatore \ac{UUID} assegnato all'istanza;
                 \item \python{enabled}: valore booleano che indica se l'istanza è abilitata o meno;
-                \item \python{url}: l'\acr{URL} dell'istanza;
+                \item \python{url}: l'\ac{URL} dell'istanza;
                 \item \python{contact}: il nome della persona di riferimento;
                 \item \python{email}: l'indirizzo email della persona di riferimento;
                 \item \python{organisation}: nome dell'organizzazione nella quale è installata l'istanza;
@@ -427,7 +427,7 @@
                 \captionof{lstlisting}[Definizione della classe \python{User}]{Definizione della classe di oggetti \python{User} per il database.}
             \end{center}
             
-            SQLAlchemy mette a disposizione molti tipi di dato tra cui scegliere, come \python{db.String} per le stringhe o \python{db.DateTime} per le date. Tuttavia può capitare di dover includere un campo di un tipo non supportato, nel qual caso è necessario definire prima il tipo di dato e come esso si comporta. In Cephalopod questo è stato necessario per i campi \python{crawled_data} e \python{geolocation} della classe \python{Instance} in quanto essi devono memorizzare strutture dati complesse, in particolare dizionari di tipo \acr{JSON}, e questo tipo non viene offerto da SQLAlchemy. Per aggiungere la possibilità di memorizzare dizionari \ac{JSON} all'interno del database, si è quindi aggiunta la seguente definizione (fonte \cite{sqlalchemy:custom}):
+            SQLAlchemy mette a disposizione molti tipi di dato tra cui scegliere, come \python{db.String} per le stringhe o \python{db.DateTime} per le date. Tuttavia può capitare di dover includere un campo di un tipo non supportato, nel qual caso è necessario definire prima il tipo di dato e come esso si comporta. In Cephalopod questo è stato necessario per i campi \python{crawled_data} e \python{geolocation} della classe \python{Instance} in quanto essi devono memorizzare strutture dati complesse, in particolare dizionari di tipo \ac{JSON}, e questo tipo non viene offerto da SQLAlchemy. Per aggiungere la possibilità di memorizzare dizionari \ac{JSON} all'interno del database, si è quindi aggiunta la seguente definizione (fonte \cite{sqlalchemy:custom}):
             
             \begin{center}
                 \begin{lstlisting}[language=python, gobble=18]
@@ -470,7 +470,7 @@
             
             Ovviamente ogni applicazione che si vuole tracciare con Cephalopod deve implementare questi endpoint, per permettere a Cephalopod di comunicare con essa. Questo, chiaramente, dipende da applicazione a applicazione ed ogni sviluppatore ha il compito di implementare le proprie \ac{API} per permettere alla propria applicazione di comunicare con Cephalopod. In Sezione \ref{sec:it;adattamento_indico} vedremo l'implementazione di questi endpoint nel caso di Indico.
             
-            Le \ac{API} messe a disposizione da Cephalopod per permettere alle istanze di comunicare con lui definiscono invece tre endpoint distinti, ognuno con una diversa funzione. Ogni \ac{API} è caratterizzata, quindi, da un endpoint, che rappresenta la parte finale dell'\ac{URL} al quale si può raggiungere Cephalopod, da un tipo di richiesta \acr{HTTP}, da dei dati da inviare con la richiesta e da una risposta che si può ricevere dopo aver inviato la richiesta. Di seguito si descrivono le tre \ac{API} fornite: 
+            Le \ac{API} messe a disposizione da Cephalopod per permettere alle istanze di comunicare con lui definiscono invece tre endpoint distinti, ognuno con una diversa funzione. Ogni \ac{API} è caratterizzata, quindi, da un endpoint, che rappresenta la parte finale dell'\ac{URL} al quale si può raggiungere Cephalopod, da un tipo di richiesta \ac{HTTP}, da dei dati da inviare con la richiesta e da una risposta che si può ricevere dopo aver inviato la richiesta. Di seguito si descrivono le tre \ac{API} fornite: 
             
             \begin{itemize}
                 \item \textbf{Create instance}: questa \ac{API} è utilizzata per inserire una nuova istanza nel database di Cephalopod.
@@ -504,7 +504,7 @@
             
             All'interno di \bash{misc.py} viene definita una serie di funzioni, dove ogni funzione corrisponde ad una determinata azione la quale, a sua volta, è associata ad uno specifico \ac{URL}. In questo caso non si parla di \ac{API} in quanto, concettualmente, le \ac{API} sono raggiungibili dall'esterno, mentre questi \ac{URL} sono pensati per essere raggiunti soltanto tramite Cephalopod.
             
-            L'azione di associare un \ac{URL} ad una funzione è detto \textit{\ac{URL} routing} (ovvero ``indirizzamento degli \ac{URL}'') ed è resa disponibile grazie al decoratore di Flask \python{route()}. Una volta associato l'\ac{URL} alla funzione desiderata, la funzione può eseguire i comandi specificati ogni volta che si accede a tale \ac{URL}. In particolare, se l'\ac{URL} corrisponde alla visualizzazione di una pagina, allora tale funzione dovrà occuparsi di generare la pagina richiesta e quindi restituirla, utilizzando la funzione Flask \python{render_template()}. Inoltre, Flask mette a disposizione altre funzioni utili, come ad esempio la funzione \python{redirect()}, che serve a reindirizzare l'applicazione su un altro \ac{URL}, oppure il decoratore \python{login_required}, che permette di eseguire i comandi di una certa funzione se e solo se si chi richiede l'\ac{URL} è un utente correttamente registrato e loggato, altrimenti restituisce un errore. Di seguito mostriamo due funzioni, a scopo illustrativo, relative alla pagina della lista delle istanze e all'eliminazione di un'istanza:
+            Come abbiamo già accennato, Cephalopod è stato sviluppato utilizzando Flask, il che significa che al suo interno sfrutta le funzioni di \ac{URL} routing e template rendering offerte da Flask. Di seguito mostriamo due funzioni, a scopo illustrativo, relative alla pagina della lista delle istanze e all'eliminazione di un'istanza:
             
             \begin{center}
                 \begin{lstlisting}[language=python, gobble=18]
@@ -544,7 +544,7 @@
         
             Essendo un'applicazione web dinamica, Cephalopod fa un largo uso di codice Javascript per gestire tutti gli elementi dinamici e interattivi delle varie pagine dell'applicazione. Senza entrare troppo nel dettaglio, descriviamo soltanto alcune parti più importanti.
             
-            Tutti i grafici utilizzati nella pagina delle statistiche utilizzano la libreria jqPlot. Per utilizzare jqPlot è stato sufficiente importare, all'interno del template \bash{statistics.html}, tutti i file Javascript necessari, ognuno dedicato alla gestione di un diverso elemento, ed il foglio di stile \acr{CSS} di jqPlot, tutti scaricabili dal sito ufficiale. Ad esempio lo script Javascript di jqPlot che gestisce i grafici a torta è denominato \bash{jqplot.pieRenderer.js}, mentre lo script principale, contenente le funzioni di base, si chiama \bash{jquery.jqplot.js}. Di seguito vediamo l'esempio del grafico a torta relativo alla distribuzione delle istanze per stato:
+            Tutti i grafici utilizzati nella pagina delle statistiche utilizzano la libreria jqPlot. Per utilizzare jqPlot è stato sufficiente importare, all'interno del template \bash{statistics.html}, tutti i file Javascript necessari, ognuno dedicato alla gestione di un diverso elemento, ed il foglio di stile \ac{CSS} di jqPlot, tutti scaricabili dal sito ufficiale. Ad esempio lo script Javascript di jqPlot che gestisce i grafici a torta è denominato \bash{jqplot.pieRenderer.js}, mentre lo script principale, contenente le funzioni di base, si chiama \bash{jquery.jqplot.js}. Di seguito vediamo l'esempio del grafico a torta relativo alla distribuzione delle istanze per stato:
             
             \begin{center}
                 \begin{lstlisting}[language=javascript, gobble=18]
