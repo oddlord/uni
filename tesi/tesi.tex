@@ -1,0 +1,49 @@
+\input{../conf/conf}
+
+\begin{document}
+
+	\frenchspacing
+	\raggedbottom
+	\pagenumbering{roman}
+	\pagestyle{plain}
+	
+%********************************************************************
+% Front matter
+%********************************************************************
+
+	\input{front/title}
+	
+	\pagestyle{scrheadings}
+	
+	\input{front/abstract}
+%	\input{front/aknowledgements}
+	\input{front/contents}
+	
+%********************************************************************
+% Body matter
+%********************************************************************
+	
+	\pagenumbering{arabic}
+	
+	\part{CERN e Indico} \label{part:CERN_indico}
+		\input{body/cern_indico/cern}
+		\input{body/cern_indico/indico}
+	
+	\part{Indico KT Project} \label{part:indico_KT_project}
+		\input{body/indico_kt_project/panoramica}
+		\input{body/indico_kt_project/cloud_deployment}
+		\input{body/indico_kt_project/distribuzione_packaging}
+		\input{body/indico_kt_project/instance_tracker}
+		\input{body/indico_kt_project/conference_customization_prototype}
+		\input{body/indico_kt_project/altri_progetti}
+	
+	\part{Note conclusive} \label{part:note_conclusive}
+		\input{body/note_conclusive/conclusioni}
+		
+%********************************************************************
+% Back matter
+%********************************************************************
+	
+	\input{back/bibliography}
+
+\end{document}

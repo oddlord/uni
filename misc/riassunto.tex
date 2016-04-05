@@ -1,0 +1,59 @@
+\input{../conf/conf}
+
+\makeatletter
+    \patchcmd{\chapter}{\if@openright\cleardoublepage\else\clearpage\fi}{}{}{}
+\makeatother
+
+\acrodef{CERN}{Conseil Européen pour la Recherche Nucléaire}
+
+\begin{document}
+    
+    	\frenchspacing
+    	\raggedbottom
+    	\pagenumbering{gobble}
+    	
+    	\begin{center}
+    		\large
+    		\begingroup
+    			\spacedallcaps{\myUni}\\
+    			\myFaculty \\
+    			\myDegree \\
+    			\myTime
+    		\endgroup \\
+    		\vspace{0.5cm}
+    		\begingroup
+    			\color{Maroon}\spacedallcaps{\myTitle}\\
+    			\spacedlowsmallcaps{\mySubtitle}\\
+    			\bigskip
+    		\endgroup
+    	\end{center}
+       	\begin{minipage}{0.5\textwidth}
+       		\begin{flushleft}
+       			\large \underline{Laureando:}\\
+       			\normalsize Tommaso \textsc{Papini}\\
+       			tommaso.papini1@stud.unifi.it
+       		\end{flushleft}
+       	\end{minipage}
+       	\begin{minipage}{0.5\textwidth}
+       		\begin{flushright}
+       			\large \underline{Relatore:}\\
+       			\normalsize Pierluigi \textsc{Crescenzi}\\
+       			pierluigi.crescenzi@unifi.it
+       		\end{flushright}
+       	\end{minipage}
+    
+        {\let\clearpage\relax
+            \chapter*{Riassunto Tesi di Laurea}
+                Questa tesi è volta ad essere un resoconto dei 14 mesi passati al \acr{CERN}, Ginevra, tramite il programma di Techical Student.
+                
+                Il \ac{CERN} è un laboratorio europeo per la ricerca sul nucleare, istituito circa 10 anni fa. Grazie al \ac{CERN} sono state fatte molte scoperte in ambito fisico, come la scoperta del bosone di Higgs, ma anche molte innovazioni a livello informatico, come ad esempio la creazione del Web, da parte di Tim Berners-Lee.
+                
+                Il \ac{CERN} offre una vasta gamma di contratti e programmi, come ad esempio il Techical Student, oggetto di questa tesi, durato un totale di 14 mesi, da Ottobre 2013 a Novembre 2014.
+                
+                Durante questi 14 mesi si è lavorato all'interno del progetto Indico, ovvero una web application open source per la gestione di eventi sviluppata al \ac{CERN}, seguendo in particolare il Progetto Indico KT, volto a migliorare la visibilità a livello mondiale di Indico, a renderne più facile l'utilizzo e a rendere Indico visivamente più moderno.
+                
+                In particolare i principali progetti seguiti sono stati quattro: il \textit{Cloud Deployment} di Indico, ovvero l'automatizzazione dell'installazione di Indico in ambiente cloud e in ambiente virtuale; \textit{Distribuzione e Packaging}, ovvero l'automatizzazione della creazione di distribuzioni di Indico e della loro distribuzione; l'\textit{Instance Tracking}, per il quale è stata scritta un applicazione che traccia le istanze di Indico nel mondo e crea delle statistiche sui dati raccolti; infine la \textit{Conference Customization}, volta ad esplorare le possibilità per un possibile aggiornamento futuro allo strumento di personalizzazione delle conferenze in Indico.
+                
+                I linguaggi, gli strumenti e le tecnologie utilizzate per portare a termine i vari progetti sono stati svariati. In particolare i linguaggi predominanti sono stati Python, Javascript, HTML5 e CSS. Gli principali ambiti dei vari progetti sono programmazione web e scripting (Python e Bash).
+        }
+\end{document}
