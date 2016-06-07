@@ -1,0 +1,45 @@
+%********************************************************************
+% Packages
+%********************************************************************
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancybox}
+\usepackage[bottom, para]{footmisc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{packages/mathpartir}
+\usepackage{multirow}
+\usepackage{pgf}
+\usepackage{stmaryrd}
+\usepackage{textcomp}
+\usepackage{tikz}
+\usepackage{titlesec}
+
+%********************************************************************
+% Packages options
+%********************************************************************
+
+% geometry
+\usepackage{geometry}
+\geometry{
+    a4paper,
+    ignoremp,
+    bindingoffset = 1cm, 
+    textwidth     = 13.5cm,
+    textheight    = 21.5cm,
+    lmargin       = 1cm,
+    rmargin		  = 3cm,
+    tmargin       = 2cm,
+    bmargin       = 3cm
+}
+
+% graphicx
+\graphicspath{{img/}}
+
+% tikz
+\usetikzlibrary{shapes,shapes.geometric,arrows,fit,calc,positioning,automata}
+\tikzset{elliptic state/.style={draw,ellipse}}
