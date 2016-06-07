@@ -570,25 +570,25 @@ run_first_return:
 ### run_first end ###
 
 ### run_id ###
-run_id:
-    addi $sp, $sp, -16
-    sw $ra, 12($sp)
+run_id:					# procedura per eseguire un task specifico
+    addi $sp, $sp, -16	# alloca 16 byte nello stack frame (4 word)
+    sw $ra, 12($sp)		# salva l'indirizzo di ritorno nello stack
 
-    move $t7, $a0
-    move $t8, $a1
-    move $t9, $a2
+					# primo argomento: ignorato
+    move $t8, $a1	# secondo: puntatore d'inizio A
+    move $t9, $a2	# terzo: puntatore d'inizio B
     
-    sw $t8, 8($sp)
-    sw $t9, 4($sp)
+    sw $t8, 8($sp)	# salva nello stack: il puntatore d'inizio A
+    sw $t9, 4($sp)	# ed il puntatore d'inizio B
 
-    li $v0, 4               # stampa la stringa per l'esecuzione di un task specifico
+    li $v0, 4               # stampa la stringa d'inizio dell'esecuzione di un task specifico
     la $a0, run_id_msg
     syscall
     
-    beq $t8, $zero, run_id_empty
+    beq $t8, $zero, run_id_empty	# se il puntatore d'inizio è nullo, allora la coda è vuota
     
 run_id_choose:
-    li $v0, 4
+    li $v0, 4				# chiede di inserire l'ID del task da eseguire
     la $a0, choose_id_msg
     syscall
     
@@ -596,35 +596,35 @@ run_id_choose:
     la $a0, choose_id_run_msg
     syscall
     
-    li $v0, 5
+    li $v0, 5		# legge un intero da input
     syscall
-    move $t0, $v0
-    sw $t0, 0($sp)
+    move $t0, $v0	# lo salva in $t0
+    sw $t0, 0($sp)	# e lo salva nello stack
     
-    move $a0, $t0
-    move $a1, $t8
+    move $a0, $t0	# prepara il primo parametro d'invocazione: ID inserito
+    move $a1, $t8	# secondo: puntatore d'inizio A
     
-    jal find_id
+    jal find_id	# invoca la procedura find_id
     
-    move $t1, $v0
-    lw $t8, 8($sp)
-    lw $t9, 4($sp)
+    move $t1, $v0	# recupera il valore di ritorno di find_id
+    lw $t8, 8($sp)	# recupera dallo stack: il puntatore d'inizio A
+    lw $t9, 4($sp)	# ed il puntatore d'inizio B
     
-    beq $t1, $zero, run_id_not_found
+    beq $t1, $zero, run_id_not_found	# se il puntatore restituito da find_id è nullo, allora non c'è nessun task con l'ID inserito
+										# altrimenti
+    move $a0, $t1	# prepara il primo parametro: puntatore al task con ID selezionato
+    move $a1, $t8	# secondo: puntatore d'inizio A
+    move $a2, $t9	# terzo: puntatore d'inizio B
+    
+    jal run	# invoca la procedura run
+    
+    move $t8, $v0   # recupera i valori di ritorno: puntatore d'inizio A
+    move $t9, $v1   # e puntatore d'inizio B
+    
+    j run_id_done   # salta alla terminazione con successo della procedura
 
-    move $a0, $t1
-    move $a1, $t8
-    move $a2, $t9
-    
-    jal run
-    
-    move $t8, $v0
-    move $t9, $v1
-    
-    j run_id_done
-
-run_id_not_found:
-    li $v0, 4
+run_id_not_found:       # se il task con ID selezionato non è stato trovato
+    li $v0, 4           # stampa un messaggio d'errore
     la $a0, task_msg
     syscall
     
@@ -636,10 +636,10 @@ run_id_not_found:
     la $a0, id_not_found_msg
     syscall
     
-    j run_id_choose
+    j run_id_choose # e torna all'inserimento dell'ID
     
-run_id_empty:
-    li $v0, 4
+run_id_empty:           # se la coda era vuota
+    li $v0, 4           # stampa un messaggio d'errore
     la $a0, empty_msg
     syscall
     
@@ -647,25 +647,25 @@ run_id_empty:
     la $a0, run_not_done_msg
     syscall
     
-    j run_id_return
+    j run_id_return # e ritorna
     
-run_id_done:
-    li $v0, 4
+run_id_done:                # se l'esecuzione è eseguita con successo
+    li $v0, 4               # stampa un messaggio di corretta terminazione
     la $a0, run_done_msg
     syscall
 
 run_id_return:
-    move $v0, $t8
-    move $v1, $t9
+    move $v0, $t8   # prepara i valori di ritorno: puntatore d'inizio A
+    move $v1, $t9   # e puntatore d'inizio B
     
-    lw $ra, 12($sp)
-    addi $sp, $sp, 16
+    lw $ra, 12($sp)     # recupera l'indirizzo di ritorno dallo stack
+    addi $sp, $sp, 16   # e dealloca lo stack frame
     
-    jr $ra
+    jr $ra  # torna al chiamante
 ### run_id end ###
 
 ### delete_id ###
-delete_id:
+delete_id:              # analogo a run_id, cambia soltanto la parte centrale
     addi $sp, $sp, -16
     sw $ra, 12($sp)
 
@@ -711,7 +711,7 @@ delete_id_choose:
     move $a1, $t8
     move $a2, $t9
     
-    jal detach
+    jal detach  # invoca la procedura detach
     
     move $t8, $v0
     move $t9, $v1
@@ -760,7 +760,7 @@ delete_id_return:
 ### delete_id end ###
     
 ### change_prio ###
-change_prio:
+change_prio:            # analogo a run_id, cambia soltanto la parte centrale
     addi $sp, $sp, -20
     sw $ra, 16($sp)
 
@@ -804,37 +804,37 @@ change_prio_choose:
     beq $t1, $zero, change_prio_not_found
     
 change_prio_insert_new:
-    li $v0, 4
+    li $v0, 4               # chiede la nuova priorità del task
     la $a0, new_prio_msg
     syscall
     
-    li $v0, 5
+    li $v0, 5       # legge un intero
     syscall
-    move $t2, $v0
-    
+    move $t2, $v0   # e lo salva in $t2
+
     li $t3, 0                               # se si è inserita una priorità minore di 0
     blt $t2, $t3, change_prio_insert_new
     li $t3, 9                               # o se si è inserita una priorità maggiore di 9
     bgt $t2, $t3, change_prio_insert_new    # chiedi nuovamente la priorità del task
-    sw $t2, 20($t1)                         # altrimenti aggiorna nell'heap
+    sw $t2, 20($t1)                         # altrimenti aggiorna la priorità nell'heap
 
-    move $a0, $t1
+    move $a0, $t1   # prepara il primo parametro: puntatore al task da modificare
+    move $a1, $t8   # secondo: puntatore d'inizio A
+    move $a2, $t9   # terzo: puntatore d'inizio B
+    
+    jal detach  # invoca la procedura detach
+    
+    lw $t1, 0($sp)  # recupera il puntatore al task da modificare dallo stack
+    move $t8, $v0   # recupera i valori di ritorno: puntatore d'inizio A
+    move $t9, $v1   # e puntatore d'inizio B
+    
+    move $a0, $t1   # prepara i parametri (come prima)
     move $a1, $t8
     move $a2, $t9
     
-    jal detach
+    jal insert  # invoca la procedura insert
     
-    lw $t1, 0($sp)
-    move $t8, $v0
-    move $t9, $v1
-    
-    move $a0, $t1
-    move $a1, $t8
-    move $a2, $t9
-    
-    jal insert
-    
-    move $t8, $v0
+    move $t8, $v0   # recupera i valori di ritorno (come prima)
     move $t9, $v1
     
     j change_prio_done
@@ -881,27 +881,28 @@ change_prio_return:
 ### change_prio end ###
 
 ### change_sched ###
-change_sched:
-    move $t7, $a0
+change_sched:   # procedura per cambiare la politica di scheduling
+    move $t7, $a0   # primo parametro: politica di scheduling attuale
+                    # secondo e terzo parametro: ignorati
     
-    li $v0, 4                   # stampa la stringa per il cambio della politica di scheduling
+    li $v0, 4                   # stampa la stringa d'inizio del cambio della politica di scheduling
     la $a0, change_sched_msg
     syscall
     
-    li $v0, 4
+    li $v0, 4                       # stampa "Politica di scheduling attuale:"
     la $a0, change_sched_old_msg
     syscall
     
-    li $t0, 'a'
-    bne $t7, $t0, change_sched_to_prio
-    
-    li $v0, 4
+    li $t0, 'a'                         # carica il carattere 'a'
+    bne $t7, $t0, change_sched_to_prio  # se la politica di scheduling attuale non è A, viene cambiata ad A
+                                        # altrimenti
+    li $v0, 4               # stampa la politica attuale (su PRIORITÀ)
     la $a0, sched_prio_msg
     syscall
     
-    li $t7, 'b'
+    li $t7, 'b' # cambia la politica a B
     
-    li $v0, 4
+    li $v0, 4                       # stampa la nuova politica (su ESECUZIONI RIMANENTI)
     la $a0, change_sched_new_msg
     syscall
     
@@ -909,16 +910,16 @@ change_sched:
     la $a0, sched_cycles_msg
     syscall
     
-    j change_sched_end
+    j change_sched_end  # salta alla fine della procedura
     
-change_sched_to_prio:
-    li $v0, 4
+change_sched_to_prio:           # se la politica non era A
+    li $v0, 4                   # stampa la politica attuale (su ESECUZIONI RIMANENTI)
     la $a0, sched_cycles_msg
     syscall
 
-    li $t7, 'a'
+    li $t7, 'a' # cambia la politica ad A
     
-    li $v0, 4
+    li $v0, 4                       # stampa la nuova politica (su PRIORITA)
     la $a0, change_sched_new_msg
     syscall
     
@@ -927,13 +928,13 @@ change_sched_to_prio:
     syscall
     
 change_sched_end:
-    li $v0, 4
+    li $v0, 4                       # stampa un messaggio di corretta terminazione della procedura
     la $a0, change_sched_done_msg
     syscall
     
-    move $v0, $t7
+    move $v0, $t7   # imposta la nuova politica di scheduling come valore di ritorno
     
-    jr $ra
+    jr $ra  # ritorna al chiamante
 ### change_sched end ###
 
 ### Main ###
