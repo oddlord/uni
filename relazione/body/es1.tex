@@ -1,2 +1,50 @@
-\section*{Esercizio 1}
+% !TeX spellcheck = it_IT
+\section*{Esercizio 1: Simulatore di chiamate a procedura}
 
+	\subsection*{Descrizione ad alto livello}
+	
+		Di seguito proponiamo lo pseudocodice relativo al primo esercizio.
+		
+        \begin{center}
+           	\begin{lstlisting}[language=pseudo, gobble=18]
+           	analyze(start, end, depth){
+	           	char = load_char(start)
+	           	
+	           	switch(char){
+		           	case 's':
+			           	char2 = load_char(start+2)
+			           	switch(char2):{
+				           	case 'm':
+					           	res = sum(start, end, depth)
+					        default:
+						        res = sub(start, end, depth)
+						}
+                    case 'p':
+                        res = prod(start, end, depth)
+                    case 'd':
+                        res = div(start, end, depth)
+                    default:
+                        res = 0
+                        while(start <= end){
+                            
+                        }
+	           	}
+           	}
+           	
+           	main(){
+	           	file_descriptor = open("chiamate.txt")
+	           	buffer_pointer, length = read(file_descriptor)
+	           	close(file_descriptor)
+	           	
+	           	start = buffer_pointer + 1
+	           	end = buffer_pointer + length - 2
+	           	depth = 0
+	           	
+	           	analyze(start, end, depth)
+	           	
+	           	exit
+           	}
+           	\end{lstlisting}
+        \end{center}
+		
+		

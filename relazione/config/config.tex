@@ -1,3 +1,4 @@
+% !TeX spellcheck = it_IT
 %********************************************************************
 % Packages
 %********************************************************************
@@ -5,19 +6,11 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[italian]{babel}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{fancybox}
 \usepackage[bottom, para]{footmisc}
 \usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
 \usepackage{hyperref}
-\usepackage{packages/mathpartir}
-\usepackage{multirow}
-\usepackage{pgf}
-\usepackage{stmaryrd}
-\usepackage{textcomp}
-\usepackage{tikz}
-\usepackage{titlesec}
 
 %********************************************************************
 % Packages options
@@ -40,6 +33,34 @@
 % graphicx
 \graphicspath{{img/}}
 
-% tikz
-\usetikzlibrary{shapes,shapes.geometric,arrows,fit,calc,positioning,automata}
-\tikzset{elliptic state/.style={draw,ellipse}}
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+\lstset{
+	basicstyle=\small\sffamily,
+	numbers=none,
+	numberstyle=\tiny,
+	numbersep=3pt,
+	frame=tb,
+	columns=fullflexible,
+	backgroundcolor=\color{yellow!20},
+	keywordstyle=\color{blue}\bfseries,
+	ndkeywordstyle=\color{darkgray}\bfseries,
+	identifierstyle=\color{black},
+	commentstyle=\color{purple}\ttfamily,
+	stringstyle=\color{red}\ttfamily
+}
+\lstset{
+	numberbychapter=false,
+	showstringspaces=false,
+	breaklines=true
+}
+
+\lstdefinelanguage{pseudo}{
+	keywords={open, read, close, exit, switch, case, default, load_char, while},
+	ndkeywords={class, export, boolean, throw, implements, import, this},
+	sensitive=false,
+	comment=[l]{//},
+	morestring=[b]',
+	morestring=[b]"
+}
