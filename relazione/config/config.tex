@@ -38,7 +38,8 @@
 \definecolor{purple}{rgb}{0.65, 0.12, 0.82}
 \lstset{
 	basicstyle=\small\sffamily,
-	numbers=none,
+	numbers=left,
+    stepnumber=2,
 	numberstyle=\tiny,
 	numbersep=3pt,
 	frame=tb,
@@ -57,7 +58,7 @@
 }
 
 \lstdefinelanguage{pseudo}{
-	keywords={open, read, close, exit, switch, case, default, load_char, while},
+	keywords={open, read, close, exit, switch, case, default, load_char, while, return},
 	ndkeywords={class, export, boolean, throw, implements, import, this},
 	sensitive=false,
 	comment=[l]{//},

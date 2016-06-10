@@ -302,6 +302,11 @@ call_div:
 analyze:
     addi $sp, $sp, -4  # alloca spazio per una word nello stack frame
     sw $ra, 0($sp)     # salva l'indirizzo di ritorno del chiamante
+
+    # i parametri di input delle chiamate sono gli stessi di analyze, ovvero:
+    # primo: puntatore d'inizio
+    # secondo: puntatore di fine
+    # terzo: profondità della chiamata
     
     lb $t0, 0($a0)                  # carica il primo carattere della stringa
     li $t1, 's'                     # se è 's'
@@ -351,9 +356,10 @@ analyze_int_loop:
     j analyze_int_loop  # ed esegue un altro ciclo
     
 analyze_end:
-    lw $ra, 0($sp)
-    addi $sp, $sp, 4
-    jr $ra
+    # nel caso delle chiamate a procedura, il valore di ritorno è lo stesso (valutazione dell'espressione)
+    lw $ra, 0($sp)      # recupera l'indirizzo di ritorno
+    addi $sp, $sp, 4    # dealloca lo stack
+    jr $ra              # torna al chiamante
 ### Analyze end ###
 
 ### Main ###
@@ -376,14 +382,19 @@ main:
     move $a0, $t0   # carica il file descriptor
     syscall
 
-    la $a0, buffer      # prepara il primo argomento (puntatore d'inizio)
-    addi $a0, $a0, 1
-    la $a1, buffer      # il secondo argomento (puntatore di fine)
-    add $a1, $a1, $t1
-    addi $a1, -2
-    li $a2, 0           # ed il terzo (profondità delle chiamate)
+    la $t2, buffer      # calcola il puntatore d'inizio
+    addi $t2, $t2, 1    # saltando le " iniziali
+    la $t3, buffer      # il puntatore di fine
+    add $t3, $t3, $t1   # sommando la lunghezza della stringa
+    addi $t3, -2        # e sottraendo 2 (evita le " finali)
+    li $t4, 0           # e la profondità delle chiamate iniziale
+    
+    move $a0, $t2   # prepara i parametri
+    move $a1, $t3
+    move $a2, $t4
     
     jal analyze # inizia analizzando l'intera stringa
+                # ignora il valore di ritorno
     
     li $v0, 10  # uscita dal programma (syscall)
     syscall
