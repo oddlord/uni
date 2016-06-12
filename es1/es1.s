@@ -5,7 +5,7 @@
 # Date: ??/??/????
 # Description:  Chiamate a procedura per l'esecuzione di operazioni aritmetiche
 # Input: chiamate.txt
-# Output: traccia delle chiamate su console
+# Output: Traccia delle chiamate su console
 
 ################# Data segment #####################
 .data
@@ -31,7 +31,7 @@ print_call:
     move $t2, $a2
     
 print_call_tabs:
-    beq $t2, $zero, print_call_arrow    # se la profondità ha è 0, allora procede a stampare la stringa
+    beq $t2, $zero, print_call_arrow    # se la profondità è 0, allora procede a stampare la stringa
                                         # altrimenti
     li $v0, 4   # stampa una tabulazione
     la $a0, tab
@@ -169,26 +169,42 @@ get_operands_found:
 ### Call sum ###
 call_sum:
     addi $sp, $sp, -20  # alloca spazio per cinque words nello stack frame
-    sw $ra, 16($sp)     # salva l'indirizzo di ritorno
-    sw $a0, 12($sp)     # il puntatore d'inizio
-    sw $a1, 8($sp)      # il puntatore di fine
-    sw $a2, 4($sp)      # e la profondità della chiamata
+    sw $ra, 16($sp)     # salva l'indirizzo di ritorno nello stack
+    
+    move $t0, $a0   # primo parametro: puntatore d'inizio
+    move $t1, $a1   # secondo: puntatore di fine
+    move $t2, $a2   # terzo: profondità della chiamata
+    
+    sw $t0, 12($sp)     # il puntatore d'inizio
+    sw $t1, 8($sp)      # il puntatore di fine
+    sw $t2, 4($sp)      # e la profondità della chiamata
+    
+    move $a0, $t0   # primo parametro: puntatore d'inizio
+    move $a1, $t1   # secondo: puntatore di fine
+    move $a2, $t2   # terzo: profondità della chiamata
     
     jal print_call      # invoca la procedura per la stampa dell'invocazione (con gli stessi parametri)
     
-    lw $a0, 12($sp)     # recupera il puntatore d'inizio dallo stack
-    addi $a0, $a0, 6    # salta la stringa "somma(" (6 caratteri)
-    lw $a1, 8($sp)      # recupera il puntatore di fine
-    addi $a1, $a1, -1   # scarta l'ultima parentesi chiusa
-    lw $a2, 4($sp)      # recupera la profondità della chiamata
+    lw $t0, 12($sp)     # recupera il puntatore d'inizio dallo stack
+    addi $t0, $t0, 6    # salta la stringa "somma(" (6 caratteri)
+    lw $t1, 8($sp)      # recupera il puntatore di fine
+    addi $t1, $t1, -1   # scarta l'ultima parentesi chiusa
+    lw $t2, 4($sp)      # recupera la profondità della chiamata
+    
+    move $a0, $t0   # primo parametro: puntatore d'inizio
+    move $a1, $t1   # secondo: puntatore di fine
+    move $a2, $t2   # terzo: profondità della chiamata
     
     jal get_operands    # invoca la procedura per ottenere gli operandi
     
-    add $v0, $v0, $v1   # somma i due operandi ottenuti
-    sw $v0, 0($sp)      # salva il risultato nello stack
+    move $t0, $v0   # primo valore di ritorno: valore del primo operando
+    move $t1, $v1   # secondo: valore del secondo operando
+    
+    add $t2, $t0, $t1   # somma i due operandi ottenuti
+    sw $t2, 0($sp)      # salva il risultato nello stack
     
     la $a0, sum_return  # carica l'indirizzo della stringa sum_return (primo parametro)
-    move $a1, $v0       # imposta il risultato dell'operazione come secondo parametro
+    move $a1, $t2       # imposta il risultato dell'operazione come secondo parametro
     lw $a2, 4($sp)      # recupera la profondità della chiamata (terzo parametro)
     
     jal print_return    # invoca la stampa del risultato con questi tre parametri
@@ -200,102 +216,150 @@ call_sum:
 ### Call sum end ###
 
 ### Call subtraction ###
-call_sub:               # call_sub, call_prod e call_div analoghe a call_sum
-    addi $sp, $sp, -20
-    sw $ra, 16($sp)
-    sw $a0, 12($sp)
-    sw $a1, 8($sp)
-    sw $a2, 4($sp)
+call_sub:
+    addi $sp, $sp, -20  # alloca spazio per cinque words nello stack frame
+    sw $ra, 16($sp)     # salva l'indirizzo di ritorno nello stack
     
-    jal print_call
+    move $t0, $a0   # primo parametro: puntatore d'inizio
+    move $t1, $a1   # secondo: puntatore di fine
+    move $t2, $a2   # terzo: profondità della chiamata
     
-    lw $a0, 12($sp)
-    addi $a0, $a0, 12   # salta la stringa "sottrazione(" (12 caratteri)
-    lw $a1, 8($sp)
-    addi $a1, $a1, -1
-    lw $a2, 4($sp)
+    sw $t0, 12($sp)     # il puntatore d'inizio
+    sw $t1, 8($sp)      # il puntatore di fine
+    sw $t2, 4($sp)      # e la profondità della chiamata
     
-    jal get_operands
+    move $a0, $t0   # primo parametro: puntatore d'inizio
+    move $a1, $t1   # secondo: puntatore di fine
+    move $a2, $t2   # terzo: profondità della chiamata
     
-    sub $v0, $v0, $v1   # sottrae il secondo operando al primo
-    sw $v0, 0($sp)
+    jal print_call      # invoca la procedura per la stampa dell'invocazione (con gli stessi parametri)
+    
+    lw $t0, 12($sp)     # recupera il puntatore d'inizio dallo stack
+    addi $t0, $t0, 12   # salta la stringa "sottrazione(" (12 caratteri)
+    lw $t1, 8($sp)      # recupera il puntatore di fine
+    addi $t1, $t1, -1   # scarta l'ultima parentesi chiusa
+    lw $t2, 4($sp)      # recupera la profondità della chiamata
+    
+    move $a0, $t0   # primo parametro: puntatore d'inizio
+    move $a1, $t1   # secondo: puntatore di fine
+    move $a2, $t2   # terzo: profondità della chiamata
+    
+    jal get_operands    # invoca la procedura per ottenere gli operandi
+    
+    move $t0, $v0   # primo valore di ritorno: valore del primo operando
+    move $t1, $v1   # secondo: valore del secondo operando
+    
+    sub $t2, $t0, $t1   # sottrae il secondo operando al primo
+    sw $t2, 0($sp)      # salva il risultato nello stack
     
     la $a0, sub_return  # carica l'indirizzo della stringa sub_return (primo parametro)
-    move $a1, $v0
-    lw $a2, 4($sp)
+    move $a1, $t2       # imposta il risultato dell'operazione come secondo parametro
+    lw $a2, 4($sp)      # recupera la profondità della chiamata (terzo parametro)
     
-    jal print_return
+    jal print_return    # invoca la stampa del risultato con questi tre parametri
     
-    lw $v0, 0($sp)
-    lw $ra, 16($sp)
-    addi $sp, $sp, 20
-    jr $ra
+    lw $v0, 0($sp)      # recupera il risultato dell'operazione
+    lw $ra, 16($sp)     # recupera l'indirizzo di ritorno
+    addi $sp, $sp, 20   # dealloca lo stack frame
+    jr $ra              # torna al chiamante
 ### Call subtraction end ###
 
 ### Call product ###
 call_prod:
-    addi $sp, $sp, -20
-    sw $ra, 16($sp)
-    sw $a0, 12($sp)
-    sw $a1, 8($sp)
-    sw $a2, 4($sp)
+    addi $sp, $sp, -20  # alloca spazio per cinque words nello stack frame
+    sw $ra, 16($sp)     # salva l'indirizzo di ritorno nello stack
     
-    jal print_call
+    move $t0, $a0   # primo parametro: puntatore d'inizio
+    move $t1, $a1   # secondo: puntatore di fine
+    move $t2, $a2   # terzo: profondità della chiamata
     
-    lw $a0, 12($sp)
-    addi $a0, $a0, 9    # salta la stringa "prodotto(" (9 caratteri)
-    lw $a1, 8($sp)
-    addi $a1, $a1, -1
-    lw $a2, 4($sp)
+    sw $t0, 12($sp)     # il puntatore d'inizio
+    sw $t1, 8($sp)      # il puntatore di fine
+    sw $t2, 4($sp)      # e la profondità della chiamata
     
-    jal get_operands
+    move $a0, $t0   # primo parametro: puntatore d'inizio
+    move $a1, $t1   # secondo: puntatore di fine
+    move $a2, $t2   # terzo: profondità della chiamata
     
-    mul $v0, $v0, $v1   # moltiplica i due operandi ottenuti
-    sw $v0, 0($sp)
+    jal print_call      # invoca la procedura per la stampa dell'invocazione (con gli stessi parametri)
+    
+    lw $t0, 12($sp)     # recupera il puntatore d'inizio dallo stack
+    addi $t0, $t0, 9    # salta la stringa "prodotto(" (9 caratteri)
+    lw $t1, 8($sp)      # recupera il puntatore di fine
+    addi $t1, $t1, -1   # scarta l'ultima parentesi chiusa
+    lw $t2, 4($sp)      # recupera la profondità della chiamata
+    
+    move $a0, $t0   # primo parametro: puntatore d'inizio
+    move $a1, $t1   # secondo: puntatore di fine
+    move $a2, $t2   # terzo: profondità della chiamata
+    
+    jal get_operands    # invoca la procedura per ottenere gli operandi
+    
+    move $t0, $v0   # primo valore di ritorno: valore del primo operando
+    move $t1, $v1   # secondo: valore del secondo operando
+    
+    mul $t2, $t0, $t1   # moltiplica i due operandi ottenuti
+    sw $t2, 0($sp)      # salva il risultato nello stack
     
     la $a0, prod_return # carica l'indirizzo della stringa prod_return (primo parametro)
-    move $a1, $v0
-    lw $a2, 4($sp)
+    move $a1, $t2       # imposta il risultato dell'operazione come secondo parametro
+    lw $a2, 4($sp)      # recupera la profondità della chiamata (terzo parametro)
     
-    jal print_return
+    jal print_return    # invoca la stampa del risultato con questi tre parametri
     
-    lw $v0, 0($sp)
-    lw $ra, 16($sp)
-    addi $sp, $sp, 20
-    jr $ra
+    lw $v0, 0($sp)      # recupera il risultato dell'operazione
+    lw $ra, 16($sp)     # recupera l'indirizzo di ritorno
+    addi $sp, $sp, 20   # dealloca lo stack frame
+    jr $ra              # torna al chiamante
 ### Call product end ###
 
 ### Call division ###
 call_div:
-    addi $sp, $sp, -20
-    sw $ra, 16($sp)
-    sw $a0, 12($sp)
-    sw $a1, 8($sp)
-    sw $a2, 4($sp)
+    addi $sp, $sp, -20  # alloca spazio per cinque words nello stack frame
+    sw $ra, 16($sp)     # salva l'indirizzo di ritorno nello stack
     
-    jal print_call
+    move $t0, $a0   # primo parametro: puntatore d'inizio
+    move $t1, $a1   # secondo: puntatore di fine
+    move $t2, $a2   # terzo: profondità della chiamata
     
-    lw $a0, 12($sp)
-    addi $a0, $a0, 10   # salta la stringa "divisione(" (10 caratteri)
-    lw $a1, 8($sp)
-    addi $a1, $a1, -1
-    lw $a2, 4($sp)
+    sw $t0, 12($sp)     # il puntatore d'inizio
+    sw $t1, 8($sp)      # il puntatore di fine
+    sw $t2, 4($sp)      # e la profondità della chiamata
     
-    jal get_operands
+    move $a0, $t0   # primo parametro: puntatore d'inizio
+    move $a1, $t1   # secondo: puntatore di fine
+    move $a2, $t2   # terzo: profondità della chiamata
     
-    div $v0, $v0, $v1   # divide (operazione quoziente) il primo operando per il secondo
-    sw $v0, 0($sp)
+    jal print_call      # invoca la procedura per la stampa dell'invocazione (con gli stessi parametri)
+    
+    lw $t0, 12($sp)     # recupera il puntatore d'inizio dallo stack
+    addi $t0, $t0, 10   # salta la stringa "divisione(" (10 caratteri)
+    lw $t1, 8($sp)      # recupera il puntatore di fine
+    addi $t1, $t1, -1   # scarta l'ultima parentesi chiusa
+    lw $t2, 4($sp)      # recupera la profondità della chiamata
+    
+    move $a0, $t0   # primo parametro: puntatore d'inizio
+    move $a1, $t1   # secondo: puntatore di fine
+    move $a2, $t2   # terzo: profondità della chiamata
+    
+    jal get_operands    # invoca la procedura per ottenere gli operandi
+    
+    move $t0, $v0   # primo valore di ritorno: valore del primo operando
+    move $t1, $v1   # secondo: valore del secondo operando
+    
+    div $t2, $t0, $t1   # divide (operazione quoziente) il primo operando per il secondo
+    sw $t2, 0($sp)      # salva il risultato nello stack
     
     la $a0, div_return  # carica l'indirizzo della stringa div_return (primo parametro)
-    move $a1, $v0
-    lw $a2, 4($sp)
+    move $a1, $t2       # imposta il risultato dell'operazione come secondo parametro
+    lw $a2, 4($sp)      # recupera la profondità della chiamata (terzo parametro)
     
-    jal print_return
+    jal print_return    # invoca la stampa del risultato con questi tre parametri
     
-    lw $v0, 0($sp)
-    lw $ra, 16($sp)
-    addi $sp, $sp, 20
-    jr $ra
+    lw $v0, 0($sp)      # recupera il risultato dell'operazione
+    lw $ra, 16($sp)     # recupera l'indirizzo di ritorno
+    addi $sp, $sp, 20   # dealloca lo stack frame
+    jr $ra              # torna al chiamante
 ### Call division end ###
     
 ### Analyze ###
