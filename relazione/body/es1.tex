@@ -24,9 +24,8 @@
     	           	
                     analyze(start, end, depth)
     	           	
-                    exit
-                }
-           	\end{lstlisting}
+                    exit()
+                }\end{lstlisting}
         \end{center}
         
         Come si può intuire, il programma apre il file \bash{chiamate.txt} e ne legge il contenuto. Quindi, calcola i puntatori d'inizio e di fine ed invoca la procedura \pseudo{analyze()} sull'intera stringa. Oltre ai puntatori d'inizio e di fine della stringa, viene mantenuto anche un valore di profondità delle chiamate ricorsive, inizializzato a $0$, utile per stampare i messaggi su consolle con la giusta indentazione.
@@ -64,8 +63,7 @@
                     }
                     
                     return res
-                }
-           	\end{lstlisting}
+                }\end{lstlisting}
         \end{center}
         
         Il compito della funzione \pseudo{analyze()} è quello di determinare quale operazione aritmetica caratterizza la stringa passata in input (ovvero la stringa delimitata dai puntatori \pseudo{start} ed \pseudo{end} passati come parametri). Dal momento che si assume che la stringa descritta in \bash{chiamate.txt} sia sempre sintatticamente corretta, per determinare l'operazione principale della stringa basterà analizzare il primo carattere: se è $s$ allora è o una somma o una sottrazione (in questo caso esamina il terzo carattere), se è $p$ allora è un prodotto, se è $d$ allora è una divisione, altrimenti è un valore già ridotto a intero.
@@ -81,7 +79,7 @@
                 sum(start, end, depth){
                    	print_call(start, end, depth)
                    	
-                   	start = start + 6
+                   	start = start + 6 (*@\label{lst:start+6}@*)
                    	end = end - 1
                    	
                    	op1, op2 = get_operands(start, end, depth)
@@ -95,7 +93,7 @@
                 sub(start, end, depth){
                    	print_call(start, end, depth)
                    	
-                   	start = start + 12
+                   	start = start + 12 (*@\label{lst:start+12}@*)
                    	end = end - 1
                    	
                    	op1, op2 = get_operands(start, end, depth)
@@ -132,11 +130,10 @@
                    	print_return("divisione-return", res, depth)
                    	
                    	return res
-                }
-           	\end{lstlisting}
+                }\end{lstlisting}
         \end{center}
         
-        Le implementazioni delle quattro operazioni sono molto simili e si distinguono soltanto per alcuni dettagli. Innanzitutto viene invocata la procedura \pseudo{print_call()} sugli stessi parametri di input: questa funzione permette di stampare su console la riga corrispondente alla chiamata a procedura. Dopodiché vengono aggiornati i puntatori d'inizio e di fine della stringa saltando il nome dell'operazione in testa e l'apertura e chiusura delle parentesi: il puntatore finale viene sempre decrementato di $1$ (per saltare la chiusura di parentesi finale) mentre i caratteri da saltare all'inizio variano a seconda dell'operazione (ad esempio per la somma si deve saltare $somma($, ovvero $6$ caratteri, come vediamo in riga 4 del codice, mentre per la sottrazione si salta $sottrazione($, ovvero $12$ caratteri totali, come si vede in riga 18). A questo punto si invoca la funzione \pseudo{get_operands()}, sui nuovi puntatori aggiornati e sulla stessa profondità, che si occupa di calcolare il valore intero dei due operandi coinvolti nell'operazione e restituirli. Una volta ottenuti gli operandi, si può effettuare l'operazione richiesta (somma, sottrazione, ecc\dots). Quindi verrà invocata la procedura \pseudo{print_return()} la quale, data una stringa caratterizzante l'operazione, il risultato calcolato e la profondità, stampa il messaggio su console relativo al ritorno della procedura. Infine la funzione restituisce il valore calcolato.
+        Le implementazioni delle quattro operazioni sono molto simili e si distinguono soltanto per alcuni dettagli. Innanzitutto viene invocata la procedura \pseudo{print_call()} sugli stessi parametri di input: questa funzione permette di stampare su console la riga corrispondente alla chiamata a procedura. Dopodiché vengono aggiornati i puntatori d'inizio e di fine della stringa saltando il nome dell'operazione in testa e l'apertura e chiusura delle parentesi: il puntatore finale viene sempre decrementato di $1$ (per saltare la chiusura di parentesi finale) mentre i caratteri da saltare all'inizio variano a seconda dell'operazione (ad esempio per la somma si deve saltare $somma($, ovvero $6$ caratteri, come vediamo in riga \ref{lst:start+6} del codice, mentre per la sottrazione si salta $sottrazione($, ovvero $12$ caratteri totali, come si vede in riga \ref{lst:start+12}). A questo punto si invoca la funzione \pseudo{get_operands()}, sui nuovi puntatori aggiornati e sulla stessa profondità, che si occupa di calcolare il valore intero dei due operandi coinvolti nell'operazione e restituirli. Una volta ottenuti gli operandi, si può effettuare l'operazione richiesta (somma, sottrazione, ecc\dots). Quindi verrà invocata la procedura \pseudo{print_return()} la quale, data una stringa caratterizzante l'operazione, il risultato calcolato e la profondità, stampa il messaggio su console relativo al ritorno della procedura. Infine la funzione restituisce il valore calcolato.
         
         Vediamo di seguito l'implementazione in pseudocodice della funzione \pseudo{get_operands()}:
         
@@ -163,8 +160,7 @@
                     res1 = analyze(start, i-1, depth)
                     res2 = analyze(i+1, end, depth)
                     return res1, res2
-                }
-           	\end{lstlisting}
+                }\end{lstlisting}
         \end{center}
         
         La funzione che estrae il valore degli operandi incrementa, innanzitutto, la profondità di chiamata di $1$: infatti, quando si effettueranno le chiamate ricorsive sui due operandi, queste avranno una profondità maggiore rispetto alla chiamata ``padre''. Quindi, viene creato un puntatore \pseudo{i}, inizializzato col puntatore d'inizio, ed un contatore \pseudo{pars}, inizializzato a $0$, che conta il numero di parentesi aperte ma non chiuse.
@@ -198,8 +194,7 @@
                     }
                     print("<--" + return_string + "(" + res + ")")
                     print_newline()
-                }
-           	\end{lstlisting}
+                }\end{lstlisting}
         \end{center}
 		
 		Entrambe le procedure iniziano stampando un numero di tabulazioni pari alla profondità di chiamata. Dopodiché viene stampata la freccia, verso destra o verso sinistra, a seconda che sia l'invocazione o la terminazione di una chiamata, rispettivamente. Infine, per l'invocazione di chiamata, viene effettuato un ciclo per stampare l'intera stringa attuale, mentre per la terminazione di chiamata viene stampata la stringa caratteristica dell'operazione (ad esempio \pseudo{"somma-return"} per la somma) e quindi il valore del risultato tra parentesi.
@@ -712,7 +707,6 @@
                     
                     li $v0, 10  # uscita dal programma (syscall)
                     syscall
-                ### Main end ###
-           	\end{lstlisting}
+                ### Main end ###\end{lstlisting}
         \end{center}
 		

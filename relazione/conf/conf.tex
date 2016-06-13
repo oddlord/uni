@@ -14,6 +14,7 @@
 \usepackage{pkg/mips}
 \usepackage{placeins}
 \usepackage{listingsutf8}
+\usepackage{textcomp}
 
 %********************************************************************
 % Packages options
@@ -52,24 +53,25 @@
 	columns=flexible,
 	backgroundcolor=\color{yellow!20},
 	keywordstyle=\color{blue}\bfseries,
-	ndkeywordstyle=\color{darkgray}\bfseries,
+	ndkeywordstyle=\color{mauve}\bfseries,
 	identifierstyle=\color{black},
 	commentstyle=\color{dkgreen}\ttfamily,
-	stringstyle=\color{mauve}\ttfamily,
+	stringstyle=\color{red}\ttfamily,
 	inputencoding=utf8/latin1,
 	keepspaces=true,
     literate=%
         {à}{{\`a}}1
-        {è}{{\`e}}1
-}
-\lstset{
+        {è}{{\`e}}1,
 	numberbychapter=false,
 	showstringspaces=false,
-	breaklines=true
+	breaklines=true,
+	upquote=true,
+	escapeinside={(*@}{@*)}
 }
 
 \lstdefinelanguage{pseudo}{
-	keywords={open, read, close, exit, switch, case, default, load_char, while, return, print_tab, print_newline, print, if, break},
+	keywords={open, read, close, exit, switch, case, default, load_char, while, return, print_tab, print_newline, print, if, break, read_int, continue, else, println, read_string},
+	ndkeywords={null, true, false},
 	sensitive=false,
 	comment=[l]{//},
 	morestring=[b]',

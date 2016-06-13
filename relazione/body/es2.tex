@@ -3,6 +3,190 @@
 
     \subsection*{Descrizione ad alto livello}
     
+        Come per l'esercizio precedente, descriviamo il funzionamento generale del programma tramite una descrizione at alto livello.
+        
+        Essendo questo esercizio, rispetto al precedente, molto più complesso, la descrizione ad alto livello del codice trascurerà alcuni dettagli meno interessanti, come la stampa su consolle di messaggi di servizio, e si concentrerà invece su aspetti più importanti del codice, per rendere la lettura più chiara e scorrevole.
+        
+        L'idea generale è quella di costruire e gestire due liste doppiamente concatenate, una corrispondente alla politica di scheduling A (su priorità) ed una corrispondente alla politica B (su esecuzioni rimanenti). Ad ogni task corrisponderà quindi un record, opportunamente allocato in memoria in modo dinamico, composto da una serie di ``campi''. Oltre ai campi caratteristici del task, come ID, nome, ecc., questo record conterrà anche quattro puntatori ad altri task, ovvero i puntatori al precedente e successivo sia per la politica A che per la B. Servirà quindi mantenere, in ogni momento, due puntatori, che rappresentano i puntatori d'inizio delle due liste concatenate, e la politica di scheduling attuale. Per semplicità di esposizione, nello pseudocodice rappresenteremo l'accesso ai campi di ogni record con una sintassi simile all'accesso ai campi di un oggetto (ovvero l'istanza di una classe): questa è solamente una scorciatoia a livello di esposizione per semplificare la lettura dello pseudocodice e non vuol dare l'idea che si stanno implementando classi ed oggetti. Le code, inoltre, saranno implementate al contrario, ovvero gli elementi puntati dai puntatori d'inizio sono di fatto gli elementi in fondo alle due code. Il perché di questa scelta verrà commentato in seguito.
+        
+        Detto questo, iniziamo col vedere, qui di seguito, la descrizione ad alto livello del segmento di codice \pseudo{main()}, punto d'entrata del programma:
+        
+        \begin{center}
+           	\begin{lstlisting}[language=pseudo, gobble=14]
+                main(){
+                    sched = 'a'
+                    start_A = null
+                    start_B = null
+                    
+                    while(true){
+                        com = read_int("Inserire un comando: ")
+                        switch(com){
+                            case 1:
+                                start_A, start_B = insert_task(start_A, start_B)
+                            case 2:
+                                start_A, start_B = run_first(sched, start_A, start_B)
+                            case 3:
+                                start_A, start_B = run_id(start_A, start_B)
+                            case 4:
+                                start_A, start_B = delete_id(start_A, start_B)
+                            case 5:
+                                start_A, start_B = change_prio(start_A, start_B)
+                            case 6:
+                                sched = change_sched(sched)
+                            case 7:
+                                print("Terminazione del programma.")
+                                exit()
+                            default:
+                                print("Menu: ...")
+                        }
+                        
+                        if(sched == 'a'){ (*@\label{lst:print_queue_start}@*)
+                            i = start_A
+                        } else {
+                            i = start_B
+                        }
+                        delim = "+----+-----------+-----------+-------------------+"
+                        header = "| ID | PRIORITA' | NOME TASK | ESECUZ. RIMANENTI |"
+                        println(delim)
+                        println(header)
+                        println(delim)
+                        if(i == null){
+                            println("|                  Coda vuota!                   |")
+                            println(delim)
+                            continue
+                        }
+                        while(i != null){
+                            print("/ ")
+                            id = i.id
+                            if (id <= 9){
+                                print("  " + id)
+                            } else {
+                                print(" " + id)
+                            }
+                            print(" /     " + i.prio + "     / " + i.name + "  /        ")
+                            cycles = i.cycles
+                            if(cycles <= 9){
+                                print(" " + cycles)
+                            } else {
+                                print(cycles)
+                            }
+                            println("         /")
+                            println(delim)
+                            if(sched == 'a'){
+                                i = i.next_A
+                            } else {
+                                i = i.next_B
+                            }
+                        }
+                    }
+                }\end{lstlisting}
+        \end{center}
+        
+        La prima cosa che viene fatta è inizializzare i due puntatori iniziali a \pseudo{null} e la politica di scheduling ad A. Quindi si inizia un ciclo nel quale ad ogni passo viene chiesto un comando tramite l'inserimento di un intero da input: a questo punto, a seconda dell'intero inserito, viene eseguita l'operazione corrispondente, passandogli i parametri necessari e catturando i valori di ritorno. Ad esempio, la funzione corrispondente al comando $1$, ovvero l'inserimento di un nuovo task, prende come parametri i puntatori d'inizio attuali e restituisce una coppia di puntatori d'inizio aggiornati. Se il comando è il $7$, allora si procede all'uscita dal programma senza invocare procedure, mentre in tutti gli altri casi (ad esempio inserendo altri interi, caratteri, stringhe o semplicemente premendo Invio) viene stampato il menu dove vengono descritti i vari comandi disponibili.
+        
+        Una volta eseguita la funzione richiesta, vengono eseguite le istruzioni per la stampa della coda (dalla riga \ref{lst:print_queue_start} dello pseudocodice). Dapprima, viene inizializzato un puntatore, che servirà a scorrere la coda a seconda della politica di scheduling attuale, e verrà stampata l'intestazione della tabella. In caso di coda vuota, verrà stampato un messaggio all'interno della tabella e si tornerà alla richiesta di selezione di un comando. In caso contrario inizierà invece un ciclo su tutti gli elementi della lista, da quello in fondo a quello in testa. Per ogni elemento viene stampata una riga nella tabella, contenente tutte le informazioni del task, estraendole dal record. Tutti gli spazi aggiuntivi che si vedono nelle varie stringhe che vengono stampate servono a rendere i campi della tabella allineati. Inoltre, su due campi, l'ID e le esecuzioni rimanenti, viene controllato se il numero è a due cifre oppure una sola, in modo da stampare un numero corretto di spazi per allineare il valore a destra (in questo caso, mentre per le esecuzioni rimanenti siamo sicuri di avere al massimo un numero di due cifre, per l'ID non possiamo esserne certi, quindi assumiamo che l'ID di un task arrivi fino a 99, altrimenti la tabella verrà non allineata). Al termine del ciclo, verrà quindi caricato il task seguente nella lista, a seconda della politica di scheduling.
+        
+        Vediamo adesso, una per una, le implementazioni ad alto livello dei vari comandi, iniziando con l'inserimento di un nuovo task.
+        
+        \begin{center}
+           	\begin{lstlisting}[language=pseudo, gobble=14]
+                insert_task(start_A, start_B){
+                    task = new_task() // alloca spazio sufficiente con sbrk
+                    task.prev_A = null
+                    task.prev_B = null
+                    while(true){
+                        id = read_int("Inserire l'ID: ")
+                        if(start_A == null){
+                            task.id = id
+                            break
+                        }
+                        duplicate_task = find_id(id, start_A)
+                        if(duplicate_task == null){
+                            task.id = id
+                            break
+                        }
+                        println("Task con ID " + id + "già presente.")
+                    }
+                    name = read_string("Inserire il nome: ")
+                    task.name = name // inserisce soltanto i primo 8 caratteri della stringa inserita
+                    while(true){
+                        prio = read_int("Inserire la priorità: ")
+                        if(prio >= 0 AND prio <= 9){
+                            task.prio = prio
+                            break
+                        }
+                    }
+                    while(true){
+                        cycles = read_int("Inserire i cicli di esecuzione: ")
+                        if(cycles >= 1 AND cycles <= 99){
+                            task.cycles = cycles
+                            break
+                        }
+                    }
+                    task.next_A = null
+                    task.next_B = null
+                    
+                    start_A, start_B = insert(task, start_A, start_B)
+                    
+                    return start_A, start_B
+                }\end{lstlisting}
+        \end{center}
+        
+        La funzione \pseudo{insert_task()} riceve come argomenti i due puntatori d'inizio, mentre la politica di scheduling attuale non serve in quanto il task dovrà essere inserito in entrambe le liste indifferentemente dalla politica attuale. Per prima cosa viene allocato spazio per il nuovo task (la pseudoistruzione \pseudo{new_task()} corrisponde di fatto ad una chiamata SBRK di 36 byte). Quindi si procede a chiedere da input i valori dei vari campi per poi inserirli all'interno del record del nuovo task. Se la coda è vuota, l'ID viene inserito automaticamente, altrimenti si controlla che non sia già presente un task con lo stesso ID (tramite la funzione \pseudo{find_id()}, di cui vedremo a breve l'implementazione): se il risultato è positivo, allora si chiede un nuovo ID, altrimenti si può salvare l'ID selezionato all'interno del record. Per quanto riguarda priorità e cicli d'esecuzione viene fatto un controllo simile: si richiede infatti l'inserimento di una priorità tra 0 e 9 e di cicli di esecuzioni tra 1 e 99. I puntatori a precedenti e successivi, invece, vengono inizializzati a \pseudo{null}, in quanto il task, di fatto, non è ancora inserito nelle liste.
+        
+        Per inserire il task nelle due code si invoca quindi la funzione \pseudo{insert()} (che descriveremo a breve) passandogli come parametri il puntatore al task appena creato e i due puntatori d'inizio. Il risultato sarà una coppia di puntatori d'inizio aggiornati, che la funzione \pseudo{insert_task()} potrà quindi restituire, terminando la sua esecuzione.
+        
+        Vediamo, di seguito, l'implementazione della funzione ausiliaria \pseudo{find_id()}:
+        
+        \begin{center}
+           	\begin{lstlisting}[language=pseudo, gobble=14]
+                find_id(id, start_A){
+                    task = null
+                    i = start_A
+                    while(i != null){
+                        if(id = i.id){
+                            task = i
+                            break
+                        }
+                        i = i.next_A
+                    }
+                    return task
+                }\end{lstlisting}
+        \end{center}
+        
+        La funzione \pseudo{find_id()} prende in input un ID ed il puntatore d'inizio della lista A e restituisce il puntatore al task con ID indicato se presente nelle code, \pseudo{null} altrimenti. Dal momento che, per come abbiamo implementato \pseudo{insert_task()}, ogni ID è unico nelle code e che gli elementi nelle due code sono esattamente gli stessi (a meno dell'ordinamento), scorrere la lista A o la B è indifferente ai fini di trovare un task con ID specificato. La funzione è molto semplice: si inizializza il puntatore al task da trovare a \pseudo{null} e quindi si scorre la lista tramite un ciclo dal quale si può uscire soltanto una volta trovato un task con ID corrispondente o una volta terminata la lista. Se il task è stato effettivamente trovato, allora verrà restituito il suo puntatore, altrimenti \pseudo{null}. Questa funzione è stata implementata a parte in quanto verrà riutilizzata in altri punti del codice.
+        
+        Parliamo anche l'implementazione della seconda funzione ausiliaria vista fin'ora, ovvero \pseudo{insert()}. La funzione \pseudo{insert()} è una funzione molto complessa ed in qualche modo rappresenta il cuore di tutto il programma. L'implementazione di questa funzione è caratterizzata da alcuni costrutti molto particolari, possibili soltanto grazie alle istruzioni di salto messe a disposizione dal linguaggio assembly, la cui conversione in pseudocodice di alto livello è molto complessa, se non impossibile, da rendere pur mantenendo un certo livello di chiarezza e leggibilità. Per queste ragioni commenteremo l'implementazione di questa funzione soltanto a livello testuale e senza l'ausilio di pseudocodice, che renderebbe soltanto le cose più difficili da comprendere.
+        
+        La funzione \pseudo{insert()} è una funzione ausiliare che prende in input il puntatore al task che si vuole inserire nelle due liste ed i puntatori d'inizio delle liste A e B. È quindi una funzione generica per l'inserimento di un task nelle due liste che verrà utilizzata più volte all'interno del programma. La funzione controlla innanzitutto se le due liste sono vuote (puntatori d'inizio a \pseudo{null}): in questo caso fa puntare i due puntatori d'inizio al task da inserire e li restituisce. In caso contrario, inizia un primo ciclo, dedicato all'inserimento nella lista A, ovvero alla coda relativa allo scheduling su priorità. Il ciclo procede scorrendo gli elementi della lista A fin tanto che trova task con priorità maggiore del task da inserire. Se, così facendo, si raggiunge la fine della lista, allora il task viene inserito come ultimo. Se durante lo scorrimento si trova invece un task con priorità uguale al task da inserire, inizia allora un secondo ciclo, più interno, che scorre gli elementi confrontando le loro esecuzioni rimanenti: finché si trovano task con meno esecuzioni (e stessa priorità) del task da inserire, si va avanti, altrimenti si inserisce il task (ovvero non appena si trova una priorità minore o delle esecuzioni rimanenti maggiori o uguali). Se invece, durante il ciclo principale, si raggiunge direttamente un task con priorità minore, allora il task è da inserire tra quel task trovato ed il suo precedente (o come primo della lista se quello era il primo). 
+        
+        \begin{center}
+           	\begin{lstlisting}[language=pseudo, gobble=14]
+                insert(task, start_A, start_B){
+                    if(start_A == null){
+                        start_A = task
+                        start_B = task
+                        return start_A, start_B
+                    }
+                    
+                    i = start_A
+                    while(true){
+                        if(i.prio > task.prio){
+                            i = i.next_A
+                            if(i == null){
+                                i.next_A = task
+                                task.prev_A = i
+                                break
+                            }
+                            continue
+                        }
+                        if(i.prio == task.prio){
+                            
+                        }
+                    }
+                }\end{lstlisting}
+        \end{center}
+    
     \subsection*{Motivazione delle scelte implementative}
     
     \subsection*{Simulazioni}
