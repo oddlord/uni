@@ -13,7 +13,7 @@ buffer:                     .space  1024
 tab:                        .asciiz "\t"
 newline:                    .asciiz "\n"
 insert_command:             .asciiz "Inserire un comando (INVIO stampa il menu): "
-menu:                       .asciiz "  Menu:\n    1. Inserisci un nuovo task;\n    2. Esegui il task in testa alla coda;\n    3. Esegui un task specifico;\n    4. Elimina un task specifico;\n    5. Modifica la priorità di un task specifico;\n    6. Cambia poitica di scheduling;\n    7. Termina il programma.\n\n"
+menu:                       .asciiz "  Menu:\n    1. Inserisci un nuovo task;\n    2. Esegui il task in testa alla coda;\n    3. Esegui un task specifico;\n    4. Elimina un task specifico;\n    5. Modifica la priorità di un task specifico;\n    6. Cambia politica di scheduling;\n    7. Termina il programma.\n\n"
 exiting:                    .asciiz "  Programma terminato."
 insert_task_msg:            .asciiz "  Inserimento di un nuovo task.\n"
 insert_id_msg:              .asciiz "    Inserire l'ID del task: "
