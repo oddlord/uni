@@ -240,18 +240,18 @@ detach_done:            # una volta terminata l'eliminazione dalle due liste
 
 ### run ###
 run:                # procedura per l'esecuzione di un task
-    move $t0, $a0   # primo parametro: puntatore al task da eseguire
+    move $s0, $a0   # primo parametro: puntatore al task da eseguire
     move $t8, $a1   # secondo: puntatore alla lista A
     move $t9, $a2   # terzo: puntatore alla lista B
     
-    lw $t1, 24($t0)     # carica le esecuzioni rimanenti del task
-    addi $t1, $t1, -1   # le decrementa
-    sw $t1, 24($t0)     # e salva il nuovo valore nel record del task
+    lw $s1, 24($s0)     # carica le esecuzioni rimanenti del task
+    addi $s1, $s1, -1   # le decrementa
+    sw $s1, 24($s0)     # e salva il nuovo valore nel record del task
     
     addi $sp, $sp, -12  # alloca spazio nello stack per 12 byte (3 word)
     sw $ra, 8($sp)      # salva nello stack l'indirizzo di ritorno
-    sw $t0, 4($sp)      # il puntatore al task da eseguire
-    sw $t1, 0($sp)      # ed il numero di esecuzioni rimanenti dopo la sua esecuzione
+    sw $s0, 4($sp)      # il puntatore al task da eseguire
+    sw $s1, 0($sp)      # ed il numero di esecuzioni rimanenti dopo la sua esecuzione
     
     jal detach  # chiama la funzione detach, per rimuovere il task dalle liste
     
@@ -325,13 +325,13 @@ find_id_end:        # alla fine della procedura
 ### insert_task ###
 insert_task:		# procedura per l'inserimento di un nuovo task
 					# primo argomento: ignorato
-    move $t8, $a1	# secondo: puntatore d'inizio A
-    move $t9, $a2	# terzo: puntatore d'inizio B
+    move $s6, $a1	# secondo: puntatore d'inizio A
+    move $s7, $a2	# terzo: puntatore d'inizio B
     
     addi $sp, $sp, -20	# alloca 20 byte (5 word) nello stack frame
     sw $ra, 16($sp)		# salva nello stack: il puntatore di ritorno al chiamante
-    sw $t8, 12($sp)		# il puntatore d'inizio della lista A
-    sw $t9, 8($sp)		# ed il puntatore d'inizio della lista B
+    sw $s6, 12($sp)		# il puntatore d'inizio della lista A
+    sw $s7, 8($sp)		# ed il puntatore d'inizio della lista B
 
     li $v0, 4               # stampa la stringa d'inizio dell'inserimento di un task
     la $a0, insert_task_msg
@@ -348,11 +348,11 @@ insert_task:		# procedura per l'inserimento di un nuovo task
                 # puntatore al successivo A (4 byte, 28-32)
                 # puntatore al successivo B (4 byte, 32-36)
                 
-    move $t0, $v0   # salva l'indirizzo d'inizio dei 36 byte allocati n $t0
-    sw $t0, 4($sp)	# e lo salva nello stack
+    move $s0, $v0   # salva l'indirizzo d'inizio dei 36 byte allocati in $s0
+    sw $s0, 4($sp)	# e lo salva nello stack
     
-    sw $zero, 0($t0)    # salva nell'heap: il puntatore al precedente A
-    sw $zero, 4($t0)    # e il puntatore al precedente B
+    sw $zero, 0($s0)    # salva nell'heap: il puntatore al precedente A
+    sw $zero, 4($s0)    # e il puntatore al precedente B
     
 insert_task_id:
     li $v0, 4				# chiede di inserire l'ID del task
@@ -361,24 +361,24 @@ insert_task_id:
     
     li $v0, 5		# legge un intero da input
     syscall
-    move $t1, $v0
+    move $s1, $v0
     
-    beq $t8, $zero, insert_task_id_store	# se la coda è vuota, salva l'ID inserito
+    beq $s6, $zero, insert_task_id_store	# se la coda è vuota, salva l'ID inserito
 											# altrimenti
-    sw $t1, 0($sp)	# salva l'ID inserito nell'heap
+    sw $s1, 0($sp)	# salva l'ID inserito nello stack
     
-    move $a0, $t1	# prepare il primo argomento: ID inserito
-    move $a1, $t8	# secondo argomento: puntatore d'inizio A
+    move $a0, $s1	# prepare il primo argomento: ID inserito
+    move $a1, $s6	# secondo argomento: puntatore d'inizio A
     
     jal find_id	# invoca la procedura find_id
     
-    move $t2, $v0	# salva in $t2 il risultato di find_id
-    lw $t8, 12($sp)	# recupera dallo stack: il puntatore d'inizio A
-    lw $t9, 8($sp)	# il puntatore d'inizio B
-    lw $t0, 4($sp)	# il puntatore alrecord allocato nell'heap
-    lw $t1, 0($sp)	# ed il valore dell'ID inserito
+    move $t1, $v0	# salva in $t1 il risultato di find_id
+    lw $s6, 12($sp)	# recupera dallo stack: il puntatore d'inizio A
+    lw $s7, 8($sp)	# il puntatore d'inizio B
+    lw $s0, 4($sp)	# il puntatore alrecord allocato nell'heap
+    lw $t0, 0($sp)	# ed il valore dell'ID inserito
     
-    bne $t2, $zero, insert_task_id_duplicate	# se il puntatore ritornato da find_id è non nullo, esiste già un task con l'ID inserito
+    bne $t1, $zero, insert_task_id_duplicate	# se il puntatore ritornato da find_id è non nullo, esiste già un task con l'ID inserito
     j insert_task_id_store						# altrimenti, può memorizzare l'ID tranquillamente
     
 insert_task_id_duplicate:	# se è già presente in coda un task con l'ID inserito
@@ -387,7 +387,7 @@ insert_task_id_duplicate:	# se è già presente in coda un task con l'ID inserit
     syscall
     
     li $v0, 1
-    move $a0, $t1
+    move $a0, $t0
     syscall
     
     li $v0, 4
@@ -397,7 +397,7 @@ insert_task_id_duplicate:	# se è già presente in coda un task con l'ID inserit
     j insert_task_id	# torna nuovamente all'inserimento dell'ID
     
 insert_task_id_store:	# se non si sono trovati ID duplicati
-    sw $t1, 8($t0)	# memorizza l'ID nell'heap
+    sw $t0, 8($s0)	# memorizza l'ID nell'heap
     
 insert_task_name:
     li $v0, 4				# chiede di inserire il nome del task
@@ -409,36 +409,36 @@ insert_task_name:
     li $a1, 1024
     syscall
     
-    li $t1, 0	# contatore inizializzato a zero (caratteri copiati nell'heap)
+    li $t0, 0	# contatore inizializzato a zero (caratteri copiati nell'heap)
     
 insert_task_name_loop:
-    li $t2, 8						# carica l'intero 8
-    beq $t1, $t2, insert_task_prio	# se il contatore ha raggiunto 8, salta all'inserimento della priorità
+    li $t1, 8						# carica l'intero 8
+    beq $t0, $t1, insert_task_prio	# se il contatore ha raggiunto 8, salta all'inserimento della priorità
 									# altrimenti
-    la $t2, buffer		# carica l'indirizzo di base della stringa inserita
-    add $t2, $t2, $t1	# shhifta l'indirizzo in avanti del numero di caratteri già copiati (diciamo n)
-    lb $t3, 0($t2)		# carica il carattere n-esimo della stringa
+    la $t1, buffer		# carica l'indirizzo di base della stringa inserita
+    add $t1, $t1, $t0	# shhifta l'indirizzo in avanti del numero di caratteri già copiati (diciamo n)
+    lb $t2, 0($t1)		# carica il carattere n-esimo della stringa
 	
-    li $t4, 32								# carica l'intero 32 (primo carattere non speciale nella codifica ASCII)
-    blt $t3, $t4, insert_task_name_spaces	# se il carattere letto è un carattere speciale, inizia il loop per inserire spazi
+    li $t3, 32								# carica l'intero 32 (primo carattere non speciale nella codifica ASCII)
+    blt $t2, $t3, insert_task_name_spaces	# se il carattere letto è un carattere speciale, inizia il loop per inserire spazi
 											# altrimenti	
-    addi $t2, $t0, 12	# carica l'indirizzo base del campo nome del task (indirizzo base del record + 12 byte)
-    add $t2, $t2, $t1	# ci somma il numero di caratteri letti (prima posizione del nome non copiata)
-    sb $t3, 0($t2)		# copia il carattere nell'heap
+    addi $t1, $s0, 12	# carica l'indirizzo base del campo nome del task (indirizzo base del record + 12 byte)
+    add $t1, $t1, $t0	# ci somma il numero di caratteri letti (prima posizione del nome non copiata)
+    sb $t2, 0($t1)		# copia il carattere nell'heap
 	
-    addi $t1, $t1, 1		# incrementa il contatore
+    addi $t0, $t0, 1		# incrementa il contatore
     j insert_task_name_loop	# esegue un altro ciclo
     
 insert_task_name_spaces:			# se si è trovato un carattere speciale
-    li $t2, 8						# se si sono copiati 8 caratteri
-    beq $t1, $t2, insert_task_prio	# finisce il ciclo
+    li $t1, 8						# se si sono copiati 8 caratteri
+    beq $t0, $t1, insert_task_prio	# finisce il ciclo
 									# altrimenti
-    addi $t2, $t0, 12	# carica l'indirizzo della prima posizione del nome disponibile
-    add $t2, $t2, $t1
-    li $t3, ' '			# e ci copia uno spazio
-    sb $t3, 0($t2)
+    addi $t1, $s0, 12	# carica l'indirizzo della prima posizione del nome disponibile
+    add $t1, $t1, $t0
+    li $t2, ' '			# e ci copia uno spazio
+    sb $t2, 0($t1)
 	
-    addi $t1, $t1, 1			# incrementa il contatore
+    addi $t0, $t0, 1			# incrementa il contatore
     j insert_task_name_spaces	# ed esegue un altro ciclo
     
 insert_task_prio:
@@ -449,11 +449,11 @@ insert_task_prio:
     li $v0, 5	# legge  un intero da input
     syscall
     
-    li $t1, 0                           # se si è inserita una priorità minore di 0
-    blt $v0, $t1, insert_task_prio
-    li $t1, 9                           # o se si è inserita una priorità maggiore di 9
-    bgt $v0, $t1, insert_task_prio      # chiede nuovamente la priorità del task
-    sw $v0, 20($t0)                     # altrimenti salva nell'heap
+    li $t0, 0                           # se si è inserita una priorità minore di 0
+    blt $v0, $t0, insert_task_prio
+    li $t0, 9                           # o se si è inserita una priorità maggiore di 9
+    bgt $v0, $t0, insert_task_prio      # chiede nuovamente la priorità del task
+    sw $v0, 20($s0)                     # altrimenti salva nell'heap
     
 insert_task_cycles:
     li $v0, 4					# chiede di inserire i cicli di esecuzione totali del task
@@ -463,23 +463,23 @@ insert_task_cycles:
     li $v0, 5	# legge un intero da input
     syscall
     
-    li $t1, 1                           # se si sono inseriti meno di 1 ciclo
-    blt $v0, $t1, insert_task_cycles
-    li $t1, 99                          # o se si sono inseriti più di 99 cicli
-    bgt $v0, $t1, insert_task_cycles    # chiede nuovamente i cicli del task
-    sw $v0, 24($t0)                     # altrimenti salva nell'heap
+    li $t0, 1                           # se si sono inseriti meno di 1 ciclo
+    blt $v0, $t0, insert_task_cycles
+    li $t0, 99                          # o se si sono inseriti più di 99 cicli
+    bgt $v0, $t0, insert_task_cycles    # chiede nuovamente i cicli del task
+    sw $v0, 24($s0)                     # altrimenti salva nell'heap
     
-    sw $zero, 28($t0)	# salva nell'heap: il puntatore al successivo A
-    sw $zero, 32($t0)	# ed il puntatore al successivo B
+    sw $zero, 28($s0)	# salva nell'heap: il puntatore al successivo A
+    sw $zero, 32($s0)	# ed il puntatore al successivo B
     
-    move $a0, $t0	# prepara il primo argomento: puntatore al task appena creato (da inserire)
-    move $a1, $t8	# secondo: puntatore d'inizio A
-    move $a2, $t9	# terzo: puntatore d'inizio B
+    move $a0, $s0	# prepara il primo argomento: puntatore al task appena creato (da inserire)
+    move $a1, $s6	# secondo: puntatore d'inizio A
+    move $a2, $s7	# terzo: puntatore d'inizio B
     
     jal insert	# invoca la procedura insert
     
-    move $t8, $v0	# recupera i valori di ritorno di insert: puntatore d'inizio A
-    move $t9, $v1	# puntatore d'inizio B
+    move $s6, $v0	# recupera i valori di ritorno di insert: puntatore d'inizio A
+    move $s7, $v1	# puntatore d'inizio B
 
     li $v0, 4						# stampa il corretto inserimento del task
     la $a0, insert_task_done_msg
@@ -488,8 +488,8 @@ insert_task_cycles:
     lw $ra, 16($sp)		# recupera l'indirizzo di ritorno al chiamante
     addi $sp, $sp, 20	# dealloca lo stack
     
-    move $v0, $t8	# prepara i valori di ritorno: puntatore alla lista A
-    move $v1, $t9	# puntatore alla lista B
+    move $v0, $s6	# prepara i valori di ritorno: puntatore alla lista A
+    move $v1, $s7	# puntatore alla lista B
     
     jr $ra	# torna al chiamante
 ### insert_task end ###
@@ -578,17 +578,17 @@ run_id:					# procedura per eseguire un task specifico
     sw $ra, 12($sp)		# salva l'indirizzo di ritorno nello stack
 
 					# primo argomento: ignorato
-    move $t8, $a1	# secondo: puntatore d'inizio A
-    move $t9, $a2	# terzo: puntatore d'inizio B
+    move $s6, $a1	# secondo: puntatore d'inizio A
+    move $s7, $a2	# terzo: puntatore d'inizio B
     
-    sw $t8, 8($sp)	# salva nello stack: il puntatore d'inizio A
-    sw $t9, 4($sp)	# ed il puntatore d'inizio B
+    sw $s6, 8($sp)	# salva nello stack: il puntatore d'inizio A
+    sw $s7, 4($sp)	# ed il puntatore d'inizio B
 
     li $v0, 4               # stampa la stringa d'inizio dell'esecuzione di un task specifico
     la $a0, run_id_msg
     syscall
     
-    beq $t8, $zero, run_id_empty	# se il puntatore d'inizio è nullo, allora la coda è vuota
+    beq $s6, $zero, run_id_empty	# se il puntatore d'inizio è nullo, allora la coda è vuota
     
 run_id_choose:
     li $v0, 4				# chiede di inserire l'ID del task da eseguire
@@ -601,28 +601,28 @@ run_id_choose:
     
     li $v0, 5		# legge un intero da input
     syscall
-    move $t0, $v0	# lo salva in $t0
-    sw $t0, 0($sp)	# e lo salva nello stack
+    move $s0, $v0	# lo salva in $s0
+    sw $s0, 0($sp)	# e lo salva nello stack
     
-    move $a0, $t0	# prepara il primo parametro d'invocazione: ID inserito
-    move $a1, $t8	# secondo: puntatore d'inizio A
+    move $a0, $s0	# prepara il primo parametro d'invocazione: ID inserito
+    move $a1, $s6	# secondo: puntatore d'inizio A
     
     jal find_id	# invoca la procedura find_id
     
-    move $t1, $v0	# recupera il valore di ritorno di find_id
-    lw $t8, 8($sp)	# recupera dallo stack: il puntatore d'inizio A
-    lw $t9, 4($sp)	# ed il puntatore d'inizio B
+    move $t0, $v0	# recupera il valore di ritorno di find_id
+    lw $s6, 8($sp)	# recupera dallo stack: il puntatore d'inizio A
+    lw $s7, 4($sp)	# ed il puntatore d'inizio B
     
-    beq $t1, $zero, run_id_not_found	# se il puntatore restituito da find_id è nullo, allora non c'è nessun task con l'ID inserito
+    beq $t0, $zero, run_id_not_found	# se il puntatore restituito da find_id è nullo, allora non c'è nessun task con l'ID inserito
 										# altrimenti
-    move $a0, $t1	# prepara il primo parametro: puntatore al task con ID selezionato
-    move $a1, $t8	# secondo: puntatore d'inizio A
-    move $a2, $t9	# terzo: puntatore d'inizio B
+    move $a0, $t0	# prepara il primo parametro: puntatore al task con ID selezionato
+    move $a1, $s6	# secondo: puntatore d'inizio A
+    move $a2, $s7	# terzo: puntatore d'inizio B
     
     jal run	# invoca la procedura run
     
-    move $t8, $v0   # recupera i valori di ritorno: puntatore d'inizio A
-    move $t9, $v1   # e puntatore d'inizio B
+    move $s6, $v0   # recupera i valori di ritorno: puntatore d'inizio A
+    move $s7, $v1   # e puntatore d'inizio B
     
     j run_id_done   # salta alla terminazione con successo della procedura
 
@@ -658,8 +658,8 @@ run_id_done:                # se l'esecuzione è eseguita con successo
     syscall
 
 run_id_return:
-    move $v0, $t8   # prepara i valori di ritorno: puntatore d'inizio A
-    move $v1, $t9   # e puntatore d'inizio B
+    move $v0, $s6   # prepara i valori di ritorno: puntatore d'inizio A
+    move $v1, $s7   # e puntatore d'inizio B
     
     lw $ra, 12($sp)     # recupera l'indirizzo di ritorno dallo stack
     addi $sp, $sp, 16   # e dealloca lo stack frame
@@ -672,18 +672,17 @@ delete_id:              # analogo a run_id, cambia soltanto la parte centrale
     addi $sp, $sp, -16
     sw $ra, 12($sp)
 
-    move $t7, $a0
-    move $t8, $a1
-    move $t9, $a2
+    move $s6, $a1
+    move $s7, $a2
     
-    sw $t8, 8($sp)
-    sw $t9, 4($sp)
+    sw $s6, 8($sp)
+    sw $s7, 4($sp)
 
     li $v0, 4
     la $a0, delete_id_msg
     syscall
     
-    beq $t8, $zero, delete_id_empty
+    beq $s6, $zero, delete_id_empty
     
 delete_id_choose:
     li $v0, 4
@@ -696,28 +695,28 @@ delete_id_choose:
     
     li $v0, 5
     syscall
-    move $t0, $v0
-    sw $t0, 0($sp)
+    move $s0, $v0
+    sw $s0, 0($sp)
     
-    move $a0, $t0
-    move $a1, $t8
+    move $a0, $s0
+    move $a1, $s6
     
     jal find_id
     
-    move $t1, $v0
-    lw $t8, 8($sp)
-    lw $t9, 4($sp)
+    move $t0, $v0
+    lw $s6, 8($sp)
+    lw $s7, 4($sp)
     
-    beq $t1, $zero, delete_id_not_found
+    beq $t0, $zero, delete_id_not_found
 
-    move $a0, $t1
-    move $a1, $t8
-    move $a2, $t9
+    move $a0, $t0
+    move $a1, $s6
+    move $a2, $s7
     
     jal detach  # invoca la procedura detach
     
-    move $t8, $v0
-    move $t9, $v1
+    move $s6, $v0
+    move $s7, $v1
     
     j delete_id_done
 
@@ -767,18 +766,17 @@ change_prio:            # analogo a run_id, cambia soltanto la parte centrale
     addi $sp, $sp, -20
     sw $ra, 16($sp)
 
-    move $t7, $a0
-    move $t8, $a1
-    move $t9, $a2
+    move $s6, $a1
+    move $s7, $a2
     
-    sw $t8, 12($sp)
-    sw $t9, 8($sp)
+    sw $s6, 12($sp)
+    sw $s7, 8($sp)
 
     li $v0, 4
     la $a0, change_prio_msg
     syscall
     
-    beq $t8, $zero, change_prio_empty
+    beq $s6, $zero, change_prio_empty
     
 change_prio_choose:
     li $v0, 4
@@ -791,20 +789,20 @@ change_prio_choose:
     
     li $v0, 5
     syscall
-    move $t0, $v0
-    sw $t0, 4($sp)
+    move $s0, $v0
+    sw $s0, 4($sp)
     
-    move $a0, $t0
-    move $a1, $t8
+    move $a0, $s0
+    move $a1, $s6
     
     jal find_id
     
-    move $t1, $v0
-    sw $t1, 0($sp)
-    lw $t8, 12($sp)
-    lw $t9, 8($sp)
+    move $s1, $v0
+    sw $s1, 0($sp)
+    lw $s6, 12($sp)
+    lw $s7, 8($sp)
     
-    beq $t1, $zero, change_prio_not_found
+    beq $s1, $zero, change_prio_not_found
     
 change_prio_insert_new:
     li $v0, 4               # chiede la nuova priorità del task
@@ -813,32 +811,32 @@ change_prio_insert_new:
     
     li $v0, 5       # legge un intero
     syscall
-    move $t2, $v0   # e lo salva in $t2
+    move $t0, $v0   # e lo salva in $t0
 
-    li $t3, 0                               # se si è inserita una priorità minore di 0
-    blt $t2, $t3, change_prio_insert_new
-    li $t3, 9                               # o se si è inserita una priorità maggiore di 9
-    bgt $t2, $t3, change_prio_insert_new    # chiedi nuovamente la priorità del task
-    sw $t2, 20($t1)                         # altrimenti aggiorna la priorità nell'heap
+    li $t1, 0                               # se si è inserita una priorità minore di 0
+    blt $t0, $t1, change_prio_insert_new
+    li $t1, 9                               # o se si è inserita una priorità maggiore di 9
+    bgt $t0, $t1, change_prio_insert_new    # chiedi nuovamente la priorità del task
+    sw $t0, 20($s1)                         # altrimenti aggiorna la priorità nell'heap
 
-    move $a0, $t1   # prepara il primo parametro: puntatore al task da modificare
-    move $a1, $t8   # secondo: puntatore d'inizio A
-    move $a2, $t9   # terzo: puntatore d'inizio B
+    move $a0, $s1   # prepara il primo parametro: puntatore al task da modificare
+    move $a1, $s6   # secondo: puntatore d'inizio A
+    move $a2, $s7   # terzo: puntatore d'inizio B
     
     jal detach  # invoca la procedura detach
     
-    lw $t1, 0($sp)  # recupera il puntatore al task da modificare dallo stack
-    move $t8, $v0   # recupera i valori di ritorno: puntatore d'inizio A
-    move $t9, $v1   # e puntatore d'inizio B
+    lw $s1, 0($sp)  # recupera il puntatore al task da modificare dallo stack
+    move $s6, $v0   # recupera i valori di ritorno: puntatore d'inizio A
+    move $s7, $v1   # e puntatore d'inizio B
     
-    move $a0, $t1   # prepara i parametri (come prima)
-    move $a1, $t8
-    move $a2, $t9
+    move $a0, $s1   # prepara i parametri (come prima)
+    move $a1, $s6
+    move $a2, $s7
     
     jal insert  # invoca la procedura insert
     
-    move $t8, $v0   # recupera i valori di ritorno (come prima)
-    move $t9, $v1
+    move $s6, $v0   # recupera i valori di ritorno (come prima)
+    move $s7, $v1
     
     j change_prio_done
 
@@ -874,8 +872,8 @@ change_prio_done:
     syscall
 
 change_prio_return:
-    move $v0, $t8
-    move $v1, $t9
+    move $v0, $s6
+    move $v1, $s7
     
     lw $ra, 16($sp)
     addi $sp, $sp, 20
@@ -942,9 +940,9 @@ change_sched_end:
 
 ### Main ###
 main:
-    li $t7, 'a'     # inizializza la politica di scheduling ad A (scheduling su priorità)
-    move $t8, $zero # ed il puntatore alla coda A
-    move $t9, $zero # e alla coda B a 0 (nessun elemento in coda)
+    li $s5, 'a'     # inizializza la politica di scheduling ad A (scheduling su priorità)
+    move $s6, $zero # ed il puntatore alla coda A
+    move $s7, $zero # e alla coda B a 0 (nessun elemento in coda)
 
 command_selection:
     li $v0, 4               # stampa la stringa per la selezione del comando
@@ -959,9 +957,9 @@ command_selection:
     la $a0, newline
     syscall
     
-    move $a0, $t7   # prepara il primo parametro (politica di scheduling)
-    move $a1, $t8   # il secondo (puntatore ad A)
-    move $a2, $t9   # ed il terzo (puntatore a B)
+    move $a0, $s5   # prepara il primo parametro (politica di scheduling)
+    move $a1, $s6   # il secondo (puntatore ad A)
+    move $a2, $s7   # ed il terzo (puntatore a B)
     
     li $t1, 1                       # se l'intero letto è 1
     beq $t0, $t1, jump_insert_task  # il comando da eseguire è l'inserimento di un nuovo task
@@ -986,85 +984,85 @@ command_selection:
     
 jump_insert_task:       # prepara il necessario per il salto al comando d'inserimento
     addi $sp, $sp, -4   # alloca 4 byte nello stack frame
-    sb $t7, 0($sp)      # salva la politica di scheduling nello stack
+    sb $s5, 0($sp)      # salva la politica di scheduling nello stack
     
     jal insert_task # salta alla procedura per l'inserimento di un task
                     # recupera i risultati della procedura
-    move $t8, $v0   # ovvero il puntatore ad A
-    move $t9, $v1   # ed il puntatore a B
+    move $s6, $v0   # ovvero il puntatore ad A
+    move $s7, $v1   # ed il puntatore a B
     
-    lb $t7, 0($sp)      # recupera la politica di scheduling dallo stack
+    lb $s5, 0($sp)      # recupera la politica di scheduling dallo stack
     addi $sp, $sp, 4    # dealloca i 4 byte dallo stack
     
     j print_queue   # salta alle istruzioni per la stampa della coda
     
 jump_run_first:         # jump_run_first, jump_run_id, jump_delete_id e jump_change_prio analoghi a jump_insert_task
     addi $sp, $sp, -4
-    sb $t7, 0($sp)
+    sb $s5, 0($sp)
     
     jal run_first
     
-    move $t8, $v0
-    move $t9, $v1
+    move $s6, $v0
+    move $s7, $v1
     
-    lb $t7, 0($sp)
+    lb $s5, 0($sp)
     addi $sp, $sp, 4
     
     j print_queue
     
 jump_run_id:
     addi $sp, $sp, -4
-    sb $t7, 0($sp)
+    sb $s5, 0($sp)
     
     jal run_id
     
-    move $t8, $v0
-    move $t9, $v1
+    move $s6, $v0
+    move $s7, $v1
     
-    lb $t7, 0($sp)
+    lb $s5, 0($sp)
     addi $sp, $sp, 4
     
     j print_queue
     
 jump_delete_id:
     addi $sp, $sp, -4
-    sb $t7, 0($sp)
+    sb $s5, 0($sp)
     
     jal delete_id
     
-    move $t8, $v0
-    move $t9, $v1
+    move $s6, $v0
+    move $s7, $v1
     
-    lb $t7, 0($sp)
+    lb $s5, 0($sp)
     addi $sp, $sp, 4
     
     j print_queue
     
 jump_change_prio:
     addi $sp, $sp, -4
-    sb $t7, 0($sp)
+    sb $s5, 0($sp)
     
     jal change_prio
     
-    move $t8, $v0
-    move $t9, $v1
+    move $s6, $v0
+    move $s7, $v1
     
-    lb $t7, 0($sp)
+    lb $s5, 0($sp)
     addi $sp, $sp, 4
     
     j print_queue
     
 jump_change_sched:      # analogo agli altri jump
     addi $sp, $sp, -8   # con la differenza che nello stack si salvano i due puntatori
-    sw $t8, 4($sp)      # e la procedura ritorna la nuova politica di scheduling
-    sw $t9, 0($sp)
+    sw $s6, 4($sp)      # e la procedura ritorna la nuova politica di scheduling
+    sw $s7, 0($sp)
     
     jal change_sched
     
-    move $t7, $v0
+    move $s5, $v0
     
-    lw $t8, 4($sp)
-    lw $t9, 0($sp)
+    lw $s6, 4($sp)
+    lw $s7, 0($sp)
     addi $sp, $sp, 8
     
     j print_queue
@@ -1075,9 +1073,9 @@ print_queue:                # istruzioni per la stampa della coda
     syscall
 
     li $t0, 'a'                             # carica il carattere 'a', per poterlo comparare con la politica attuale
-    bne $t7, $t0, print_queue_cycles_begin  # se la politica non è A, esegui l'inizializzazione per la politica B
+    bne $s5, $t0, print_queue_cycles_begin  # se la politica non è A, esegui l'inizializzazione per la politica B
                                             # altrimenti
-    move $t1, $t8   # inizializza il puntatore $t1 col puntatore di A
+    move $t1, $s6   # inizializza il puntatore $t1 col puntatore di A
     
     li $v0, 4               # stampa "PRIORITÀ"
     la $a0, sched_prio_msg
@@ -1086,7 +1084,7 @@ print_queue:                # istruzioni per la stampa della coda
     j print_queue_header    # salta alla stampa dell'header della tabella
     
 print_queue_cycles_begin:   # se la politica è B
-    move $t1, $t9           # inizializza il puntatore $t1 col puntatore di B
+    move $t1, $s7           # inizializza il puntatore $t1 col puntatore di B
 
     li $v0, 4                   # stampa "ESECUZIONI RIMANENTI"
     la $a0, sched_cycles_msg
@@ -1217,7 +1215,7 @@ print_queue_cycles:
     la $a0, print_delim
     syscall
     
-    bne $t7, $t0, print_queue_load_next_cycles  # controlla la politica di scheduling attuale
+    bne $s5, $t0, print_queue_load_next_cycles  # controlla la politica di scheduling attuale
     lw $t1, 28($t1)                             # se è A, carica il prossimo elemento della lista A
     j print_queue_check_next                    # e salta al controllo del prossimo elemento
                                 # altrimenti
