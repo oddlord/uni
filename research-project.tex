@@ -17,18 +17,33 @@
     
     \clearpage
     
-    \section*{Motivations}
+    \section*{Introduction}
     
         More and more every year we see all around the world an increasing use of \textit{smart systems}, i.e. systems that incorporate the functions of sensing, actuation and control in order to describe and analyse a situation and make decisions based on the available data in a predictive and adaptive manner (i.e. performing \textit{smart} actions).
         
-        Smart systems can have very different natures, as they are used in many distinct fields. Smart systems range from sensor networks to smart buildings, from cyber-physical systems to smart cities.
+        Smart systems can have very different natures, as they are used in many distinct fields. Smart systems range from sensor networks to smart buildings, from cyber-physical systems to smart cities, and also many different applications, like healthcare, security, entertainment or transportation.
         
-        In this context, \textit{smart computing} is a multidisciplinary area that mainly aims to study
+        In this sense, \textit{smart computing} is a multidisciplinary area that mainly aims to study how to design and build smart systems and how to use them in order to improve human life.
+        
+        A notable example is the area of study of \textit{Ambient Assisted Living} (AAL) which refers to the integration of electronic devices (made of sensors and actuators) into a habitation in order to improve the quality of everyday life by making mundane tasks easier \cite{cook2009ambient}. Special projects are being developed in order to create smart buildings for people with difficulties, such as people with handicaps or old people. These smart buildings consist of a series of sensors, through which an application can recognize which action the person is performing, and some actuators, like a display that show important information based on the data gathered, for example a reminder to take some pills at a certain time \cite{qest15, epew16}.
+        
+        Another example would be the problem of \textit{Industrial Monitoring}. Industrial Monitoring aims at recognizing faults and anomalies during the production process of an industrial plant in order to solve the problem as soon as possible \cite{chiang2001fault}. Further on, Industrial Monitoring is also very useful for predicting future faults, so to repair the faulty component even before the damage will happen, and scheduling the best time to perform maintenance, implementing for example a maintenance protocol.
         
     \section*{Goals}
     
+        The main objectives of this project is to investigate model-based methods to perform diagnosis, prediction and action scheduling for real-time partially observable systems. We chose to focus the attention of the project on partially observable systems because most real systems and applications cannot be correctly modelled through fully observable systems, thus the need for partially observable systems. These systems, as the name suggests, are composed of a series of non-observable (or \textit{hidden}) states and some other observable (or \textit{visible}) states. As the system evolves from one hidden state to another it can also generate different observable events (also called \textit{emissions}). The challenge here is to be able to perform quantitative analysis on the model of the system by taking into account just the observable data and trying to infer the non-observable part.
+        
+        The first problem that has to be solved is the \textit{diagnosis} problem. With diagnosis we refer to the act of inferring the current system state taking into account only the detected observations. In AAL, for example, diagnosis is crucial in order to understand, through only the data registered from the sensors, which action is the person actually performing \cite{qest15}. In Industrial Monitoring, performing diagnosis would allow to detect a fault or an error before they produce a system failure, giving the chance to repair or patch the faulty component before irreparable damage is made, thus saving a lot of money.
+        
+        A more challenging problem is then the \textit{prediction} problem. As diagnosis means estimating the current state given the present observations, prediction means estimating the state of the system in a future moment given only the present observations. In AAL, for example, prediction can be used to estimate the most probable future actions of the subject in order to display some advice/warning or start preparations for certain activities \cite{epew16}.
+        
+        Both diagnosis and prediction are known to be achievable through the modelization of a partially observable system using a Hidden Markov Model (HMM). HMMs are statistical Markov models where the system being modelled is assumed to be a Discrete Time Markov Chain (DTMC) with hidden states that generates an observable state after each step of the process. For this case, classical algorithms exist, such as the Viterbi algorithm, used for diagnosis to estimate the current system state. A viable alternative to HMM are Conditional Random Fields (CRF), which represent the discriminative counterpart of HMM and for which algorithms for diagnosis and prediction have already been studied. If the underlying process is more complex than a DTMC, we consider then Hidden non-Markov Models (HnMM): for example the model can be a Semi Markov Process (SMP) or a Markov Regenerative Process (MRP) \cite{logothetis1995markov}. These non-Markov type of processes are generally harder to analyse but allow to study a wider class of problems.
+        
+        The last problem that this project aims to address is the \textit{scheduling} problem. Scheduling means calculating the best action to take and the best time (in the future) to take it. In the context of AAL we can think of messages or warnings being displayed, for example a remainder to take some pills, or suggestions related to the next activities the subject is (most likely) going to do. In Industrial Monitoring, action scheduling is very important as it allows to define, for example, a maintenance protocol, through which several parts of the production process are maintained each time the likelihood of having a failure in the close future is high enough (above a threshold), thus avoiding the failure itself and minimizing downtime.
     
     \section*{Approach}
+        
+        
     
     \clearpage
     
