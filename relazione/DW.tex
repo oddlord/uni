@@ -1,0 +1,70 @@
+\documentclass[twoside, openright, titlepage, fleqn, headinclude, 11pt, a4paper, BCOR5mm, footinclude]{book}
+
+%-----------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage[pdftex]{graphicx}
+\usepackage[square, numbers]{natbib}
+\usepackage[Lenny]{fncychap}
+\usepackage[nottoc, notlof]{tocbibind}
+\usepackage[unicode]{hyperref}
+\usepackage[fixlanguage]{babelbib}
+\usepackage{amsfonts, amsmath, geometry, xcolor, url, caption, perpage, datetime, placeins}
+
+%-----------------------------------------------------------------
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\newdateformat{monthyear}{\monthname[\THEMONTH] \THEYEAR}
+
+\captionsetup{format=hang,font=small}
+
+\MakePerPage{footnote}
+
+\graphicspath{{img/}}
+
+\selectbiblanguage{italian}
+
+%-----------------------------------------------------------------
+
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=blue
+}
+
+%-----------------------------------------------------------------
+
+\begin{document}
+
+	\frenchspacing
+	\raggedbottom
+	\pagenumbering{roman}
+	\pagestyle{plain}
+	
+	\include{capitoli/titolo}
+	
+	\tableofcontents %\addtocontents{toc}{~\hfill\textbf{Pagina}\par}
+	\listoffigures
+	
+	\cleardoublepage
+	\pagenumbering{arabic}
+	\pagestyle{headings}
+	
+	\include{capitoli/introduzione}
+	\include{capitoli/modellazione_concettuale}
+	\include{capitoli/progettazione_logica}
+	\include{capitoli/elaborazione_dataset}
+	\include{capitoli/costruzione_alimentazione_dw}
+	\include{capitoli/analisi}
+	\include{capitoli/conclusioni}
+	
+	\nocite{*}
+	\bibliographystyle{plainnat}
+	\bibliography{bibliografia}
+
+\end{document}
