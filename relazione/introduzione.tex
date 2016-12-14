@@ -1,0 +1,16 @@
+\chapter*{Introduzione a Snort}
+\addcontentsline{toc}{chapter}{Introduzione a Snort}
+\markboth{\textsc{\uppercase{Introduzione a Snort}}}{\textsc{\uppercase{Introduzione a Snort}}}
+Snort è un software Open Source, che realizza un "semplice" sistema per il rilevamento di intrusioni in rete (NIDS) basato sulla libreria libpcap (http://www-nrg.ee.lbl.gov/). Il termine ``semplice'' non deve essere frainteso: si tratta infatti di un software molto efficace, con capacità di eseguire in tempo reale sia analisi del traffico che packet logging (utile per debuggare il traffico della rete) su IP networks. Esso può compiere analisi dei protocolli, può individuare una varietà di attacchi e probes, così come buffer overflow, port scanning, attacchi CGI e probes SMB. Guardando i file di log si riesce a determinare a quale tipo di attacco si è stati soggetti. Usa un semplice linguaggio di descrizione di regole flessibili e potenti che consente di descrivere che tipo di traffico dovrebbe essere catturato o ignorato e di individuare traffico ostile o semplicemente sospetto sulla rete.\\
+Snort può lavorare in diversi modi:
+
+\begin{itemize}
+\item \textbf{Packet Sniffer}: è capace di ispezionare il carico dei pacchetti sulla rete, decodificando il livello di applicazione di un pacchetto e catalogando il traffico basato su un certo contenuto di dati. Può anche filtrare il traffico attraverso BPF (comandi Berkley Packet Filter), i quali lo rendono flessibile nel catalogare specifici tipi di dati basati sul suo insieme di regole.
+
+\item \textbf{Packet Logger}: può anche effettuare il log dei pacchetti su linea di comando indirizzati ad una specifica locazione, in un syslog, ed invia alert a video. Uno dei migliori vantaggi è che esso effettua il log in formato leggibile decodificato in una directory basata su IP sorgenti. Esegue anche il log di pacchetti in formato binario su un singolo file.
+
+\item \textbf{Intrusion Detection}: può essere usato come IDS su reti dove sono richieste alte prestazioni. Precisamente può essere posizionato tra il firewall, che controlla una sottorete, e la linea esterna non sicura, analizzando in questo modo sia il traffico diretto al firewall, che il traffico nella sottorete controllata. Ha un piccolo sistema di firme ed è disegnato per essere un tool veloce di alerting per gli amministratori quando sono individuate attività sospette.
+
+\end{itemize}
+
+Nei capitoli successivi andremo ad analizzare più in dettaglio il comportamento temporale di Snort, configurato per funzionare come IDS.

@@ -1,0 +1,63 @@
+$ sudo nmap -A 192.168.137.180
+
+Starting Nmap 6.00 ( http://nmap.org ) at 2013-07-11 11:52 CEST
+Nmap scan report for sony-VPCY11V9E.mshome.net (192.168.137.180)
+Host is up (0.0053s latency).
+Not shown: 999 closed ports
+PORT   STATE SERVICE VERSION
+80/tcp open  http    Apache httpd 2.2.22 ((Ubuntu))
+|_http-title: Site doesn't have a title (text/html).
+MAC Address: 2C:81:58:F5:37:8E (Hon Hai Precision Ind. Co.)
+No exact OS matches for host (If you know what OS is running on it, see http://nmap.org/submit/ ).
+TCP/IP fingerprint:
+OS:SCAN(V=6.00%E=4%D=7/11%OT=80%CT=1%CU=38613%PV=Y%DS=1%DC=D%G=Y%M=2C8158%T
+OS:M=51DE8061%P=i686-pc-linux-gnu)SEQ(SP=101%GCD=1%ISR=107%TI=Z%CI=Z%II=I%T
+OS:S=8)OPS(O1=M5B4ST11NW7%O2=M5B4ST11NW7%O3=M5B4NNT11NW7%O4=M5B4ST11NW7%O5=
+OS:M5B4ST11NW7%O6=M5B4ST11)WIN(W1=3890%W2=3890%W3=3890%W4=3890%W5=3890%W6=3
+OS:890)ECN(R=Y%DF=Y%T=41%W=3908%O=M5B4NNSNW7%CC=Y%Q=)T1(R=Y%DF=Y%T=41%S=O%A
+OS:=S+%F=AS%RD=0%Q=)T2(R=N)T3(R=N)T4(R=Y%DF=Y%T=41%W=0%S=A%A=Z%F=R%O=%RD=0%
+OS:Q=)T5(R=Y%DF=Y%T=41%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)T6(R=Y%DF=Y%T=41%W=0%S=
+OS:A%A=Z%F=R%O=%RD=0%Q=)T7(R=Y%DF=Y%T=41%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)U1(R=
+OS:Y%DF=N%T=41%IPL=164%UN=0%RIPL=G%RID=G%RIPCK=G%RUCK=G%RUD=G)IE(R=Y%DFI=N%
+OS:T=41%CD=S)
+
+Network Distance: 1 hop
+
+TRACEROUTE
+HOP RTT     ADDRESS
+1   5.28 ms sony-VPCY11V9E.mshome.net (192.168.137.180)
+
+OS and Service detection performed. Please report any incorrect results at http://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 23.26 second
+
+
+$ sudo ntpdate -d ntp1.inrim.it
+
+11 Jul 11:52:44 ntpdate[7142]: ntpdate 4.2.6p3@1.2290-o Mon Aug 20 14:49:17 UTC 2012 (1)
+Looking for host ntp1.inrim.it and service ntp
+host found : ntp1.inrim.it
+transmit(193.204.114.232)
+receive(193.204.114.232)
+transmit(193.204.114.232)
+receive(193.204.114.232)
+transmit(193.204.114.232)
+receive(193.204.114.232)
+transmit(193.204.114.232)
+receive(193.204.114.232)
+transmit(193.204.114.232)
+server 193.204.114.232, port 123
+stratum 1, precision -22, leap 00, trust 000
+refid [CTD], delay 0.10669, dispersion 0.00241
+transmitted 4, in filter 4
+reference time:    d588feb7.f02156b9  Thu, Jul 11 2013 11:51:51.938
+originate timestamp: d588fef3.2ccb97de  Thu, Jul 11 2013 11:52:51.174
+transmit timestamp:  d588fef3.98bde9df  Thu, Jul 11 2013 11:52:51.596
+filter delay:  0.14420  0.10828  0.10669  0.10905 
+         0.00000  0.00000  0.00000  0.00000 
+filter offset: -0.47870 -0.46335 -0.46418 -0.46341
+         0.000000 0.000000 0.000000 0.000000
+delay 0.10669, dispersion 0.00241
+offset -0.464184
+
+11 Jul 11:52:53 ntpdate[7142]: adjust time server 193.204.114.232 offset -0.464184 sec
+

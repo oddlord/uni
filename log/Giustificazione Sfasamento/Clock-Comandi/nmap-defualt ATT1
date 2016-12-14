@@ -1,0 +1,43 @@
+$ sudo nmap 192.168.137.180
+
+Starting Nmap 6.00 ( http://nmap.org ) at 2013-07-11 10:25 CEST
+Nmap scan report for sony-VPCY11V9E.mshome.net (192.168.137.180)
+Host is up (0.031s latency).
+Not shown: 999 closed ports
+PORT   STATE SERVICE
+80/tcp open  http
+MAC Address: 2C:81:58:F5:37:8E (Hon Hai Precision Ind. Co.)
+
+Nmap done: 1 IP address (1 host up) scanned in 0.93 seconds
+
+
+$ sudo ntpdate -d ntp1.inrim.it
+
+11 Jul 10:25:34 ntpdate[5294]: ntpdate 4.2.6p3@1.2290-o Mon Aug 20 14:49:17 UTC 2012 (1)
+Looking for host ntp1.inrim.it and service ntp
+host found : ntp1.inrim.it
+transmit(193.204.114.232)
+receive(193.204.114.232)
+transmit(193.204.114.232)
+receive(193.204.114.232)
+transmit(193.204.114.232)
+receive(193.204.114.232)
+transmit(193.204.114.232)
+receive(193.204.114.232)
+transmit(193.204.114.232)
+server 193.204.114.232, port 123
+stratum 1, precision -22, leap 00, trust 000
+refid [CTD], delay 0.13947, dispersion 0.00723
+transmitted 4, in filter 4
+reference time:    d588ea77.f020ad8b  Thu, Jul 11 2013 10:25:27.937
+originate timestamp: d588ea85.dbecb4ac  Thu, Jul 11 2013 10:25:41.859
+transmit timestamp:  d588ea85.c1bc67a9  Thu, Jul 11 2013 10:25:41.756
+filter delay:  0.17851  0.14270  0.13947  0.14035 
+         0.00000  0.00000  0.00000  0.00000 
+filter offset: -0.00780 0.044264 -0.045447 0.044859
+         0.000000 0.000000 0.000000 0.000000
+delay 0.13947, dispersion 0.00723
+offset -0.045447
+
+11 Jul 10:25:43 ntpdate[5294]: adjust time server 193.204.114.232 offset -0.045447 sec
+

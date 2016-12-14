@@ -1,0 +1,2 @@
+alert 192.168.137.170 any -> 192.168.137.180 any (msg:"PACKET RECEIVED"; sid:51004;)
+alert icmp any any -> 192.168.137.180 any (msg:"TOO MUCH PING"; threshold: typeboth, track by_src, count 10, seconds 3; classtype:attempted-dos; sid:51000;)

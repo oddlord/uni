@@ -1,0 +1,26 @@
+11 Jul 11:56:40 ntpdate[5320]: ntpdate 4.2.6p3@1.2290-o Mon Aug 20 14:49:17 UTC 2012 (1)
+Looking for host ntp1.inrim.it and service ntp
+host found : ntp1.inrim.it
+transmit(193.204.114.232)
+receive(193.204.114.232)
+transmit(193.204.114.232)
+receive(193.204.114.232)
+transmit(193.204.114.232)
+transmit(193.204.114.232)
+transmit(193.204.114.232)
+server 193.204.114.232, port 123
+stratum 1, precision -22, leap 00, trust 000
+refid [CTD], delay 0.11354, dispersion 24.00018
+transmitted 4, in filter 4
+reference time:    d588ffb7.f0212e3e  Thu, Jul 11 2013 11:56:07.938
+originate timestamp: d588ffda.f290c198  Thu, Jul 11 2013 11:56:42.947
+transmit timestamp:  d588ffde.ee3844d5  Thu, Jul 11 2013 11:56:46.930
+filter delay:  0.11362  0.11354  0.00000  0.00000 
+         0.00000  0.00000  0.00000  0.00000 
+filter offset: -0.02739 -0.02703 0.000000 0.000000
+         0.000000 0.000000 0.000000 0.000000
+delay 0.11354, dispersion 24.00018
+offset -0.027038
+
+11 Jul 11:56:48 ntpdate[5320]: adjust time server 193.204.114.232 offset -0.027038 sec
+

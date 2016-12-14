@@ -1,0 +1,27 @@
+$ sudo ntpdate -d ntp1.inrim.it
+11 Jul 14:31:06 ntpdate[10735]: ntpdate 4.2.6p3@1.2290-o Mon Aug 20 14:49:17 UTC 2012 (1)
+Looking for host ntp1.inrim.it and service ntp
+host found : ntp1.inrim.it
+transmit(193.204.114.232)
+transmit(193.204.114.232)
+receive(193.204.114.232)
+transmit(193.204.114.232)
+receive(193.204.114.232)
+transmit(193.204.114.232)
+transmit(193.204.114.232)
+server 193.204.114.232, port 123
+stratum 1, precision -22, leap 00, trust 000
+refid [CTD], delay 0.13026, dispersion 24.00046
+transmitted 4, in filter 4
+reference time:    d58923f7.f0202ddd  Thu, Jul 11 2013 14:30:47.937
+originate timestamp: d589240f.f33013f9  Thu, Jul 11 2013 14:31:11.949
+transmit timestamp:  d5892411.e82448db  Thu, Jul 11 2013 14:31:13.906
+filter delay:  0.00000  0.13026  0.13156  0.00000 
+         0.00000  0.00000  0.00000  0.00000 
+filter offset: 0.000000 -0.00895 -0.00986 0.000000
+         0.000000 0.000000 0.000000 0.000000
+delay 0.13026, dispersion 24.00046
+offset -0.008950
+
+11 Jul 14:31:15 ntpdate[10735]: adjust time server 193.204.114.232 offset -0.008950 sec
+
