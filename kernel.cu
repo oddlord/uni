@@ -104,9 +104,21 @@ int main() {
 	float *deviceInputImageData;
 	float *deviceOutputImageData;
 	
-	float hostMaskData[maskRows * maskColumns] = { 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04,
-		0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04,
-		0.04, 0.04, 0.04, 0.04, 0.04, 0.04, };
+	float hostMaskDataConstant[maskRows * maskColumns] = {
+		0.04, 0.04, 0.04, 0.04, 0.04,
+		0.04, 0.04, 0.04, 0.04, 0.04,
+		0.04, 0.04, 0.04, 0.04, 0.04,
+		0.04, 0.04, 0.04, 0.04, 0.04,
+		0.04, 0.04, 0.04, 0.04, 0.04
+	};
+
+	float hostMaskDataIdentical[maskRows * maskColumns] = {
+		0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0,
+		0, 0, 1, 0, 0,
+		0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0
+	};
 
 	inputImage = PPM_import("computer_programming.ppm");
 
@@ -134,7 +146,7 @@ int main() {
 
 	//copy memory from host to device
 	CUDA_CHECK_RETURN(
-		cudaMemcpyToSymbol(deviceMaskData, hostMaskData, maskRows * maskColumns * sizeof(float)));
+		cudaMemcpyToSymbol(deviceMaskData, hostMaskDataConstant, maskRows * maskColumns * sizeof(float)));
 	CUDA_CHECK_RETURN(
 		cudaMemcpy(deviceInputImageData, hostInputImageData, sizeof(float) * imageWidth * imageHeight * imageChannels,
 			cudaMemcpyHostToDevice));
