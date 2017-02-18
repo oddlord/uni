@@ -12,6 +12,10 @@
 #include <cassert>
 #include <iostream>
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+#include <iomanip>
+
 static void CheckCudaErrorAux(const char *, unsigned, const char *,
 	cudaError_t);
 #define CUDA_CHECK_RETURN(value) CheckCudaErrorAux(__FILE__,__LINE__, #value, value)
@@ -92,6 +96,68 @@ void test_images() {
 		printf("Img diverse\n");
 }
 
+void constantFilter(float mask[])
+{
+	for (int x = 0; x < 5; x++)
+	{
+		for (int y = 0; y < 5; y++)
+		{
+			mask[x*5 + y] = (float)1 / (float)(5*5);
+		}
+	}
+}
+
+void identityFilter(float mask[])
+{
+	for (int x = 0; x < 5; x++)
+	{
+		for (int y = 0; y < 5; y++)
+		{
+			mask[x*5 + y] = 0;
+		}
+	}
+	mask[2*5 + 2] = 1;
+}
+
+void gaussianFilter(float mask[])
+{
+	// means on X and Y are fixed to 0
+	// correlation coefficient is fixed to 0
+	// standard deviation is set to 1 (for both X and Y)
+	float sigma = 1.0;
+	float r, s = 2.0 * sigma * sigma;
+
+	// sum is for normalization
+	float sum = 0.0;
+
+	// generate 5x5 mask values
+	for (int x = -2; x <= 2; x++)
+	{
+		for (int y = -2; y <= 2; y++)
+		{
+			r = sqrt(x*x + y*y);
+			mask[(x + 2)*5 + (y + 2)] = (exp(-(r*r) / s)) / (M_PI * s);
+			sum += mask[(x + 2) * 5 + (y + 2)];
+		}
+	}
+
+	// normalize the mask
+	for (int i = 0; i < 5; ++i)
+		for (int j = 0; j < 5; ++j)
+			mask[i*5 + j] /= sum;
+
+}
+
+void printFilter(float mask[]) {
+	for (int i = 0; i < 5; ++i)
+	{
+		for (int j = 0; j < 5; ++j)
+			std::cout << mask[i*5 + j] << "\t";
+		std::cout << std::endl;
+	}
+	std::cin.ignore();
+}
+
 int main() {
 
 	int imageChannels;
@@ -104,21 +170,9 @@ int main() {
 	float *deviceInputImageData;
 	float *deviceOutputImageData;
 	
-	float hostMaskDataConstant[maskRows * maskColumns] = {
-		0.04, 0.04, 0.04, 0.04, 0.04,
-		0.04, 0.04, 0.04, 0.04, 0.04,
-		0.04, 0.04, 0.04, 0.04, 0.04,
-		0.04, 0.04, 0.04, 0.04, 0.04,
-		0.04, 0.04, 0.04, 0.04, 0.04
-	};
-
-	float hostMaskDataIdentical[maskRows * maskColumns] = {
-		0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0,
-		0, 0, 1, 0, 0,
-		0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0
-	};
+	float hostMaskData[maskRows * maskColumns];
+	gaussianFilter(hostMaskData);
+	//printFilter(hostMaskData); // uncomment to check mask values
 
 	inputImage = PPM_import("computer_programming.ppm");
 
@@ -146,7 +200,7 @@ int main() {
 
 	//copy memory from host to device
 	CUDA_CHECK_RETURN(
-		cudaMemcpyToSymbol(deviceMaskData, hostMaskDataConstant, maskRows * maskColumns * sizeof(float)));
+		cudaMemcpyToSymbol(deviceMaskData, hostMaskData, maskRows * maskColumns * sizeof(float)));
 	CUDA_CHECK_RETURN(
 		cudaMemcpy(deviceInputImageData, hostInputImageData, sizeof(float) * imageWidth * imageHeight * imageChannels,
 			cudaMemcpyHostToDevice));
