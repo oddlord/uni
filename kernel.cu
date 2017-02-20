@@ -34,8 +34,9 @@ static void CheckCudaErrorAux(const char *file, unsigned line,
 }
 
 // useful defines
-#define TILE_WIDTH 16
-#define w (TILE_WIDTH + Mask_width - 1)
+#define NUMBER_THREAD_X 16
+#define NUMBER_THREAD_Y 16
+#define TILE_SIZE NUMBER_THREAD_X * NUMBER_THREAD_Y * 3
 #define clamp(x) (min(max((x), 0.0), 1.0))
 
 //Global variables
@@ -53,9 +54,16 @@ __global__ void convolution(float *I, float *P,
 	int row = blockIdx.y * blockDim.y + threadIdx.y;
 	int depth = threadIdx.z;
 
-	//Copia dato nella shared memory (Tiling)
-
-	//Sincronizzati in atttedsa deglim altri
+	//Copy from global memory to shared memory (Tiling)
+	//As design choice, we assume that each thread copy the central pixel
+	__shared__ float Ids[TILE_SIZE];
+	int sharedMemoryPos = threadIdx.x * NUMBER_THREAD_X + threadIdx.y * NUMBER_THREAD_Y + threadIdx.z;
+	
+	if (col < width && row < height && depth < channels) {
+		Ids[sharedMemoryPos] = I[(row * width + col) * channels + depth];
+	}
+	
+	//Wait for other threads in the same block
 	__syncthreads();
 
 	if (col < width && row < height && depth < channels) {
@@ -78,6 +86,35 @@ __global__ void convolution(float *I, float *P,
 		P[(row * width + col) * channels + depth] = pValue;
 	}
 }
+
+__global__ void convolutionNoTiling(float *I, float *P,
+	int channels, int width, int height) {
+
+	int col = blockIdx.x * blockDim.x + threadIdx.x;
+	int row = blockIdx.y * blockDim.y + threadIdx.y;
+	int depth = threadIdx.z;
+
+	if (col < width && row < height && depth < channels) {
+		//Evaluate convolution
+		float pValue = 0;
+
+		int startRow = row - maskRowsRadius;
+		int startCol = col - maskColumnsRadius;
+
+		for (int i = 0; i < maskRows; i++) {
+			for (int j = 0; j < maskColumns; j++) {
+				int currentRow = startRow + i;
+				int currentColumn = startCol + j;
+
+				pValue += I[(currentRow * width +  currentColumn) * channels + depth] * deviceMaskData[i * maskRows + j];
+			}
+		}
+
+		//Salva il risultato dal registro alla global
+		P[(row * width + col) * channels + depth] = pValue;
+	}
+}
+
 
 // simple test to read/write PPM images, and process Image_t data
 void test_images() {
@@ -170,6 +207,7 @@ int main() {
 	float *deviceInputImageData;
 	float *deviceOutputImageData;
 	
+	// mask matrix creation
 	float hostMaskData[maskRows * maskColumns];
 	gaussianFilter(hostMaskData);
 	//printFilter(hostMaskData); // uncomment to check mask values
@@ -197,7 +235,6 @@ int main() {
 		cudaMalloc((void **)&deviceOutputImageData,
 			sizeof(float) * imageWidth * imageHeight * imageChannels));
 
-
 	//copy memory from host to device
 	CUDA_CHECK_RETURN(
 		cudaMemcpyToSymbol(deviceMaskData, hostMaskData, maskRows * maskColumns * sizeof(float)));
@@ -207,14 +244,12 @@ int main() {
 
 	//Evaluate block and thread number
 	int requiredThread = (imageWidth + (maskColumnsRadius * 2)) * (imageHeight + (maskRowsRadius * 2)) * imageChannels;
-	int numberThreadX = 16;
-	int numberThreadY = 16;
 
-	int numberBlockX = ceil((float)imageWidth /numberThreadX);
-	int numberBlockY = ceil((float)imageHeight / numberThreadY);
+	int numberBlockX = ceil((float)imageWidth /NUMBER_THREAD_X);
+	int numberBlockY = ceil((float)imageHeight / NUMBER_THREAD_Y);
 		
-	dim3 dimGrid(numberBlockX, numberBlockY); 
-	dim3 dimBlock(numberThreadX, numberThreadY, 3); 
+	dim3 dimGrid(NUMBER_THREAD_X, NUMBER_THREAD_Y); 
+	dim3 dimBlock(NUMBER_THREAD_X, NUMBER_THREAD_Y, 3);
 	convolution<<<dimGrid, dimBlock>>>(deviceInputImageData,
 	 deviceOutputImageData, imageChannels, imageWidth, imageHeight);
 
