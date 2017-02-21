@@ -33,13 +33,13 @@ static void CheckCudaErrorAux(const char *file, unsigned line,
 	exit(1);
 }
 
-// useful defines
+// Useful defines
 #define NUMBER_THREAD_X 16
 #define NUMBER_THREAD_Y 16
 #define TILE_SIZE NUMBER_THREAD_X * NUMBER_THREAD_Y * 3
 #define clamp(x) (min(max((x), 0.0), 1.0))
 
-//Global variables
+// Global variables
 const int maskRows = 5;
 const int maskColumns = 5;
 const int maskRowsRadius = maskRows / 2;
@@ -54,8 +54,8 @@ __global__ void convolution(float *I, float *P,
 	int row = blockIdx.y * blockDim.y + threadIdx.y;
 	int depth = threadIdx.z;
 
-	//Copy from global memory to shared memory (Tiling)
-	//As design choice, we assume that each thread copy the central pixel
+	// Copy from global memory to shared memory (Tiling)
+	// As design choice, we assume that each thread copies the central pixel
 	__shared__ float Ids[TILE_SIZE];
 	int sharedMemoryPos = threadIdx.x * NUMBER_THREAD_X + threadIdx.y * NUMBER_THREAD_Y + threadIdx.z;
 	
@@ -63,11 +63,11 @@ __global__ void convolution(float *I, float *P,
 		Ids[sharedMemoryPos] = I[(row * width + col) * channels + depth];
 	}
 	
-	//Wait for other threads in the same block
+	// Wait for other threads in the same block
 	__syncthreads();
 
 	if (col < width && row < height && depth < channels) {
-		//Evaluate convolution
+		// Evaluate convolution
 		float pValue = 0;
 
 		int startRow = row - maskRowsRadius;
@@ -78,7 +78,14 @@ __global__ void convolution(float *I, float *P,
 				int currentRow = startRow + i;
 				int currentColumn = startCol + j;
 
-				pValue += I[(currentRow * width +  currentColumn) * channels + depth] * deviceMaskData[i * maskRows + j];
+				float iValue = 0;
+
+				// Check for ghost elements
+				if (currentRow >= 0 && currentRow < height && currentColumn >= 0 && currentColumn < width) {
+					iValue = I[(currentRow * width + currentColumn) * channels + depth];
+				}
+
+				pValue += iValue * deviceMaskData[i * maskRows + j];
 			}
 		}
 
@@ -95,7 +102,7 @@ __global__ void convolutionNoTiling(float *I, float *P,
 	int depth = threadIdx.z;
 
 	if (col < width && row < height && depth < channels) {
-		//Evaluate convolution
+		// Evaluate convolution
 		float pValue = 0;
 
 		int startRow = row - maskRowsRadius;
@@ -106,17 +113,24 @@ __global__ void convolutionNoTiling(float *I, float *P,
 				int currentRow = startRow + i;
 				int currentColumn = startCol + j;
 
-				pValue += I[(currentRow * width +  currentColumn) * channels + depth] * deviceMaskData[i * maskRows + j];
+				float iValue = 0;
+
+				// Check for ghost elements
+				if (currentRow >= 0 && currentRow < height && currentColumn >= 0 && currentColumn < width) {
+					iValue = I[(currentRow * width + currentColumn) * channels + depth];
+				}
+
+				pValue += iValue * deviceMaskData[i * maskRows + j];
 			}
 		}
 
-		//Salva il risultato dal registro alla global
+		// Salva il risultato dal registro alla global
 		P[(row * width + col) * channels + depth] = pValue;
 	}
 }
 
 
-// simple test to read/write PPM images, and process Image_t data
+// Simple test to read/write PPM images, and process Image_t data
 void test_images() {
 	Image_t* inputImg = PPM_import("computer_programming.ppm");
 	for (int i = 0; i < 300; i++) {
@@ -156,18 +170,17 @@ void identityFilter(float mask[])
 	mask[2*5 + 2] = 1;
 }
 
-void gaussianFilter(float mask[])
+void gaussianFilter(float mask[], float sigma)
 {
-	// means on X and Y are fixed to 0
-	// correlation coefficient is fixed to 0
-	// standard deviation is set to 1 (for both X and Y)
-	float sigma = 1.0;
+	// Means on X and Y are fixed to 0
+	// Correlation coefficient is fixed to 0
+	// Standard deviation (for both X and Y) is passed as parameter
 	float r, s = 2.0 * sigma * sigma;
 
-	// sum is for normalization
+	// Sum is for normalization
 	float sum = 0.0;
 
-	// generate 5x5 mask values
+	// Generate 5x5 mask values
 	for (int x = -2; x <= 2; x++)
 	{
 		for (int y = -2; y <= 2; y++)
@@ -178,10 +191,31 @@ void gaussianFilter(float mask[])
 		}
 	}
 
-	// normalize the mask
+	// Normalize the mask
 	for (int i = 0; i < 5; ++i)
 		for (int j = 0; j < 5; ++j)
 			mask[i*5 + j] /= sum;
+
+}
+
+void inverseGaussianFilter(float mask[], float sigma)
+{
+	gaussianFilter(mask, sigma);
+
+	float sum = 0.0;
+
+	// Invert the mask
+	for (int i = 0; i < 5; ++i) {
+		for (int j = 0; j < 5; ++j) {
+			mask[i * 5 + j] = 1 - mask[i * 5 + j];
+			sum += mask[i * 5 + j];
+		}
+	}
+
+	// Normalize the mask
+	for (int i = 0; i < 5; ++i)
+		for (int j = 0; j < 5; ++j)
+			mask[i * 5 + j] /= sum;
 
 }
 
@@ -207,10 +241,10 @@ int main() {
 	float *deviceInputImageData;
 	float *deviceOutputImageData;
 	
-	// mask matrix creation
+	// Mask matrix creation
 	float hostMaskData[maskRows * maskColumns];
-	gaussianFilter(hostMaskData);
-	//printFilter(hostMaskData); // uncomment to check mask values
+	inverseGaussianFilter(hostMaskData, 0.5);
+	// printFilter(hostMaskData); // uncomment to check mask values
 
 	inputImage = PPM_import("computer_programming.ppm");
 
@@ -235,20 +269,20 @@ int main() {
 		cudaMalloc((void **)&deviceOutputImageData,
 			sizeof(float) * imageWidth * imageHeight * imageChannels));
 
-	//copy memory from host to device
+	// Copy memory from host to device
 	CUDA_CHECK_RETURN(
 		cudaMemcpyToSymbol(deviceMaskData, hostMaskData, maskRows * maskColumns * sizeof(float)));
 	CUDA_CHECK_RETURN(
 		cudaMemcpy(deviceInputImageData, hostInputImageData, sizeof(float) * imageWidth * imageHeight * imageChannels,
 			cudaMemcpyHostToDevice));
 
-	//Evaluate block and thread number
+	// Evaluate block and thread number
 	int requiredThread = (imageWidth + (maskColumnsRadius * 2)) * (imageHeight + (maskRowsRadius * 2)) * imageChannels;
 
 	int numberBlockX = ceil((float)imageWidth /NUMBER_THREAD_X);
 	int numberBlockY = ceil((float)imageHeight / NUMBER_THREAD_Y);
 		
-	dim3 dimGrid(NUMBER_THREAD_X, NUMBER_THREAD_Y); 
+	dim3 dimGrid(numberBlockX, numberBlockY);
 	dim3 dimBlock(NUMBER_THREAD_X, NUMBER_THREAD_Y, 3);
 	convolution<<<dimGrid, dimBlock>>>(deviceInputImageData,
 	 deviceOutputImageData, imageChannels, imageWidth, imageHeight);
@@ -261,7 +295,7 @@ int main() {
 	PPM_export("processed_computer_programming.ppm", outputImage);
 
 	// Free device memory
-	//deviceMaskData memory doesn't need to be freed since it's a global variable
+	// deviceMaskData memory doesn't need to be freed since it's a global variable
 	cudaFree(deviceInputImageData);
 	cudaFree(deviceOutputImageData);
 
