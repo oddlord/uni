@@ -57,7 +57,8 @@ __global__ void convolution(float *I, float *P,
 	// Copy from global memory to shared memory (Tiling)
 	// As design choice, we assume that each thread copies the central pixel
 	__shared__ float Ids[TILE_SIZE];
-	int sharedMemoryPos = threadIdx.x * NUMBER_THREAD_X + threadIdx.y * NUMBER_THREAD_Y + threadIdx.z;
+	int sharedMemoryPos = (threadIdx.y * blockDim.y + threadIdx.x)*channels + depth;
+	int imagePos = (row * width + col) * channels + depth; // WIP: il primo toglie 2, gli altri tolgono 4
 	
 	if (col < width && row < height && depth < channels) {
 		Ids[sharedMemoryPos] = I[(row * width + col) * channels + depth];
@@ -279,8 +280,12 @@ int main() {
 	// Evaluate block and thread number
 	int requiredThread = (imageWidth + (maskColumnsRadius * 2)) * (imageHeight + (maskRowsRadius * 2)) * imageChannels;
 
-	int numberBlockX = ceil((float)imageWidth /NUMBER_THREAD_X);
-	int numberBlockY = ceil((float)imageHeight / NUMBER_THREAD_Y);
+	float numberBlockXNoTiling = (float)imageWidth / NUMBER_THREAD_X;
+	float numberBlockXTiling = ((float)imageWidth + (numberBlockXNoTiling - 1) * 6 + 4) / NUMBER_THREAD_X;
+	float numberBlockYNoTiling = (float)imageHeight / NUMBER_THREAD_Y;
+	float numberBlockYTiling = ((float)imageHeight + (numberBlockXNoTiling - 1) * 6 + 4) / NUMBER_THREAD_Y;
+	int numberBlockX = ceil(numberBlockXTiling);
+	int numberBlockY = ceil(numberBlockYTiling);
 		
 	dim3 dimGrid(numberBlockX, numberBlockY);
 	dim3 dimBlock(NUMBER_THREAD_X, NUMBER_THREAD_Y, 3);
