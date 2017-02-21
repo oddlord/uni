@@ -54,44 +54,46 @@ __global__ void convolution(float *I, float *P,
 	int row = blockIdx.y * blockDim.y + threadIdx.y;
 	int depth = threadIdx.z;
 
+	int shiftedCol = (col - 2 - (blockIdx.x) * 4);
+	int shiftedRow = (row - 2 - (blockIdx.y) * 4);
+
 	// Copy from global memory to shared memory (Tiling)
 	// As design choice, we assume that each thread copies the central pixel
 	__shared__ float Ids[TILE_SIZE];
 	int sharedMemoryPos = (threadIdx.y * blockDim.y + threadIdx.x)*channels + depth;
-	int imagePos = (row * width + col) * channels + depth; // WIP: il primo toglie 2, gli altri tolgono 4
+	int imagePos = (shiftedRow * width + shiftedCol) * channels + depth;
 	
-	if (col < width && row < height && depth < channels) {
-		Ids[sharedMemoryPos] = I[(row * width + col) * channels + depth];
+	if (shiftedRow >= 0 && shiftedRow < height && shiftedCol >= 0 && shiftedCol < width) {
+		Ids[sharedMemoryPos] = I[(shiftedRow * width + shiftedCol) * channels + depth];
+	}
+	else {
+		Ids[sharedMemoryPos] = 0;
 	}
 	
 	// Wait for other threads in the same block
 	__syncthreads();
 
-	if (col < width && row < height && depth < channels) {
+	if (shiftedRow >= 0 && shiftedRow < height && shiftedCol >= 0 && shiftedCol < width && threadIdx.x > 1 && threadIdx.x < NUMBER_THREAD_X-1 && threadIdx.y > 1 && threadIdx.y < NUMBER_THREAD_Y - 1) {
+
 		// Evaluate convolution
 		float pValue = 0;
 
-		int startRow = row - maskRowsRadius;
-		int startCol = col - maskColumnsRadius;
+		int startRow = threadIdx.y - maskRowsRadius;
+		int startCol = threadIdx.x - maskColumnsRadius;
 
 		for (int i = 0; i < maskRows; i++) {
 			for (int j = 0; j < maskColumns; j++) {
 				int currentRow = startRow + i;
-				int currentColumn = startCol + j;
+				int currentCol = startCol + j;
 
-				float iValue = 0;
-
-				// Check for ghost elements
-				if (currentRow >= 0 && currentRow < height && currentColumn >= 0 && currentColumn < width) {
-					iValue = I[(currentRow * width + currentColumn) * channels + depth];
-				}
+				float iValue  = Ids[(currentRow * width + currentCol) * channels + depth];
 
 				pValue += iValue * deviceMaskData[i * maskRows + j];
 			}
 		}
 
 		//Salva il risultato dal registro alla global
-		P[(row * width + col) * channels + depth] = pValue;
+		P[(shiftedRow * width + shiftedCol) * channels + depth] = pValue;
 	}
 }
 
@@ -103,6 +105,7 @@ __global__ void convolutionNoTiling(float *I, float *P,
 	int depth = threadIdx.z;
 
 	if (col < width && row < height && depth < channels) {
+
 		// Evaluate convolution
 		float pValue = 0;
 
@@ -112,13 +115,13 @@ __global__ void convolutionNoTiling(float *I, float *P,
 		for (int i = 0; i < maskRows; i++) {
 			for (int j = 0; j < maskColumns; j++) {
 				int currentRow = startRow + i;
-				int currentColumn = startCol + j;
+				int currentCol = startCol + j;
 
 				float iValue = 0;
 
 				// Check for ghost elements
-				if (currentRow >= 0 && currentRow < height && currentColumn >= 0 && currentColumn < width) {
-					iValue = I[(currentRow * width + currentColumn) * channels + depth];
+				if (currentRow >= 0 && currentRow < height && currentCol >= 0 && currentCol < width) {
+					iValue = I[(currentRow * width + currentCol) * channels + depth];
 				}
 
 				pValue += iValue * deviceMaskData[i * maskRows + j];
