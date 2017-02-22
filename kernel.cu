@@ -281,7 +281,6 @@ int main() {
 			cudaMemcpyHostToDevice));
 
 	// Evaluate block and thread number
-	int requiredThread = (imageWidth + (maskColumnsRadius * 2)) * (imageHeight + (maskRowsRadius * 2)) * imageChannels;
 
 	float numberBlockXNoTiling = (float)imageWidth / NUMBER_THREAD_X;
 	float numberBlockXTiling = ((float)imageWidth + (numberBlockXNoTiling - 1) * 6 + 4) / NUMBER_THREAD_X;
