@@ -51,8 +51,8 @@ __global__ void convolution(float *I, float *P,
 	int channels, int width, int height) {
 
 	// Original columns/rows index before shifting
-	int colOriginal = blockIdx.x * (blockDim.x - maskColumnsRadius) + threadIdx.x;
-	int rowOriginal = blockIdx.y * (blockDim.y - maskRowsRadius) + threadIdx.y;
+	int colOriginal = blockIdx.x * (blockDim.x - maskColumnsRadius*2) + threadIdx.x;
+	int rowOriginal = blockIdx.y * (blockDim.y - maskRowsRadius*2) + threadIdx.y;
 
 	// Thread columns and rows
 	// (Original cols/rows shifted by the mask radius backwards)
@@ -262,7 +262,7 @@ int main() {
 	
 	// Mask matrix creation
 	float hostMaskData[maskRows * maskColumns];
-	inverseGaussianFilter(hostMaskData, 0.5);
+	gaussianFilter(hostMaskData, 1);
 	// printFilter(hostMaskData); // uncomment to check mask values
 
 	inputImage = PPM_import("computer_programming.ppm");
@@ -305,8 +305,8 @@ int main() {
 	// # of blocks needed WITH tiling is computed as
 	// width (or height) of the image / width (or height) of an output tile
 	// (this is due the fact that we chose to match blocks with input tiles)
-	float numberBlockXTiling = (float)imageWidth / (NUMBER_THREAD_X - maskColumnsRadius);
-	float numberBlockYTiling = (float)imageHeight / (NUMBER_THREAD_Y - maskRowsRadius);
+	float numberBlockXTiling = (float)imageWidth / (NUMBER_THREAD_X - maskColumnsRadius*2);
+	float numberBlockYTiling = (float)imageHeight / (NUMBER_THREAD_Y - maskRowsRadius*2);
 
 	// the actual # of blocks is obtained by rounding up the previous value
 	// use here # of block with/without tiling depending on which kernel is called
