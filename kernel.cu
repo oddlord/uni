@@ -36,7 +36,7 @@ static void CheckCudaErrorAux(const char *file, unsigned line,
 // Useful defines
 #define NUMBER_THREAD_X 16
 #define NUMBER_THREAD_Y 16
-#define TILE_SIZE NUMBER_THREAD_X * NUMBER_THREAD_Y * 3
+#define TILE_SIZE NUMBER_THREAD_X * NUMBER_THREAD_Y * 3 // each block matches with the input tile
 #define clamp(x) (min(max((x), 0.0), 1.0))
 
 // Global variables
@@ -50,50 +50,62 @@ __constant__ float deviceMaskData[maskRows * maskColumns];
 __global__ void convolution(float *I, float *P,
 	int channels, int width, int height) {
 
-	int col = blockIdx.x * blockDim.x + threadIdx.x;
-	int row = blockIdx.y * blockDim.y + threadIdx.y;
+	// Original columns/rows index before shifting
+	int colOriginal = blockIdx.x * (blockDim.x - maskColumnsRadius) + threadIdx.x;
+	int rowOriginal = blockIdx.y * (blockDim.y - maskRowsRadius) + threadIdx.y;
+
+	// Thread columns and rows
+	// (Original cols/rows shifted by the mask radius backwards)
+	int colT = colOriginal - maskColumnsRadius;
+	int rowT = rowOriginal - maskRowsRadius;
+
 	int depth = threadIdx.z;
 
-	int shiftedCol = (col - 2 - (blockIdx.x) * 4);
-	int shiftedRow = (row - 2 - (blockIdx.y) * 4);
+	// 1st phase: copy from global memory to shared memory (tiling)
 
-	// Copy from global memory to shared memory (Tiling)
-	// As design choice, we assume that each thread copies the central pixel
+	// As design choice, we assume that each block matches each input tile
+	// meaning that each thread loads its own input pixel
+	// but only the central ones computes the output pixel
 	__shared__ float Ids[TILE_SIZE];
 	int sharedMemoryPos = (threadIdx.y * blockDim.y + threadIdx.x)*channels + depth;
-	int imagePos = (shiftedRow * width + shiftedCol) * channels + depth;
 	
-	if (shiftedRow >= 0 && shiftedRow < height && shiftedCol >= 0 && shiftedCol < width) {
-		Ids[sharedMemoryPos] = I[(shiftedRow * width + shiftedCol) * channels + depth];
+	// Actual tiling
+	if (rowT >= 0 && rowT < height && colT >= 0 && colT < width) {
+		Ids[sharedMemoryPos] = I[(rowT * width + colT) * channels + depth];
 	}
-	else {
-		Ids[sharedMemoryPos] = 0;
+	else { // check for ghost elements
+		Ids[sharedMemoryPos] = 0.0f;
 	}
 	
 	// Wait for other threads in the same block
 	__syncthreads();
 
-	if (shiftedRow >= 0 && shiftedRow < height && shiftedCol >= 0 && shiftedCol < width && threadIdx.x > 1 && threadIdx.x < NUMBER_THREAD_X-1 && threadIdx.y > 1 && threadIdx.y < NUMBER_THREAD_Y - 1) {
+	// 2nd phase: evaluate convolution
 
-		// Evaluate convolution
-		float pValue = 0;
+	// This first IF is to check whether we're still inside the image boundaries or not
+	if (rowT >= 0 && rowT < height && colT >= 0 && colT < width) {
+		// This second IF is to check whether we're inside the central block area or not (border threads do not compute anything)
+		if (threadIdx.x >= maskColumnsRadius && threadIdx.x < (blockDim.x - 2) && threadIdx.y >= maskRowsRadius && threadIdx.y < (blockDim.y - 2)) {
+			float pValue = 0;
 
-		int startRow = threadIdx.y - maskRowsRadius;
-		int startCol = threadIdx.x - maskColumnsRadius;
+			int startCol = threadIdx.x - maskColumnsRadius;
+			int startRow = threadIdx.y - maskRowsRadius;
 
-		for (int i = 0; i < maskRows; i++) {
-			for (int j = 0; j < maskColumns; j++) {
-				int currentRow = startRow + i;
-				int currentCol = startCol + j;
+			for (int i = 0; i < maskRows; i++) {
+				for (int j = 0; j < maskColumns; j++) {
+					int currentCol = startCol + j;
+					int currentRow = startRow + i;
 
-				float iValue  = Ids[(currentRow * width + currentCol) * channels + depth];
+					// Check for ghost elements already done during tiling
+					float iValue = Ids[(currentRow * blockDim.y + currentCol) * channels + depth];
 
-				pValue += iValue * deviceMaskData[i * maskRows + j];
+					pValue += iValue * deviceMaskData[i * maskRows + j];
+				}
 			}
-		}
 
-		//Salva il risultato dal registro alla global
-		P[(shiftedRow * width + shiftedCol) * channels + depth] = pValue;
+			// Store the result inside the output vector P in the global memory
+			P[(rowT * width + colT) * channels + depth] = pValue;
+		}
 	}
 }
 
@@ -117,11 +129,14 @@ __global__ void convolutionNoTiling(float *I, float *P,
 				int currentRow = startRow + i;
 				int currentCol = startCol + j;
 
-				float iValue = 0;
+				float iValue;
 
 				// Check for ghost elements
 				if (currentRow >= 0 && currentRow < height && currentCol >= 0 && currentCol < width) {
 					iValue = I[(currentRow * width + currentCol) * channels + depth];
+				}
+				else {
+					iValue = 0.0f;
 				}
 
 				pValue += iValue * deviceMaskData[i * maskRows + j];
@@ -282,10 +297,19 @@ int main() {
 
 	// Evaluate block and thread number
 
+	// # of blocks needed WITHOUT tiling is computed as
+	// width (or height) of the image / width (or height) of a single block
 	float numberBlockXNoTiling = (float)imageWidth / NUMBER_THREAD_X;
-	float numberBlockXTiling = ((float)imageWidth + (numberBlockXNoTiling - 1) * 6 + 4) / NUMBER_THREAD_X;
 	float numberBlockYNoTiling = (float)imageHeight / NUMBER_THREAD_Y;
-	float numberBlockYTiling = ((float)imageHeight + (numberBlockXNoTiling - 1) * 6 + 4) / NUMBER_THREAD_Y;
+
+	// # of blocks needed WITH tiling is computed as
+	// width (or height) of the image / width (or height) of an output tile
+	// (this is due the fact that we chose to match blocks with input tiles)
+	float numberBlockXTiling = (float)imageWidth / (NUMBER_THREAD_X - maskColumnsRadius);
+	float numberBlockYTiling = (float)imageHeight / (NUMBER_THREAD_Y - maskRowsRadius);
+
+	// the actual # of blocks is obtained by rounding up the previous value
+	// use here # of block with/without tiling depending on which kernel is called
 	int numberBlockX = ceil(numberBlockXTiling);
 	int numberBlockY = ceil(numberBlockYTiling);
 		
