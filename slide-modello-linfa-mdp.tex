@@ -49,45 +49,137 @@
                   \item scelte non-deterministiche sull'ordine
                 \end{itemize}
               \end{itemize}
+              \vspace{1cm}
               \begin{center}
                 \begin{tikzpicture}[node distance = 2cm, auto]
                   % Place nodes
-                  \node [block] at (0,0) (oggi) [] {Giorno\\corrente};
-                  \node [block] at (2.5,0) (g1) [] {Giorno 1};
-                  \node [block] at (5,0) (g2) [] {Giorno 2};
-                  \node [block] at (7.5,0) (g3) [] {Giorno 3};
+                  \node [block, circle] at (0,0) (oggi) [] {Giorno\\corrente};
+                  \node [block, circle] at (2.5,0) (g1) [] {Giorno 1};
+                  \node [block, circle] at (5,0) (g2) [] {Giorno 2};
+                  \node [block, circle] at (7.5,0) (g3) [] {Giorno 3};
                   % Draw edges
+                  \path [line] (oggi) to [out=40,in=140] (g1);
                   \path [line] (oggi) -- (g1);
+                  \path [line] (oggi) to [out=-40,in=-140] (g1);
+                  
+                  \path [line] (g1) to [out=40,in=140] (g2);
                   \path [line] (g1) -- (g2);
+                  \path [line] (g1) to [out=-40,in=-140] (g2);
+                  
+                  \path [line] (g2) to [out=40,in=140] (g3);
                   \path [line] (g2) -- (g3);
+                  \path [line] (g2) to [out=-40,in=-140] (g3);
                 \end{tikzpicture}
               \end{center}
+              % schema con quantità dell'ordine
+%              \begin{center}
+%                \begin{tikzpicture}[node distance = 2cm, auto]
+%                  % Place nodes
+%                  \node [block] at (0,0) (oggi) [] {Giorno\\corrente};
+%                  \node [block] at (2.5,0) (g1) [] {Giorno 1};
+%                  \node [block] at (5,0) (g2) [] {Giorno 2};
+%                  \node [block] at (7.5,0) (g3) [] {Giorno 3};
+%                  % Draw edges
+%                  \path [line] (oggi) to [out=40,in=140] node {0} (g1);
+%                  \path [line] (oggi) -- node {10} (g1);
+%                  \path [line] (oggi) to [out=-40,in=-140] node {20} (g1);
+%                  
+%                  \path [line] (g1) to [out=40,in=140] node {0} (g2);
+%                  \path [line] (g1) -- node {10} (g2);
+%                  \path [line] (g1) to [out=-40,in=-140] node {20} (g2);
+%                  
+%                  \path [line] (g2) to [out=40,in=140] node {0} (g3);
+%                  \path [line] (g2) -- node {10} (g3);
+%                  \path [line] (g2) to [out=-40,in=-140] node {20} (g3);
+%                \end{tikzpicture}
+%              \end{center}
             \end{frame}
         
         \subsection{Specifiche e limitazioni}
-            \begin{frame}{Specifiche}
+            \begin{frame}{Specifiche e limitazioni}
+              \begin{itemize}
+                \item Reparto
+                \begin{itemize}
+                  \item un reparto con posologia fissa
+                  \item capienza del reparto fissata
+                  \item capienza del magazzino fissata
+                \end{itemize}
+                \item Farmaco
+                \begin{itemize}
+                  \item un solo tipo di farmaco
+                \end{itemize}
+                \item Caratterizzazione probabilistica
+                \begin{itemize}
+                  \item pazienti in arrivo (programmati/pronto soccorso)
+                  \item pazienti in uscita
+                  \item consumo di farmaci per i pazienti in reparto
+                \end{itemize}
+                \item Scelte non-deterministiche
+                \begin{itemize}
+                  \item se e in che quantità riordinare $\{0,10,20,30,40\}$
+                \end{itemize}
+                \item Funzione di costo
+                \begin{itemize}
+                  \item costo dell'ordine di ogni unità di farmaco
+                  \item costo della giacenza di ogni farmaco in magazzino
+                  \item costo di farmaci mancanti da somministrare
+                \end{itemize}
+              \end{itemize}
             \end{frame}
             
-            \begin{frame}{Limitazioni}
-            \end{frame}
-    
     \section{Utilizzo del modello}
     
         \subsection{Strumenti utilizzati}
             \begin{frame}{Strumenti utilizzati}
+              \begin{itemize}
+                \item Componente Java
+                \begin{itemize}
+                  \item simulazione
+                  \item attualizzazione
+                  \item estrazione dell'avversario
+                  \item sperimentazione
+                \end{itemize}
+                \vspace{0.8cm}
+                \item Prism
+                \begin{itemize}
+                  \item Implementazione del modello attualizzato
+                  \item Calcolo della strategia ottima
+                \end{itemize}
+              \end{itemize}
             \end{frame}
     
-        \subsection{Attualizzazione del modello}
-            \begin{frame}{Attualizzazione del modello}
-            \end{frame}
-            
-        \subsection{Estrazione dell'avversario}
-            \begin{frame}{Estrazione dell'avversario}
+        \subsection{Calcolo della strategia ottima}
+            \begin{frame}{Calcolo della strategia ottima}
+              Ogni giorno, il modello viene attualizzato sulla base dei dati attuali.
+              \begin{itemize}
+                \item \textbf{Simulatore}: genera dati verosimili e consistenti
+                \begin{itemize}
+                  \item implementa le stesse distribuzioni di probabilità definite nel modello Prism
+                \end{itemize}
+                \item \textbf{Template}: rappresenta un generico modello Prism non attualizzato
+                \begin{itemize}
+                  \item attualizzato tramite il template engine Apache Velocity
+                \end{itemize}
+              \end{itemize}
+              \vspace{1cm}
+              Sul modello attualizzato, Prism può calcolare la strategia ottima
+              \begin{itemize}
+                \item Da componente Java
+                \begin{itemize}
+                  \item viene estratto l'avversario
+                  \item che indica la scelta ottima
+                \end{itemize}
+              \end{itemize}
+              \vspace{1cm}
+              La scelta ottima suggerita da Prism \textbf{minimizza} il costo \textbf{medio} sui 3 giorni successivi! 
             \end{frame}
             
     \section{Sperimentazione}
     
         \begin{frame}{Sperimentazione}
+          \begin{center}
+            \includegraphics[scale=0.4]{test1.png}
+          \end{center}
         \end{frame}
 
 \end{document}
