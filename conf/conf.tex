@@ -2,15 +2,27 @@
 % !TeX encoding = UTF-8
 % !TeX spellcheck = it_IT
 
-\usepackage{amsmath}
-\usepackage{amsfonts}
-\usepackage{amssymb}
-\usepackage{graphicx}
+%********************************************************************
+% Packages
+%********************************************************************
 
 \usepackage[italian]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
 \usepackage{times}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+
+\graphicspath{{img/}}
+
+%********************************************************************
+% Beamer styles
+%********************************************************************
 
 \usetheme{Antibes} % Antibes, Berkeley, Hannover, Luebeck
 \usecolortheme{dolphin} % beaver, dolphin
@@ -22,3 +34,100 @@
 
 \setbeamertemplate{footline}[frame number]
 \setbeamertemplate{navigation symbols}{}
+
+%********************************************************************
+% Tikz styles
+%********************************************************************
+
+\usetikzlibrary{shapes, arrows, patterns, automata}
+
+\makeatletter
+% the contents of \squarecorner were mostly stolen from pgfmoduleshapes.code.tex
+\def\squarecorner#1{
+  % Calculate x
+  %
+  % First, is width < minimum width?
+  \pgf@x=\the\wd\pgfnodeparttextbox%
+  \pgfmathsetlength\pgf@xc{\pgfkeysvalueof{/pgf/inner xsep}}%
+  \advance\pgf@x by 2\pgf@xc%
+  \pgfmathsetlength\pgf@xb{\pgfkeysvalueof{/pgf/minimum width}}%
+  \ifdim\pgf@x<\pgf@xb%
+      % yes, too small. Enlarge...
+      \pgf@x=\pgf@xb%
+  \fi%
+  % Calculate y
+  %
+  % First, is height+depth < minimum height?
+  \pgf@y=\ht\pgfnodeparttextbox%
+  \advance\pgf@y by\dp\pgfnodeparttextbox%
+  \pgfmathsetlength\pgf@yc{\pgfkeysvalueof{/pgf/inner ysep}}%
+  \advance\pgf@y by 2\pgf@yc%
+  \pgfmathsetlength\pgf@yb{\pgfkeysvalueof{/pgf/minimum height}}%
+  \ifdim\pgf@y<\pgf@yb%
+      % yes, too small. Enlarge...
+      \pgf@y=\pgf@yb%
+  \fi%
+  %
+  % this \ifdim is the actual part that makes the node dimensions square.
+  \ifdim\pgf@x<\pgf@y%
+      \pgf@x=\pgf@y%
+  \else
+      \pgf@y=\pgf@x%
+  \fi
+  %
+  % Now, calculate right border: .5\wd\pgfnodeparttextbox + .5 \pgf@x + #1outer sep
+  \pgf@x=#1.5\pgf@x%
+  \advance\pgf@x by.5\wd\pgfnodeparttextbox%
+  \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/outer xsep}}%
+  \advance\pgf@x by#1\pgf@xa%
+  % Now, calculate upper border: .5\ht-.5\dp + .5 \pgf@y + #1outer sep
+  \pgf@y=#1.5\pgf@y%
+  \advance\pgf@y by-.5\dp\pgfnodeparttextbox%
+  \advance\pgf@y by.5\ht\pgfnodeparttextbox%
+  \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/outer ysep}}%
+  \advance\pgf@y by#1\pgf@ya%
+}
+\makeatother
+
+\pgfdeclareshape{square}{
+  \savedanchor\northeast{\squarecorner{}}
+  \savedanchor\southwest{\squarecorner{-}}
+
+  \foreach \x in {east,west} \foreach \y in {north,mid,base,south} {
+    \inheritanchor[from=rectangle]{\y\space\x}
+  }
+  \foreach \x in {east,west,north,mid,base,south,center,text} {
+    \inheritanchor[from=rectangle]{\x}
+  }
+  \inheritanchorborder[from=rectangle]
+  \inheritbackgroundpath[from=rectangle]
+}
+
+% http://tex.stackexchange.com/questions/214663/draw-on-background-rectangle
+\tcbset{mystyle/.style={
+    enhanced, 
+    coltitle = black, 
+    colframe = black!15,
+    attach boxed title to top left={yshift=-.25mm-\tcboxedtitleheight/2, xshift=2ex},
+    boxed title style={enhanced, 
+        frame code={\draw[black!15, line width=.5mm, fill=white, 
+            rounded corners=1.75ex] 
+            (frame.south west) rectangle (frame.north east);}, 
+        interior empty}
+    }}
+\newtcbox{\mybox}[2][]{mystyle, #1, title=#2}
+\newtcbox{\mytikzbox}[2][]{mystyle, tikz upper, #1, title=#2}
+
+% see example at http://www.texample.net/tikz/examples/simple-flow-chart/
+% http://www.texample.net/media/pgf/builds/pgfmanualCVS2012-11-04.pdf Chapter 42 for patterns
+\tikzstyle{decision} = [diamond, draw, node distance=3cm, inner sep=0pt, minimum height=3em, minimum width=3em, align=center]
+\tikzstyle{block} = [circle, draw, rounded corners, minimum height=2.5em, align=center]
+\tikzstyle{texted} = [text width=5em, text centered]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [draw, ellipse, node distance=3cm, minimum height=2em]
+\tikzstyle{north-east-lines} = [pattern=north east lines, pattern color=black!50]
+\tikzstyle{north-west-lines} = [pattern=north west lines, pattern color=green!50]
+\tikzstyle{dots} = [pattern=dots, pattern color=red!50]
+\tikzstyle{crosshatch} = [pattern=crosshatch, pattern color=cyan!50]
+\tikzstyle{filled} = [fill=blue!20]
+

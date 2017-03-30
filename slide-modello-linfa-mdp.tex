@@ -49,6 +49,19 @@
                   \item scelte non-deterministiche sull'ordine
                 \end{itemize}
               \end{itemize}
+              \begin{center}
+                \begin{tikzpicture}[node distance = 2cm, auto]
+                  % Place nodes
+                  \node [block] at (0,0) (oggi) [] {Giorno\\corrente};
+                  \node [block] at (2.5,0) (g1) [] {Giorno 1};
+                  \node [block] at (5,0) (g2) [] {Giorno 2};
+                  \node [block] at (7.5,0) (g3) [] {Giorno 3};
+                  % Draw edges
+                  \path [line] (oggi) -- (g1);
+                  \path [line] (g1) -- (g2);
+                  \path [line] (g2) -- (g3);
+                \end{tikzpicture}
+              \end{center}
             \end{frame}
         
         \subsection{Specifiche e limitazioni}
