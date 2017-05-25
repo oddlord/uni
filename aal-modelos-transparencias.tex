@@ -6,7 +6,7 @@
 
 \input{conf/conf}
 
-\title[AAL basada en modelos]{Ambient Assisted Living basada en modelos}
+\title[AAL y modelos aleatorios]{Ambient Assisted Living y modelos aleatorios}
 \author{\textbf{Tommaso Papini}}
 \institute{
   STLab, Departamiento de la Ingenieria de la Informacíon, Universidad de Florencia, Italia,\\
@@ -22,14 +22,8 @@
   \begin{frame}
     \titlepage
     \begin{itemize}
-      \item Análisis cuantitativa basada en modelos
-      \item Reconocimiento de Actividades
-%      \begin{itemize}
-%        \item diagnosis
-%        \item predicción
-%        \item planificación de acciones
-%      \end{itemize}
-%      \item Datasets para AAL
+      \item Ambient Assisted Living
+      \item Análisis de entornos inteligentes
     \end{itemize}
   \end{frame}
 
@@ -38,106 +32,104 @@
     \tableofcontents
   \end{frame}
   
-  \section{Análisis cuantitativa basada en modelos}
+  \section{Ambient Assisted Living}
     
-    \subsection{Redes de Petri}
-      \begin{frame}{TODO!!!}
+    \begin{frame}{Ambient Assisted Living}
+      El \textbf{Ambient Assisted Living} es un sector de investigación que tiene como objetivo lo de ayudar las personas que viven en \textit{entornos inteligentes} (es decir, dotado de sensores y actuadores) explotando a la tecnología de sensores y de procesamiento de datos.
+    \end{frame}
+    
+    \subsection{Objetivos}
+      \begin{frame}{Objetivos}
+        \pause
+        Un \textit{entorno inteligente} es un sistema \textbf{parcialmente observable}:
+        \pause
+        \begin{itemize}
+          \item el estado efectivo del sistema resulta escondido
+          \pause
+          \item solo se pueden observar eventos (\textit{observaciones}) emitidos por el sistema (por ej. la activación de un sensor)\\[1em]
+        \end{itemize}
+        
+        \pause
+        
+        Principales análisis de interese:
+        \pause
+        \begin{itemize}
+          \item \textbf{Diagnosis}: estimar cual es el estado efectivo actual del sistema a partir de las observaciones registradas
+          \pause
+          \item \textbf{Predicción}: estimar cual será el estado efectivo del sistema después de una determinada cantidad de tiempo
+          \item \textbf{Planificación de acciones}: elegir la acción optima y entre cuanto tiempo ir actuarla para evitar situaciones críticas\\[1em]
+        \end{itemize}
+        
+        \pause
+        
+        Análisis en linea:
+        \pause
+        \begin{itemize}
+          \item la análisis en linea intenta analizar a un entorno inteligente \textit{mientras} está evolucionando
+        \end{itemize}
       \end{frame}
-      
-    \subsection{Análisis de transición}
-      \begin{frame}{TODO!!!}
-      \end{frame}
-
-  \section{Reconocimiento de Actividades}
+    
+  \section{Análisis de entornos inteligentes}
   
-    \begin{frame}{Dos artículos principales}
-      \pause
+    \begin{frame}{Modelos estadísticos}
+      Los \textit{modelos estadísticos} representan una aproximación de sistemas donde se modela:
       \begin{itemize}
-        \item Carnevali, L., Nugent, C., Patara, F. and Vicario, E., 2015, September. \textbf{A continuous-time model-based approach to activity recognition for ambient assisted living}. In International Conference on Quantitative Evaluation of Systems (pp. 38-53). Springer International Publishing.
-        \pause
-        \item Biagi, M., Carnevali, L., Paolieri, M., Patara, F. and Vicario, E., 2016, October. \textbf{A Stochastic Model-Based Approach to Online Event Prediction and Response Scheduling}. In European Workshop on Performance Engineering (pp. 32-47). Springer International Publishing.
+        \item la evolución del estado del sistema
+        \item parámetros estadísticos que definen como el sistema pasa de un estado al otro
       \end{itemize}
-    \end{frame}
-    
-    \begin{frame}{Reconocimiento de Actividades}
-      \pause
-      Un \textit{entorno inteligente} (es decir, dotado de sensores y actuadores) es un sistema \textbf{parcialmente observable}:
-      \pause
-      \begin{itemize}
-        \item el estado efectivo del sistema resulta escondido
-        \pause
-        \item solo se pueden observar eventos (\textit{observaciones}) emitidos por el sistema (por ej. la activación de un sensor)\\[1em]
-      \end{itemize}
-      
-      \pause
-      
-      Reconocimiento de Actividades:
-      \pause
-      \begin{itemize}
-        \item \textbf{Diagnosis}: estimar cual es el estado efectivo actual del sistema a partir de las observaciones registradas
-        \pause
-        \item \textbf{Predicción}: estimar cual será el estado efectivo del sistema después de una determinada cantidad de tiempo
-        \item \textbf{Planificación de acciones}: elegir la acción optima y entre cuanto tiempo ir actuarla para evitar situaciones críticas\\[1em]
-      \end{itemize}
-    \end{frame}
-    
-    \begin{frame}{Reconocimiento de Actividades}
       \begin{center}
-        \includegraphics[scale=0.35]{img/diag_pred_sched_chain_general.png}
+        \colorbox{white}{\includegraphics[scale=0.28]{708px-HMMGraph.png}}
       \end{center}
-      
-      \pause
-            
-      El Reconocimiento de Actividades es fundamental en el desarrollo de sistemas inteligentes en cuanto actúa de puente entre los datos recibidos por los sensores y la semántica de alto nivel de las aplicaciones.
     \end{frame}
     
-    \subsection{Diagnosis y predicción}
+    \begin{frame}{Datasets anotados}
+      Un \textit{dataset anotado} es un dataset donde hay:
+      \begin{itemize}
+        \item los eventos registrados y cuando han pasado (marca temporal)
+        \item anotaciones manuales de la evolución del estado efectivo del sistema (con intervalos temporales por cada estado)
+      \end{itemize}
+      Un ejemplo clásico de dataset anotado para AAL es el dataset de \textit{van Kasteren}\footnote{\url{https://sites.google.com/site/tim0306/datasets}}\footnote{Van Kasteren, T., Noulas, A., Englebienne, G. and Kröse, B., 2008, September. Accurate activity recognition in a home setting. In Proceedings of the 10th international conference on Ubiquitous computing (pp. 1-9). ACM.}\\[1em]
       
-%      \begin{frame}{HMM y CRF}
-%        \pause
-%        Los \textit{Modelos Ocultos de Márkov} (HMM, Hidden Markov Model) y los \textit{Campos Aleatorios Condicionales} (CRF, Conditional Random Field) ofrecen soluciones clásicas para realizar diagnosis y predicción en sistemas parcialmente observables en tiempo \textbf{discreto}.\\[1.5em]
-%        
-%        \pause
-%        
-%        El objetivo principal de las técnicas basadas en modelos para sistemas parcialmente observables es realizar la misma diagnosis y predicción, pero en tiempo \textbf{continuo}.
-%      \end{frame}
+      \includegraphics[scale=0.8]{activity_event_formulation.pdf}
+    \end{frame}
+    
+    \begin{frame}{Process mining: de datasets anotados a modelos estadísticos}
+      Con el término \textbf{process mining} se indica un conjunto de técnicas para construir un modelo estadístico de un sistema parcialmente observable a partir de un dataset anotado de este mismo sistema.\\[1em]
       
-      \begin{frame}{Diagnosis y predicción con modelos}
-        \pause
-        La idea es explotar las técnicas de análisis cuantitativa basada en modelos para realizar diagnosis y predicción.\\[1em]
-        
-        \pause
-        
-        Pasos principales:
-        \pause
-        \begin{enumerate}
-          \item Obtener a un dataset de observaciones \textit{anotado} (es decir, con observaciones y actividades efectivas en un intervalo de tiempo)\footnote{Van Kasteren, T., Noulas, A., Englebienne, G. and Kröse, B., 2008, September. \textbf{Accurate activity recognition in a home setting}. In Proceedings of the 10th international conference on Ubiquitous computing (pp. 1-9). ACM.}
-          \pause
-          \item Calcular medidas estadísticas
-          \begin{itemize}
-            \item correlación entre eventos y actividades
-            \item duración de actividades
-            \item inter-tiempo entre eventos durante actividades
-          \end{itemize}
-          \pause
-          \item Construir a un modelo del sistema
-          \begin{itemize}
-            \item process elicitation
-            \item process enhancement
-          \end{itemize}
-          \pause
-          \item Análisis de transición
-        \end{enumerate}
+      El process mining está compuesto por dos técnicas principales:
+      \begin{itemize}
+        \item \textbf{Process elicitation}: construye un modelo discreto (es decir, sin informaciones sobre la permanencia en los estados del sistema) a partir de los eventos y actividades anotados en el dataset
+        \item \textbf{Process ehnancement}: añade una visión temporal continua a un modelo discreto introduciendo parámetros estadísticos que describen como el sistema evoluciona a lo largo del tiempo utilizando medidas estadísticas sacadas por el dataset
+      \end{itemize}
+    \end{frame}
+  
+    \begin{frame}{Diagnosis, predicción y planificación de acciones}
+      \begin{center}
+        \includegraphics[scale=0.34]{architecture.png}
+      \end{center}
+    \end{frame}
+  
+    \subsection{Diagnosis}
+      \begin{frame}{Diagnosis: tiempo discreto}
+        Los \textbf{Modelos Ocultos de Márkov} (Hidden Markov Model, HMM):
+        \begin{itemize}
+          \item modelan a un sistema parcialmente observable sin tener en cuenta del tiempo de permanencia en cada estado
+          \item asocian a cada estado efectivo del sistema una distribución discreta sobre los eventos observables
+          \item modelan a un sistema donde los estados efectivos evolucionan como una \textit{Cadena de Márkov Tiempo Discreto} (Discrete Time Markov Chain, DTMC)
+          
+        \end{itemize}
+        \begin{center}
+          \includegraphics[scale=0.25]{HMM.png}
+        \end{center}
+        Diagnosis con HMM se puede lograr con algoritmos clásicos como el \textit{algoritmo de Viterbi}.
       \end{frame}
-        
-    \subsection{Planificación de acciones}
+      
+    \subsection{Predicción}
       \begin{frame}{TODO!!!}
       \end{frame}
-            
-%  \section{Datasets para AAL}
-%    
-%    \subsection{TODO!!!}
-%      \begin{frame}{TODO!!!}
-%      \end{frame}
+      
+    \subsection{Planificación de datos}
+      \begin{frame}{TODO!!!}
+      \end{frame}
 
 \end{document}
