@@ -2,7 +2,7 @@
 % !TeX encoding = UTF-8
 % !TeX spellcheck = es_ES
 
-\documentclass[9pt]{beamer}
+\documentclass[9pt, handout]{beamer}
 
 \input{conf/conf}
 
@@ -29,7 +29,7 @@
 %        \item predicción
 %        \item planificación de acciones
 %      \end{itemize}
-      \item Datasets para AAL
+%      \item Datasets para AAL
     \end{itemize}
   \end{frame}
 
@@ -59,42 +59,48 @@
       \end{itemize}
     \end{frame}
     
-    \subsection{Diagnosis y predicción}
-      \begin{frame}{Diagnosis y predicción}
+    \begin{frame}{Reconocimiento de Actividades}
+      \pause
+      Un \textit{entorno inteligente} (es decir, dotado de sensores y actuadores) es un sistema \textbf{parcialmente observable}:
+      \pause
+      \begin{itemize}
+        \item el estado efectivo del sistema resulta escondido
         \pause
-        Un \textit{entorno inteligente} (es decir, dotado de sensores y actuadores) es un sistema \textbf{parcialmente observable}:
-        \pause
-        \begin{itemize}
-          \item el estado efectivo del sistema resulta escondido
-          \pause
-          \item solo se pueden observar eventos (\textit{observaciones}) emitidos por el sistema (por ej. la activación de un sensor)\\[1.5em]
-        \end{itemize}
-        
-        \pause
-        
-        Reconocimiento de Actividades:
-        \pause
-        \begin{itemize}
-          \item \textbf{Diagnosis}: estimar cual es el estado efectivo actual del sistema a partir de las observaciones registradas
-          \pause
-          \item \textbf{Predicción}: estimar cual será el estado efectivo del sistema después de una determinada cantidad de tiempo a partir del resultado de la diagnosis\\[1.5em]
-        \end{itemize}
-        
-        \pause
-        
-        El Reconocimiento de Actividades es fundamental en el desarrollo de sistemas inteligentes en cuanto actúa de puente entre los datos recibidos por los sensores y la semántica de alto nivel de las aplicaciones.
-        
-        % TODO: figura qui???
-      \end{frame}
+        \item solo se pueden observar eventos (\textit{observaciones}) emitidos por el sistema (por ej. la activación de un sensor)\\[1em]
+      \end{itemize}
       
-      \begin{frame}{HMM y CRF}
+      \pause
+      
+      Reconocimiento de Actividades:
+      \pause
+      \begin{itemize}
+        \item \textbf{Diagnosis}: estimar cual es el estado efectivo actual del sistema a partir de las observaciones registradas
         \pause
-        Los \textit{Modelos Ocultos de Márkov} (HMM, Hidden Markov Model) y los \textit{Campos Aleatorios Condicionales} (CRF, Conditional Random Field) ofrecen soluciones clásicas para realizar diagnosis y predicción en sistemas parcialmente observables en tiempo \textbf{discreto}.\\[1.5em]
-        
-        \pause
-        
-        El objetivo principal de las técnicas basadas en modelos para sistemas parcialmente observables es realizar la misma diagnosis y predicción, pero en tiempo \textbf{continuo}.
-      \end{frame}
+        \item \textbf{Predicción}: estimar cual será el estado efectivo del sistema después de una determinada cantidad de tiempo
+        \item \textbf{Planificación de acciones}: elegir la acción optima y entre cuanto tiempo ir actuarla para evitar situaciones críticas\\[1em]
+      \end{itemize}
+    \end{frame}
+    
+    \begin{frame}{Reconocimiento de Actividades}
+      \begin{center}
+        \includegraphics[scale=0.35]{img/diag_pred_sched_chain_general.png}
+      \end{center}
+      
+      \pause
+            
+      El Reconocimiento de Actividades es fundamental en el desarrollo de sistemas inteligentes en cuanto actúa de puente entre los datos recibidos por los sensores y la semántica de alto nivel de las aplicaciones.
+    \end{frame}
+    
+    \subsection{Diagnosis y predicción}
+      
+%      \begin{frame}{HMM y CRF}
+%        \pause
+%        Los \textit{Modelos Ocultos de Márkov} (HMM, Hidden Markov Model) y los \textit{Campos Aleatorios Condicionales} (CRF, Conditional Random Field) ofrecen soluciones clásicas para realizar diagnosis y predicción en sistemas parcialmente observables en tiempo \textbf{discreto}.\\[1.5em]
+%        
+%        \pause
+%        
+%        El objetivo principal de las técnicas basadas en modelos para sistemas parcialmente observables es realizar la misma diagnosis y predicción, pero en tiempo \textbf{continuo}.
+%      \end{frame}
       
       \begin{frame}{Diagnosis y predicción con modelos}
         \pause
@@ -128,10 +134,10 @@
       \begin{frame}{TODO!!!}
       \end{frame}
             
-  \section{Datasets para AAL}
-    
-    \subsection{TODO!!!}
-      \begin{frame}{TODO!!!}
-      \end{frame}
+%  \section{Datasets para AAL}
+%    
+%    \subsection{TODO!!!}
+%      \begin{frame}{TODO!!!}
+%      \end{frame}
 
 \end{document}
