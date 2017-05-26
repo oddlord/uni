@@ -23,6 +23,7 @@
     \titlepage
     \begin{itemize}
       \item Ambient Assisted Living
+      \item Modelos y datasets
       \item Análisis de entornos inteligentes
     \end{itemize}
   \end{frame}
@@ -44,7 +45,7 @@
         Un \textit{entorno inteligente} es un sistema \textbf{parcialmente observable}:
         \pause
         \begin{itemize}
-          \item el estado efectivo del sistema resulta escondido
+          \item el estado efectivo del sistema resulta oculto
           \pause
           \item solo se pueden observar eventos (\textit{observaciones}) emitidos por el sistema (por ej. la activación de un sensor)\\[1em]
         \end{itemize}
@@ -69,48 +70,59 @@
         \end{itemize}
       \end{frame}
     
+  \section{Modelos y datasets}
+    \subsection{Modelos estadísticos}
+      \begin{frame}{Modelos estadísticos}
+        Los \textit{modelos estadísticos} representan una aproximación de sistemas donde se modela:
+        \begin{itemize}
+          \item la evolución del estado del sistema
+          \item parámetros estadísticos que definen como el sistema pasa de un estado al otro
+        \end{itemize}
+        \begin{center}
+          \colorbox{white}{\includegraphics[scale=0.28]{708px-HMMGraph.png}}
+        \end{center}
+      \end{frame}
+    
+    \subsection{Datasets anotados}
+      \begin{frame}{Datasets anotados}
+        Un \textit{dataset anotado} es un dataset donde hay:
+        \begin{itemize}
+          \item los eventos registrados y cuando han pasado (marca temporal)
+          \item anotaciones manuales de la evolución del estado efectivo del sistema (con intervalos temporales por cada estado)
+        \end{itemize}
+        Un ejemplo clásico de dataset anotado para AAL es el dataset de \textit{van Kasteren}\footnote{\url{https://sites.google.com/site/tim0306/datasets}}\footnote{Van Kasteren, T., Noulas, A., Englebienne, G. and Kröse, B., 2008, September. Accurate activity recognition in a home setting. In Proceedings of the 10th international conference on Ubiquitous computing (pp. 1-9). ACM.}\\[1em]
+        
+        \includegraphics[scale=0.8]{activity_event_formulation.pdf}
+      \end{frame}
+    
+    \subsection{Process mining}
+      \begin{frame}{Process mining}{De datasets anotados a modelos estadísticos}
+        Con el término \textbf{process mining} se indica un conjunto de técnicas para construir un modelo estadístico de un sistema parcialmente observable a partir de un dataset anotado de este mismo sistema.\\[1em]
+        
+        El process mining está compuesto por dos técnicas principales:
+        \begin{itemize}
+          \item \textbf{Process elicitation}: construye un modelo discreto (es decir, sin informaciones sobre la permanencia en los estados del sistema) a partir de los eventos y actividades anotados en el dataset
+          \item \textbf{Process ehnancement}: añade una visión temporal continua a un modelo discreto introduciendo parámetros estadísticos que describen como el sistema evoluciona a lo largo del tiempo utilizando medidas estadísticas sacadas por el dataset
+        \end{itemize}
+      \end{frame}
+    
   \section{Análisis de entornos inteligentes}
   
-    \begin{frame}{Modelos estadísticos}
-      Los \textit{modelos estadísticos} representan una aproximación de sistemas donde se modela:
-      \begin{itemize}
-        \item la evolución del estado del sistema
-        \item parámetros estadísticos que definen como el sistema pasa de un estado al otro
-      \end{itemize}
-      \begin{center}
-        \colorbox{white}{\includegraphics[scale=0.28]{708px-HMMGraph.png}}
-      \end{center}
-    \end{frame}
-    
-    \begin{frame}{Datasets anotados}
-      Un \textit{dataset anotado} es un dataset donde hay:
-      \begin{itemize}
-        \item los eventos registrados y cuando han pasado (marca temporal)
-        \item anotaciones manuales de la evolución del estado efectivo del sistema (con intervalos temporales por cada estado)
-      \end{itemize}
-      Un ejemplo clásico de dataset anotado para AAL es el dataset de \textit{van Kasteren}\footnote{\url{https://sites.google.com/site/tim0306/datasets}}\footnote{Van Kasteren, T., Noulas, A., Englebienne, G. and Kröse, B., 2008, September. Accurate activity recognition in a home setting. In Proceedings of the 10th international conference on Ubiquitous computing (pp. 1-9). ACM.}\\[1em]
-      
-      \includegraphics[scale=0.8]{activity_event_formulation.pdf}
-    \end{frame}
-    
-    \begin{frame}{Process mining: de datasets anotados a modelos estadísticos}
-      Con el término \textbf{process mining} se indica un conjunto de técnicas para construir un modelo estadístico de un sistema parcialmente observable a partir de un dataset anotado de este mismo sistema.\\[1em]
-      
-      El process mining está compuesto por dos técnicas principales:
-      \begin{itemize}
-        \item \textbf{Process elicitation}: construye un modelo discreto (es decir, sin informaciones sobre la permanencia en los estados del sistema) a partir de los eventos y actividades anotados en el dataset
-        \item \textbf{Process ehnancement}: añade una visión temporal continua a un modelo discreto introduciendo parámetros estadísticos que describen como el sistema evoluciona a lo largo del tiempo utilizando medidas estadísticas sacadas por el dataset
-      \end{itemize}
-    \end{frame}
-  
-    \begin{frame}{Diagnosis, predicción y planificación de acciones}
+    \begin{frame}{Análisis de entornos inteligentes}{Esquema general}
       \begin{center}
         \includegraphics[scale=0.34]{architecture.png}
       \end{center}
+      
+      \begin{itemize}
+        \item \textbf{Process mining}: de dataset anotado a modelo estadístico
+        \item \textbf{Diagnosis}: de eventos efectivos a probabilidad del estado corriente (sobre un determinado modelo estadístico)
+        \item \textbf{Predicción}: de probabilidad del estado corriente a probabilidad de que haya un evento crítico
+        \item \textbf{Planificación}: de probabilidad de que haya un evento crítico a tiempo de respuesta (con una determinada política de respuesta)
+      \end{itemize}
     \end{frame}
   
     \subsection{Diagnosis}
-      \begin{frame}{Diagnosis: tiempo discreto}
+      \begin{frame}{Diagnosis}{Tiempo discreto}
         Los \textbf{Modelos Ocultos de Márkov} (Hidden Markov Model, HMM):
         \begin{itemize}
           \item modelan a un sistema parcialmente observable sin tener en cuenta del tiempo de permanencia en cada estado
@@ -121,14 +133,120 @@
         \begin{center}
           \includegraphics[scale=0.25]{HMM.png}
         \end{center}
-        Diagnosis con HMM se puede lograr con algoritmos clásicos como el \textit{algoritmo de Viterbi}.
+        Diagnosis con HMM se puede lograr con algoritmos clásicos como el \textit{algoritmo de Viterbi} o el \textit{algoritmo de Forward-Backward}.
+      \end{frame}
+      
+      \begin{frame}{Diagnosis}{Tiempo discreto con permanencia}
+        \begin{itemize}
+          \item \textbf{HSMM}\footnote{Van Kasteren, T.L.M., Englebienne, G. and Kröse, B.J., 2010. Activity recognition using semi-markov models on real world smart home datasets. Journal of ambient intelligence and smart environments, 2(3), pp.311-325.}
+          \begin{itemize}
+            \item Hidden Semi Markov Model
+            \item permanencia en los estados ocultos modelada con distribuciones te tiempo discreto
+            \item eventos generados en cada instante temporal
+          \end{itemize}
+          \item \textbf{IS-HSMM}/\textbf{ILP-HSMM}\footnote{Narimatsu, H. and Kasai, H., 2016. State Duration and Interval Modeling in Hidden Semi-Markov Model for Sequential Data Analysis. arXiv preprint arXiv:1608.06954.}
+          \begin{itemize}
+            \item Interval State-Hidden Semi Markov Model
+            \item Interval Length Probability-Hidden Semi Markov Model
+            \item extensiones de los HSMMs
+            \item permite modelar a intervalos de silencio (es decir, sin eventos)
+          \end{itemize}
+        \end{itemize}
+      \end{frame}
+      
+      \begin{frame}{Diagnosis}{Tiempo continuo}
+        \begin{itemize}
+          \item \textbf{HnMM}\footnote{Buchholz, R., Krull, C., Strigl, T. and Horton, G., 2010, March. Using hidden non-markovian models to reconstruct system behavior in partially-observable systems. In Proceedings of the 3rd International ICST Conference on Simulation Tools and Techniques (p. 86). ICST (Institute for Computer Sciences, Social-Informatics and Telecommunications Engineering).}
+          \begin{itemize}
+            \item Hidden nonMarkov Model
+            \item tiempos de permanencia continuos
+            \item cada \textit{transición} (es decir, el pasaje de un estado al siguiente) produce un evento
+          \end{itemize}
+          \item \textbf{GHSMM}\footnote{Salfner, F., 2006. Modeling event-driven time series with generalized hidden semi-Markov models.}
+          \begin{itemize}
+            \item Generalized Hidden Semi Markov Process
+            \item tiempo de permanencia continuo
+            \item solo una observación por cada estado
+          \end{itemize}
+        \end{itemize}
+      \end{frame}
+      
+      \begin{frame}{Diagnosis}{H-MRGP-M}
+        El \textbf{Modelo Oculto de un Proceso Regenerativo de Márkov} (Hidden-Markov Regenerative Process-Model) ha sido dessarollado por el STLab en la Universidad de Florencia.\footnote{Carnevali, L., Nugent, C., Patara, F. and Vicario, E., 2015, September. A continuous-time model-based approach to activity recognition for ambient assisted living. In International Conference on Quantitative Evaluation of Systems (pp. 38-53). Springer International Publishing.}
+        
+        \begin{itemize}
+          \item Modela tiempo continuo de permanencia en los estados y del inter-tiempo entre eventos
+          \item El estado del modelo evoluciona como un \textit{Proceso Regenerativo de Márkov} (Markov Regenerative Process, MRP)
+        \end{itemize}
+      \end{frame}
+      
+      \begin{frame}{Diagnosis}{H-MRGP-M}
+        \begin{itemize}
+          \item Experimentado sobre el dataset de van Kasteren
+          \begin{itemize}
+            \item 7+1 actividades
+            \item \{Leaving house, Preparing a beverage, Preparing breakfast, Preparing dinner, Sleeping, Taking shower, Toileting\}
+          \end{itemize}
+          \item A partir de las marcas temporales en el dataset anotado, se calculan los tiempos continuos
+          \begin{itemize}
+            \item de permanencia en cada actividad
+            \item de inter-tiempo entre eventos en cada actividad
+          \end{itemize}
+        \end{itemize}
+        
+    		\begin{table}[h!]
+    			\centering
+    			\small
+    			\setlength{\tabcolsep}{5pt}
+    			\def\arraystretch{0.75}
+    			\begin{tabular}{| l | c | c || c | c |}
+    				\hline
+    				& \multicolumn{2}{|c||}{\bf Tiempo de permanencia}& \multicolumn{2}{|c|}{\bf Inter-tiempo entre eventos}\\
+    				\cline{2-5}
+    				& $\mu$ (s) & {\bf CV} & $\mu$ (s) & {\bf CV}\\
+    				\hline
+    				{\bf Leaving house} & 40\,261.455 & 1.042 & 9\,354.190 & 2.810 \\ \hline
+    				{\bf Preparing a beverage} &  35.667 & 1.361 & 7.643 & 2.613\\ \hline
+    				{\bf Preparing breakfast} &  108.684 & 0.713 & 9.928 & 1.844\\ \hline
+    				{\bf Preparing dinner} &  1\,801.889 & 0.640 & 77.966 & 2.589\\ \hline
+    				{\bf Sleeping} &  26\,116.571 & 0.442 & 1\,871.836 & 3.090\\ \hline
+    				{\bf Taking shower} &  485.910 & 0.298 & 102.788 & 1.969\\ \hline
+    				{\bf Toileting} &  88.742 & 1.175 & 14.814 & 2.449\\ 
+    				\hline
+      		\end{tabular}
+    		\end{table}
+      \end{frame}
+      
+      \begin{frame}{Diagnosis}{H-MRGP-M}
+        El modelo H-MRGP-M es un \textit{modelo estadístico @runtime}
+        \begin{itemize}
+          \item El modelo se crea con técnicas de \textit{process mining}
+          \begin{itemize}
+            \item \textit{process elicitacion} para definir la topología del modelo
+            \item \textit{process enhancement} para añadir parámetros estadísticos a partir de los tiempos y inter-tiempos calculados
+          \end{itemize}
+          \item Modelo \textit{@runtime}: el modelo es actualizado cada vez que se observa un nuevo evento
+        \end{itemize}
+      \end{frame}
+      
+      \begin{frame}{Diagnosis}{H-MRGP-M}
+        Después de cada observación, se pueden calcular las probabilidades de ser en diferentes estados del sistema hasta la observación siguiente
+        \begin{itemize}
+          \item Para alcanzar esto, se explota la técnica de análisis transitorio de Procesos Regenerativos de Markov basada en clases de estado estocásticas\footnote{Horváth, A., Paolieri, M., Ridi, L. and Vicario, E., 2012. Transient analysis of non-Markovian models using stochastic state classes. Performance Evaluation, 69(7), pp.315-335.}
+        \end{itemize}
+        
+        \begin{center}
+          \includegraphics[scale=0.18]{diagnosis-analysis-scheme.png}
+        \end{center}
+        
+        El estado estimado por la diagnosis será el estado que lleva la probabilidad más alta.
       \end{frame}
       
     \subsection{Predicción}
       \begin{frame}{TODO!!!}
       \end{frame}
       
-    \subsection{Planificación de datos}
+    \subsection{Planificación de acciones}
       \begin{frame}{TODO!!!}
       \end{frame}
 
