@@ -36,7 +36,11 @@
   \section{Ambient Assisted Living}
     
     \begin{frame}{Ambient Assisted Living}
-      El \textbf{Ambient Assisted Living} es un sector de investigación que tiene como objetivo lo de ayudar las personas que viven en \textit{entornos inteligentes} (es decir, dotado de sensores y actuadores) explotando a la tecnología de sensores y de procesamiento de datos.
+      El \textbf{Ambient Assisted Living} es un sector de investigación que tiene como objetivo lo de ayudar a las personas que viven en \textit{entornos inteligentes} (es decir, dotado de sensores y actuadores) explotando a la tecnología de sensores y de procesamiento de datos.
+      
+      \begin{center}
+        \includegraphics[scale=1.8]{elderly_assi.jpg}
+      \end{center}
     \end{frame}
     
     \subsection{Objetivos}
@@ -226,11 +230,8 @@
             \item \textit{process enhancement} para añadir parámetros estocásticos a partir de los tiempos y inter-tiempos calculados
           \end{itemize}
           \item Modelo \textit{@runtime}: el modelo es actualizado cada vez que se observa un nuevo evento\footnote{Blair, G., Bencomo, N. and France, R.B., 2009. Models@ run. time. Computer, 42(10).}
+          \item El formalismo utilizado para representar el modelo es el de las \textbf{Redes de Petri Temporizadas estocásticas} (stochastic Timed Petri Net, sTPN)\footnote{Horváth, A. and Vicario, E., 2009, September. Aggregated stochastic state classes in quantitative evaluation of non-markovian stochastic Petri nets. In Quantitative Evaluation of Systems, 2009. QEST'09. Sixth International Conference on the (pp. 155-164). IEEE.}\footnote{Vicario, E., 2001. Static analysis and dynamic steering of time-dependent systems. IEEE transactions on software engineering, 27(8), pp.728-748.}
         \end{itemize}
-      \end{frame}
-      
-      \begin{frame}{Diagnosis}{H-MRGP-M: sTPN}
-        En particular, el formalismo utilizado para representar el modelo es el de las \textbf{Redes de Petri Temporizadas estocásticas} (stochastic Timed Petri Net, sTPN).\footnote{Horváth, A. and Vicario, E., 2009, September. Aggregated stochastic state classes in quantitative evaluation of non-markovian stochastic Petri nets. In Quantitative Evaluation of Systems, 2009. QEST'09. Sixth International Conference on the (pp. 155-164). IEEE.}\footnote{Vicario, E., 2001. Static analysis and dynamic steering of time-dependent systems. IEEE transactions on software engineering, 27(8), pp.728-748.}
       \end{frame}
       
       \begin{frame}{Diagnosis}{H-MRGP-M: sTPN}
@@ -259,7 +260,7 @@
       \end{frame}
       
     \subsection{Predicción}
-      \begin{frame}{Predicción}
+      \begin{frame}{Predicción\footnote{Salfner, F., Lenk, M. and Malek, M., 2010. A survey of online failure prediction methods. ACM Computing Surveys (CSUR), 42(3), p.10.}}
         Predicción basada en modelos
         \begin{itemize}
           \item Process enhancement sin elicitation
@@ -289,7 +290,47 @@
       \end{frame}
       
     \subsection{Planificación de acciones}
-      \begin{frame}{TODO!!!}
+      \begin{frame}{Planificación de acciones}{Descripción del problema}
+        \begin{itemize}
+          \item \textbf{Actividad crítica}: actividad por la cual nos interesa planificar una reacción
+          \item \textbf{Reacción}: acción que el sistema tiene que actuar cuando ocurre la actividad crítica
+          \item \textbf{Duración de la reacción}: duración $t_d$ del tiempo de activación de la reacción
+          \item \textbf{Tiempo de actuación de la reacción}: tiempo $t_w$ necesario al sistema para actuar a la reacción desde cuando ha sido planificada
+        \end{itemize}
+        
+      	\begin{columns}
+      		\column{0.60\linewidth}
+      		\centering
+      		\include{img/schedulingParameters}
+      		\column{0.40\linewidth}
+      		Por ej. notificación para tomar píldoras antes de cenar:
+      		\begin{itemize}
+      			\item $t_w = 60s$
+      			\item $t_d = 120s$
+      			\item Notifica al instante $\tilde t$
+      		\end{itemize}
+      	\end{columns}
       \end{frame}
-
+      
+      \begin{frame}{Planificación de acciones}{Politica de planificación\footnote{Biagi, M., Carnevali, L., Paolieri, M., Patara, F. and Vicario, E., 2016, October. A Stochastic Model-Based Approach to Online Event Prediction and Response Scheduling. In European Workshop on Performance Engineering (pp. 32-47). Springer International Publishing.}}
+        \begin{itemize}
+          \item Se busca el intervalo de mayor probabilidad de que ocurra la actividad crítica
+          \item Si la \textbf{probabilidad máxima} está mas alta de un \textbf{umbral fijo}, la reacción será planificada por el sistema al instante $\boldsymbol{\tilde t = x^* - t_w}$, donde $x^*$ indica el extremo inferior del intervalo de máxima probabilidad
+          \item Si la probabilidad máxima está mas baja del umbral, ninguna reacción será planificada por el sistema
+        \end{itemize}
+        \vspace{-1em}
+      	\centering
+      	\include{img/schedulingExample}
+      \end{frame}
+      
+  \section*{Fin}
+    \begin{frame}
+      \begin{center}
+      	\textbf{\calligra\Huge Fin.}\\
+        \includegraphics[width=5cm]{ornament.eps}\\[1cm]
+      	\pause
+      	{\huge\calligra Preguntas?\pause{} Gracias!}
+      \end{center}
+    \end{frame}
+      
 \end{document}
