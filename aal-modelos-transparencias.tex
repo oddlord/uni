@@ -62,6 +62,7 @@
           \item \textbf{Diagnosis}: estimar cual es el estado efectivo actual del sistema a partir de las observaciones registradas.
           \pause
           \item \textbf{Predicción}: estimar cual será el estado efectivo del sistema después de una determinada cantidad de tiempo o la densidad de probabilidad de que un evento se verifique.
+          \pause
           \item \textbf{Planificación de acciones}: elegir la acción optima y entre cuanto tiempo ir actuarla para evitar situaciones críticas.
         \end{itemize}
         
@@ -77,36 +78,63 @@
   \section{Modelos y datasets}
     \subsection{Modelos estocásticos}
       \begin{frame}{Modelos estocásticos}
+        \pause
         Los \textit{modelos estocásticos} representan una aproximación de sistemas donde se modelan:
+        \pause
         \begin{itemize}
           \item la evolución del estado del sistema;
+          \pause
           \item parámetros estocásticos que definen como el sistema pasa de un estado al otro.
         \end{itemize}
-        \begin{center}
-          \colorbox{white}{\includegraphics[scale=0.28]{708px-HMMGraph.png}}
-        \end{center}
+        \pause
+        \visible<5->{
+          \begin{center}
+            \colorbox{white}{\includegraphics[scale=0.28]{708px-HMMGraph.png}}
+          \end{center}
+        }
       \end{frame}
     
     \subsection{Datasets anotados}
       \begin{frame}{Datasets anotados}
+        \pause
         Un \textit{dataset anotado} es un dataset donde hay:
+        \pause
         \begin{itemize}
           \item los eventos registrados y cuando han pasado (marca temporal);
+          \pause
           \item anotaciones manuales de la evolución del estado efectivo del sistema (con intervalos temporales por cada estado).
         \end{itemize}
-        Un ejemplo clásico de dataset anotado para AAL es el dataset de \textit{van Kasteren}\footnote{\url{https://sites.google.com/site/tim0306/datasets}}\footnote{Van Kasteren, T., Noulas, A., Englebienne, G. and Kröse, B., 2008, September. Accurate activity recognition in a home setting. In Proceedings of the 10th international conference on Ubiquitous computing (pp. 1-9). ACM.}\\[1em]
         
-        \includegraphics[scale=0.8]{activity_event_formulation.pdf}
+        \pause
+        \vspace{1em}
+        \visible<5->{
+          \includegraphics[scale=0.8]{activity_event_formulation.pdf}
+        }
+      \end{frame}
+      
+      \begin{frame}{Datasets anotados}{van Kasteren}
+        Un ejemplo clásico de dataset anotado para AAL es el dataset de \textit{van Kasteren}\footnote{\url{https://sites.google.com/site/tim0306/datasets}}\footnote{Van Kasteren, T., Noulas, A., Englebienne, G. and Kröse, B., 2008, September. Accurate activity recognition in a home setting. In Proceedings of the 10th international conference on Ubiquitous computing (pp. 1-9). ACM.}
+        
+        \pause
+        \visible<2->{
+          \begin{center}
+            \includegraphics[scale=0.18]{SmartHome.png}
+          \end{center}
+        }
       \end{frame}
     
     \subsection{Process mining}
       \begin{frame}{Process mining}{De datasets anotados a modelos estocásticos}
+        \pause
         Con el término \textbf{process mining} se indica un conjunto de técnicas para construir a un modelo estocástico de un sistema parcialmente observable a partir de un dataset anotado de este mismo sistema.
         
+        \pause
         \vspace{1em}
         El process mining está compuesto por dos técnicas principales:
+        \pause
         \begin{itemize}
           \item \textbf{Process elicitation}: construye un modelo discreto (es decir, sin informaciones sobre la permanencia en los estados del sistema) a partir de los eventos y actividades anotados en el dataset.
+          \pause
           \item \textbf{Process ehnancement}: añade una visión temporal continua a un modelo discreto introduciendo parámetros estocásticos que describen como el sistema evoluciona a lo largo del tiempo utilizando medidas estadísticas sacadas por el dataset.
         \end{itemize}
       \end{frame}
@@ -119,37 +147,69 @@
         \includegraphics[scale=0.34]{architecture.png}
       \end{center}
       
+      \pause
       \begin{itemize}
         \item \textbf{Process mining}: de dataset anotado a modelo estocásticos.
+        \pause
         \item \textbf{Diagnosis}: de eventos efectivos a probabilidad del estado corriente (sobre un determinado modelo estocástico).
+        \pause
         \item \textbf{Predicción}: de probabilidad del estado corriente a probabilidad de que ocurra un evento crítico.
+        \pause
         \item \textbf{Planificación}: de probabilidad de que ocurra un evento crítico a tiempo de planificación de una reacción (con una determinada política de reacción).
       \end{itemize}
     \end{frame}
   
     \subsection{Diagnosis}
+      \begin{frame}{Diagnosis}
+      	\begin{center}
+      		\includegraphics[width=\textwidth,height=0.8\textheight,keepaspectratio]{diag_pred_sched_chain_general.png}
+      	\end{center}
+      	\begin{tikzpicture}[remember picture, overlay]
+        	\node [shift={(-12cm,-5.5cm)}]  at (current page.north east)
+        	{%
+        		\begin{tikzpicture}[remember picture, overlay]
+        			\draw[red, thick] (0,0) rectangle (5cm,2.5cm);
+        		\end{tikzpicture}
+        	};
+      	\end{tikzpicture}
+      	
+      	\pause
+      	La \textbf{diagnosis} calcula el estado efectivo mas probable del modelo en el instante corriente a partir de los eventos observados hasta el instante corriente.
+      \end{frame}
+    
       \begin{frame}{Diagnosis}{Tiempo discreto}
+        \pause
         Los \textbf{Modelos Ocultos de Márkov} (Hidden Markov Model, HMM):
+        \pause
         \begin{itemize}
           \item modelan a un sistema parcialmente observable sin tener en cuenta del tiempo de permanencia en cada estado;
+          \pause
           \item asocian a cada estado efectivo del sistema una distribución discreta sobre los eventos observables;
+          \pause
           \item modelan a un sistema donde los estados efectivos evolucionan como una \textit{Cadena de Márkov Tiempo Discreto} (Discrete Time Markov Chain, DTMC).
-          
         \end{itemize}
-        \begin{center}
-          \includegraphics[scale=0.25]{HMM.png}
-        \end{center}
+        
+        \pause
+        \visible<6->{
+          \begin{center}
+            \includegraphics[scale=0.25]{HMM.png}
+          \end{center}
+        }
+        
+        \pause
         Diagnosis con HMM se puede lograr con algoritmos clásicos como el \textit{algoritmo de Viterbi} o el \textit{algoritmo de Forward-Backward}.
       \end{frame}
       
       \begin{frame}{Diagnosis}{Tiempo discreto con permanencia}
         \begin{itemize}
+          \pause
           \item \textbf{HSMM}\footnote{Van Kasteren, T.L.M., Englebienne, G. and Kröse, B.J., 2010. Activity recognition using semi-markov models on real world smart home datasets. Journal of ambient intelligence and smart environments, 2(3), pp.311-325.}
           \begin{itemize}
             \item Hidden Semi Markov Model;
             \item permanencia en los estados ocultos modelada con distribuciones te tiempo discreto;
             \item eventos generados en cada instante temporal.
           \end{itemize}
+          \pause
           \item \textbf{IS-HSMM}/\textbf{ILP-HSMM}\footnote{Narimatsu, H. and Kasai, H., 2016. State Duration and Interval Modeling in Hidden Semi-Markov Model for Sequential Data Analysis. arXiv preprint arXiv:1608.06954.}
           \begin{itemize}
             \item Interval State-Hidden Semi Markov Model;
@@ -162,12 +222,14 @@
       
       \begin{frame}{Diagnosis}{Tiempo continuo}
         \begin{itemize}
+          \pause
           \item \textbf{HnMM}\footnote{Buchholz, R., Krull, C., Strigl, T. and Horton, G., 2010, March. Using hidden non-markovian models to reconstruct system behavior in partially-observable systems. In Proceedings of the 3rd International ICST Conference on Simulation Tools and Techniques (p. 86). ICST (Institute for Computer Sciences, Social-Informatics and Telecommunications Engineering).}
           \begin{itemize}
             \item Hidden nonMarkov Model;
             \item tiempos de permanencia continuos;
             \item cada \textit{transición} (es decir, el pasaje de un estado al siguiente) produce un evento.
           \end{itemize}
+          \pause
           \item \textbf{GHSMM}\footnote{Salfner, F., 2006. Modeling event-driven time series with generalized hidden semi-Markov models.}
           \begin{itemize}
             \item Generalized Hidden Semi Markov Process;
@@ -178,21 +240,26 @@
       \end{frame}
       
       \begin{frame}{Diagnosis}{H-MRGP-M}
+        \pause
         El \textbf{Modelo Oculto de Márkov Regenerativo} (Hidden-Markov Regenerative Process-Model) ha sido dessarollado por el STLab en la Universidad de Florencia.\footnote{Carnevali, L., Nugent, C., Patara, F. and Vicario, E., 2015, September. A continuous-time model-based approach to activity recognition for ambient assisted living. In International Conference on Quantitative Evaluation of Systems (pp. 38-53). Springer International Publishing.}
         
+        \pause
         \begin{itemize}
           \item Modela el tiempo continuo de permanencia en los estados y del inter-tiempo entre eventos.
+          \pause
           \item El estado del modelo evoluciona como un \textit{Proceso Regenerativo de Márkov} (Markov Regenerative Process, MRP).
         \end{itemize}
       \end{frame}
       
-      \begin{frame}{Diagnosis}{H-MRGP-M: tiempos continuos}
+      \begin{frame}{Diagnosis}{H-MRGP-M: medidas estadísticas}
+        \pause
         \begin{itemize}
           \item Experimentado sobre el dataset de van Kasteren:
           \begin{itemize}
             \item 7+1 actividades.
             \item \{Leaving house, Preparing a beverage, Preparing breakfast, Preparing dinner, Sleeping, Taking shower, Toileting\}.
           \end{itemize}
+          \pause
           \item A partir de las marcas temporales en el dataset anotado, se calculan medidas estadísticas sobre los tiempos continuos
           \begin{itemize}
             \item de permanencia en cada actividad;
@@ -200,6 +267,7 @@
           \end{itemize}
         \end{itemize}
         
+        \pause
     		\begin{table}[h!]
     			\centering
     			\small
@@ -224,13 +292,18 @@
       \end{frame}
       
       \begin{frame}{Diagnosis}{H-MRGP-M: modelo estocástico @runtime}
+        \pause
         \begin{itemize}
           \item El modelo se crea con técnicas de \textit{process mining}:
+          \pause
           \begin{itemize}
             \item \textit{process elicitation} para definir la topología del modelo;
-            \item \textit{process enhancement} para añadir parámetros estocásticos a partir de las medidas estadísticas calculadas (estrategia de Whitt\footnote{Whitt, W., 1982. Approximating a point process by a renewal process, I: Two basic methods. Operations Research, 30(1), pp.125-147.} y software PhFit\footnote{Horváth, A. and Telek, M., 2002, April. Phfit: A general phase-type fitting tool. In International Conference on Modelling Techniques and Tools for Computer Performance Evaluation (pp. 82-91). Springer Berlin Heidelberg.}).
+            \pause
+            \item \textit{process enhancement} para añadir parámetros estocásticos a partir de las medidas estadísticas calculadas (técnica de Whitt\footnote{Whitt, W., 1982. Approximating a point process by a renewal process, I: Two basic methods. Operations Research, 30(1), pp.125-147.} y software PhFit\footnote{Horváth, A. and Telek, M., 2002, April. Phfit: A general phase-type fitting tool. In International Conference on Modelling Techniques and Tools for Computer Performance Evaluation (pp. 82-91). Springer Berlin Heidelberg.}).
           \end{itemize}
+          \pause
           \item Modelo \textbf{@runtime}: modelo actualizado cada vez que se observa un nuevo evento.\footnote{Blair, G., Bencomo, N. and France, R.B., 2009. Models@ run. time. Computer, 42(10).}
+          \pause
           \item El formalismo utilizado para representar al modelo es el de las \textbf{Redes de Petri Temporizadas estocásticas} (stochastic Timed Petri Net, sTPN).\footnote{Horváth, A. and Vicario, E., 2009, September. Aggregated stochastic state classes in quantitative evaluation of non-markovian stochastic Petri nets. In Quantitative Evaluation of Systems, 2009. QEST'09. Sixth International Conference on the (pp. 155-164). IEEE.}\footnote{Vicario, E., 2001. Static analysis and dynamic steering of time-dependent systems. IEEE transactions on software engineering, 27(8), pp.728-748.}
         \end{itemize}
       \end{frame}
@@ -242,15 +315,21 @@
       \end{frame}
       
       \begin{frame}{Diagnosis}{H-MRGP-M: probabilidades}
+        \pause
         Después de cada observación, se pueden calcular las probabilidades de ser en diferentes estados del sistema hasta la observación siguiente.
+        \pause
         \begin{itemize}
           \item Se explota a la técnica de análisis transitorio de Procesos Regenerativos de Markov basada en clases de estado estocásticas.\footnote{Horváth, A., Paolieri, M., Ridi, L. and Vicario, E., 2012. Transient analysis of non-Markovian models using stochastic state classes. Performance Evaluation, 69(7), pp.315-335.}
         \end{itemize}
         
-        \begin{center}
-          \includegraphics[scale=0.18]{diagnosis-analysis-scheme.png}
-        \end{center}
+        \pause
+        \visible<4->{
+          \begin{center}
+            \includegraphics[scale=0.18]{diagnosis-analysis-scheme.png}
+          \end{center}
+        }
         
+        \pause
         El estado estimado por la diagnosis será el estado que lleva la probabilidad más alta.
       \end{frame}
       
@@ -261,67 +340,129 @@
       \end{frame}
       
     \subsection{Predicción}
-      \begin{frame}{Predicción\footnote{Salfner, F., Lenk, M. and Malek, M., 2010. A survey of online failure prediction methods. ACM Computing Surveys (CSUR), 42(3), p.10.}}
-        Predicción de la densidad de probabilidad de una actividad crítico:
+      \begin{frame}{Predicción}
+      	\begin{center}		
+      		\includegraphics[height=2.8cm,keepaspectratio]{pred_sched_chain.png}
+      	\end{center}
+      	\begin{tikzpicture}[remember picture, overlay]
+        	\node [shift={(-11cm,-4.9cm)}]  at (current page.north east)
+        	{%
+        		\begin{tikzpicture}[remember picture, overlay]
+        		\draw[red, thick] (0,0) rectangle (5.5cm,2.2cm);
+        		\end{tikzpicture}
+        	};
+      	\end{tikzpicture}
+      	
+      	\pause
+      	La \textbf{predicción}\footnote{Salfner, F., Lenk, M. and Malek, M., 2010. A survey of online failure prediction methods. ACM Computing Surveys (CSUR), 42(3), p.10.} calcula la densidad de probabilidad en el tiempo de que ocurra una determinada actividad crítica, a partir de la estimación sobre el estado corriente del modelo calculado por la diagnosis.
+      \end{frame}
+      
+      \begin{frame}{Predicción}{Modelo utilizado}
+        \pause
+        Predicción de la densidad de probabilidad de una actividad crítica:
+        \pause
         \begin{itemize}
           \item Process enhancement sin elicitation:
           \begin{itemize}
             \item probabilidades de transición calculadas por las medidas estadísticas sobre las marcas temporales.
           \end{itemize}
+          \pause
           \item Estados \textit{idle} especializados:
           \begin{itemize}
             \item permite tener en cuenta la última actividad.
           \end{itemize}
+          \pause
           \item Las actividades evolucionan como un \textit{Proceso Semi Márkov} (Semi Markov Process, SMP).
         \end{itemize}
         
-      	\begin{figure}[center]
-      		\scalebox{0.7}{\input{img/smp.tex}}
-      	\end{figure}
+        \pause
+        \visible<6->{
+        	\begin{figure}[center]
+        		\scalebox{0.7}{\input{img/smp.tex}}
+        	\end{figure}
+        }
       \end{frame}
       
-      \begin{frame}{Predicción}
-      	\input{img/predictionAnalysis.tex}
+      \begin{frame}{Predicción}{Calculo de la PDF}
+        \pause
+        \vspace{-1em}
+      	\visible<2->{
+        	\input{img/predictionAnalysis.tex}
+        }
+        
+      	\pause
       	\begin{itemize}
         	\item Para cada estado posible, se calcula la densidad de probabilidad de alcanzar al estado crítico (análisis transitorio).
+        	\pause
         	\item Se suman entre sí las densidades de probabilidad a partir de cada estado posible, pesadas por la probabilidad de ser en cada estado.
       	\end{itemize}
+      	
+      	\pause
       	\vspace{-1em}
-      	\include{img/plotComposition}
+      	\visible<5->{
+        	\include{img/plotComposition}
+        }
       \end{frame}
       
     \subsection{Planificación de acciones}
-      \begin{frame}{Planificación de acciones}{Descripción del problema}
+      \begin{frame}{Planificación de acciones}
+      	\begin{center}		
+      		\includegraphics[height=2.8cm,keepaspectratio]{pred_sched_chain.png}
+      	\end{center}
+      	\begin{tikzpicture}[remember picture, overlay]
+        	\node [shift={(-6.9cm,-6.1cm)}]  at (current page.north east)
+        	{%
+        		\begin{tikzpicture}[remember picture, overlay]
+        		\draw[red, thick] (0,0) rectangle (5.3cm,3.2cm);
+        		\end{tikzpicture}
+        	};
+      	\end{tikzpicture}
+      	
+      	\pause
+      	La \textbf{planificación de acciones} calcula el instante temporal óptimo para planificar una reacción oportuna a una determinada actividad critica, a partir de la probabilidad de que dicha actividad ocurra (calculada por la predicción) y de una política de reacción (decidida por el usuario).
+      \end{frame}
+    
+      \begin{frame}{Planificación de acciones}{Descripción del problema\footnote{Biagi, M., Carnevali, L., Paolieri, M., Patara, F. and Vicario, E., 2016, October. A Stochastic Model-Based Approach to Online Event Prediction and Response Scheduling. In European Workshop on Performance Engineering (pp. 32-47). Springer International Publishing.}}
+        \pause
         \begin{itemize}
           \item \textbf{Actividad crítica}: actividad por la cual nos interesa planificar una reacción.
+          \pause
           \item \textbf{Reacción}: acción que el sistema tiene que actuar cuando ocurre la actividad crítica.
+          \pause
           \item \textbf{Duración de la reacción}: duración $t_d$ del tiempo de activación de la reacción.
+          \pause
           \item \textbf{Tiempo de actuación de la reacción}: tiempo $t_w$ necesario al sistema para actuar a la reacción desde cuando ha sido planificada.
         \end{itemize}
         
-      	\begin{columns}
-      		\column{0.60\linewidth}
-      		\centering
-      		\include{img/schedulingParameters}
-      		\column{0.40\linewidth}
-      		Por ej. notificación para tomar píldoras antes de cenar:
-      		\begin{itemize}
-      			\item $t_w = 60s$
-      			\item $t_d = 120s$
-      			\item Notifica al instante $\tilde t$
-      		\end{itemize}
-      	\end{columns}
+        \pause
+       	\begin{columns}
+       		\column{0.60\linewidth}
+       		\centering
+       		\include{img/schedulingParameters}
+       		\column{0.40\linewidth}
+       		Por ej. notificación para tomar píldoras antes de cenar:
+       		\begin{itemize}
+       			\item $t_w = 60s$
+       			\item $t_d = 120s$
+       			\item Notifica al instante $\tilde t$
+       		\end{itemize}
+       	\end{columns}
       \end{frame}
       
-      \begin{frame}{Planificación de acciones}{Politica de planificación\footnote{Biagi, M., Carnevali, L., Paolieri, M., Patara, F. and Vicario, E., 2016, October. A Stochastic Model-Based Approach to Online Event Prediction and Response Scheduling. In European Workshop on Performance Engineering (pp. 32-47). Springer International Publishing.}}
+      \begin{frame}{Planificación de acciones}{Politica de planificación}
+        \pause
         \begin{itemize}
           \item Se busca al \textbf{intervalo de mayor probabilidad} (de longitud $t_d$) de que ocurra la actividad crítica.
+          \pause
           \item Si la \textbf{probabilidad máxima} está mas alta de un \textbf{umbral fijo}, la reacción será planificada por el sistema al instante $\boldsymbol{\tilde t = x^* - t_w}$, donde $x^*$ indica el extremo inferior del intervalo de máxima probabilidad.
+          \pause
           \item Si la probabilidad máxima está mas baja del umbral, ninguna reacción será planificada por el sistema.
         \end{itemize}
+        
+        \pause
         \vspace{-1em}
-      	\centering
-      	\include{img/schedulingExample}
+        \centering
+        \include{img/schedulingExample}
       \end{frame}
       
   \section*{Fin}
