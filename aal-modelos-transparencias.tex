@@ -36,7 +36,7 @@
   \section{Ambient Assisted Living}
     
     \begin{frame}{Ambient Assisted Living}
-      El \textbf{Ambient Assisted Living} es un sector de investigación que tiene como objetivo lo de ayudar a las personas que viven en \textit{entornos inteligentes} (es decir, dotados de sensores y actuadores) explotando a la tecnología de sensores y de procesamiento de datos.
+      El \textbf{Ambient Assisted Living} es un sector de investigación que tiene como objetivo ayudar a las personas que viven en \textit{entornos inteligentes} (es decir, dotados de sensores y actuadores) explotando a la tecnología de sensores y de procesamiento de datos.
       
       \begin{center}
         \includegraphics[scale=1.8]{elderly_assi.jpg}
@@ -56,14 +56,14 @@
         
         \vspace{1em}
         \pause
-        Principales análisis de interese:
+        Principales análisis de interés:
         \pause
         \begin{itemize}
           \item \textbf{Diagnosis}: estimar cual es el estado efectivo actual del sistema a partir de las observaciones registradas.
           \pause
           \item \textbf{Predicción}: estimar cual será el estado efectivo del sistema después de una determinada cantidad de tiempo o la densidad de probabilidad de que un evento se verifique.
           \pause
-          \item \textbf{Planificación de acciones}: elegir la acción optima y entre cuanto tiempo ir actuarla para evitar situaciones críticas.
+          \item \textbf{Planificación de acciones}: elegir la acción optima y entre cuanto tiempo debe desarrollarse para evitar situaciones críticas.
         \end{itemize}
         
         \vspace{1em}
@@ -71,7 +71,7 @@
         Análisis en linea:
         \pause
         \begin{itemize}
-          \item intenta analizar a un entorno inteligente \textit{mientras} está evolucionando.
+          \item intenta analizar un entorno inteligente \textit{mientras} está evolucionando.
         \end{itemize}
       \end{frame}
     
@@ -126,7 +126,7 @@
     \subsection{Process mining}
       \begin{frame}{Process mining}{De datasets anotados a modelos estocásticos}
         \pause
-        Con el término \textbf{process mining} se indica un conjunto de técnicas para construir a un modelo estocástico de un sistema parcialmente observable a partir de un dataset anotado de este mismo sistema.
+        Con el término \textbf{process mining} se indica un conjunto de técnicas para construir un modelo estocástico de un sistema parcialmente observable a partir de un dataset anotado de este mismo sistema.
         
         \pause
         \vspace{1em}
@@ -182,7 +182,7 @@
         Los \textbf{Modelos Ocultos de Márkov} (Hidden Markov Model, HMM):
         \pause
         \begin{itemize}
-          \item modelan a un sistema parcialmente observable sin tener en cuenta del tiempo de permanencia en cada estado;
+          \item modelan a un sistema parcialmente observable sin tener en cuenta el tiempo de permanencia en cada estado;
           \pause
           \item asocian a cada estado efectivo del sistema una distribución discreta sobre los eventos observables;
           \pause
@@ -314,9 +314,9 @@
         \end{center}
       \end{frame}
       
-      \begin{frame}{Diagnosis}{H-MRGP-M: probabilidades}
+      \begin{frame}{Diagnosis}{H-MRGP-M: análisis transitorio}
         \pause
-        Después de cada observación, se pueden calcular las probabilidades de ser en diferentes estados del sistema hasta la observación siguiente.
+        Después de cada observación, se pueden calcular las probabilidades de estar en diferentes estados del sistema hasta la observación siguiente.
         \pause
         \begin{itemize}
           \item Se explota a la técnica de análisis transitorio de Procesos Regenerativos de Markov basada en clases de estado estocásticas.\footnote{Horváth, A., Paolieri, M., Ridi, L. and Vicario, E., 2012. Transient analysis of non-Markovian models using stochastic state classes. Performance Evaluation, 69(7), pp.315-335.}
@@ -333,9 +333,34 @@
         El estado estimado por la diagnosis será el estado que lleva la probabilidad más alta.
       \end{frame}
       
-      \begin{frame}{Diagnosis}{H-MRGP-M: probabilidades}
+      \begin{frame}{Diagnosis}{H-MRGP-M: análisis transitorio}
         \begin{center}
-          \includegraphics[scale=0.35]{onLineAnalysisAfterN-eps-converted-to.pdf}
+          \includegraphics[scale=0.33]{onLineAnalysisAfterN_start.eps}
+        \end{center}
+        
+        \pause
+        Después de haber observado el evento $n$, por cada actividad corriente \textit{posible}
+        \pause
+        \begin{itemize}
+          \item se construye el árbol de las clases hasta que se encuentre la observación siguiente (evento $n+1$);
+          \pause
+          \item se seleccionan las hojas correspondientes al nuevo evento observado;
+          \pause
+          \item se calcula la PDF de las hojas seleccionadas en el retraso $d$ (inter-tiempo entre los eventos $n$ y $n+1$) en cada árbol, sumandolas entre sí con peso la probabilidad de la raíz;
+          \pause
+          \item se restituye el máximo como actividad más probable.
+        \end{itemize}
+      \end{frame}
+      
+      \begin{frame}{Diagnosis}{H-MRGP-M: análisis transitorio}
+        \begin{center}
+          \includegraphics[scale=0.35]{onLineAnalysisAfterN.eps}
+        \end{center}
+      \end{frame}
+      
+      \begin{frame}{Diagnosis}{H-MRGP-M: análisis transitorio}
+        \begin{center}
+          \includegraphics[scale=0.325]{onLineAnalysisAfterN_restricted.eps}
         \end{center}
       \end{frame}
       
@@ -394,7 +419,7 @@
       	\begin{itemize}
         	\item Para cada estado posible, se calcula la densidad de probabilidad de alcanzar al estado crítico (análisis transitorio).
         	\pause
-        	\item Se suman entre sí las densidades de probabilidad a partir de cada estado posible, pesadas por la probabilidad de ser en cada estado.
+        	\item Se suman entre sí las densidades de probabilidad a partir de cada estado posible, pesadas por la probabilidad de estar en cada estado.
       	\end{itemize}
       	
       	\pause
@@ -431,7 +456,7 @@
           \pause
           \item \textbf{Duración de la reacción}: duración $t_d$ del tiempo de activación de la reacción.
           \pause
-          \item \textbf{Tiempo de actuación de la reacción}: tiempo $t_w$ necesario al sistema para actuar a la reacción desde cuando ha sido planificada.
+          \item \textbf{Tiempo de actuación de la reacción}: tiempo $t_w$ necesario al sistema para llevar a cabo la reacción desde cuando ha sido planificada.
         \end{itemize}
         
         \pause
@@ -440,7 +465,7 @@
        		\centering
        		\include{img/schedulingParameters}
        		\column{0.40\linewidth}
-       		Por ej. notificación para tomar píldoras antes de cenar:
+       		Por ej. notificación para tomar pastillas antes de cenar:
        		\begin{itemize}
        			\item $t_w = 60s$
        			\item $t_d = 120s$
@@ -452,7 +477,7 @@
       \begin{frame}{Planificación de acciones}{Politica de planificación}
         \pause
         \begin{itemize}
-          \item Se busca al \textbf{intervalo de mayor probabilidad} (de longitud $t_d$) de que ocurra la actividad crítica.
+          \item Se busca el \textbf{intervalo de mayor probabilidad} (de longitud $t_d$) de que ocurra la actividad crítica.
           \pause
           \item Si la \textbf{probabilidad máxima} está mas alta de un \textbf{umbral fijo}, la reacción será planificada por el sistema al instante $\boldsymbol{\tilde t = x^* - t_w}$, donde $x^*$ indica el extremo inferior del intervalo de máxima probabilidad.
           \pause
@@ -469,8 +494,10 @@
     \begin{frame}
       \begin{center}
       	\textbf{\calligra\Huge Fin.}\\
-        \includegraphics[width=5cm]{ornament.eps}\\[1cm]
+        \includegraphics[width=5cm]{ornament.eps}
+        
       	\pause
+      	\vspace{1cm}
       	{\huge\calligra Preguntas?\pause{} Gracias!}
       \end{center}
     \end{frame}
