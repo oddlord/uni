@@ -9,7 +9,7 @@
 \title[AAL y modelos estocásticos]{Ambient Assisted Living y modelos estocásticos}
 \author{\textbf{Tommaso Papini}}
 \institute{
-  STLab, Departamiento de la Ingenieria de la Informacíon, Universidad de Florencia, Italia,\\
+  STLab, Departamento de la Ingenieria de la Informacíon, Universidad de Florencia, Italia,\\
   {tommaso.papini@unifi.it}
 }
 \date{
@@ -133,9 +133,9 @@
         El process mining está compuesto por dos técnicas principales:
         \pause
         \begin{itemize}
-          \item \textbf{Process elicitation}: construye un modelo discreto (es decir, sin informaciones sobre la permanencia en los estados del sistema) a partir de los eventos y actividades anotados en el dataset.
+          \item \textbf{Process elicitation}: construye un modelo discreto (es decir, sin informaciones sobre la permanencia en los estados del sistema) a partir de los eventos y actividades anotadas en el dataset.
           \pause
-          \item \textbf{Process ehnancement}: añade una visión temporal continua a un modelo discreto introduciendo parámetros estocásticos que describen como el sistema evoluciona a lo largo del tiempo utilizando medidas estadísticas sacadas por el dataset.
+          \item \textbf{Process ehnancement}: añade una visión temporal continua a un modelo discreto introduciendo parámetros estocásticos que describen como el sistema evoluciona a lo largo del tiempo utilizando medidas estadísticas obtenidas por el dataset.
         \end{itemize}
       \end{frame}
     
@@ -206,7 +206,7 @@
           \item \textbf{HSMM}\footnote{Van Kasteren, T.L.M., Englebienne, G. and Kröse, B.J., 2010. Activity recognition using semi-markov models on real world smart home datasets. Journal of ambient intelligence and smart environments, 2(3), pp.311-325.}
           \begin{itemize}
             \item Hidden Semi Markov Model;
-            \item permanencia en los estados ocultos modelada con distribuciones te tiempo discreto;
+            \item permanencia en los estados ocultos modelada con distribuciones de tiempo discreto;
             \item eventos generados en cada instante temporal.
           \end{itemize}
           \pause
@@ -254,7 +254,7 @@
       \begin{frame}{Diagnosis}{H-MRGP-M: medidas estadísticas}
         \pause
         \begin{itemize}
-          \item Experimentado sobre el dataset de van Kasteren:
+          \item Experimentos sobre el dataset de van Kasteren:
           \begin{itemize}
             \item 7+1 actividades.
             \item \{Leaving house, Preparing a beverage, Preparing breakfast, Preparing dinner, Sleeping, Taking shower, Toileting\}.
@@ -419,7 +419,7 @@
       	\begin{itemize}
         	\item Para cada estado posible, se calcula la densidad de probabilidad de alcanzar al estado crítico (análisis transitorio).
         	\pause
-        	\item Se suman entre sí las densidades de probabilidad a partir de cada estado posible, pesadas por la probabilidad de estar en cada estado.
+        	\item Se suman entre sí las densidades de probabilidad a partir de cada estado posible, comparándolas con la probabilidad de estar en cada estado.
       	\end{itemize}
       	
       	\pause
