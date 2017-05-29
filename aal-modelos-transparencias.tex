@@ -28,7 +28,7 @@
     \end{itemize}
   \end{frame}
 
-  \begin{frame}{Overview}
+  \begin{frame}{Temas}
     %\tiny
     \tableofcontents
   \end{frame}
@@ -89,7 +89,7 @@
         \pause
         \visible<5->{
           \begin{center}
-            \colorbox{white}{\includegraphics[scale=0.28]{708px-HMMGraph.png}}
+            \includegraphics[scale=0.5]{220px-Markovkate_01.png}
           \end{center}
         }
       \end{frame}
@@ -97,7 +97,7 @@
     \subsection{Datasets anotados}
       \begin{frame}{Datasets anotados}
         \pause
-        Un \textit{dataset anotado} es un dataset donde hay:
+        Un \textit{dataset anotado} de un sistema parcialmente observable es un dataset donde hay:
         \pause
         \begin{itemize}
           \item los eventos registrados y cuando han pasado (marca temporal);
@@ -121,6 +121,28 @@
             \includegraphics[scale=0.18]{SmartHome.png}
           \end{center}
         }
+      \end{frame}
+      
+      \begin{frame}{Datasets anotados}{van Kasteren}
+        \pause
+        \begin{itemize}
+          \item 7+1 tipos de actividades (Activities of Daily Living, ADL\footnote{Katz, S., Downs, T.D., Cash, H.R. and Grotz, R.C., 1970. Progress in development of the index of ADL. The gerontologist, 10(1 Part 1), pp.20-30.}):
+          \begin{itemize}
+            \item \{Leaving house, Preparing a beverage, Preparing breakfast, Preparing dinner, Sleeping, Taking shower, Toileting\} $\cup$ \{Idling\}.
+          \end{itemize}
+          \pause
+          \item 28 tipos de eventos (on/off de 14 sensores):
+          \begin{itemize}
+            \item puerta del baño abierta/cerrada, nevera abierta/cerrada, \dots.
+          \end{itemize}
+          \pause
+          \item 28 días de eventos y actividades anotadas:
+          \begin{itemize}
+            \item 245 actividades, anotadas por un dispositivo Bluetooth con reconocimiento vocal;
+            \item 219 intervalos \textit{Idling};
+            \item 2638 eventos observados.
+          \end{itemize}
+        \end{itemize}
       \end{frame}
     
     \subsection{Process mining}
@@ -254,11 +276,7 @@
       \begin{frame}{Diagnosis}{H-MRGP-M: medidas estadísticas}
         \pause
         \begin{itemize}
-          \item Experimentos sobre el dataset de van Kasteren:
-          \begin{itemize}
-            \item 7+1 actividades.
-            \item \{Leaving house, Preparing a beverage, Preparing breakfast, Preparing dinner, Sleeping, Taking shower, Toileting\}.
-          \end{itemize}
+          \item Experimentación sobre el dataset de van Kasteren.
           \pause
           \item A partir de las marcas temporales en el dataset anotado, se calculan medidas estadísticas sobre los tiempos continuos
           \begin{itemize}
@@ -389,6 +407,7 @@
         \begin{itemize}
           \item Process enhancement sin elicitation:
           \begin{itemize}
+            \item solo nos importa como el sistema pasa de un estado al otro;
             \item probabilidades de transición calculadas por las medidas estadísticas sobre las marcas temporales.
           \end{itemize}
           \pause
@@ -419,11 +438,11 @@
       	\begin{itemize}
         	\item Para cada estado posible, se calcula la densidad de probabilidad de alcanzar al estado crítico (análisis transitorio).
         	\pause
-        	\item Se suman entre sí las densidades de probabilidad a partir de cada estado posible, comparándolas con la probabilidad de estar en cada estado.
+        	\item Se suman entre sí las densidades de probabilidad a partir de cada estado posible, ponderadas por la probabilidad de estar en cada estado.
       	\end{itemize}
       	
       	\pause
-      	\vspace{-1em}
+      	\vspace{-0.5em}
       	\visible<5->{
         	\include{img/plotComposition}
         }
