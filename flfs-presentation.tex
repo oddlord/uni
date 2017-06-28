@@ -104,6 +104,7 @@
           \begin{itemize}
             \item stochastic modelling techniques.
           \end{itemize}
+          \pause
           \item \textit{Sinbad\textsuperscript{2}} research group\footnote{\url{http://sinbad2.ujaen.es/}}
           \begin{itemize}
             \item fuzzy logic techniques and temporal window-based classification
@@ -174,7 +175,7 @@
       \end{itemize}
       
       \pause
-      \visible<4->{
+      \visible<5->{
         \begin{center}
           \includegraphics[scale=0.8]{fuzzy-phases.png}
         \end{center}
@@ -508,15 +509,16 @@
             \item only last event taken into consideration.
           \end{itemize}
         \end{minipage}\\
+        \pause
         \vspace{2em}
-        Exploiting linguistic terms, support for continuous sensors can be added to the H-MRGP-M model!
+        Exploiting linguistic terms and temporal fuzzy rules, support for continuous sensors can be added to the H-MRGP-M model!
       \end{frame}
     
     \subsection{Proposals}
-      \begin{frame}{Proposal}
+      \begin{frame}{Proposal}{$\alpha$-cuts}
         \pause
         \begin{itemize}
-          \item Use linguistic terms as before:
+          \item Use linguistic variables as before:
           \begin{itemize}
             \item provided by an expert;
             \item one for the time dimension and one for each continuous sensor.
@@ -537,6 +539,33 @@
           \item compute the degree of membership of the data stream for that sensor to the intersection fuzzy set $v \cap T$;
           \item defuzzify on the intersection fuzzy set $V \cap T$;
           \item the state-change corresponding to the defuzzification output is fired in the H-MRGP-M model.
+        \end{itemize}
+      \end{frame}
+      
+      \begin{frame}{Proposal}{State-change fuzzy temporal rules}
+        \pause
+        \begin{itemize}
+          \item Use linguistic variables as before:
+          \begin{itemize}
+            \item provided by an expert;
+            \item one for the time dimension and one for each continuous sensor.
+          \end{itemize}
+          \pause
+          \item Define state-changes for each continuous sensor:
+          \begin{itemize}
+            \item define state-change fuzzy temporal rules (by an expert);
+            \item each rule is applied to the whole sensor data stream;
+            \item e.g. \textit{IF (movement IS high) WHEN now AND (movement IS low) WHEN a while THEN inhabitant IS started moving}.
+          \end{itemize}
+          \pause
+          \item The new state-changes of the continuous sensor are added to the model.
+        \end{itemize}
+        \pause
+        When a new continuous event is observed:
+        \pause
+        \begin{itemize}
+          \item infer the state-change using the fuzzy temporal rule engine and the sensor data stream;
+          \item the inferred state-change is fired in the H-MRGP-M model.
         \end{itemize}
       \end{frame}
       
