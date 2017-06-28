@@ -1,0 +1,35 @@
+% -*- TeX:EN:UNIX; ispell-local-dictionary: "american"; TeX-master: "palomar.tex"; -*-
+  \scalebox{0.85}{
+    \begin{tikzpicture}[label distance=1mm,>=stealth',auto,font=\sffamily,font=\small,node distance=15mm and 5mm,/tikz/initial text=]
+    \tikzstyle{state-act}=[circle,rounded corners,draw,fill=gray!30,text height=1.7ex,text depth=0.3ex,anchor=base,text centered,text width=9mm, minimum height=9mm]
+    \tikzstyle{state-idle}=[circle,rounded corners,draw,fill=black!0,text height=1.7ex,text depth=0.3ex,anchor=base,text centered,text width=9mm, minimum height=9mm]
+
+    \node [state-act,initial] (x) at (0,6.07cm) { $\texttt{act}_x$};
+    \node [state-act] (y) at (9cm,6.07cm) { $\texttt{act}_y$};
+    \node [state-act] (z) at (4.5cm,4cm) { $\texttt{act}_z$};
+    \node [state-idle] (xz) at (1cm,4cm) {$\texttt{idle}_{xz}$};
+    \node [state-idle] (yz) at (8cm,4cm) {$\texttt{idle}_{yz}$};
+    \node [state-idle] (xy) at (4.5cm,7.7cm) {$\texttt{idle}_{xy}$};
+    \node [state-idle] (yx) at (4.5cm,6.07cm) {$\texttt{idle}_{yx}$};
+    \path (z.base) -- node[midway,state-idle] (zx) {$\texttt{idle}_{zx}$} (x.base);
+    \path (z.base) -- node[midway,state-idle] (zy) {$\texttt{idle}_{zy}$} (y.base);
+    \draw[->] (x) to node[] {$p_{xy}$} (xy);
+    \draw[->] (xy) to (y);
+    \draw[->] (y) to node[above] {$p_{yx}$} (yx);
+    \draw[->] (yx) to (x);
+    \draw[->] (x) to node[left] {$p_{xz}$} (xz);
+    \draw[->] (xz) to (z);
+    \draw[->] (z) to node[above] {$p_{zx}$} (zx);
+    \draw[->] (zx) to (x);
+    \draw[->] (y) to node[right] {$p_{yz}$} (yz);
+    \draw[->] (yz) to (z);
+    \draw[->] (z) to node[above] {$p_{zy}$} (zy);
+    \draw[->] (zy) to (y);
+   %  \node [class, right=of s2,xshift=1.5cm] (s5) {
+   %    $S_5|$ $\id{buffer_1}\,\id{producing_2}$\\
+   %    $(\id{consume_1},\id{produce_2}) \in [1,2]\times [0,2]$
+   %  };
+   % 
+   % \draw[->] (s0) to  node[left] {$\tr{produce_2}$} (s0 |- s9.south);
+  \end{tikzpicture}
+  }

@@ -1,0 +1,59 @@
+\tikzset{>=stealth'}
+\begin{tikzpicture}[scale=1]
+  \tikzset{
+    activity/.style={dashed}
+    schedule/.style={dashed, color=black!5}
+  }
+  \def\tickheight{2mm}
+  \def\eticka{1.2}
+  \def\etickb{2.2}
+  \def\etickc{4.2}
+  \def\etickd{7}
+  \def\eticke{8}
+  \def\actheight{0.5cm}
+  \def\astarta{.5}
+  \def\aenda{3.2}
+  \def\astartb{6}
+  \def\aendb{9}
+  \def\D{1}
+  \def\W{.6}
+  \def\shiftpdfc{-1.6cm}
+  \def\startpredc{1.3}
+
+  
+  \draw[->,thick] (3,0) --  (10,0) node[below left] {time};
+  \draw[thick] (3,-{\tickheight/2}) -- (3,{\tickheight/2}) node[above] {0};
+  
+  \draw[thick] (\etickc,-{\tickheight/2}) node[below] {} -- (\etickc,{\tickheight/2}) node[above] {$t_{ev}$} ;
+  
+%  \draw[thick] (\astartb,-{\tickheight/2}) node[below] {$\tau_2$} -- (\astartb,{\tickheight/2}) ;
+%  \draw[thick] (\aendb,-{\tickheight/2}) node[below] {$\tau_2+\delta_2$} -- (\aendb,{\tickheight/2}) ;
+  \draw[activity] (\astartb,0) -- (\astartb,\actheight) -- node[above] {$dinner$} (\aendb,\actheight) -- (\aendb,0);
+  \fill[red] (\astartb,0) circle (.5mm);
+
+  \begin{scope}[xshift=\etickc cm, yshift=\shiftpdfc]
+    \begin{scope}[on background layer]
+    \draw[color=black!30,dashed] ({\startpredc-\W},1mm) -- ({\startpredc-\W},-\shiftpdfc);
+    \draw[color=black!15] ({\astartb-\etickc},.5mm) -- ({\astartb-\etickc},-\shiftpdfc);
+    \end{scope}
+    \draw[<->] (0,1cm) node[below left] {$PDF(t)$} -- (0,0) --  (4cm,0) node[right] {$t$};
+
+    \draw [line width=1mm,color=black!25]({\startpredc},0) -- ({\startpredc+\D},0);
+    \draw (\startpredc,-{\tickheight/4}) -- (\startpredc,{\tickheight/4});
+    \draw ({\startpredc+\D},-{\tickheight/4}) -- ({\startpredc+\D},{\tickheight/4});
+    \draw [<->]({\startpredc},0) -- ({\startpredc+\D},0);
+    \node[below] at ({\startpredc+\D/2},0) {$t_d$};
+
+    \draw (\startpredc,-{\tickheight/4}) -- (\startpredc,{\tickheight/4});
+    \draw ({\startpredc-\W},-{\tickheight/4}) -- ({\startpredc-\W},{\tickheight/4});
+    \draw [<->]({\startpredc},0) -- ({\startpredc-\W},0);
+    \node[below] at ({\startpredc-\W/2},0) {$t_w$};
+
+    \draw [red] plot [smooth] coordinates {(0,0) (1,.5) (1.8,1) (2.5,.6) (3.5,0.2) (3.8,0)};
+    \node [right] at ({\startpredc-(.8)},2.0cm) {$\tilde t$};
+    
+    \node [above] at ({\startpredc+0.1},0) {$x^*$};
+    
+  \end{scope}
+  \fill[black] ({\startpredc-\W+\etickc},0) circle (.5mm);
+\end{tikzpicture}

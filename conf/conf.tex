@@ -1,19 +1,22 @@
-% !TeX root = ../flfs-presentation.tex
+% !TeX root = ../aal-modelos-transparencias.tex
 % !TeX encoding = UTF-8
-% !TeX spellcheck = en_GB
+% !TeX spellcheck = es_ES
 
 %********************************************************************
 % Packages
 %********************************************************************
 
-\usepackage[english]{babel}
+\usepackage[spanish]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{calligra}
 \usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata,shapes,calc,backgrounds,positioning}
 \usepackage{times}
 
 \graphicspath{{img/}}
@@ -22,8 +25,8 @@
 % Beamer styles
 %********************************************************************
 
-\usetheme{Antibes} % Antibes, Berkeley, Hannover, Luebeck
-\usecolortheme{dolphin} % beaver, dolphin
+\usetheme{Montpellier}
+\usecolortheme{default}
 \setbeamercovered{dynamic}
 \newcommand{\nologo}{\setbeamertemplate{logo}{}} % command to set the logo to nothing
 
@@ -33,3 +36,19 @@
 \setbeamertemplate{footline}[frame number]
 \setbeamertemplate{navigation symbols}{}
 
+\usebackgroundtemplate{
+  \begin{tikzpicture}
+    \node[opacity=0.05] {\includegraphics[]{logoUnifi.png}};
+  \end{tikzpicture}
+}
+
+\AtBeginSection[]{
+  \begin{frame}
+  \vfill
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+    \usebeamerfont{title}\insertsectionhead\par%
+  \end{beamercolorbox}
+  \vfill
+  \end{frame}
+}
