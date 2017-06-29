@@ -7,8 +7,8 @@
 \input{conf/conf}
 
 \title[AAL: Fuzzy Logic \& Stochastic Modelling]{
-  Ambient Assisted Living: Fuzzy Logic\\
-  \& Stochastic Modelling
+  Ambient Assisted Living:\\
+  Fuzzy Logic \& Stochastic Modelling
 }
 \author{\textbf{Tommaso Papini}}
 \institute{
@@ -99,6 +99,7 @@
         
         \pause
         Comparative survey between AR researches:
+        \pause
         \begin{itemize}
           \item \textit{STLab} research group\footnote{\url{https://stlab.dinfo.unifi.it/}}
           \begin{itemize}
@@ -244,8 +245,8 @@
         }
       \end{frame}
       
-    \subsection{Intersection membership functions}
-      \begin{frame}{Intersection membership functions}
+    \subsection{Intersection membership function}
+      \begin{frame}{Intersection membership function}
         \pause
         For each sensor and time linguistic term, we define the intersection membership function:
         \pause
@@ -295,23 +296,22 @@
       \end{frame}
     
   \section{A Stochastic Modelling approach}
-    \subsection{Stochastic models}
-      \begin{frame}{Stochastic Models}
+    \begin{frame}{Stochastic Models}
+      \pause
+      \textit{Stochastic Models} represent an approximation of systems where are modelled:
+      \pause
+      \begin{itemize}
+        \item the evolution of the system's state;
         \pause
-        \textit{Stochastic Models} represent an approximation of systems where are modelled:
-        \pause
-        \begin{itemize}
-          \item the evolution of the system's state;
-          \pause
-          \item the stochastic parameters that characterize how the system passes from a state to another.
-        \end{itemize}
-        \pause
-        \visible<5->{
-          \begin{center}
-            \includegraphics[scale=0.5]{220px-Markovkate_01.png}
-          \end{center}
-        }
-      \end{frame}
+        \item the stochastic parameters that characterize how the system passes from a state to another.
+      \end{itemize}
+      \pause
+      \visible<5->{
+        \begin{center}
+          \includegraphics[scale=0.5]{220px-Markovkate_01.png}
+        \end{center}
+      }
+    \end{frame}
     
     \subsection{Process mining}
       \begin{frame}{Process mining}{From annotated datasets to stochastic models}
@@ -515,7 +515,7 @@
       \end{frame}
     
     \subsection{Proposals}
-      \begin{frame}{Proposal}{$\alpha$-cuts}
+      \begin{frame}{Proposal}{Intersection fuzzy set}
         \pause
         \begin{itemize}
           \item Use linguistic variables as before:
@@ -526,8 +526,8 @@
           \pause
           \item Define state-changes for each continuous sensor:
           \begin{itemize}
-            \item for each continuous sensor, define one or more $\alpha$-cuts;
-            \item each resulting interval is seen as a different state-change for a specific sensor.
+            \item for each pair of time and sensor-specific linguistic term define the intersection fuzzy set $V \cap T$;
+            \item each combination is seen as a different state-change for a specific sensor.
           \end{itemize}
           \pause
           \item The new state-changes of the continuous sensor are added to the model.
@@ -536,13 +536,15 @@
         When a new continuous event is observed:
         \pause
         \begin{itemize}
-          \item compute the degree of membership of the data stream for that sensor to the intersection fuzzy set $v \cap T$;
-          \item defuzzify on the intersection fuzzy set $V \cap T$;
-          \item the state-change corresponding to the defuzzification output is fired in the H-MRGP-M model.
+          \item compute the degree of membership of the new measurement to the intersection fuzzy sets $V \cap T$;
+          \pause
+          \item identify the intersection fuzzy set with highest membership degree;
+          \pause
+          \item the state-change corresponding to the fuzzy set with highest membership degree is fired in the H-MRGP-M model.
         \end{itemize}
       \end{frame}
       
-      \begin{frame}{Proposal}{State-change fuzzy temporal rules}
+      \begin{frame}{Proposal}{Fuzzy temporal rules}
         \pause
         \begin{itemize}
           \item Use linguistic variables as before:
@@ -565,6 +567,7 @@
         \pause
         \begin{itemize}
           \item infer the state-change using the fuzzy temporal rule engine and the sensor data stream;
+          \pause
           \item the inferred state-change is fired in the H-MRGP-M model.
         \end{itemize}
       \end{frame}
@@ -580,8 +583,8 @@
           \pause
           \item Sensor-specific time linguistic terms:
           \begin{itemize}
-            \item each sensor might have different variation distributions in time.
-            \item e.g. a sensor motion might have very rapid and very high variations, while a temperature sensor is usually smoother
+            \item each sensor might have different variation distributions in time;
+            \item e.g. a sensor motion might have very rapid and very high variations, while a temperature sensor is usually smoother.
           \end{itemize}
         \end{itemize}
       \end{frame}
