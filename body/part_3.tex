@@ -1,1 +1,33 @@
-\chapter{Tutorial PRISM parte 3: Dynamic power management}
+% !TeX root = ../report-smc.tex
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_GB
+
+\section*{PRISM Tutorial Part 3: Dynamic power management}
+
+  In Section will be described the modelization through PRISM of a \textit{DPM} (\textit{Dynamic Power Management}) system, following the PRISM tutorial found at \cite{prism-tutorial3}. DPMs are used to apply different power usages to some computing device, according to a predefined strategy that takes into account the current state of the device. This kind of systems have been studied largely in literature, for example in \cite{qiu2001stochastic} where a DPM for a Fujitsu disk drive has been studied.
+  
+  A generic DPM system is made of three distinct components:
+  
+  \begin{itemize}
+    \item \textit{Service Queue} (\textit{SQ}): holds the requests that the Service Provider will have to serve, in an ordered fashion, and can have finite queue capacity;
+    \item \textit{Service Provider} (\textit{SP}): serves, one at a time, the requests stored in the Service Queue, serving each time the request at the head of the queue;
+    \item \textit{Power Manager} (\textit{PM}): can change the power state of the Service Provider according to certain policies.
+  \end{itemize}
+  
+  The \textit{SP} could be anything that is a computing device that serves requests, such as a disk drive as in \cite{qiu2001stochastic}, but also a CPU or a Web Server.
+  
+  At any given time, the \textit{SP} is in one of three possible power states, each of which:
+  
+  \begin{itemize}
+    \item \textit{sleep}: the \textit{SP} is in a low-power consumption mode and is unable to serve any request unless explicitly awaken by the \textit{PM};
+    \item \textit{idle}: the \textit{SP} is awake but currently not serving any request, so any newly arriving request will be served immediately by the \textit{SP};
+    \item \textit{busy}: the \textit{SP} is currently serving a request and will be available to serve the next in queue as soon as it's finished.
+  \end{itemize}
+  
+  Ideally, when in the \textit{sleep} state the \textit{SP} will be requiring little to none power, when in the \textit{idle} state it will require more, as it is awake and ready to serve requests, while when \textit{busy} it will require even more, as the \textit{SP} in that case is actively working on a request. The \textit{PM} is charged with employing a power consumption strategy by switching the \textit{SP}'s power state, in order to maximise the availability of the service while minimising the overall power consumption.
+  
+  A first PRISM model for a DPM based on \cite{qiu2001stochastic} is proposed in Code \ref{lst:power}, as seen in \cite{prism-tutorial3}.
+  
+  \begin{center}
+    \lstinputlisting[language=prism, caption={PRISM code for the model of a DPM based on \cite{qiu2001stochastic}. Source \cite{prism-tutorial3}.}, label={lst:power}]{code/power.sm}
+  \end{center}

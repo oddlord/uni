@@ -4,20 +4,13 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[italian]{babel}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{fancybox}
+\usepackage[english]{babel}
 \usepackage[bottom, para]{footmisc}
 \usepackage{graphicx}
 \usepackage{hyperref}
-\usepackage{pkg/mathpartir}
-\usepackage{multirow}
-\usepackage{pgf}
-\usepackage{stmaryrd}
-\usepackage{textcomp}
-\usepackage{tikz}
-\usepackage{titlesec}
+\usepackage{listings}
+\usepackage{perpage}
+\usepackage{xcolor}
 
 %********************************************************************
 % Packages options
@@ -32,9 +25,64 @@
     textwidth     = 13.5cm,
     textheight    = 21.5cm,
     lmargin       = 1cm,
-    rmargin		  = 3cm,
+    rmargin		    = 3cm,
     tmargin       = 2cm,
     bmargin       = 3cm
+}
+
+% listings
+\renewcommand{\lstlistingname}{Code}
+
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+\lstset{
+    basicstyle=\small\sffamily,
+    numbers=left,
+    numberstyle=\tiny,
+    numbersep=3pt,
+    stepnumber=1,
+    frame=tb,
+    columns=fullflexible,
+    backgroundcolor=\color{yellow!20},
+    keywordstyle=\color{blue}\bfseries,
+    ndkeywordstyle=\color{darkgray}\bfseries,
+    identifierstyle=\color{black},
+    commentstyle=\color{purple}\ttfamily,
+    stringstyle=\color{red}\ttfamily,
+    numberbychapter=false,
+    showstringspaces=false,
+    breaklines=true,
+    captionpos=b, % put captions at the bottom 
+}
+
+\definecolor{prismgreen}{rgb}{0.12, 0.48, 0.12}
+\lstdefinelanguage{prism}{ % syntax highlight via font
+  keywords={
+    bool,C,ceil,const,ctmc,double,dtmc,endinit,endmodule,endrewards,endsystem,F,false,floor,formula,G,global,I,init,int,label,max,mdp,min,module,nondeterministic,P,Pmin,Pmax,prob,probabilistic,R,rate,rewards,Rmin,Rmax,S,stochastic,system,true,U,X
+  }, 
+  keywordstyle={\bfseries\color{black}}, 
+  numberstyle=\tiny\color{black}, 
+  comment=[l] {//}, morecomment=[s]{/*}{*/}, % single and multi-line 
+  commentstyle= \color{prismgreen}, % dark green 
+  tabsize=4, % tab treatment (going to be fixed in Prism)
+  escapechar=@ % write LaTeX comments escaped by @ symbol 
+} 
+
+% perpage
+\MakePerPage{footnote}
+
+% hyperref
+\hypersetup{%
+  %draft, % = no hyperlinking at all (useful in b/w printouts)
+  colorlinks=true, linktocpage=true, pdfstartpage=3, pdfstartview=FitV,%
+  % uncomment the following line if you want to have black links (e.g., for printing)
+  colorlinks=false, linktocpage=false, pdfstartpage=3, pdfstartview=FitV, pdfborder={0 0 0},%
+  breaklinks=true, pdfpagemode=UseNone, pageanchor=true, pdfpagemode=UseOutlines,%
+  plainpages=false, bookmarksnumbered, bookmarksopen=true, bookmarksopenlevel=1,%
+  hypertexnames=true, pdfhighlight=/O,%nesting=true,%frenchlinks,%
+  urlcolor=webbrown, linkcolor=RoyalBlue, citecolor=webgreen, %pagecolor=RoyalBlue,%
+  %urlcolor=Black, linkcolor=Black, citecolor=Black, %pagecolor=Black,%
 }
 
 % graphicx
