@@ -6,11 +6,16 @@
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
 \usepackage[bottom, para]{footmisc}
+\usepackage{amsmath,amssymb,amsthm}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{listings}
 \usepackage{perpage}
 \usepackage{xcolor}
+\usepackage{wrapfig}
+\usepackage{ifthen}
+\usepackage{scrextend}
+\usepackage{dashrule}
 
 %********************************************************************
 % Packages options
@@ -37,24 +42,28 @@
 \definecolor{darkgray}{rgb}{.4,.4,.4}
 \definecolor{purple}{rgb}{0.65, 0.12, 0.82}
 \lstset{
-    basicstyle=\small\sffamily,
-    numbers=left,
-    numberstyle=\tiny,
-    numbersep=3pt,
-    stepnumber=1,
-    frame=tb,
-    columns=fullflexible,
-    backgroundcolor=\color{yellow!20},
-    keywordstyle=\color{blue}\bfseries,
-    ndkeywordstyle=\color{darkgray}\bfseries,
-    identifierstyle=\color{black},
-    commentstyle=\color{purple}\ttfamily,
-    stringstyle=\color{red}\ttfamily,
-    numberbychapter=false,
-    showstringspaces=false,
-    breaklines=true,
-    captionpos=b, % put captions at the bottom 
+  basicstyle=\small\sffamily,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=3pt,
+  stepnumber=1,
+  frame=tb,
+  columns=fullflexible,
+  backgroundcolor=\color{yellow!20},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  numberbychapter=false,
+  showstringspaces=false,
+  breaklines=true,
+  captionpos=b, % put captions at the bottom 
 }
+%\lstset{
+%  numbersep=5pt,
+%  frame=trbl
+%}
 
 \definecolor{prismgreen}{rgb}{0.12, 0.48, 0.12}
 \lstdefinelanguage{prism}{ % syntax highlight via font
@@ -73,17 +82,64 @@
 \MakePerPage{footnote}
 
 % hyperref
+\definecolor{webgreen}{rgb}{0,.5,0}
+\definecolor{webbrown}{rgb}{.6,0,0}
+\definecolor{RoyalBlue}{cmyk}{1, 0.50, 0, 0}
 \hypersetup{%
   %draft, % = no hyperlinking at all (useful in b/w printouts)
   colorlinks=true, linktocpage=true, pdfstartpage=3, pdfstartview=FitV,%
   % uncomment the following line if you want to have black links (e.g., for printing)
-  colorlinks=false, linktocpage=false, pdfstartpage=3, pdfstartview=FitV, pdfborder={0 0 0},%
+  % colorlinks=false, linktocpage=false, pdfstartpage=3, pdfstartview=FitV, pdfborder={0 0 0},%
   breaklinks=true, pdfpagemode=UseNone, pageanchor=true, pdfpagemode=UseOutlines,%
   plainpages=false, bookmarksnumbered, bookmarksopen=true, bookmarksopenlevel=1,%
   hypertexnames=true, pdfhighlight=/O,%nesting=true,%frenchlinks,%
-  urlcolor=webbrown, linkcolor=RoyalBlue, citecolor=webgreen, %pagecolor=RoyalBlue,%
+  urlcolor=RoyalBlue, linkcolor=black, citecolor=webbrown, %pagecolor=RoyalBlue,%
   %urlcolor=Black, linkcolor=Black, citecolor=Black, %pagecolor=Black,%
 }
 
 % graphicx
 \graphicspath{{img/}}
+
+%********************************************************************
+% New commands
+%********************************************************************
+
+\newcommand{\question}[1]{%
+  \vspace{20pt}%
+  \begin{wrapfigure}{l}{0.1\textwidth}%
+    \vspace{-30pt}%
+    \begin{center}%
+      \includegraphics[scale=1]{hand.jpg}%
+    \end{center}%
+    \vspace{-30pt}%
+  \end{wrapfigure}%
+  \noindent #1%
+}%
+\newcommand{\answer}[1]{%
+  \\[5pt]%
+  \textbf{\underline{Answer:}}%
+  \begin{addmargin}[1em]{1em}% 1em left, 2em right
+    #1%
+    \begin{flushright}%
+      \qedsymbol%
+    \end{flushright}%
+  \end{addmargin}%
+}%
+
+\definecolor{light-gray}{gray}{0.95}
+\newboolean{inlineCodeBackground}
+\setboolean{inlineCodeBackground}{false}
+\newcommand{\prism}[1]{%
+  \ifthenelse{\boolean{inlineCodeBackground}}{%
+    \colorbox{light-gray}{\lstinline[language=prism]{#1}}%
+  }{%
+    \lstinline[language=prism]{#1}%
+  }%
+}%
+\newcommand{\bash}[1]{%
+  \ifthenelse{\boolean{inlineCodeBackground}}{%
+    \colorbox{light-gray}{\lstinline[language=bash]{#1}}%
+  }{%
+    \lstinline[language=bash]{#1}%
+  }%
+}%
