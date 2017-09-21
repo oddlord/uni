@@ -85,5 +85,5 @@
     
     \question{Look at the code we have added to the \prism{SP} module and at the new \prism{PM} module. Make sure you understand how they work.}
     \answer{
-      
+      The \prism{PM} module has the function of wake the \textit{SP} or to put it back to sleep according, in this case, to the current size of the queue. In particular, when in the queue there are at least \prism{q_trigger} elements the modules \prism{PM} and  \prism{SP} can synchronise on the action \prism{sleep2idle} (lines 56, 57 and 87), effectively waking up the \textit{SP} in case it was still asleep, as the action name suggests. If at the moment of 
     }
