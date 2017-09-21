@@ -31,7 +31,7 @@
     A first PRISM model for a DPM based on \cite{qiu2001stochastic} is proposed in Code \ref{lst:power}, as seen in \cite{prism-tutorial3}.
     
     \begin{center}
-      \lstinputlisting[language=prism, caption={PRISM code for the model of a DPM based on \cite{qiu2001stochastic}. Source \cite{prism-tutorial3}.}, label={lst:power}]{code/power.sm}
+      \lstinputlisting[language=prism, caption={PRISM code for the model of a DPM based on \cite{qiu2001stochastic}, with only the \textit{SQ} and the \textit{SP} components. Source \cite{prism-tutorial3}.}, label={lst:power}]{code/power.sm}
     \end{center}
     
     In this first model version shown in Code \ref{lst:power}, only the two modules, for the \textit{SQ} and the \textit{SP} components, are introduced. This is an already working strategy, even without the \textit{PM} component, which would only add a smarter policy for the \textit{SP}'s power management.
@@ -75,4 +75,15 @@
     
   \subsection*{Adding the power management control}
   
+    Now we add to the PRISM model shown in Code \ref{lst:power} and additional module, \prism{PM}, responsible of implementing the Power Manager. The \textit{PM} is the component of a DPM that is charged with waking the \textit{SP} from sleep or putting it back to sleep according to a specific policy that might be dependent of several factors, such as the current state of the \textit{SP} or of the \textit{SQ}.
     
+    Code \ref{lst:power_policy1} shows the updated model with the added \prism{PM} module, which employs a fairly naive policy.
+    
+    \begin{center}
+      \lstinputlisting[language=prism, caption={PRISM code for the model of a DPM based on \cite{qiu2001stochastic}, with the \textit{SQ}, \textit{SP} and \textit{PM} components. Source \cite{prism-tutorial3}.}, label={lst:power_policy1}]{code/power_policy1.sm}
+    \end{center}
+    
+    \question{Look at the code we have added to the \prism{SP} module and at the new \prism{PM} module. Make sure you understand how they work.}
+    \answer{
+      
+    }
