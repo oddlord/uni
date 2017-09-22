@@ -73,6 +73,8 @@
       By selecting the ``Build model'' feature, it can be seen that the state space of this model is made of a total of 21 states. Intuitively, these are made of a state where the \textit{SP} is \textit{idle} and the queue empty and 20 states where the \textit{SP} is \textit{busy} and the queue has a different number of pending requests (from 1 to 20).
     }
     
+  \dashedrule
+  
   \subsection*{Adding the power management control}
   
     Now we add to the PRISM model shown in Code \ref{lst:power} and additional module, \prism{PM}, responsible of implementing the Power Manager. The \textit{PM} is the component of a DPM that is charged with waking the \textit{SP} from sleep or putting it back to sleep according to a specific policy that might be dependent of several factors, such as the current state of the \textit{SP} or of the \textit{SQ}.
@@ -85,5 +87,113 @@
     
     \question{Look at the code we have added to the \prism{SP} module and at the new \prism{PM} module. Make sure you understand how they work.}
     \answer{
-      The \prism{PM} module has the function of wake the \textit{SP} or to put it back to sleep according, in this case, to the current size of the queue. In particular, when in the queue there are at least \prism{q_trigger} elements the modules \prism{PM} and  \prism{SP} can synchronise on the action \prism{sleep2idle} (lines 56, 57 and 87), effectively waking up the \textit{SP} in case it was still asleep, as the action name suggests. If at the moment of 
+      The \prism{PM} module has the function of wake the \textit{SP} or to put it back to sleep according, in this case, to the current size of the queue.
+      
+      In particular, when in the queue there are at least \prism{q_trigger} elements the modules \prism{PM} and  \prism{SP} can synchronise on the action \prism{sleep2idle} (lines 56, 57 and 87), effectively waking up the \textit{SP} in case it was still asleep, as the action name suggests. If, when the awakening is triggered, the queue \prism{q} is empty then the \textit{SP} is switched to the \textit{idle} state, otherwise it's switched directly to the \textit{busy} state, i.e. working on the request on top of the queue.
+      
+      Whenever, instead, the queue becomes empty, the \prism{PM} and \prism{SP} modules can synchronize on the \prism{idle2sleep} action (lines 59 and 90), effectively waking up the \textit{SP}.
+      
+      It is worth noticing how the operations of waking the \textit{SP} up and putting it back to sleep are not immediate but instead, when the corresponding conditions are met, are characterised by rates (\prism{rate_s2i} and \prism{rate_i2s}, respectively). Also, in this second version of the model, the \prism{SP}'s power state is now initialised as 0 (i.e. \textit{sleep} state), since now, thanks to the \prism{PM} module, initialising the \textit{SP} in the \textit{sleep} state wouldn't end up in a deadlock any more.
+    }
+    
+    \question{Now use the simulator to generate a trace through this new model. When you create a new path, you have to specify a value for the constant \prism{q_trigger}, because it is left undefined in the model. Try a value of 5 for now. Does this new model behave as you expect?}
+    \answer{
+      After a few simulation steps, it can be seen that the model actually behaves as expected. In particular, between 0 and 4 requests the \textit{SP} has no other option than staying in the \textit{sleep} state and, thus, the model has just one available transition at each step, that is the arrival of new requests. When the queue reaches 5 requests, the waking condition is met, but sometimes the awakening is not immediate and some additional requests (usually 1 or 2) manage to arrive before the \textit{SP} is properly awaken: this is due the fact that the awaking rate (\prism{rate_s2i}) is slightly smaller than the request arrival rate (\prism{request}), meaning that on average the arrival of a new request is slightly faster than the awakening of \textit{SP}.
+      
+      Similarly, once the queue has been emptied, the \textit{SP} can be switched back to \textit{sleep} right away or it could happen that a request manages to arrive before that happens, forcing the \textit{SP} to serve it first by switching to the \textit{busy} state.
+    }
+    
+  \dashedrule
+    
+  \subsection*{Analysing the model}
+  
+    We'll analyse now various aspects of the model, exploiting the properties and analyses features that PRISM offers.
+    
+    \question{
+      Go to the "Properties" tab of the GUI, create a new constant called T, of type double and with no defined value. Then add the following property:
+      
+      \lstinputlisting[language=prism, numbers=none]{code/q_max_P.pctl}
+    }
+    \answer{
+      The property regarding the full queue added through the PRISM interface is shown in Figure \ref{fig:q_max_property}.
+    	\begin{figure}[h!]
+    		\begin{center}
+    			\includegraphics[scale=0.8]{q_max_property.png}
+    		\end{center}
+    		\caption{Full queue property added in PRISM.}
+    		\label{fig:q_max_property}
+    	\end{figure}
+    }
+    
+    \question{Now, create an \href{http://www.prismmodelchecker.org/manual/RunningPRISM/Experiments}{experiment} based on this property, plotting a graph of its result for \prism{q_trigger} equal to 5 and \prism{T} from 0 up to 20, i.e. for the first 20 seconds of the system.}
+    \answer{
+      The resulting experiment plot, with steps of $0.5$ seconds, is shown in Figure \ref{fig:q_max_plot_0-20}.
+    	\begin{figure}[h!]
+    		\begin{center}
+    			\includegraphics[scale=0.8]{q_max_plot_0-20.eps}
+    		\end{center}
+    		\caption{Experiment plot of the full queue between time 0 and 20.}
+    		\label{fig:q_max_plot_0-20}
+    	\end{figure}
+    }
+    
+    \question{It seems that the transient probability of the queue being full stabilises after a short while. Using another experiment, plot values for the same property on the same graph, this time for \prism{T} from 20 up to 40, and see if the probability remains the same. To confirm this, now create a property to check the long-run probability of the queue being full, using the \href{http://www.prismmodelchecker.org/manual/PropertySpecification/TheSOperator}{S operator}. Right click the new property and select ``Verify''. You will need to give a value for \prism{T} but this is not used so you can enter anything. It turns out that the default iterative method in PRISM (Jacobi) for solving this kind of property does not converge in this case. Switch to the Gauss-Seidel method from the ``Options'' dialog and try again. Check that your result matches the graph.}
+    \answer{
+      From the extended plot shown in Figure \ref{fig:q_max_plot_0-40} it seems that the probability of reaching a full queue indeed stabilises.
+      
+    	\begin{figure}[h!]
+    		\begin{center}
+    			\includegraphics[scale=0.8]{q_max_plot_0-40.eps}
+    		\end{center}
+    		\caption{Experiment plot of the full queue between time 0 and 40.}
+    		\label{fig:q_max_plot_0-40}
+    	\end{figure}
+    	
+    	In order to check the steady-state probability of the queue being full in a more direct fashion, the following property, that exploits the S operator, can be used:
+    	
+      \lstinputlisting[language=prism, numbers=none]{code/q_max_S.pctl}
+      
+      By trying to evaluate the property using the default iterative method (Jacobi) the evaluation indeed does not converge and PRISM prompts an error. Instead, using the Gauss-Seidel iterative method, the computed steady-state probability of the queue being full results being $0.0010287642322871614$. Watching at the plot in Figure \ref{fig:q_max_plot_0-40} it looks like the probability of a full queue stabilises slightly above $0.0010$, which matches with the obtained result.
+    }
+    
+    \question{Read the section on \href{http://www.prismmodelchecker.org/manual/ThePRISMLanguage/CostsAndRewards}{costs and rewards} in the manual. Then, look at the rewards that have already been defined in this model.}
+    \answer{
+      The only reward that has been defined in the model in Code \ref{lst:power_policy1} is \prism{queue_size} which, at any given time, is equivalent to the current number of requests present in the queue.
+    }
+    
+    \question{
+      Add these two properties which can be used to compute the transient and long-run expected queue size, respectively:
+      
+      \lstinputlisting[language=prism, numbers=none]{code/queue_size.pctl}
+    }
+    \answer{
+      The properties regarding the queue size added through the PRISM interface are shown in Figure \ref{fig:queue_size_properties}.
+    	\begin{figure}[h!]
+    		\begin{center}
+    			\includegraphics[scale=0.8]{queue_size_properties.png}
+    		\end{center}
+    		\caption{Queue size properties added in PRISM.}
+    		\label{fig:queue_size_properties}
+    	\end{figure}
+    }
+    
+    \question{Plot the expected queue size at time \prism{T}, for the first 20 seconds of the model. As above, also compute the long-run value and check that it matches the results on the graph.}
+    \answer{
+      The experiment plot is shown in Figure \ref{fig:queue_size_plot}.
+      
+    	\begin{figure}[h!]
+    		\begin{center}
+    			\includegraphics[scale=0.8]{queue_size_plot.eps}
+    		\end{center}
+    		\caption{Experiment plot of the queue size between time 0 and 20.}
+    		\label{fig:queue_size_plot}
+    	\end{figure}
+    	
+    	Evaluating instead the steady-state property, it can be seen that the number of requests in the queue at steady-state is $3.2038846166301242$, which seems to match to the transient results shown in the plot in Figure \ref{fig:queue_size_plot}.
+    }
+    
+    % TODO: provare con phantom elements
+    \question{Now create some experiments to analyse the transient and/or long-run expected queue size for a range of different values of the constant \prism{q_trigger}. How does the performance of the system vary as this changes? What is the ``best'' value of \prism{q_trigger}?}
+    \answer{
+      
     }

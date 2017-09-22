@@ -15,6 +15,7 @@
 \usepackage{wrapfig}
 \usepackage{ifthen}
 \usepackage{scrextend} % add margin to answers
+\usepackage{dashrule}
 
 %********************************************************************
 % Packages options
@@ -48,7 +49,7 @@
   stepnumber=1,
   frame=tb,
   columns=fullflexible,
-  backgroundcolor=\color{yellow!20},
+  backgroundcolor=\color{yellow!15},
   keywordstyle=\color{blue}\bfseries,
   ndkeywordstyle=\color{darkgray}\bfseries,
   identifierstyle=\color{black},
@@ -115,7 +116,7 @@
   \noindent #1%
 }%
 \newcommand{\answer}[1]{%
-  \\[5pt]%
+  \vspace{5pt}\par\noindent
   \textbf{\underline{Answer:}}%
   \begin{addmargin}[1em]{1em}% 1em left, 2em right
     #1%
@@ -141,4 +142,8 @@
   }{%
     \lstinline[language=bash]{#1}%
   }%
+}%
+
+\newcommand{\dashedrule}{%
+  \noindent\hdashrule{\textwidth}{1pt}{1.5mm}%
 }%
