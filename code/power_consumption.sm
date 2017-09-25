@@ -44,12 +44,20 @@ const double rate_s2i = 1/1.6;
 // Rate of switching from idle to sleep (average transition time = 0.67s)
 const double rate_i2s = 1/0.67;
 
+const double rate_consume_sleep = 0.13;
+const double rate_consume_idle = 0.95;
+const double rate_consume_busy = 2.15;
+
 module SP
 	
 	// Power state of SP: 0=sleep, 1=idle, 2=busy
 	sp : [0..2] init 0;
 	
 	// Respond to controls from power manager (PM):
+
+	[consume_sleep] sp=0 -> rate_consume_sleep : true;
+	[consume_idle] sp=1 -> rate_consume_idle : true;
+	[consume_busy] sp=2 -> rate_consume_busy : true;
 	
 	// Switch from sleep state to idle state
 	// (in fact, if the queue is non-empty, go straight to "busy" , rather than "idle")
@@ -99,3 +107,19 @@ rewards "queue_size"
 	true : q;
 endrewards
 
+rewards "queue_size_coefficient"
+	q_trigger=0 : 0;
+	q_trigger!=0 : q/q_trigger;
+endrewards
+
+rewards "lost"
+	[request] q=q_max : 1;
+endrewards
+
+rewards "consumption"
+	[sleep2idle] true : 7;
+	[idle2sleep] true : 0.067;
+	[consume_sleep] true : 1;
+	[consume_idle] true : 1;
+	[consume_busy] true : 1;
+endrewards

@@ -274,15 +274,73 @@
       
       \lstinputlisting[language=prism, numbers=none]{code/consumption_reward.sm}
       
-      Experiment results are shown in Figure \ref{fig:consumption_plot}.
+      Experiment results are shown in Figure \ref{fig:consumption_policy1_plot}.
       
     	\begin{figure}[h!]
     		\begin{center}
-    			\includegraphics[scale=0.45]{consumption_plot.eps}
+    			\includegraphics[scale=0.45]{consumption_policy1_plot.eps}
     		\end{center}
     		\caption{Experiment plot of the cumulative energy consumption between time 0 and 40 and for q\_trigger between 0 and 20.}
-    		\label{fig:consumption_plot}
+    		\label{fig:consumption_policy1_plot}
     	\end{figure}
       
       As expected, the cumulative energy consumption grows as time goes on, but it can also be observed that the energy consumption is lower for higher values of \prism{q_trigger}, which is obvious considering that in these scenarios the \textit{SP} spends, on average, more time in the \textit{sleep} state, consuming less energy.
     }
+    
+  \dashedrule
+  
+  \subsection*{Extensions}
+  
+    \question{
+      Replace the PM module in the existing model with the following:\\
+      
+      \lstinputlisting[language=prism, numbers=none]{code/PM_stochastic_policy.sm}
+    }
+    \answer{
+      The model with stochastic policy loaded into PRISM is shown in Figure \ref{fig:loaded_model_stochastic_policy}.
+    	\begin{figure}[h!]
+    		\begin{center}
+    			\includegraphics[scale=0.35]{loaded_model_stochastic_policy.png}
+    		\end{center}
+    		\caption{Model with stochastic policy loaded into PRISM.}
+    		\label{fig:loaded_model_stochastic_policy}
+    	\end{figure}
+    }
+    
+    \question{How well does this power management system perform? What effect does the value of the probability \prism{p_sleep} have?}
+    \answer{
+      The results of the experiments concerning the cumulative energy consumption with the stochastic policy are shown in Figure \ref{fig:consumption_stochastic_plot}.
+      
+    	\begin{figure}[h!]
+    		\begin{center}
+    			\includegraphics[scale=0.45]{consumption_stochastic_plot.eps}
+    		\end{center}
+    		\caption{Experiment plot of the cumulative energy consumption employing the stochastic policy, between time 0 and 40 and for p\_sleep between 0 and 1, with step $0.1$.}
+    		\label{fig:consumption_stochastic_plot}
+    	\end{figure}
+      
+      Again, the energy consumption grows as the time goes on, but also it tends to be lower for higher values of \prism{p_sleep}, yielding top performance when \prism{p_sleep}=1, i.e. when the \textit{SP} always gets put to sleep after the queue has been emptied. On top of that, we can notice that while for the previous simpler policy the energy consumption, after 40 seconds, could reach, on average, almost 140 units (see Figure \ref{fig:consumption_policy1_plot}), with this new policy the maximum at \prism{T}=40 is $32.392$, for \prism{p_sleep}=0, making this second policy way more performing than the previous one.
+    }
+    
+    \question{Can you think of any ways of improving these power management strategies? Implement them in the PRISM model and see how well they perform.}
+    \answer{
+      A possible way of minimising even further the energy consumption is to reverse idea behind the stochastic policy introduced previously. In particular, we now want to always put the \textit{SP} to sleep when the queue has been emptied and wake it up only when the queue is full but only with a certain probability. This policy is implemented by the following code for the \prism{PM} module:
+      
+      \lstinputlisting[language=prism, numbers=none]{code/PM_custom_policy.sm}
+      
+      The results of the experimentation with this new policy are shown in Figure \ref{fig:consumption_custom_plot}.
+      
+    	\begin{figure}[h!]
+    		\begin{center}
+    			\includegraphics[scale=0.45]{consumption_custom_plot.eps}
+    		\end{center}
+    		\caption{Experiment plot of the cumulative energy consumption employing a new custom policy, between time 0 and 40 and for p\_sleep between 0 and 1.}
+    		\label{fig:consumption_custom_plot}
+    	\end{figure}
+      
+      It can be observed that, by increasing the value of \prism{p_sleep}, i.e. the probability of remaining asleep even with a full queue, the cumulated energy consumption tends to be lower. This policy basically tries to minimise the number of times the \textit{SP} wakes up, being the wake up process a highly consuming action. Clearly, with this policy the number of lost requests is expected to be higher, but in a scenario where energy consumption is a central problem and some lost request is not such a big deal, this might be a good solution. In particular, the ``best'' case would be that with \prism{p_sleep}=1, but that would mean that the \textit{SP} never wakes up, which would be unrealistic.
+      
+      In order to further analyse the model, and devise smarter policies, both the energy consumption and the number of lost requests should be taken into account, in order to find the best trade-off.
+    }
+    
+  \dashedrule

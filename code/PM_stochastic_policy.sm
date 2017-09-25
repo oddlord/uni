@@ -1,0 +1,19 @@
+// Probability of ordering the SP to sleep when queue empty
+const double p_sleep;
+
+module PM
+	
+	// i2s: true when idle2sleep command should be issued
+	i2s : bool init false;
+	
+	// Updates to i2s variable triggered by request arrivals/services
+	[serve_last] true -> p_sleep : (i2s'=true) + 1-p_sleep : (i2s'=false);
+	[request] true -> (i2s'=false);
+	
+	// Send idle2sleep command to SP (when queue empty, with probability p_sleep)
+	[idle2sleep] i2s -> (i2s'=false);
+	
+	// Send sleep2idle command to SP (when queue is full)
+	[sleep2idle] q=q_max -> true;
+	
+endmodule

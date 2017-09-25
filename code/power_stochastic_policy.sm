@@ -44,19 +44,27 @@ const double rate_s2i = 1/1.6;
 // Rate of switching from idle to sleep (average transition time = 0.67s)
 const double rate_i2s = 1/0.67;
 
+const double rate_consume_sleep = 0.13;
+const double rate_consume_idle = 0.95;
+const double rate_consume_busy = 2.15;
+
 module SP
 	
 	// Power state of SP: 0=sleep, 1=idle, 2=busy
 	sp : [0..2] init 0;
 	
 	// Respond to controls from power manager (PM):
+
+	[consume_sleep] sp=0 -> rate_consume_sleep : true;
+	[consume_idle] sp=1 -> rate_consume_idle : true;
+	[consume_busy] sp=2 -> rate_consume_busy : true;
 	
 	// Switch from sleep state to idle state
 	// (in fact, if the queue is non-empty, go straight to "busy" , rather than "idle")
 	[sleep2idle] sp=0 & q=0 -> rate_s2i : (sp'=1);
 	[sleep2idle] sp=0 & q>0 -> rate_s2i : (sp'=2);
 	// Switch from idle state to sleep state
-	[idle2sleep] sp=1 -> rate_i2s : (sp'=0);
+	[idle2sleep] sp!=0 -> rate_i2s : (sp'=0);
 	
 	// Synchronise with service queue (SQ):
 	
@@ -78,16 +86,25 @@ endmodule
 // Controls power state of service provider
 // (this is done via synchronisation on idle2sleep/sleep2idle actions)
 
-// Bound on queue size, above which sleep2idle command is sent
-const int q_trigger;
+// Probability of ordering the SP to sleep when queue empty
+const double p_sleep;
 
 module PM
 	
-	// Send sleep2idle command to SP (when queue is of size q_trigger or greater)
-	[sleep2idle] q>=q_trigger -> true;
+	// i2s: true when idle2sleep command should be issued
+	i2s : bool init false;
 	
-	// Send idle2sleep command to SP (when queue is empty)
+	// Updates to i2s variable triggered by request arrivals/services
+	[serve] true -> p_sleep : (i2s'=true) + 1-p_sleep : (i2s'=false);
+	[request] true -> (i2s'=false);
+	
+	// Send idle2sleep command to SP (when queue empty)
 	[idle2sleep] q=0 -> true;
+
+	[idle2sleep] q>0 & q<q_max & i2s -> true;
+	
+	// Send sleep2idle command to SP (when queue is full)
+	[sleep2idle] q=q_max -> true;
 	
 endmodule
 
@@ -99,3 +116,15 @@ rewards "queue_size"
 	true : q;
 endrewards
 
+
+rewards "lost"
+	[request] q=q_max : 1;
+endrewards
+
+rewards "consumption"
+	[sleep2idle] true : 7;
+	[idle2sleep] true : 0.067;
+	[consume_sleep] true : 1;
+	[consume_idle] true : 1;
+	[consume_busy] true : 1;
+endrewards
