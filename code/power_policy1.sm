@@ -99,3 +99,16 @@ rewards "queue_size"
 	true : q;
 endrewards
 
+rewards "queue_size_coefficient"
+	q_trigger=0 : 0;
+	q_trigger!=0 : q/q_trigger;
+endrewards
+
+rewards "lost"
+	[request] q=q_max : 1;
+endrewards
+
+rewards "consumption"
+	[sleep2idle] true : 7;
+	[idle2sleep] true : 0.067;
+endrewards

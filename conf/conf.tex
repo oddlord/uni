@@ -16,6 +16,8 @@
 \usepackage{ifthen}
 \usepackage{scrextend} % add margin to answers
 \usepackage{dashrule}
+\usepackage{epstopdf}
+\usepackage{placeins}
 
 %********************************************************************
 % Packages options
@@ -114,12 +116,14 @@
     \vspace{-30pt}%
   \end{wrapfigure}%
   \noindent #1%
+  \FloatBarrier
 }%
 \newcommand{\answer}[1]{%
   \vspace{5pt}\par\noindent
   \textbf{\underline{Answer:}}%
   \begin{addmargin}[1em]{1em}% 1em left, 2em right
     #1%
+    \FloatBarrier
     \begin{flushright}%
       \qedsymbol%
     \end{flushright}%

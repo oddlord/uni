@@ -1,0 +1,3 @@
+[consume_sleep] sp=0 -> rate_consume_sleep : true;
+[consume_idle] sp=1 -> rate_consume_idle : true;
+[consume_busy] sp=2 -> rate_consume_busy : true;

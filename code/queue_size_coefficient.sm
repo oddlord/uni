@@ -1,0 +1,4 @@
+rewards "queue_size_coefficient"
+	q_trigger=0 : 0;
+	q_trigger!=0 : q/q_trigger;
+endrewards

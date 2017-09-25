@@ -1,0 +1,7 @@
+rewards "consumption"
+	[sleep2idle] true : 7;
+	[idle2sleep] true : 0.067;
+	[consume_sleep] true : 1;
+	[consume_idle] true : 1;
+	[consume_busy] true : 1;
+endrewards

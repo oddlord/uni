@@ -130,7 +130,7 @@
       The resulting experiment plot, with steps of $0.5$ seconds, is shown in Figure \ref{fig:q_max_plot_0-20}.
     	\begin{figure}[h!]
     		\begin{center}
-    			\includegraphics[scale=0.8]{q_max_plot_0-20.eps}
+    			\includegraphics[scale=0.45]{q_max_plot_0-20.eps}
     		\end{center}
     		\caption{Experiment plot of the full queue between time 0 and 20.}
     		\label{fig:q_max_plot_0-20}
@@ -143,7 +143,7 @@
       
     	\begin{figure}[h!]
     		\begin{center}
-    			\includegraphics[scale=0.8]{q_max_plot_0-40.eps}
+    			\includegraphics[scale=0.45]{q_max_plot_0-40.eps}
     		\end{center}
     		\caption{Experiment plot of the full queue between time 0 and 40.}
     		\label{fig:q_max_plot_0-40}
@@ -168,6 +168,7 @@
     }
     \answer{
       The properties regarding the queue size added through the PRISM interface are shown in Figure \ref{fig:queue_size_properties}.
+      
     	\begin{figure}[h!]
     		\begin{center}
     			\includegraphics[scale=0.8]{queue_size_properties.png}
@@ -183,7 +184,7 @@
       
     	\begin{figure}[h!]
     		\begin{center}
-    			\includegraphics[scale=0.8]{queue_size_plot.eps}
+    			\includegraphics[scale=0.45]{queue_size_plot.eps}
     		\end{center}
     		\caption{Experiment plot of the queue size between time 0 and 20.}
     		\label{fig:queue_size_plot}
@@ -192,8 +193,96 @@
     	Evaluating instead the steady-state property, it can be seen that the number of requests in the queue at steady-state is $3.2038846166301242$, which seems to match to the transient results shown in the plot in Figure \ref{fig:queue_size_plot}.
     }
     
-    % TODO: provare con phantom elements
     \question{Now create some experiments to analyse the transient and/or long-run expected queue size for a range of different values of the constant \prism{q_trigger}. How does the performance of the system vary as this changes? What is the ``best'' value of \prism{q_trigger}?}
     \answer{
+      Transient analysis results between time 0 and 40 and for \prism{q_trigger} between 0 and 21 are shown in Figure \ref{fig:queue_size-q_trigger_plot_I}. The last value, \prism{q_trigger}=21, has been included to show what happens in a scenario where the \textit{SP} never wakes.
       
+    	\begin{figure}[h!]
+    		\begin{center}
+    			\includegraphics[scale=0.45]{queue_size-q_trigger_plot_I.eps}
+    		\end{center}
+    		\caption{Experiment plot of the queue size between time 0 and 40 and for q\_trigger between 0 and 21.}
+    		\label{fig:queue_size-q_trigger_plot_I}
+    	\end{figure}
+      
+      As expected, the average queue size is higher for higher values of \prism{q_trigger}. After some time this value tends to stabilise, although for higher values of \prism{q_trigger} it seems as it needs more time in order to reach the steady-state. For \prism{q_trigger}=21, as expected, the queue fills completely and never gets the change to get emptied. According to the plot in Figure \ref{fig:queue_size-q_trigger_plot_I} we could say that the ``best'' values for \prism{q_trigger} are the lowest (from 0 to 5), since for those values the average queue size stabilises earlier, thus producing a more predictable behaviour.
+      
+      In Figure \ref{fig:queue_size-q_trigger_plot_S} is instead shown the average queue size at steady-state, for the same range of values for \prism{q_trigger}.
+      
+    	\begin{figure}[h!]
+    		\begin{center}
+    			\includegraphics[scale=0.45]{queue_size-q_trigger_plot_S.eps}
+    		\end{center}
+    		\caption{Experiment plot of the queue size at steady-state for q\_trigger between 0 and 21.}
+    		\label{fig:queue_size-q_trigger_plot_S}
+    	\end{figure}
+      
+      As expected, the average queue size rises as \prism{q_trigger} grows and it's exactly 20 for \prism{q_trigger}$\geq 21$. But is can also be observed that the growth is not exactly linear: for example for \prism{q_trigger}=1 the average queue size is $1.734$, while for \prism{q_trigger}=3 it's $2.383$.
+      
+      Ideally, we would like to have the queue as empty as possible at any time, because that would mean that requests are handled rapidly and there is more room for future requests, while at the same time consuming as few resources as possible, for example by keeping the \textit{SP} in the \textit{sleep} state for longer. In Figure \ref{fig:queue_size_coefficient_plot} we are showing then the \textit{queue size coefficient}, evaluated as \prism{q/q_trigger}, in order to find the best trade-off between these two factors. In particular, the coefficient is added to the PRISM model by including the following reward structure:
+      
+      \lstinputlisting[language=prism, numbers=none]{code/queue_size_coefficient.sm}
+      
+    	\begin{figure}[h!]
+    		\begin{center}
+    			\includegraphics[scale=0.45]{queue_size_coefficient_plot.eps}
+    		\end{center}
+    		\caption{Experiment plot of the queue size coefficient at steady-state for q\_trigger between 0 and 21.}
+    		\label{fig:queue_size_coefficient_plot}
+    	\end{figure}
+      
+      The results in Figure \ref{fig:queue_size_coefficient_plot} shows that, for \prism{q_trigger}=1 and 2, the coefficient is above 1, meaning that the average queue size is usually higher than the value of \prism{q_trigger}. For \prism{q_trigger}$\geq 3$ instead, the coefficient is lower than zero and decreasing, except for \prism{q_trigger}=21, which becomes higher again. According to this experiment then, we are able to say that the ``best'' value for \prism{q_trigger} is $20$, since in this case the queue size coefficient is at it's lowest (looking at the plot in Figure \ref{fig:queue_size-q_trigger_plot_S} we can see that for \prism{q_trigger}=20 the average queue size is $10.126$).
+    }
+    
+    \question{Add a second \href{http://www.prismmodelchecker.org/manual/ThePRISMLanguage/CostsAndRewards}{reward structure} to the model called ``lost'', which assigns 1 to every transition of the model labelled with action \prism{request} from a state where the queue is full.}
+    \answer{
+      The reward ``lost'' is simply included in the PRISM model by adding at the end the following lines:
+      
+      \lstinputlisting[language=prism, numbers=none]{code/lost.sm}
+    }
+    
+    \question{Now create a new property to check the expected \textit{cumulated} reward up until time \prism{T}. Don't forget to specify which reward structure you want in the property. (You might want to look at \href{http://www.prismmodelchecker.org/manual/PropertySpecification/Reward-basedProperties}{this section} of the manual.) How does this measure vary for different values of \prism{q_trigger}?}
+    \answer{
+      In Figure \ref{fig:lost_plot} are shown the results for the cumulative lost requests between time 0 and 40 and for values of \prism{q_trigger} between 0 and 20. The experiment is conducted using the following property:
+      
+      \lstinputlisting[language=prism, numbers=none]{code/lost_cumulative.pctl}
+      
+    	\begin{figure}[h!]
+    		\begin{center}
+    			\includegraphics[scale=0.45]{lost_plot.eps}
+    		\end{center}
+    		\caption{Experiment plot of the cumulative lost requests between time 0 and 40 and for q\_trigger between 0 and 20.}
+    		\label{fig:lost_plot}
+    	\end{figure}
+      
+      As expected, the cumulative lost requests are more as time goes on, but also for higher values of \prism{q_trigger} this values grows at higher rates. This is intuitive since when the \textit{SP} only wakes up after more requests have arrived in the queue, the chances of reaching the queue saturation are higher.
+    }
+    
+    Let's imagine now to introduce a measure of the actual power consumption. In particular, energy consumption rates are $0.13$, $0.95$ and $2.15$, for the power states \textit{sleep}, \textit{idle} and \textit{busy}, respectively. On top of that, switching from \textit{sleep} to \textit{idle} costs $7.0$ energy units, while from \textit{idle} to \textit{sleep} costs $0.067$ energy units.
+    
+    \question{Add a third reward structure to the model representing the power consumption. Use a cumulative reward property to investigate the energy consumption over time of the system.}
+    \answer{
+      First of all, in order to add the desired reward structure, the following rates have to be included in the model:
+      
+      \lstinputlisting[language=prism, numbers=none]{code/consumption_rates.sm}
+      
+      Then, inside the \prism{SP} module, the following transitions have to be included:
+      
+      \lstinputlisting[language=prism, numbers=none]{code/consumption_transitions.sm}
+      
+      Finally, the ``consumption'' reward structure can be defined as follows:
+      
+      \lstinputlisting[language=prism, numbers=none]{code/consumption_reward.sm}
+      
+      Experiment results are shown in Figure \ref{fig:consumption_plot}.
+      
+    	\begin{figure}[h!]
+    		\begin{center}
+    			\includegraphics[scale=0.45]{consumption_plot.eps}
+    		\end{center}
+    		\caption{Experiment plot of the cumulative energy consumption between time 0 and 40 and for q\_trigger between 0 and 20.}
+    		\label{fig:consumption_plot}
+    	\end{figure}
+      
+      As expected, the cumulative energy consumption grows as time goes on, but it can also be observed that the energy consumption is lower for higher values of \prism{q_trigger}, which is obvious considering that in these scenarios the \textit{SP} spends, on average, more time in the \textit{sleep} state, consuming less energy.
     }
