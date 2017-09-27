@@ -10,8 +10,19 @@
     
     In this scenario fits the project \textit{LINFA} (i.e. \textit{Logistica INtelligent del FArmaco}, or \textit{Smart Drug Logistic}, from Italian), that aims to develop an IT system for support to processes of drugs logistic management, in the context of healthcare or local companies. LINFA aims to increase efficiency, effectiveness and predictability of the process of drugs and medical devices restocking, within healthcare structures, through methods of predictive analysis and optimization, advanced logistic techniques and tracking features through the use of RFID technologies or the integration of healthcare and administrative information stream.
     
-    For sake of simplicity, the following assumptions will be made:
+    For sake of simplicity, the following assumptions will be made in order to build a model:
     
     \begin{itemize}
-      \item 
+      \item a single ward is present;
+      \item the ward has a fixed number of beds and a fixed maximum storage capacity;
+      \item patients are indistinguishable;
+      \item there is only one type of drug;
+      \item patients can arrive through emergencies (i.e. according to a random variable) or scheduled examinations (i.e. according to a fixed constant);
+      \item each day, patients can leave the ward with a certain probability;
+      \item restock orders are issued at the end of each day and arrive immediately.
     \end{itemize}
+    
+    \question{Try to build a model of a ward taking into consideration the previous assumptions. Consider maximum 40 beds in the ward and a stock capacity of 40 drugs units. Model the restock orders to be either of 0, 10, 20, 30 or 40 drug's units and with a uniform distribution. Consider also that each day each patient consumes a drug's unit.}
+    \answer{
+      
+    }
