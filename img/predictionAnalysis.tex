@@ -1,0 +1,29 @@
+\begin{center}
+	\scalebox{0.78}{\begin{tikzpicture}
+	    \tikzstyle{state}=[circle,rounded corners,draw,fill=black!0,text height=1.7ex,text depth=0.3ex,anchor=base,text centered,text width=5mm, minimum height=5mm]
+		\def\innercirclesize{4mm} 
+	
+		\node [state] (stateA) at (0, 2cm) { $A$};
+		\draw[thick,dashed] (0, 2.13cm) circle (\innercirclesize);
+		\node [state] (stateB) at (0, 0) { $B$};
+		\draw[thick,dashed] (0, 0.13cm) circle (\innercirclesize);
+		\node [state] (stateC) at (2cm, 0.5cm) { $C$};
+		\node [state] (stateD) at (2cm, 2.5cm) { $D$};
+		\node [state] (stateE) at (4cm, 2.5cm) {$E$};
+		\node [state,fill=gray] (stateF) at (4cm, 0.5cm) { $F$};
+	
+	
+		\draw[->] (stateA) to (stateC);
+		\draw[->] (stateA) to (stateD);
+		\draw[->] (stateB) to (stateC);
+		\draw[->] (stateC) to (stateF);
+		\draw[->] (stateD) to (stateC);
+		\draw[->] (stateD) to (stateF);
+		\draw[->] (stateF) to (stateE);
+		\draw[->] (stateE) to (stateD);
+		
+		\node [above=-0.15cm of stateA] {$\pi_A = 0.7$};
+		\node [above=-0.15cm of stateB] {$\pi_B = 0.3$};
+	
+	\end{tikzpicture}}
+\end{center}
