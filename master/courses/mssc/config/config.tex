@@ -1,0 +1,85 @@
+%********************************************************************
+% Packages
+%********************************************************************
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancybox}
+\usepackage[bottom, para]{footmisc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{packages/mathpartir}
+\usepackage{multirow}
+\usepackage{pgf}
+\usepackage{stmaryrd}
+\usepackage{textcomp}
+\usepackage{tikz}
+\usepackage{titlesec}
+
+%********************************************************************
+% Packages options
+%********************************************************************
+
+% geometry
+\usepackage{geometry}
+\geometry{
+    a4paper,
+    ignoremp,
+    bindingoffset = 1cm, 
+    textwidth     = 13.5cm,
+    textheight    = 21.5cm,
+    lmargin       = 1cm,
+    rmargin		  = 3cm,
+    tmargin       = 2cm,
+    bmargin       = 3cm
+}
+
+% graphicx
+\graphicspath{{img/}}
+
+% tikz
+\usetikzlibrary{shapes,shapes.geometric,arrows,fit,calc,positioning,automata}
+\tikzset{elliptic state/.style={draw,ellipse}}
+
+%********************************************************************
+% New commands
+%********************************************************************
+
+\newcommand{\enunciato}[2]{
+    \begin{center}
+        \doublebox{
+            \begin{minipage}{#1\textwidth}
+                #2
+            \end{minipage}
+        }
+    \end{center}
+}
+
+\newcommand{\dotxrightarrow}[1]{\;\bullet\!\!\!\xrightarrow{#1}}
+
+\newcommand{\doublebracket}[1]{\llbracket #1 \rrbracket}
+
+\newcommand{\orbar}{\;|\;}
+
+\newcommand{\boxedaligned}[2]{
+    \begin{center}
+        \fbox{
+            \begin{minipage}{#1\linewidth}
+                $\begin{aligned} #2 \end{aligned}$
+            \end{minipage}
+        }
+    \end{center}
+}
+
+\newcount\tabs
+\newcommand{\tb}[1]{
+    \tabs=0
+    \loop
+        \advance\tabs by 1
+        \qquad
+        \ifnum\tabs<#1
+    \repeat
+}

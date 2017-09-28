@@ -1,0 +1,189 @@
+\section*{Esercizio 4.10}
+
+    \enunciato{1}{
+        Si dimostrino le seguenti uguaglianze usando il sistema di inferenza della semantica assiomatica:\\
+        \\
+        $\begin{aligned}
+            c)& \ E=F \Longrightarrow E^* = F^*\\
+            d)& \ E^* +1=E^*\\
+            e)& \ E^* + E = E^*
+        \end{aligned}$
+    }
+    
+    Sfruttando gli assiomi e le due regole in Tabella 4.4 delle dispense, si dimostrano le uguaglianze proposte.\\
+    
+    \begin{description}
+        \item[$c) \ E=F \Longrightarrow E^* = F^*$] \hfill \\
+            Come già mostrato nelle dispense, si può dimostrare che l'uguaglianza $=$ è riflessiva e simmetrica:
+            \begin{equation}
+                \inferrule* [Right={$(regola1)$}]
+                    {E+E=E \\ E+E=E}
+                    {E=E \\ E=E+E}
+                \label{eq:riflessività}
+            \end{equation}
+            \begin{equation}
+                \inferrule* [Right={$(regola1)$}]
+                    {E=F \\ E=F}
+                    {F=F \\ F=E}
+                \label{eq:simmetria}
+            \end{equation}
+            Da qui in avanti useremo i risultati della (\ref{eq:riflessività}) e della (\ref{eq:simmetria}) come fossero regole, indicandole con $(rifl)$ e $(simm)$, rispettivamente.\\
+            \\
+            Per dimostrare quindi che $E=F \Longrightarrow E^* = F^*$ basta applicare la regola della sostituzione assumendo riflessività e simmetria della relazione $=$.
+            \begin{equation}
+                \inferrule* [Right={$(simm)$}]
+                    {\inferrule* [Right={$(regola1)$}]
+                        {E=F \\ \inferrule* [Right={$(rifl)$}]
+                            { }
+                            {E^* = E^*}
+                        }
+                        {F^*=E^*}
+                    }
+                    {E^* = F^*}
+            \end{equation}
+        \item[$d) \ E^* +1=E^*$] \hfill \\
+            Dimostriamo innanzitutto la sostitutività rispetto alla somma (che indicheremo con $(sost+)$) come suggerito dalla Proposizione 4.13 delle dispense:
+            \begin{equation}
+                \inferrule* [Right={$(simm)$}]
+                    {\inferrule* [Right={$(regola1)$}]
+                        {G=H \\ \inferrule* [Right={$(regola1)$}]
+                            {E=F \\ \inferrule* [Right={$(rifl)$}]
+                                { }
+                                {E+G=E+G}
+                            }
+                            {F+G=E+G}
+                        }
+                        {F+H=E+G}
+                    }
+                    {E+G=F+H}
+            \end{equation}
+            La dimostrazione che $E^*+1=E^*$ si ottiene quindi come segue (abbiamo diviso la dimostrazione in quattro parti per questioni di leggibilità):
+            \begin{equation}
+                \scriptsize
+                \inferrule* [Right={$(simm)$}]
+                    {\inferrule* [Right={$(sost+)$}]
+                        {\inferrule* [right={$(unfolding)$}]
+                            { }
+                            {E^*=1+E^*E}\\
+                        \inferrule* [Right=$(rifl)$]
+                            { }
+                            {1=1}
+                        }
+                        {E^*+1=1+E^*E+1}
+                    }
+                    {1+E^*E+1=E^*+1}
+                \label{eq:1+E^*E+1=E^*+1}
+            \end{equation}
+            \begin{equation}
+                \scriptsize
+                \inferrule* [Right={$(regola1)$}]
+                    {\inferrule* [right={$(comm+)$}]
+                        { }
+                        {1+E^*E+1=1+1+E^*E}\\
+                    \inferrule* [Right=(\ref{eq:1+E^*E+1=E^*+1})]
+                        { }
+                        {1+E^*E+1=E^*+1}
+                    }
+                    {1+1+E^*E=E^*+1}
+                \label{eq:1+1+E^*E=E^*+1}
+            \end{equation}
+            \begin{equation}
+                \scriptsize
+                \inferrule* [Right={$(regola1)$}]
+                    {\inferrule* [right={$(idem+)$}]
+                        { }
+                        {1+1=1}\\
+                    \inferrule* [Right=(\ref{eq:1+1+E^*E=E^*+1})]
+                        { }
+                        {1+1+E^*E=E^*+1}
+                    }
+                    {1+E^*E=E^*+1}
+                \label{eq:1+E^*E=E^*+1}
+            \end{equation}
+            \begin{equation}
+                \scriptsize
+                \inferrule* [Right={$(simm)$}]
+                    {\inferrule* [Right={$(regola1)$}]
+                        {\inferrule* [right={$(simm)$}]
+                            {\inferrule* [right={$(unfolding)$}]
+                                { }
+                                {E^*=1+E^*E}
+                            }
+                            {1+E^*E=E^*}\\
+                        \inferrule* [Right=(\ref{eq:1+E^*E=E^*+1})]
+                            { }
+                            {1+E^*E=E^*+1}
+                        }
+                        {E^*=E^*+1}
+                    }
+                    {E^*+1=E^*}
+                \label{eq:E^*+1=E^*}
+            \end{equation}
+            In parole povere, si è fatto un primo passo di unfolding di $E^*$, ci si è sommato $1$ e si è fatto vedere che i due $1$ si riducono ad un solo $1$. Quindi abbiamo rimesso le cose a posto per avere la formulazione finale richiesta.
+        \item[$e) \ E^* + E = E^*$] \hfill \\
+            L'idea di quest'ultima dimostrazione è sulla falsariga della dimostrazione precedente, ovvero si dimostra facendo un passo di unfolding e poi rimettendo tutto a posto. Ad un certo punto sarà molto utile anche sfruttare il risultato della dimostrazione precedente.
+            \begin{equation}
+                \scriptsize
+                \inferrule* [Right={$(simm)$}]
+                    {\inferrule* [Right={$(sost+)$}]
+                        {\inferrule* [right={$(unfolding)$}]
+                            { }
+                            {E^*=1+E^*E}\\
+                        \inferrule* [Right={$(simm)$}]
+                            {\inferrule* [Right={$(neutro;)$}]
+                                { }
+                                {1E=E}
+                            }
+                            {E=1E}
+                        }
+                        {E^*+E=1+E^*E+1E}
+                    }
+                    {1+E^*E+1E=E^*+E}
+                \label{eq:1+E^*E+1E=E^*+E}
+            \end{equation}
+            \begin{equation}
+                \scriptsize
+                \inferrule* [Right={$(regola1)$}]
+                    {\inferrule* [right={$(distribD)$}]
+                        { }
+                        {E^*E+1E=(E^*+1)E}\\
+                    \inferrule* [Right=(\ref{eq:1+E^*E+1E=E^*+E})]
+                        { }
+                        {1+E^*E+1E=E^*+E}
+                    }
+                    {1+(E^*+1)E=E^*+E}
+                \label{eq:1+(E^*+1)E=E^*+E}
+            \end{equation}
+            \begin{equation}
+                \scriptsize
+                \inferrule* [Right={$(regola1)$}]
+                    {\inferrule* [right=(\ref{eq:E^*+1=E^*})]
+                        { }
+                        {E^*+1=E^*}\\
+                    \inferrule* [Right=(\ref{eq:1+(E^*+1)E=E^*+E})]
+                        { }
+                        {1+(E^*+1)E=E^*+E}
+                    }
+                    {1+E^*E=E^*+E}
+                \label{eq:1+E^*E=E^*+E}
+            \end{equation}
+            \begin{equation}
+                \scriptsize
+                \inferrule* [Right={$(simm)$}]
+                    {\inferrule* [Right={$(regola1)$}]
+                        {\inferrule* [right={$(simm)$}]
+                            {\inferrule* [right={$(unfolding)$}]
+                                { }
+                                {E^*=1+E^*E}
+                            }
+                            {1+E^*E=E^*}\\
+                        \inferrule* [Right=(\ref{eq:1+E^*E=E^*+E})]
+                            { }
+                            {1+E^*E=E^*+E}
+                        }
+                        {E^*=E^*+E}
+                    }
+                    {E^*+E=E^*}
+                \label{eq:E^*+E=E^*}
+            \end{equation}
+    \end{description}

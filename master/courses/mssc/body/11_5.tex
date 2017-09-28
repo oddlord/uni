@@ -1,0 +1,33 @@
+\section*{Esercizio 11.5}
+
+    \enunciato{1}{
+        Si provi con un esempio che l'intersezione di bisimulazioni forti non è necessariamente una bisimulazione forte.
+    }
+    
+    Per dimostrare che l'intersezione di due bisimulazioni forti non è necessariamente una bisimulazione forte, mostriamo un esempio minimale, in modo da capire meglio quando ciò accade.\\
+    \\
+    Consideriamo il seguente LTS:
+        
+    \begin{center}
+        \begin{tikzpicture}[->, >=stealth', shorten >=1pt, auto, node distance=2cm, semithick, align=center]
+            \node[state]	(A)              						{$p_0$};
+            \node[state]    (B) [above right=0.5cm and 3cm of A]	{$p_1$};
+            \node[state]    (C) [below right=0.5cm and 3cm of A]	{$p_2$};
+            \path	(A) edge	node {$a$}	(B)
+                    (A) edge	node {$a$}	(C);
+        \end{tikzpicture}
+    \end{center}
+    
+    Quindi consideriamo le seguenti due relazioni sugli stati dell'LTS mostrato:
+    \begin{align*}
+        R &= \{<p_0,p_0>, <p_1,p_1>, <p_2, p_2>\}\\
+        S &= \{<p_0,p_0>, <p_1,p_2>, <p_2, p_1>\}
+    \end{align*}
+    
+    Risulta chiaro che $R$ ed $S$ sono bisimulazioni forti. In particolare $R=Id$, che sappiamo essere una bisimulazione forte per la Proposizione 11.14(1) delle dispense.\\
+    \\
+    Se adesso però calcoliamo l'intersezione tra $R$ ed $S$ otteniamo
+    \begin{equation*}
+        R \cap S = \{<p_0,p_0>\},
+    \end{equation*}
+    che ovviamente non è una bisimulazione forte, in quanto mette in relazione $p_0$ ma non gli stati in cui $p_0$ può transire.
