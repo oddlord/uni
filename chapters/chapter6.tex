@@ -1,0 +1,616 @@
+\chapter{Calcolo del \textit{Google pagerank}}
+	\label{chapterGooglePagerank}
+	\minitoc \mtcskip
+	\lettrine{L}{}a tecnica di ordinamento di Google si basa su l'ordinamento per importanza, detto \textbf{Google pagerank}. L'idea di base è che ``una pagina è importante se viene citata da molte pagine importanti''. Per determinare quindi l'importanza di una pagina viene implementato il cosiddetto \textbf{random surfer}, ovvero viene modellizzato un ipotetico utente che naviga sul web cliccando a caso sui link che gli si presentano davanti.\\
+	Se pensiamo adesso al web come un enorme grafo orientato $W\langle V,E\rangle$, dove $V$è l'insieme dei nodi, ovvero le \textit{pagine web}, con $|V|=n$, mentre $E$ è l'insieme degli archi, ovvero i \textit{link} che collegano tra loro le pagine, allora l'importanza $x_i$ della pagina $i$-esima viene definita come
+	\begin{equation}
+		\label{importanzaPaginaJ}
+		x_i=\sum_{(j\to i)\in E}\frac{x_j}{f_i},\qquad i=1,\dots,n,
+	\end{equation}
+	dove $(j\to i)$ indica il link uscente dalla pagina $j$ ed entrante nella pagina $i$, mentre $f_j$ denota il numero totale di link uscenti dalla pagina $j$. Quindi l'importanza di una pagina viene ridistribuita equamente tra le pagine in essa citate.\\
+	Più formalmente, definendo la matrice
+	\[
+		L=(l_{ij})\in\mathbb{R}^{n\times n},\qquad l_{ij}=
+		\begin{cases}
+			1, &\text{se $(j\to i)\in E$,}\\
+			0, &\text{altrimenti},
+		\end{cases}
+	\]
+	abbiamo che
+	$$f_j=\sum_{i=1}^nl_{ij},\qquad j=1,\dots,n.$$
+	Definendo allora la matrice
+	$$H=LF,$$
+	con
+	\[
+		F=\begin{pmatrix}
+			f_1^+ & &\\
+			& \ddots &\\
+			& & f_n^+
+		\end{pmatrix},
+		\qquad f_i^+=\begin{cases}
+			\frac{1}{f_i}, &\text{se $f_i>0$},\\
+			0, &\text{se $f_i=0$},
+		\end{cases}
+	\]
+	(ovvero, $h_{ij}=\frac{l_{ij}}{f_j}$, oppure $0$ se $f_j=0$), possiamo definire il vettore del \textit{pagerank}
+	\[
+		\underline{\hat{x}}=\begin{pmatrix}
+			x_1\\
+			\vdots\\
+			x_n
+		\end{pmatrix},
+	\]
+	e riformulare la (\ref{importanzaPaginaJ}) come segue:
+	\begin{equation}
+		\label{calcoloImportanzaSemplice}
+		\underline{\hat{x}}=H\underline{\hat{x}},
+	\end{equation}
+	ovvero $\underline{\hat{x}}$ è l'\textit{autovettore destro} di $H$ relativo all'autovalore $1$.\\
+	Si osservi che $H$ è una matrice sparsa (cioè con molti elementi nulli) e quindi può essere convenientemente memorizzata in formato compresso per colonne.\\
+	Il modello (\ref{calcoloImportanzaSemplice}) è tuttavia incompleto, in quanto se il \textit{random surfer} si trova in una pagina senza link in uscita non potrebbe più uscirne. Si ipotizza allora che quando il \textit{random surfer} si incontra in una pagina senza link uscenti, questo salta casualmente ad una pagina qualsiasi del web. Definiamo a tal proposito i vettori
+	\begin{equation}
+		\label{vDelta}
+		\underline{v}=\begin{pmatrix}
+			\frac{1}{n}\\
+			\vdots\\
+			\frac{1}{n}
+		\end{pmatrix},
+		\qquad\underline{v}=\frac{1}{n}\underline{e},\qquad \underline{\delta}=\begin{pmatrix}
+			\delta_1\\
+			\vdots\\
+			\delta_n
+		\end{pmatrix},
+		\quad \delta_i=1-f_if_i^+=\begin{cases}
+			1, &\text{se $f_i=0$,}\\
+			0, &\text{se $f_i>0$.}
+		\end{cases}
+	\end{equation}
+	e la matrice
+	\begin{equation}
+		\label{S}
+		S\equiv H+\underline{v}\;\underline{\delta}^T.
+	\end{equation}
+	Allora la modifica appena esposta si traduce, algebricamente, nel seguente modello per il \textit{pagerank}:
+	\begin{equation}
+		\label{randomSurferNoLink}
+		\underline{\hat{x}}=S\underline{\hat{x}}.
+	\end{equation}
+	\begin{teo}
+		La matrice $S$ definita nella (\ref{S}) soddisfa le seguenti proprietà (le disuguaglianze sono elemento per elemento):
+		\begin{enumerate}
+			\item $S\geq 0$;
+			\item $\underline{e}^TS=\underline{e}^T$, dove
+				\[
+					\underline{e}=\begin{pmatrix}
+						1\\
+						\vdots\\
+						1
+					\end{pmatrix};
+				\]
+			\item $\lambda=1$ è il \textit{raggio spettrale} di $S$ (dove con raggio spettrale, indicato dal simbolo $\rho(S)$, si intende il massimo autovalore, in valore assoluto di una matrice).
+		\end{enumerate}
+	\end{teo}
+	Tuttavia, affinché il \textit{pagerank} abbia significato fisico, vogliamo che sia a componenti strettamente positive ed unico, utilizzando la normalizzazione:
+	\begin{equation}
+		\label{normaXHat}
+		||\underline{\hat{x}}||_1=\underline{e}^T\underline{\hat{x}}=1.
+	\end{equation}
+	\begin{teo}[Perron-Frobenius]
+		\label{teoPerronFrobenius}
+		Sia $A>0$, allora:
+		\begin{enumerate}
+			\item esiste $\lambda>0$, $\lambda\in\sigma(A)$ (dove $\sigma(A)$ indica lo spettro di $A$, ovvero l'insieme dei suoi autovalori), tale che $\lambda=\rho(A)$. inoltre, $\lambda$ è un \textit{autovalore semplice} (ovvero se è una radice semplice del polinomio caratteristico $p(\lambda)=det(A-\lambda I)$) e separa in modulo ogni altro autovalore di $A$;
+			\item ad esso corrisponde un autovettore a componenti positive.
+		\end{enumerate}
+	\end{teo}
+	\begin{teo}[Perron-Frobenius (forma debole)]
+		Sia $A\geq 0$, allora:
+		\begin{enumerate}
+			\item esiste $\lambda\geq 0$, $\lambda\in\sigma(A)$, tale che $\lambda=\rho(A)$;
+			\item ad esso corrisponde un autovettore a componenti non negative.
+		\end{enumerate}
+	\end{teo}
+	Perciò, per il Teorema \ref{teoPerronFrobenius}, se avessimo $S>0$, avremo sicuramente l'autovettore del \textit{pagerank} unico e a componenti positive.\\
+	Modifichiamo quindi ulteriormente la formulazione del \textit{pagerank}, introducendo una probabilità $p\in(0,1)$, come segue:
+	\begin{equation}
+		\label{pagerankProbabilità}
+		\underline{\hat{x}}=S(p)\underline{\hat{x}}\equiv (pS+(1-p)\underline{v}\;\underline{e}^T)\underline{\hat{x}}.
+	\end{equation}
+	Questo equivale a dire che, con probabilità $p$ il \textit{random surfer} si comporterà esattamente come descritto nella (\ref{randomSurferNoLink}), mentre con probabilità $(1-p)$ salterà casualmente ad una qualsiasi pagina del web.\\
+	Si può vedere che la matrice $S(p)$ verifica le ipotesi del Teorema \ref{teoPerronFrobenius}, ovvero $S(p)>0$, quindi esiste il vettore del \textit{pagerank} a componenti positive e il calcolo di tale vettore di riduce al calcolo dell'autovettore della matrice $S(p)$ relativo all'autovalore $\lambda=1$. Inoltre si ha che
+	\begin{equation}
+		\label{normaS(p)}
+		||S(p)||_1=||\underline{e}^TS(p)||_{\infty}=1,\qquad p\in(0,1).
+	\end{equation}
+	
+	\section{Il metodo delle potenze}
+		Studiamo adesso il metodo delle potenze, grazie al quale potremo calcolare l'\textit{autovalore dominante} (\textit{semplice}) ed il corrispondente \textit{autovettore} di una data matrice. Ovvero calcolare, data $A\in\mathbb{R}^{n\times n}$, $\lambda_1$ e $\underline{v_1}\neq 0$, tali che
+		\begin{equation}
+			\label{equazioneAutovettAutoval}
+			A\underline{v_1}=\lambda_1\underline{v_1},
+		\end{equation}
+		con
+		$$|\lambda_1|=\rho(A)>|\lambda_2|\geq\dots\geq|\lambda_n|,\qquad\{\lambda_i\}=\sigma(A).$$
+		Supponiamo, per semplicità, che gli autovalori siano tutti \textit{distinti} e \textit{reali}:
+		$$\lambda_i\neq\lambda_j,\qquad i\neq j,\qquad \lambda_i\in\mathbb{R},\qquad i=1,\dots,n,$$
+		in questo modo anche gli autovettori corrispondenti saranno a componenti reali:
+		$$0\neq\underline{v_i}\in\mathbb{R}^n,\qquad i=1,\dots,n.$$
+		Possiamo riscrivere l'equazione (\ref{equazioneAutovettAutoval}) in forma matriciale come segue:
+		\begin{align*}
+			AV&=V\Lambda,\\
+			V=(\underline{v_1},\dots,\underline{v_n}),&\qquad\Lambda=\begin{pmatrix}
+					\lambda_1 & &\\
+					& \ddots &\\
+					& & \lambda_n
+				\end{pmatrix},
+		\end{align*}
+		ovvero con $V$ matrice che presenta gli autovettori lungo le sue colonne e $\Lambda$ matrice con gli autovettori corrispondenti sulla sua diagonale principale.
+		\begin{teo}
+			Se gli autovalori di una matrice sono distinti, allora i corrispondenti autovettori sono \textit{linearmente indipendenti}.
+		\end{teo}
+		Essendo, per il teorema appena enunciato, gli autovettori di $A$ linearmente indipendenti, essi possono costituire una base per $\mathbb{R}^n$. Consideriamo quindi un vettore casuale costruito su tale base:
+		\[
+			\underline{x_0}=V\alpha=(\underline{v_1},\dots,\underline{v_n})\begin{pmatrix}
+				\alpha_1\\
+				\vdots\\
+				\alpha_n
+			\end{pmatrix}=
+			\sum_{i=1}^n\alpha_i\underline{v_i},\qquad\alpha_i\in\mathbb{R},
+		\]
+		e costruiamo la successione
+		$\underline{x_k}=A\underline{x_{k-1}}=\dots=A^k\underline{x_0}=A^kV\alpha.$
+		Per la (\ref{equazioneAutovettAutoval})
+		\begin{align*}
+			\underline{x_k}&=A^kV\alpha=A^{k-1}(AV)\alpha=A^{k-1}V\Lambda\alpha=\dots=V\Lambda^k\alpha=\sum_{i=1}^n\underline{v_i}\lambda_i^k\alpha_i\\
+			&=\underline{v_1}\lambda_1^k\alpha_1+\sum_{i=2}^n\underline{v_i}\lambda_i^k\alpha_i=\lambda_1^k\left(\alpha_1\underline{v_1}+\sum_{i=2}^n \left(\frac{\lambda_i}{\lambda_1}\right)^k\alpha_i\underline{v_i}\right).
+		\end{align*}
+		Dato che, per il Teorema \ref{teoPerronFrobenius}, $\lambda_1$ separa in modulo tutti gli altri autovalori, si ricava che
+		$$\left(\frac{\lambda_i}{\lambda_1}\right)^k\rightarrow 0,\qquad k\rightarrow\infty,\qquad i=2,\dots,n.$$
+		Quindi si può stimare che
+		$$\underline{x_k}=\lambda_1^k\left(\alpha_1\underline{v_1}+\sum_{i=2}^n \left(\frac{\lambda_i}{\lambda_1}\right)^k\alpha_i\underline{v_i}\right)\approx \lambda_1^k\alpha_1\underline{v_1},\qquad k\gg 1.$$
+		Se proviamo a moltiplicare il vettore $k$-esimo della successione con il $(k+1)$-esimo, otteniamo:
+		$$\underline{x_k}^T\underline{x_{k+1}}\approx(\lambda_1^k\alpha_1\underline{v_1})^T(\lambda_1^{k+1}\alpha_1\underline{v_1})=\lambda_1(\lambda_1^k\alpha_1\underline{v_1})^T(\lambda_1^k\alpha_1\underline{v_1})=\lambda_1\underline{x_k}^T\underline{x_k}=\lambda_1||\underline{x_k}||_2^2,$$
+		dalla quale si ricava, infine, un'approssimazione per l'autovalore dominante:
+		$$\lambda_1\approx\frac{\underline{x_k}^T\underline{x_{k+1}}}{||\underline{x_k}||_2^2},\qquad k\gg 1,$$
+		prendendo $\underline{x_{k+1}}$ come approssimazione dell'autovettore dominante corrispondente.\\
+		Ovviamente, in fase di implementazione, si deve porre attenzione a possibili \textit{overflow} o \textit{underflow}. Per ovviare a questo tipo di problemi, ad ogni passo del metodo delle potenze si normalizza il vettore $\underline{x_k}$.\\
+		Di seguito, proponiamo un'implementazione in \textsc{Matlab} del metodo delle potenze:
+		\lstinputlisting[caption={Metodo delle potenze.}]{code/metodoPotenze.m}
+
+		\subsection{Metodo delle potenze per il \textit{Google pagerank}}
+			Nel caso del calcolo del \textit{Google pagerank} sappiamo che l'autovalore corrispondente all'autovettore dominante è $\lambda=1$, quindi non ci sarà bisogno né di calcolarlo, né di normalizzare di volta in volta il vettore $\underline{x_k}$. Per questo motivo non si rischia di incorrere in \textit{overflow}/\textit{underflow}.\\
+			Se inoltre prendiamo come vettore iniziale un vettore $\underline{x_0}$ tale che
+			$$\underline{x_0}>0,\qquad \underline{e}^T\underline{x_0}=||\underline{x_0}||_1=1,$$
+			per induzione (grazie alla (\ref{normaS(p)})) si ha:
+			\begin{align}
+				&\underline{x_k}=S(p)\underline{x_{k-1}}>0,\notag\\
+				\label{normaXk}
+				&||\underline{x_k}||_1=\underbrace{\underline{e}^TS(p)}_{\underline{e}^T}\underline{x_{k-1}}=\underline{e}^T\underline{x_{k-1}}=||\underline{x_{k-1}}||_1=1.
+			\end{align}
+			Quindi, per la (\ref{pagerankProbabilità}), possiamo ricavare come segue un criterio d'arresto per il metodo delle potenze:
+			\begin{align*}
+				||\underline{x_k}-\underline{\hat{x}}||_1&= ||S(p)\underline{x_{k-1}}-S(p)\underline{\hat{x}}||_1=||S(p)(\underline{x_{k-1}}-\underline{\hat{x}})||_1 =\\
+				&=||pS(\underline{x_{k-1}}-\underline{\hat{x}})+(1-p)\underline{v}\;\underbrace{\underline{e}^T(\underline{x_{k-1}}-\underline{\hat{x}})}_{=0}||_1=||pS(\underline{x_{k-1}}-\underline{\hat{x}})||_1\leq\\
+				&\leq p\underbrace{||S||_1}_{=||\underline{e}^TS||_{\infty}=1}\cdot||\underline{x_{k-1}}-\underline{\hat{x}}||_1=p||\underline{x_{k-1}}-\underline{\hat{x}}||_1\leq\dots\leq\\
+				&\leq p^k||\underline{x_0}-\underline{\hat{x}}||_1\leq 2p^k.
+			\end{align*}
+			Quindi si ricava che per avere un risultato entro la tolleranza fissata $tol$, basta fare, al più, $\frac{\log tol-\log 2}{\log p}$. Si osserva che valori di $p$ vicini ad $1$ riproducono un modello più fedele del web ma degradano la velocità di convergenza del metodo delle potenze. Studi in proposito indicano $p=0.85$ come un buon compromesso tra \textit{accuratezza} ed \textit{efficienza}.\\
+			\\
+			Per quanto riguarda il \underline{costo computazionale} del metodo delle potenze, si ha che ogni iterazione si riduce al calcolo di (ricordando che $\underline{v}=\frac{1}{n}\underline{e}$):
+			\begin{align}
+				\underline{x_k} &= pS\underline{x_{k-1}} + (1-p)\underline{v}\;\underbrace{\underline{e}^T\underline{x_{k-1}}}_{=1}=\notag\\
+				&=p(H+\underline{v}\;\underline{\delta}^T)\underline{x_{k-1}}+(1-p)\underline{v}=\notag\\
+				\label{metodoPotenzeGooglepgrank}
+				&=p(H\underline{x_{k-1}})+\frac{1+p(\underline{\delta}^T\underline{x_{k-1}}-1)}{n}\underline{e}.
+			\end{align}
+			Quest'operazione è composta da:
+			\begin{itemize}
+				\item un prodotto matrice-vettore, $H\underline{x_{k-1}}$, del costo di $O(n)$ \texttt{flops};
+				\item un prodotto scalare, $\underline{\delta}^T\underline{x_{k-1}}$, del costo di $2n$ \texttt{flops};
+				\item l'operazione complessiva, che è del tipo
+					\begin{center}
+						vettore = scalare*vettore + scalare*vettore,
+					\end{center}
+					che costa altri $3n$ \texttt{flops}.
+			\end{itemize}
+			Quindi il costo complessivo si vede essere \textbf{lineare} rispetto alla dimensione del problema, sia in termini di operazioni eseguite che di memoria occupata (memorizzando la matrice sparsa $H$ in formato compresso per colonne).\\
+			Secondo le osservazioni appena fatte, il metodo delle potenze per il calcolo del Google \textit{pagerank} può essere implementato efficientemente come segue:
+			\lstinputlisting[caption={Metodo delle potenze per il calcolo del Google \textit{pagerank}.}]{code/metodoPotenzeGooglePagerank.m}
+	\section{Risoluzione iterativa di sistemi lineari}
+		Un approccio differente al metodo delle potenze per il calcolo del \textit{Google pagerank} è la risoluzione iterativa di sistemi lineari.\\
+		Si vede che, per le (\ref{vDelta}), (\ref{normaXHat}) e (\ref{pagerankProbabilità}):
+		\begin{align*}
+			&\underline{\hat{x}}=S(p)\underline{\hat{x}}=pS\underline{\hat{x}}+(1-p)\frac{1}{n}\underline{e}\;\underbrace{\underline{e}^T\underline{\hat{x}}}_{=1},\\
+			&\underline{\hat{x}}-pS\underline{\hat{x}}=\frac{1-p}{n}\underline{e},\\
+			&\underbrace{(I-pS)}_{\equiv A}\underline{\hat{x}}=\underbrace{\frac{1-p}{n}\underline{e}}_{\equiv\underline{b}}.
+		\end{align*}
+		Quindi il problema (\ref{pagerankProbabilità}) può essere riformulato come segue:
+		\begin{equation}
+			\label{sistemaPagerank}
+			A\underline{\hat{x}}=\underline{b}.
+		\end{equation}
+		Risulta chiaro che, data la sparsità della matrice $A$, non è conveniente utilizzare i metodi di fattorizzazione visti nel Capitolo \ref{chap:sistemiLinENonLin}.Un'importante caratteristica della matrice $A$ è quella di poter essere scritta nella forma
+		\begin{equation}
+			\label{A}
+			A=I-B,\qquad B\geq 0,\qquad \rho(B)<1,
+		\end{equation}
+		infatti risulta che $B=I-I+pS=pS$ e si ha che $S\geq 0$, $\rho(S)=1$ e $p<1$.
+		\begin{teo}
+			\label{teoMatriceConvergente}
+			Una matrice $B$ ha raggio spettrale minore di $1$, ovvero $\rho(B)<1$, se e solo se
+			$$B^i\rightarrow O,\qquad i\rightarrow\infty.$$
+		\end{teo}
+		\begin{defi}
+			Per il Teorema \ref{teoMatriceConvergente}, una matrice avente raggio spettrale minore di $1$ si dice \textbf{convergente}.
+		\end{defi}
+		\begin{defi}
+			Una matrice del tipo $\alpha A$, con $A$ definita nella (\ref{A}) ed $\alpha>0$, si dice \textbf{M-matrice}.
+		\end{defi}
+		\begin{teo}
+			\label{teoM-Matrice}
+			Se $A$ è una M-matrice, allora $A^{-1}\geq 0$
+		\end{teo}
+		Le \textit{M-matrici} inoltre risultano essere \textbf{matrici monotone}, ovvero tali che
+		$$A\underline{x}\leq\underline{y}\qquad\Rightarrow\qquad\underline{x}\leq A^{-1}\underline{y},$$
+		o, più in generale, se $C$ è una matrice delle stesse dimensioni di $A$, tali che
+		$$A\leq C\qquad\Rightarrow\qquad I\leq A^{-1}C,\quad I\leq CA^{-1},$$
+		dove le disuguaglianze sono da intendersi elemento per elemento.
+		\begin{defi}
+			Si parla di \textbf{splitting} della matrice $A$ qualora si possa scrivere
+			\begin{equation}
+				\label{splitting}
+				A=M-N,
+			\end{equation}
+			con $det(M)\neq 0$.
+		\end{defi}
+		Lo \textit{splitting} della matrice $A$ viene definito in modo tale che i sistemi lineari con la matrice $M$ come matrice dei coefficienti siano immediatamente risolvibili senza bisogno di fattorizzazione. Questo perché, per le (\ref{sistemaPagerank}) e (\ref{splitting}), si può definire il seguente metodo iterativo per calcolare un'approssimazione del vettore di \textit{pagerank}:
+		\begin{equation}
+			\label{metodoIterativoSplitting}
+			M\underline{x_k}=N\underline{x_{k-1}}+\underline{b},\qquad k\geq 1,
+		\end{equation}
+		partendo da un'approssimazione data $x_0$. Definiamo l'errore al passo $k$, come
+		\begin{equation}
+			\label{erroreSplitting}
+			\underline{e_k}=\underline{x_k}-\underline{\hat{x}}.
+		\end{equation}
+		Osservando che $$M\underline{\hat{x}}=N\underline{\hat{x}}+\underline{b}$$ e per la (\ref{metodoIterativoSplitting}) si ottiene la seguente \textit{equazione dell'errore}:
+		\begin{align*}
+			\underline{e_k} &= \underline{x_k}-\underline{\hat{x}} = M^{-1}(N\underline{x_{k-1}}+\underline{b})-M^{-1}(N\underline{\hat{x}}+\underline{b})=\\
+			&= M^{-1}(N\underline{x_{k-1}}+\underline{b}-N\underline{\hat{x}}-\underline{b})=\\
+			&= M^{-1}N(\underline{x_{k-1}}-\underline{\hat{x}})=\\
+			&= M^{-1}N\underline{e_{k-1}},\qquad k\geq 1,
+		\end{align*}
+		dalla quale si ricava
+		$$\underline{e_k}=(M^{-1}N)^k\underline{e_0},\qquad k\geq 1.$$
+		Quindi, per il Teorema \ref{teoMatriceConvergente}, il metodo sarà convergente se e solo se la matrice $M^{-1}N$ è convergente, ovvero se e solo se $\rho(M^{-1}N)<1$.
+		\begin{defi}
+			La matrice $M^{-1}N$ dello splitting (\ref{splitting}) si dice \textbf{matrice di iterazione} del metodo (\ref{metodoIterativoSplitting}).
+		\end{defi}
+		Per quanto visto nello studio del metodo delle potenze e supponendo che la matrice d'iterazione abbia un autovalore dominante semplice, si ottiene la stima
+		$$||\underline{e_k}||\approx\rho(M^{-1}N)^k||\underline{e_0}||,\qquad k\gg 1.$$
+		Quindi il raggio spettrale della matrice d'iterazione ci permette di confrontare tra loro metodi iterativi definiti da diversi splitting della matrice $A$.
+		
+		\subsection{\textit{Splitting} regolari di matrici}
+			\begin{defi}
+				Lo splitting (\ref{splitting}) si dice \textbf{regolare} se
+				$$m^{-1}\geq 0,\qquad N\geq 0.$$
+			\end{defi}
+			\begin{lem}
+				\label{lemmaMatriciOrdinate}
+				Siano $A,B\in\mathbb{R}^{n\times n}$, $A\geq B\geq 0$. Allora $A^i\geq B^i\geq 0$, $i\geq 0$.
+			\end{lem}
+			\begin{lem}
+				\label{lemmaMatriciOrdinate2}
+				Siano $A,B\in\mathbb{R}^{n\times n}$, $A\geq B\geq 0$. Allora $\rho(A)\geq\rho(B)$.
+			\end{lem}
+			\begin{teo}
+				Se lo splitting (\ref{splitting}) è regolare e $A^{-1}\geq 0$, allora il metodo iterativo (\ref{metodoIterativoSplitting}) è convergente
+			\end{teo}
+			\begin{cor}
+				Se lo splitting (\ref{splitting}) è regolare ed $A$ è una M-matrice, allora il metodo iterativo (\ref{metodoIterativoSplitting}) è convergente (vedi Teorema \ref{teoM-Matrice}).
+			\end{cor}
+			Per i Lemmi \ref{lemmaMatriciOrdinate} e \ref{lemmaMatriciOrdinate2} si hanno i seguenti due corollari:
+			\begin{cor}
+				\label{corMmatrice}
+				Se $A=\alpha(I-B)$ è una M-matrice e $A=M-N$, con $0\leq N\leq\alpha B$, allora M è nonsingolare e lo splitting è regolare. Pertanto, il metodo (\ref{metodoIterativoSplitting}) è convergente.
+			\end{cor}
+			\begin{cor}
+				\label{corMmatrice2}
+				Se $A$ è una M-matrice e la matrice $M$ in (\ref{splitting}) è ottenuta ponendo a $0$ gli elementi extradiagonali di $A$, allora lo splitting (\ref{splitting}) è regolare. Pertanto il metodo iterativo (\ref{metodoIterativoSplitting}) è convergente.
+			\end{cor}
+
+			Infine quest'ultimo Teorema ci consente di comparare tra loro le velocità di due metodi iterativi costruiti su due diversi splitting regolari di una stessa matrice:
+			\begin{teo}
+				\label{teoVelocitàConvergenzaSplitting}
+				Siano $A=M_1-N_1=M_2-N_2$ due splitting regolati di $A$, matrice tale che $A^{-1}\geq 0$. Se $N_1\leq N_2$, allora $\rho(M^{-1}_1N_1)\leq\rho(M^{-1}_2N_2)$, ovvero il primo splitting converge più velocemente del secondo.
+			\end{teo}
+		\subsection{Criteri d'arresto}
+			Per quanto riguarda i criteri d'arresto del metodo iterativo (\ref{metodoIterativoSplitting}) si può pensare a controllare la norma $||\underline{x_k}-\underline{x_{k-1}}||$. Un'altra possibilità, invece, è quella di controllare la norma del \textit{vettore residuo}:
+			\begin{equation}
+				\label{residuoSplitting}
+				\underline{r_k}=A\underline{x_k}-\underline{b}.
+			\end{equation}
+			Si osserva che il vettore residuo $\underline{r_k}$ ed il vettore d'errore $\underline{e_k}$ sono in stretta relazione tra loro, infatti:
+			$$A\underline{e_k}=\underline{r_k}.$$
+		\subsection{I metodi di Jacobi e Gauss-Seidel}
+			Consideriamo il partizionamento della matrice $A$
+			\begin{equation}
+				\label{splittingDLU}
+				A=D-L-U,
+			\end{equation}
+			con
+			\begin{itemize}
+				\item $D$ diagonale,
+				\item $L$ strettamente triangolare inferiore e
+				\item $U$ strettamente triangolare superiore.
+			\end{itemize}
+			\begin{teo}
+				\label{teoDLUmaggiori0}
+				Se la matrice $A$ in (\ref{splittingDLU}) è una M-matrice, allora $D,L,U\geq 0$. In particolare $D$ ha elementi diagonali positivi ($D>0$).
+			\end{teo}
+
+			\begin{teo}
+				Se $A$ in (\ref{splittingDLU}) è una M-matrice, allora tali sono anche le matrici $D$ e $D-L$.
+			\end{teo}
+			\begin{defi}$\;$\\
+				\begin{itemize}
+					\item Lo splitting
+						$$A=M_J-N_J\equiv D-(L+U)$$
+						definisce il metodo iterativo di \textbf{Jacobi}.
+					\item Lo splitting
+						$$A=M_{GS}-N_{GS}\equiv (D-L)-U$$
+						definisce il metodo iterativo di \textbf{Gauss-Seidel}
+				\end{itemize}
+			\end{defi}
+			\begin{cor}
+				Se $A$ in (\ref{splittingDLU}) è una M-matrice, allora gli splitting di Jacobi e di Gauss-Seidel sono regolari e quindi i relativi metodi iterativi sono convergenti.
+			\end{cor}
+			Si osserva che ad ogni iterazione il metodo di Jacobi richiede la risoluzione di un sistema diagonale, mentre il metodo di Gauss-Seidel richiede la risoluzione di un sistema triangolare inferiore.
+			\begin{cor}
+				Se $A$ in (\ref{splittingDLU}) è una M-matrice, allora
+				$$\rho((D-L)^{-1}U)\leq\rho(D^{-1}(L+U))<1.$$
+				Ovvero, in generale, il metodo di Gauss-Seidel converge più velocemente del metodo di Jacobi.
+			\end{cor}
+			Infatti, essendo $L\geq 0$ per il Teorema \ref{teoDLUmaggiori0}, sicuramente $U\leq(L+U)$ (vedi Teorema \ref{teoVelocitàConvergenzaSplitting}).\\
+			\\
+			Concludendo, osserviamo che, per quanto detto fin'ora sugli splitting regolari di matrici, i metodi iterativi di Jacobi e di Gauss-Seidel (ed in particolare quest'ultimo) possono essere convenientemente utilizzati per calcolare un'approssimazione del vettore di \textit{pagerank} di Google.\\
+			\\
+			Si mostrano di seguito le implementazioni in \textsc{Matlab} dei metodi di Jacobi e di Gauss-Seidel;
+			\lstinputlisting[caption={Metodo di Jacobi.}]{code/jacobi.m}
+			\lstinputlisting[caption={Metodo di Gauss-Seidel.}]{code/gaussSeidel.m}
+
+	\section*{Esercizi}
+		\addcontentsline{toc}{section}{Esercizi}
+		\markboth{\textsc{\uppercase{Capitolo }\ref{chapterGooglePagerank}\uppercase{. Calcolo del \textit{Google pagerank}}}}{\textsc{\uppercase{Esercizi}}}
+		\begin{es}[Teorema di Gershgorin] %6.1
+			Dimostrare che gli autovalori di una matrice $A=(a_{ij})\in\mathbb{C}^{n\times n}$ sono contenuti nell'insieme
+			\[
+				\mathcal{D}=\bigcup_{i=1}^n\mathcal{D}_i,\qquad \mathcal{D}_i=\left\{\lambda\in\mathbb{C}:|\lambda-a_{ii}|\leq\sum_{\begin{subarray}{c}
+					j=1\\
+					j\neq i
+				\end{subarray}}^n|a_{ij}|\right\},\quad i=1,\dots,n.
+			\]
+		\end{es}
+		\begin{sol}
+			\normalfont Sia $\lambda\in\sigma{A}$ ed $\underline{x}$ il corrispondente autovettore ($\underline{x}\neq\underline{0}$ e $A\underline{x}=\lambda\underline{x}$) quindi $\underline{e}_i^TA\underline{x}=\lambda\underline{e}_i^T\underline{x}$ per $i=1,\ldots,n$ cioè $\sum_{j=1}^n{a_{i,j}x_j}=\lambda x_i$; posto $i$ tale che $|x_i|\geq|x_j|$ ($x_i\neq 0$) risulta $\lambda=\frac{\sum_{j=1}^n{a_{i,j}x_j}}{x_i}=a_{i,i}+\sum_{j=1\: j\neq i}^n{a_{i,j}\frac{x_j}{x_i}}$ ovvero $\lambda-a_{i,i}=\sum_{j=1\: j\neq i}^n{a_{i,j}\frac{x_j}{x_i}}$. Passando ai valori assoluti $$\left|\lambda-a_{i,i}\right|=\left|\sum_{j=1\: j\neq i}^n{a_{i,j}\frac{x_j}{x_i}}\right|\leq\sum_{j=1\: j\neq i}^n{\left|a_{i,j}\frac{x_j}{x_i}\right|}\leq\sum_{j=1\: j\neq i}^n{\left|a_{i,j}\right|}$$ poiché $\left|\frac{x_j}{x_i}\right|\leq 1$ in quanto $|x_i|\geq|x_j|$. Segue $\lambda\in\bigcup_{i=1}^{n}{\mathcal{D}_i}$ da cui $\sigma{A}\subseteq\mathcal{D}$.
+		\end{sol}
+		\sectionline
+		\begin{es} %6.2
+			\label{es:6.2}
+			Utilizzare il metodo delle potenze per approssimare l'autovalore dominante della matrice
+			\[
+				A_n=\begin{pmatrix}
+					2 & -1 & &\\
+					-1 & 2 & \ddots &\\
+					& \ddots & \ddots & -1\\
+					& & -1 & 2
+				\end{pmatrix}\in\mathbb{R}^{n\times n},
+			\]
+			per valori crescenti di $n$. Verificare numericamente che questo è dato da $2\left(1+\cos\frac{\pi}{n+1}\right)$.
+		\end{es}
+		\begin{sol}
+			\normalfont 
+			Prima di applicare il metodo delle potenze, mostriamo che $A_n$ può essere scritta come una M-matrice, infatti: $A_n=2(I_n-B_n)$ dove $$B_n=\begin{pmatrix}0&1/2&&\\1/2&0&\ddots&\\&\ddots&\ddots&1/2\\&&1/2&0\end{pmatrix}\in\mathbb{R}^{n\times n}.$$ Risulta $\lambda_j(B_n)=\cos{\frac{j\pi}{n+1}}$, $|\lambda_j|\leq 1$, per $j=1,\ldots,n$; segue $\lambda_j(A_n)=2(\lambda_j(I_n)-\lambda_j(B_n))=2(1-\cos{\frac{j\pi}{n+1}})$; il massimo è $\lambda=2(1+\cos{\frac{\pi}{n+1}})$.
+			La verifica numerica di questo risultato è riportata nelle seguenti tabelle.
+			\begin{center}\begin{tabular}{c|c|c|c}
+			\hline\multicolumn{4}{c}{Tolleranza $tol=10^{-5}$}\\\hline
+			$n$ & $\lambda_1$ & $2\left(1+\cos{\frac{\pi}{n+1}}\right)$ & scostamento\\\hline
+			10 & 3.9189 & 3.9190 & 0.0001 \\
+			15 & 3.9614 & 3.9616 & 0.0002 \\
+			20 & 3.9774 & 3.9777 & 0.0003 \\
+			25 & 3.9853 & 3.9854 & 0.0002 \\
+			30 & 3.9891 & 3.9897 & 0.0006 \\
+			35 & 3.9921 & 3.9924 & 0.0003 \\
+			40 & 3.9929 & 3.9941 & 0.0012 \\
+			45 & 3.9938 & 3.9953 & 0.0015 \\
+			50 & 3.9947 & 3.9962 & 0.0015 
+			\end{tabular}\end{center}
+			
+			\begin{center}\begin{tabular}{c|c|c|c}
+			\hline\multicolumn{4}{c}{Tolleranza $tol=10^{-7}$}\\\hline
+			$n$ & $\lambda_1$ & $2\left(1+\cos{\frac{\pi}{n+1}}\right)$ & scostamento\\\hline
+			5 & 3.7321 & 3.7321 & 0.0000 \\
+			10 & 3.9190 & 3.9190 & 0.0000 \\
+			15 & 3.9616 & 3.9616 & 0.0000 \\
+			20 & 3.9777 & 3.9777 & 0.0000 \\
+			25 & 3.9854 & 3.9854 & 0.0000 \\
+			30 & 3.9897 & 3.9897 & 0.0000 \\
+			35 & 3.9924 & 3.9924 & 0.0000 \\
+			40 & 3.9941 & 3.9941 & 0.0000 \\
+			45 & 3.9953 & 3.9953 & 0.0000 \\
+			50 & 3.9962 & 3.9962 & 0.0000  
+			\end{tabular}\end{center}
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es6.2} (pagina \pageref{lst:es6.2})
+			\end{flushright}
+		\end{sol}
+		\sectionline
+		\begin{es} %6.3
+			Dimostrare i Corollari \ref{corMmatrice} e \ref{corMmatrice2}.
+		\end{es}
+		\begin{sol}
+			\normalfont
+			\underline{Corollario 6.2}\\
+			Sia $A=\alpha(I-B)=M-N$ con $0\leq N\leq\alpha B$ quindi $M=\alpha I-\alpha B+N=\alpha I-\alpha B+\alpha Q=\alpha(I-(B-Q))$ con $\alpha Q=N\leq\alpha B$ e $0\leq Q\leq B$. Dato che $0\leq B-Q\leq B$, per il Lemma 6.2, $\rho(B-Q)\leq\rho(B)\leq 1$. Quindi $M$ è una M-matrice; lo splitting è regolare infatti $M^{-1}\geq 0$ ($M$ è una M-matrice) e $B-Q\geq 0$.\\
+			\\\underline{Corollario 6.3}\\
+			Sia $A=M-N$ M-matrice con $M=diag(A)$ allora la matrice $A-M=B$ avrà elementi nulli sulla diagonale e, altrove, gli elementi di $A$. Poiché $A=\alpha(I-B)=\alpha I-\alpha B=M-N$, risulta $\alpha B=N$ quindi, per il Corollario 6.2, lo splitting è regolare ed il metodo è convergente.
+		\end{sol}
+		\sectionline
+		\begin{es} %6.4
+			Dimostrare il Teorema \ref{teoDLUmaggiori0}.
+		\end{es}
+		\begin{sol}
+			\normalfont
+			Poiché $A$ è una M-matrice, essa può essere scritta nella forma $A=\alpha(I-B)$ con $B\geq 0$ e $\rho(B)<1$; inoltre, per ipotesi, $A=D-L-U$ da cui si deduce che $D=\alpha(I-diag(B))$ e $(L+U)=\alpha(B-diag(B))$.\\
+			La matrice $(L+U)=\alpha(B-diag(B))$ risulta maggiore di zero in quanto $B>0\rightarrow (B-diag(B))>0$.
+			La matrice $D$ ha elementi positivi sulla diagonale: supponiamo per assurdo $a_{i,i}\leq 0$: l'$i$-esima riga di $A$, negativa, è data da $A\underline{e}_i\leq\underline{0}$ dato che $A$ è una M-matrice risulta $\underline{e}_i\leq A^{-1}\underline{0}=\underline{0}$ assurdo poiché $\underline{e}_i\geq\underline{0}, \forall i$.
+		\end{sol}
+		\sectionline
+		\begin{es} %6.5
+			Tenendo conto della (\ref{normaXk}), riformulare il metodo delle potenze (\ref{metodoPotenzeGooglepgrank}) per il calcolo del \textit{Google pagerank} come metodo iterativo definito da uno splitting regolare.
+		\end{es}
+		\begin{sol}
+			\normalfont
+			Il problema del \textsl{Google pagerank} è $S(p)\hat{\underline{x}}=\hat{\underline{x}}$ dove $S(p)=pS+(1-p)\underline{v}\:\underline{e}^{T}$. Sostituendo, risulta $$(pS+(1-p)\underline{v}\:\underline{e}^{T})\hat{\underline{x}}=\hat{\underline{x}}\quad\Rightarrow\quad (I-pS)\hat{\underline{x}}=(1-p)\underline{v}\:\underline{e}^T\hat{\underline{x}}$$
+			Dato che $\underline{v}=\frac{1}{n}\underline{e}$ ed $e^T\hat{\underline{x}}=1$ si ricava
+			$$(I-pS)\hat{\underline{x}}=\frac{1-p}{n}\underline{e}.$$
+			Si può infine definire il seguente metodo iterativo:
+			$$I\underline{x}_{k+1}=pS\underline{x}_k+\dfrac{1-p}{n}\underline{e}.$$
+			Il metodo è convergente in quanto la matrice di iterazione ha raggio spettrale minore di $1$: $\rho(I^{-1}pS)=\rho(pS)<1$ dato che $p \in (0,1)$ e $\rho(S)=1$.
+		\end{sol}
+		\sectionline
+		\begin{es} %6.6
+			Dimostrare che il metodo di Jacobi converge asintoticamente in un numero minore di iterazioni, rispetto al metodo delle potenze (\ref{metodoPotenzeGooglepgrank}) per il calcolo del \textit{Google pagerank}.
+		\end{es}
+		\begin{sol}
+			\normalfont 
+			La matrice di iterazione di Jacobi ha raggio spettrale minore di 1 mentre, nel calcolo del \textsl{Google pagerank}, l'autovalore dominante è $\lambda=1$ quindi il raggio spettrale di tale matrice è esattamente 1. Poiché il raggio spettrale della matrice di iterazione del metodo di Jacobi è minore del raggio spettrale della matrice del \textsl{Google pagerank}, il metodo di Jacobi converge in asintoticamente in un numero minore di iterazioni, rispetto al metodo delle potenze per il calcolo del \textsl{Google pagerank}.
+		\end{sol}
+		\sectionline
+		\begin{es} %6.7
+			Dimostrare che, se $A$ è diagonale dominante, per riga o per colonna, il metodo di Jacobi è convergente.
+		\end{es}
+		\begin{sol}
+			\normalfont 
+			Nel metodo di Jacobi si ha $A=M-N=D-(L+U)$ quindi $$M=\begin{pmatrix}a_{1,1}&&&\\&\ddots&&\\&&\ddots&\\&&&a_{n,n}\end{pmatrix}\mbox{ e } N=\begin{pmatrix}0&a_{1,2}&\ldots&a_{1,n}\\a_{2,1}&\ddots&\ddots&\vdots\\\vdots&\ddots&\ddots&a_{n-1,n}\\a_{n,1}&\ldots&a_{n,n-1}&0\end{pmatrix}.$$ Si ha $$B=M^{-1}N=\begin{pmatrix}\frac{1}{a_{1,1}}&&&\\&\ddots&&\\&&\ddots&\\&&&\frac{1}{a_{n,n}}\end{pmatrix}\begin{pmatrix}0&a_{1,2}&\ldots&a_{1,n}\\a_{2,1}&\ddots&\ddots&\vdots\\\vdots&\ddots&\ddots&a_{n-1,n}\\a_{n,1}&\ldots&a_{n,n-1}&0\end{pmatrix}=$$$$=\begin{pmatrix}0&\frac{a_{1,2}}{a_{1,1}}&\ldots&\frac{a_{1,n}}{a_{1,1}}\\\frac{a_{2,1}}{a_{2,2}}&\ddots&\ddots&\vdots\\\vdots&\ddots&\ddots&\frac{a_{n-1,n}}{a_{n-1,n-1}}\\\frac{a_{n,1}}{a_{n,n}}&\ldots&\frac{a_{n,n-1}}{a_{n,n}}&0\end{pmatrix},$$ per il Teorema di Gershgorin risulta $$\mathcal{D}_i=\left\{\lambda\in\mathbb{C}\::\:|\lambda-b_{i,i}|\leq\sum_{j=1\: j\neq i}^{n}{|b_{i,j}|}\right\}=\left\{\lambda\in\mathbb{C}\::\:|\lambda|\leq\sum_{j=1\: j\neq i}^{n}{\left|\frac{a_{i,j}}{a_{i,i}}\right|}\right\};$$ supposta $A$ a diagonale dominante per righe, $|a_{i,i}|\geq\sum_{j=1,\: j\neq i}^n{|a_{i,j}|}$, risulta $|\lambda|\leq\frac{1}{|a_{i,i}|}\sum_{j=1\: j\neq i}^{n}{a_{i,j}}<1$. Ogni $\mathcal{D}_i$ è centrato in $0$ e ha raggio minore di $1$ quindi $\mathcal{D}=\bigcup_{i=1}^{n}{\mathcal{D}_i}$ è centrato in $0$ e ha raggio pari al raggio massimo dei $\mathcal{D}_i$ ma sempre minore di $1$. Dato che $\lambda(A)=\lambda(A^T)$, il risultato vale anche se $A$ è a diagonale dominante per colonne; il metodo di Jacobi è dunque convergente per matrici a diagonale dominante.
+		\end{sol}
+		\sectionline
+		\begin{es} %6.8
+			Dimostrare che, se $A$ è diagonale dominante, per riga o per colonna, il metodo di Gauss-Seidel è convergente.
+		\end{es}
+		\begin{sol}
+			\normalfont 
+			Nel metodo di Gauss-Seidel si ha $A=M-N=(D-L)-U$; sia $\lambda\in\sigma(M^-1N)$ quindi $\lambda$ è tale che $\det{(M^{-1}N-\lambda I)}=\det{(M^{-1}(N-\lambda M))}=\det{(M^{-1})}\det{(N-\lambda M)}=0$. Dato che, per definizione di splitting, $\det{(M^{-1})}\neq 0$ deve risultare $\det{(N-\lambda M)}=0=\det{(\lambda M-N)}$; sia $H=\lambda M-N$ matrice singolare e supponiamo, per assurdo, $|\lambda|\geq 1$. Risulta $$H=\begin{cases}\lambda a_{i,j}&\mbox{se }i\geq j,\\a_{i,j}&\mbox{altrimenti},\end{cases};$$ quindi $H$ è a diagonale dominante ma $$\sum_{j=1\: j\neq i}^n{|h_{i,j}|}\leq |\lambda|\sum_{j=1\: j\neq i}^n{|a_{i,j}|}<|\lambda||a_{i,i}|=|h_{i,i}|.$$Si ha una contraddizione poiché le matrici a diagonale dominanti sono non signolari, dunque $|\lambda|<1$ e quindi il metodo di Gauss-Seidel è convergente per matrici a diagonale dominante.
+		\end{sol}
+		\sectionline
+		\begin{es} %6.9
+			Se $A$ è \textit{sdp}, il metodo di Gauss-Seidel risulta essere convergente. Dimostrare questo risultato nel caso (assai più semplice) in cui l'autovalore di massimo modulo della matrice di iterazione sia reale.\\
+			(\underline{Suggerimento:} considerare il sistema lineare equivalente
+			$$(D^{-\frac{1}{2}}AD^{-\frac{1}{2}})(D^{\frac{1}{2}}\underline{x})=(D^{-\frac{1}{2}}\underline{b}),\qquad D^{\frac{1}{2}}=diag(\sqrt{a_{11}},\dots,\sqrt{a_{nn}}),$$
+			la cui matrice dei coefficienti è ancora \textit{sdp} ma ha diagonale unitaria, ovvero del tipo $I-L-L^T$. Osservare quindi che, per ogni vettore reale $\underline{v}$ di norma $1$, si ha: $\underline{v}^TL\underline{v}=\underline{v}^TL^T\underline{v}=\frac{1}{2}\underline{v}^T(L+L^T)\underline{v}<\frac{1}{2}$.)
+		\end{es}
+		\begin{sol}
+			\normalfont 
+			Scriviamo il sistema $A\underline{x}=\underline{b}$ nella forma equivalente $$\left(D^{-1/2}AD^{-1/2}\right)\left(D^{1/2}\underline{x}\right)=\left(D^{-1/2}\underline{b}\right)$$ con $D=diag(\sqrt{a_{1,1}},\ldots,\sqrt{a_{n,n}})$. La matrice $C=\left(D^{-1/2}AD^{-1/2}\right)$ ha diagonale unitaria: $$c_{i,i}=d_i^{-1}a_{i,i}d_i^{-1}=\frac{1}{\sqrt{a_{i,i}}}a_{i,i}\frac{1}{\sqrt{a_{i,i}}}=a_{i,i};$$ inoltre è ancora sdp e scrivibile come $C=I-L-L^T$.\\
+			Poiché $C$ è sdp risulta $\underline{v}^TA\underline{v}>0, \forall\underline{v}\neq\underline{0}$ cioè $$\underline{v}^T\underline{v}>\underline{v}^TL\underline{v}+\underline{v}^TL^T\underline{v}\quad\Rightarrow\quad\underline{v}^TL\underline{v}=\underline{v}^TL^T\underline{v}<\frac{1}{2}.$$
+			Sia $|\lambda|=\rho(M_{GS}^{-1}N_{GS})=\rho\left((I-L)^{-1}L^T\right)$ assunto reale e $\underline{v}$ il corrispondente autovettore, dunque $$(I-L)^{-1}L^T=\lambda\underline{v}\quad\Rightarrow\quad\lambda\underline{v}=L^T\underline{v}+\lambda L\underline{v}$$ ovvero $\lambda=\underline{v}^TL\underline{v}+\lambda\underline{v}^TL\underline{v}=(1+\lambda)\underline{v}^TL)\underline{v}$ da cui $$\frac{\lambda}{1+\lambda}=\underline{v}^TL\underline{v}<\frac{1}{2}\quad\Rightarrow\quad -1<\lambda<1.$$
+			Segue $\rho(M_{GS}^{-1}N_{GS})=|\lambda|<1$.
+		\end{sol}
+		\sectionline
+		\begin{es} %6.10
+			Con riferimento ai vettori errore (\ref{erroreSplitting}) e residuo (\ref{residuoSplitting}) dimostrare che, se
+			\begin{equation}
+				\label{criterioArrestoSplitting}
+				||\underline{r_k}||\leq\varepsilon||\underline{b}||,
+			\end{equation}
+			allora
+			$$||\underline{e_k}||\leq\varepsilon k(A)||\underline{\hat{x}}||,$$
+			dove $k(A)$ denota, al solito, il numero di condizionamento della matrice $A$. Concludere che, per sistemi lineari malcondizionati, anche la risoluzione iterativa (al pari di quella diretta) risulta essere più problematica.
+		\end{es}
+		\begin{sol}
+			\normalfont 
+			Posto $\underline{e}_k=\underline{x}_k-\underline{\hat{x}}$ e $\underline{r}_k=A\underline{x}_k-\underline{b}$, risulta $$A\underline{e}_k=A(\underline{x}_k-\underline{\hat{x}})=A\underline{x}_k-A\underline{\hat{x}}=A\underline{x}_k-b=\underline{r}_k.$$Segue, passando alle norme, \begin{equation}\begin{split}||\underline{e}_k||=&\left|\left|A^{-1}\underline{r}_k\right|\right|\leq\left|\left|A^{-1}\right|\right|\cdot||\underline{r}_k||\leq\left|\left|A^{-1}\right|\right|\cdot\varepsilon||\underline{b}||\leq\\\leq&\left|\left|A^{-1}\right|\right|\cdot\left|\left|A\right|\right|\cdot||\underline{\hat{x}}||=\varepsilon\kappa(A)||\underline{\hat{x}}||,\end{split}\end{equation} ovvero $$\frac{||\underline{e}_k||}{||\underline{\hat{x}}||}\leq\varepsilon\kappa(A).$$ La risoluzione iterativa, come la risoluzione diretta, di sistemi lineari è ben condizionata per $\kappa(A)\approx 1$ mentre risulta malcondizionata per $\kappa(A)\gg 1$.
+		\end{sol}
+		\sectionline
+		\begin{es} %6.11
+			Calcolare il polinomio caratteristico della matrice
+			\[
+				\begin{pmatrix}
+					0 & \dots & 0 & \alpha\\
+					1 & \ddots & & 0\\
+					& \ddots & \ddots & \vdots\\
+					0 & & 1 & 0
+				\end{pmatrix}\in\mathbb{R}^{n\times n}.
+			\]
+		\end{es}
+		\begin{sol}
+			\normalfont Il polinomio caratteristico è dato del determinante della matrice $A-\lambda I$:
+			\begin{equation}\begin{split}\det{(A-\lambda I)}=&\det{\begin{pmatrix}-\lambda&\ldots&0&\alpha\\1&\ddots&&0\\&\ddots&\ddots&\vdots\\0&&1&-\lambda\end{pmatrix}}=\\=&(-1)^n\lambda^n+(-1)^{n+1}\alpha=(-1)^n(\lambda^n-\alpha).\end{split}\end{equation} Le radici di tale polinomio sono $\lambda=\sqrt[n]{\alpha}$.
+		\end{sol}
+		\sectionline
+		\begin{es} %6.12
+			\label{es:6.12}
+			Dimostrare che i metodi di Jacobi e Gauss-Seidel possono essere utilizzati per la risoluzione del sistema lineare (gli elementi non indicati sono da intendersi nulli)
+			\[
+				\begin{pmatrix}
+					1 & & & -\frac{1}{2}\\
+					-1 & 1 & &\\
+					& \ddots & \ddots &\\
+					& & -1 & 1
+				\end{pmatrix}\underline{x}=\begin{pmatrix}
+					\frac{1}{2}\\
+					0\\
+					\vdots\\
+					0
+				\end{pmatrix}\in\mathbb{R}^n,
+			\]
+			la cui soluzione è $\underline{x}=(1,\dots,1)^T\in\mathbb{R}^n$. Confrontare il numero di iterazioni richieste dai due metodi per soddisfare lo stesso criterio di arresto (\ref{criterioArrestoSplitting}), per valori crescenti di $n$ e per tolleranze $\varepsilon$ decrescenti. Riportare i risultati ottenuti in una tabella $(n/\varepsilon)$.
+		\end{es}
+		\begin{sol}
+			\normalfont 
+			La matrice è una M-matrice:$$A=\begin{pmatrix}1&&&-1/2\\-1&1&&\\&\ddots&\ddots&\\&&-1&1\end{pmatrix}=I-B\mbox{ con }B=\begin{pmatrix}0&&&1/2\\1&\ddots&&\\&\ddots&\ddots&\\&&1&0\end{pmatrix}>0.$$ Si dimostra che $\rho(B)<1$ calcolando gli autovalori della matrice $B$:
+			$$\det(B-\lambda I)=$$ $$\det\begin{pmatrix}-\lambda&&&1/2\\1&\ddots&&\\&\ddots&\ddots&\\&&1&-\lambda\end{pmatrix}=-\lambda\det\begin{pmatrix}-\lambda&&&\\1&\ddots&&\\&\ddots&\ddots&\\&&1&-\lambda\end{pmatrix}_{(n-1)\times (n-1)}+$$ $$+(-1)^{n+1}\frac{1}{2}\det\begin{pmatrix}1&-\lambda &&\\&\ddots&\ddots&\\&&\ddots&-\lambda\\&&&1\end{pmatrix}_{(n-1)\times (n-1)} = -\lambda(-\lambda)^{n-1}+(-1)^{n+1}\frac{1}{2}=$$$$=(-1)^{n-2}\lambda^n+(-1)^{n+1}\frac{1}{2}=(-1)^n\frac{1}{2}(2\lambda^n-1).$$ Quindi $\det(B-\lambda I)=0$ se e solo se $2\lambda^n-1=0$ se e solo se $\lambda=2^{-1/n}$. Poiché $|\lambda|<1$, $\rho(B)<1$ quindi $A$ è una M-matrice ed è possibile risolvere il sistema lineare tramite i metodo iterativi di Jacobi e Gauss-Seidel in quando lo splitting è regolare ed $A$ converge.\\
+			Implementando il criterio d'arresto $||\underline{r}_k||\leq\varepsilon||\underline{b}||$, si ha convergenza nel numero di iterazioni riportate nelle seguenti tabelle:
+			\footnotesize
+			\begin{center}\begin{tabular}{|c||c|c|c|c|c|c|c|c|c|c|}
+			\hline\multicolumn{11}{c}{Iterazioni del metodo di Jacobi}\\\hline		
+			$n \backslash \varepsilon $ & $10^{-1}$& $10^{-2}$& $10^{-3}$& $10^{-14}$& $10^{-5}$& $10^{-6}$& $10^{-7}$& $10^{-8}$& $10^{-9}$& $10^{-10}$\\\hline	
+			5& 25 & 34 & 54 & 74 & 85 & 105 & 124 & 139 & 157 & 171 \\\hline
+			10& 50 & 72 & 116 & 145 & 181 & 211 & 250 & 276 & 304 & 342 \\\hline
+			15& 87 & 125 & 180 & 230 & 284 & 326 & 379 & 430 & 465 & 524 \\ \hline
+			20& 95 & 175 & 239 & 298 & 370 & 433 & 512 & 573 & 628 & 702 \\\hline
+			25& 128 & 217 & 299 & 375 & 468 & 549 & 643 & 720 & 800 & 885 \\ \hline
+			30& 162 & 265 & 378 & 475 & 570 & 659 & 762 & 870 & 964 & 1066 \\ \hline
+			35& 199 & 311 & 436 & 533 & 662 & 775 & 905 & 1014 & 1120 & 1249 \\ \hline
+			40& 214 & 384 & 494 & 635 & 755 & 889 & 1037 & 1157 & 1299 & 1429 \\ \hline
+			45& 252 & 423 & 556 & 703 & 853 & 1020 & 1165 & 1327 & 1448 & 1607 \\ \hline
+			50& 299 & 458 & 622 & 787 & 963 & 1108 & 1290 & 1473 & 1630 & 1789 \\\hline
+			\end{tabular}\end{center}
+			\begin{center}\begin{tabular}{|c||c|c|c|c|c|c|c|c|c|c|}
+			\hline\multicolumn{11}{c}{Iterazioni del metodo di Gauss-Seidel}\\\hline
+			$n \backslash \varepsilon $ & $10^{-1}$& $10^{-2}$& $10^{-3}$& $10^{-14}$& $10^{-5}$& $10^{-6}$& $10^{-7}$& $10^{-8}$& $10^{-9}$& $10^{-10}$\\\hline	
+			5 & 3 & 7 & 10 & 13 & 17 & 20 & 22 & 26 & 30 & 33 \\\hline
+			10 & 1 & 6 & 10 & 13 & 16 & 20 & 23 & 26 & 27 & 33 \\\hline
+			15 & 4 & 6 & 9 & 12 & 17 & 19 & 21 & 27 & 27 & 33 \\ \hline
+			20 & 2 & 5 & 10 & 12 & 15 & 20 & 23 & 27 & 28 & 33 \\ \hline
+			25 & 4 & 4 & 10 & 12 & 16 & 20 & 24 & 23 & 28 & 33 \\ \hline
+			30 & 1 & 7 & 7 & 13 & 17 & 19 & 23 & 27 & 29 & 33 \\ \hline
+			35 & 2 & 7 & 10 & 11 & 17 & 19 & 23 & 26 & 30 & 32 \\ \hline
+			40 & 1 & 7 & 9 & 12 & 17 & 20 & 18 & 27 & 30 & 25 \\ \hline
+			45 & 1 & 3 & 9 & 13 & 15 & 20 & 23 & 27 & 30 & 32 \\ \hline
+			50 & 2 & 3 & 10 & 7 & 15 & 19 & 23 & 27 & 27 & 31 \\ \hline
+			\end{tabular}\end{center}
+			\normalsize Si nota come il numero di iterazioni richieste dal metodo di Gauss-Seidel sia molto minore del numero richiesto dal metodo di Jacobi, per ogni valore della tolleranza.
+			\begin{flushright}
+				\underline{Riferimenti \textsc{Matlab}}\\
+				Codice \ref{lst:es6.12} (pagina \pageref{lst:es6.12})
+			\end{flushright}
+		\end{sol}
+	\section*{Codice degli esercizi}
+		\addcontentsline{toc}{section}{Codice degli esercizi}
+		\markboth{\textsc{\uppercase{Capitolo }\ref{chapterGooglePagerank}\uppercase{. Calcolo del \textit{Google pagerank}}}}{\textsc{\uppercase{Codice degli esercizi}}}
+		\lstinputlisting[caption={Esercizio \ref{es:6.2}.}, label=lst:es6.2]{code/es6_2.m}
+		\sectionline
+		\lstinputlisting[caption={Esercizio \ref{es:6.12}.}, label=lst:es6.12]{code/es6_12.m}
+		
