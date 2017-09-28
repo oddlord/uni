@@ -1,0 +1,88 @@
+% !TeX spellcheck = it_IT
+%********************************************************************
+% Packages
+%********************************************************************
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage[bottom, hang, multiple, perpage]{footmisc}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{pkg/mips}
+\usepackage{placeins}
+\usepackage{listingsutf8}
+\usepackage{textcomp}
+\usepackage{morefloats}
+
+%********************************************************************
+% Packages options
+%********************************************************************
+
+% geometry
+\usepackage{geometry}
+\geometry{
+    a4paper,
+    ignoremp,
+    bindingoffset = 1cm, 
+    textwidth     = 13.5cm,
+    textheight    = 21.5cm,
+    lmargin       = 1cm,
+    rmargin		  = 3cm,
+    tmargin       = 2cm,
+    bmargin       = 3cm
+}
+
+% graphicx
+\graphicspath{{img/}}
+
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\lstset{
+	basicstyle=\small\sffamily,
+	numbers=left,
+    stepnumber=2,
+	numberstyle=\tiny,
+	numbersep=3pt,
+	frame=tb,
+	columns=flexible,
+	backgroundcolor=\color{yellow!20},
+	keywordstyle=\color{blue}\bfseries,
+	ndkeywordstyle=\color{mauve}\bfseries,
+	identifierstyle=\color{black},
+	commentstyle=\color{dkgreen}\ttfamily,
+	stringstyle=\color{red}\ttfamily,
+	inputencoding=utf8/latin1,
+	keepspaces=true,
+    literate=%
+        {à}{{\`a}}1
+        {À}{{\`A}}1
+        {è}{{\`e}}1
+        {ò}{{\`o}}1
+        {ù}{{\`u}}1,
+	numberbychapter=false,
+	showstringspaces=false,
+	breaklines=true,
+	upquote=true,
+	escapeinside={(*@}{@*)}
+}
+
+\lstdefinelanguage{pseudo}{
+	keywords={open, read, close, exit, switch, case, default, load_char, while, return, print_tab, print_newline, print, if, break, read_int, continue, else, println, read_string},
+	ndkeywords={null, true, false},
+	sensitive=false,
+	comment=[l]{//},
+	morestring=[b]',
+	morestring=[b]"
+}
+
+\definecolor{light-gray}{gray}{0.95}
+\newcommand{\pseudo}[1]{\colorbox{light-gray}{\lstinline[language=pseudo]{#1}}}
+\newcommand{\mips}[1]{\colorbox{light-gray}{\lstinline[language=mips]{#1}}}
+\newcommand{\bash}[1]{\colorbox{light-gray}{\lstinline[language=bash]{#1}}}
