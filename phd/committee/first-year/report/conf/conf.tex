@@ -1,0 +1,59 @@
+% !TeX root = ../report-phd-first-year.tex
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_GB
+
+%********************************************************************
+% Packages
+%********************************************************************
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage[bottom, para]{footmisc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{perpage}
+\usepackage{xcolor}
+\usepackage{epstopdf}
+\usepackage{placeins}
+
+%********************************************************************
+% Packages options
+%********************************************************************
+
+% geometry
+\usepackage{geometry}
+\geometry{
+    a4paper,
+    ignoremp,
+    bindingoffset = 1cm, 
+    textwidth     = 13.5cm,
+    textheight    = 21.5cm,
+    lmargin       = 1cm,
+    rmargin		    = 3cm,
+    tmargin       = 2cm,
+    bmargin       = 3cm
+}
+
+% perpage
+\MakePerPage{footnote}
+
+% hyperref
+\definecolor{webgreen}{rgb}{0,.5,0}
+\definecolor{webbrown}{rgb}{.6,0,0}
+\definecolor{RoyalBlue}{cmyk}{1, 0.50, 0, 0}
+\hypersetup{%
+  %draft, % = no hyperlinking at all (useful in b/w printouts)
+  colorlinks=true, linktocpage=true, pdfstartpage=3, pdfstartview=FitV,%
+  % uncomment the following line if you want to have black links (e.g., for printing)
+  % colorlinks=false, linktocpage=false, pdfstartpage=3, pdfstartview=FitV, pdfborder={0 0 0},%
+  breaklinks=true, pdfpagemode=UseNone, pageanchor=true, pdfpagemode=UseOutlines,%
+  plainpages=false, bookmarksnumbered, bookmarksopen=true, bookmarksopenlevel=1,%
+  hypertexnames=true, pdfhighlight=/O,%nesting=true,%frenchlinks,%
+  urlcolor=RoyalBlue, linkcolor=black, citecolor=webbrown, %pagecolor=RoyalBlue,%
+  %urlcolor=Black, linkcolor=Black, citecolor=Black, %pagecolor=Black,%
+}
+
+% graphicx
+\graphicspath{{img/}}
