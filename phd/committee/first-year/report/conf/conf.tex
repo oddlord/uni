@@ -88,7 +88,7 @@
     \ifAC@dua
       \ifAC@starred\acl*{#1}\else\acl{#1}\fi%
     \else
-      \expandafter\ifx\csname ac@#1\endcsname\AC@used%
+      \expandafter\ifx\csname AC@#1\endcsname\AC@used%
         \ifAC@starred\acs*{#1}\else\acs{#1}\fi%
       \else
         \ifAC@starred\acrf*{#1}\else\acrf{#1}\fi%
