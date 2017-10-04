@@ -17,6 +17,7 @@
 \usepackage{xcolor}
 \usepackage{epstopdf}
 \usepackage{placeins}
+\usepackage[nolist,nohyperlinks]{acronym}
 
 %********************************************************************
 % Packages options
@@ -57,3 +58,64 @@
 
 % graphicx
 \graphicspath{{img/}}
+
+%********************************************************************
+% New commands
+%********************************************************************
+
+% Reversed \ac
+% e.g. MRP (Markov Regenerative Process)
+\makeatletter
+  \newcommand*{\acrf}{\AC@starredfalse\protect\acrfa}%
+  \WithSuffix\newcommand\acrf*{\AC@starredtrue\protect\acrfa}%
+  \newcommand*{\acrfa}[1]{%
+    \texorpdfstring{\protect\@acrf{#1}}{#1 (\AC@acl{#1})}
+  }
+  \newcommand*{\@acrf}[1]{%
+    \ifAC@footnote
+      \acsfont{\AC@acs{#1}}%
+      \footnote{\AC@placelabel{#1}\AC@acl{#1}{}}%
+    \else
+      \acffont{%
+        \acfsfont{\acsfont{\AC@acs{#1}}}%
+        \nolinebreak[3] %
+        (\AC@placelabel{#1}\AC@acl{#1})%
+      }%
+    \fi
+    \ifAC@starred\else\AC@logged{#1}\fi
+  }
+  \newcommand{\@acr}[1]{%
+    \ifAC@dua
+      \ifAC@starred\acl*{#1}\else\acl{#1}\fi%
+    \else
+      \expandafter\ifx\csname AC@#1\endcsname\AC@used%
+        \ifAC@starred\acs*{#1}\else\acs{#1}\fi%
+      \else
+        \ifAC@starred\acrf*{#1}\else\acrf{#1}\fi%
+      \fi
+    \fi
+  }
+  \newcommand*{\acr}{\AC@starredfalse\protect\@acr}%
+  \WithSuffix\newcommand\acr*{\AC@starredtrue\protect\@acr}%
+\makeatother
+
+% Full acronym with plural long and singular short
+% e.g. Markov Regenerative Processes (MRP)
+\makeatletter
+  \renewcommand*{\acfpa}[1]{%
+    \texorpdfstring{\protect\@acfp{#1}}{\AC@aclp{#1} (\AC@acs{#1})}
+  }
+  \renewcommand*{\@acfp}[1]{%
+    \ifAC@footnote
+      \acsfont{\AC@acsp{#1}}%
+      \footnote{\AC@placelabel{#1}\AC@aclp{#1}{}}%
+    \else
+      \acffont{%
+        \AC@placelabel{#1}\AC@aclp{#1}%
+        \nolinebreak[3] %
+        \acfsfont{(\acsfont{\AC@acs{#1}})}%
+      }%
+    \fi
+    \ifAC@starred\else\AC@logged{#1}\fi
+  }
+\makeatother
