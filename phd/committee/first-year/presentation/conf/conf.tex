@@ -1,4 +1,4 @@
-% !TeX root = ../koneko-presentation.tex
+% !TeX root = ../phd-1st-year-presentation.tex
 % !TeX encoding = UTF-8
 % !TeX spellcheck = en_GB
 
@@ -64,3 +64,14 @@
 
 \newcommand{\tr}[1]{\mathtt{#1}}
 \newcommand{\pl}[1]{\mathtt{#1}}
+
+\AtBeginSection[]{
+  \begin{frame}
+  \vfill
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+    \usebeamerfont{title}\insertsectionhead\par%
+  \end{beamercolorbox}
+  \vfill
+  \end{frame}
+}
