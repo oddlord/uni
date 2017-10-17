@@ -1,0 +1,35 @@
+\tikzstyle{decision} = [diamond, draw, node distance=3cm, inner sep=0pt, minimum height=3em, minimum width=3em, align=center, fill=white]
+\tikzstyle{block} = [rectangle, draw, rounded corners, minimum height=2.5em, align=center, fill=white]
+\tikzstyle{line} = [draw, -latex', line width=.3mm]
+
+\begin{tikzpicture}[node distance = 1.5em, auto]
+  \draw [black!25, line width=.5mm, rounded corners=1.75ex, fill=black!5] (0,0) rectangle (10.2,4) node[fitting node] (ws) {};
+  \node [right = 2.5em of ws.north west, rectangle, draw, color=black!25, line width=.5mm, fill=white, text=black, rounded corners, minimum width=4em, minimum height=2em] (ws-name) {$\pl{WS}_k$};
+  % Place nodes
+  \node [above right = 6em and 1.5em of ws.south west, block, square] (p1) {$\pl{p}_1$};
+  \node [left = 5em of p1] (wsk-1) {};
+  \node [right = of p1, block, square] (p2) {$\pl{p}_2$};
+  \node [right = of p2, decision] (s1) {$\pl{s}_1$};
+  \node [above right = of s1, block, square] (p3a) {$\pl{p}_{3a}$};
+  \node [below right = of s1, block, square] (p3b) {$\pl{p}_{3b}$};
+  \node [right = of p3a, block, square] (p4a) {$\pl{p}_{4a}$};
+  \node [right = of p3b, block, square] (p4b) {$\pl{p}_{4b}$};
+  \node [right = of p4b, decision] (s2) {$\pl{s}_2$};
+  \node [above right = of s2, block, square] (p5) {$\pl{p}_5$};
+  \node [right = of p5, block, square] (d) {$\pl{d}$};
+  \node [right = 5em of d] (wsk+1) {};
+  % Draw edges
+  \path [line] (wsk-1) -- (p1);
+  \path [line] (p1) -- (p2);
+  \path [line] (p2) -- (s1);
+  \path [line] (s1) |- (p3a);
+  \path [line] (s1) |- (p3b);
+  \path [line] (p3a) -- (p4a);
+  \path [line] (p3b) -- (p4b);
+  \path [line] (p4b) -- (s2);
+  \path [line] (s2) -- ++(0,-0.8) -| (p3b);
+  \path [line] (p4a) -| (p5);
+  \path [line] (s2) -| (p5);
+  \path [line] (p5) -- (d);
+  \path [line] (d) -- (wsk+1);
+\end{tikzpicture}

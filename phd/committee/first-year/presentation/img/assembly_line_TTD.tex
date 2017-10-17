@@ -1,0 +1,50 @@
+\relaxnewsetlength{\nodewidth}{2.5em}
+\relaxnewsetlength{\nodedistance}{1.5em}
+\relaxnewsetlength{\workingnodewidth}{0.7\nodewidth}
+
+\relaxnewsetlength{\nodemeasuredistance}{0.1em}
+\relaxnewsetlength{\pathopdistance}{1.4em}
+
+\tikzstyle{block} = [rectangle, draw, rounded corners, minimum height=\nodewidth, align=center, fill=white]
+\tikzstyle{line} = [draw, -latex', line width=.3mm]
+\definecolor{notidlegray}{gray}{0.8}
+\tikzstyle{notidle} = [fill=notidlegray]
+
+\begin{tikzpicture}[node distance = \nodedistance, auto]
+  % Place nodes
+  \node [text width=1cm, align=center] at (0,0) (arrival) {\textit{arrival}};
+  
+  \node [right = of arrival, block, square] (ws1-white-background) {};
+  \fill [notidlegray, draw] ($(ws1-white-background.north west) + (\workingnodewidth,0)$) {[rounded corners] -- ++(-\workingnodewidth,0) -- ++(0,-\nodewidth)} -- ++(\workingnodewidth,0) -- cycle {};
+  \node [right = of arrival, block, square, fill=none] (ws1) {$\pl{WS}_{1}$};
+  \node [below = \nodemeasuredistance of ws1, align=center] (ws1-measure) {$\scriptstyle(R_1+Z_1)$};
+  
+  \node [right = of ws1, block, square] (ws2) {$\pl{WS}_{2}$};
+  \node [below = \nodemeasuredistance of ws2, align=center] (ws2-measure) {$\scriptstyle V_2$};
+  
+  \node [right = of ws2, block, square] (ws3) {$\pl{WS}_{3}$};
+  \node [below = \nodemeasuredistance of ws3, align=center] (ws3-measure) {$\scriptstyle V_3$};
+  \node [above = \nodemeasuredistance of ws3, align=center] (TTD3) {$\scriptstyle TTD_3$};
+  
+  \node [right = of ws3, block, square, notidle] (ws4) {$\pl{WS}_{4}$};
+  
+  \node [right = of ws4, block, square] (ws5-white-background) {};
+  \fill [notidlegray, draw] ($(ws5-white-background.north west) + (\workingnodewidth,0)$) {[rounded corners] -- ++(-\workingnodewidth,0) -- ++(0,-\nodewidth)} -- ++(\workingnodewidth,0) -- cycle {};
+  \node [right = of ws4, block, square, fill=none] (ws5) {$\pl{WS}_{5}$};
+  
+  \node [right = of ws5, block, square] (ws6-white-background) {};
+  \fill [notidlegray, draw] ($(ws6-white-background.north west) + (\workingnodewidth,0)$) {[rounded corners] -- ++(-\workingnodewidth,0) -- ++(0,-\nodewidth)} -- ++(\workingnodewidth,0) -- cycle {};
+  \node [right = of ws5, block, square, fill=none] (ws6) {$\pl{WS}_{6}$};
+  
+  \node [right = of ws6, text width=1.5cm, align=center] (production) {\textit{completion}};
+  % Draw edges
+  \path [line] (arrival) -- (ws1);
+  \path [line] (ws1) -- coordinate[midway] (ws1ws2) (ws2);
+  \node [below = \pathopdistance of ws1ws2, align=center] (ws1ws2-op) {$\scriptstyle+$};
+  \path [line] (ws2) -- coordinate[midway] (ws2ws3) (ws3);
+  \node [below = \pathopdistance of ws2ws3, align=center] (ws2ws3-op) {$\scriptstyle+$};
+  \path [line] (ws3) -- (ws4);
+  \path [line] (ws4) -- (ws5);
+  \path [line] (ws5) -- (ws6);
+  \path [line] (ws6) -- (production);
+\end{tikzpicture}

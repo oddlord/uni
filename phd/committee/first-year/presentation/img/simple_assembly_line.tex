@@ -1,0 +1,14 @@
+\tikzstyle{block} = [rectangle, draw, rounded corners, minimum height=2.5em, align=center, fill=white]
+\tikzstyle{line} = [draw, -latex', line width=.3mm]
+
+\begin{tikzpicture}[node distance = 1.5em, auto]
+  % Place nodes
+  \node [text width=1cm, align=center] at (0,0) (arrival) {\textit{arrival}};
+  \node [right = of arrival, block, square] (s1) {$\pl{S}_1$};
+  \node [right = of s1, block, square] (s2) {$\pl{S}_2$};
+  \node [right = of s2, text width=1.5cm, align=center] (production) {\textit{completion}};
+  % Draw edges
+  \path [line] (arrival) -- (s1);
+  \path [line] (s1) -- (s2);
+  \path [line] (s2) -- (production);
+\end{tikzpicture}

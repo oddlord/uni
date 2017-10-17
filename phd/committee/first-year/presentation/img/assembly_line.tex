@@ -1,0 +1,22 @@
+\tikzstyle{block} = [rectangle, draw, rounded corners, minimum height=2.5em, align=center, fill=white]
+\tikzstyle{line} = [draw, -latex', line width=.3mm]
+
+\begin{tikzpicture}[node distance = 1.5em, auto]
+  % Place nodes
+  \node [text width=1cm, align=center] at (0,0) (arrival) {\textit{product\\arrival}};
+  \node [right = of arrival, block, square] (ws1) {$\pl{WS}_1$};
+  \node [right = of ws1, block, square] (ws2) {$\pl{WS}_2$};
+  \node [right = of ws2] (dots1) {\ldots};
+  \node [right = of dots1, block, square] (wsk) {$\pl{WS}_{k}$};
+  \node [right = of wsk] (dots2) {\ldots};
+  \node [right = of dots2, block, square] (wsN) {$\pl{WS}_{N}$};
+  \node [right = of wsN, text width=1.5cm, align=center] (production) {\textit{production\\complete}};
+  % Draw edges
+  \path [line] (arrival) -- (ws1);
+  \path [line] (ws1) -- (ws2);
+  \path [line] (ws2) -- (dots1);
+  \path [line] (dots1) -- (wsk);
+  \path [line] (wsk) -- (dots2);
+  \path [line] (dots2) -- (wsN);
+  \path [line] (wsN) -- (production);
+\end{tikzpicture}

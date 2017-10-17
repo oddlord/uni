@@ -1,0 +1,30 @@
+\let\observationdistance\relax
+\newlength{\observationdistance}
+\setlength{\observationdistance}{0.1em}
+
+\tikzstyle{decision} = [diamond, draw, node distance=3cm, inner sep=0pt, minimum height=3em, minimum width=3em, align=center, fill=white]
+\tikzstyle{block} = [rectangle, draw, rounded corners, minimum height=2.5em, align=center, fill=white]
+\tikzstyle{line} = [draw, -latex', line width=.3mm]
+
+\tikzstyle{north-east-lines} = [preaction={fill, white}, pattern=north east lines, pattern color=black!30]
+
+\begin{tikzpicture}[node distance = 1.5em, auto]
+  \draw [black!25, line width=.5mm, rounded corners=1.75ex, fill=black!5] (0,0) rectangle (5.7,2.2) node[fitting node] (ws) {};
+  \node [right = 1em of ws.north west, rectangle, draw, color=black!25, line width=.5mm, fill=white, text=black, rounded corners, minimum width=2em, minimum height=1.5em] (ws-name) {$\pl{cyclic}$};
+  % Place nodes
+  \node [above right = 2.2em and 1.5em of ws.south west, block, square, fill=black!25] (p1) {$\pl{p}_1$};
+  \node [above = \observationdistance of p1] (p1-obs) {$o_1$};
+  \node [left = 3em of p1] (wsk-1) {};
+  \node [right = of p1, decision] (s1) {$\pl{s}_1$};
+  \node [right = of s1, block, square, north-east-lines] (p2) {$\pl{p}_{2}$};
+  \node [above = \observationdistance of p2] (p2-obs) {$o_2$};
+  \node [right = of p2, block, square] (d) {$\pl{d}$};
+  \node [right = 3em of d] (wsk+1) {};
+  % Draw edges
+  \path [line] (wsk-1) -- (p1);
+  \path [line] (p1) -- (s1);
+  \path [line] (s1) -- ++(0,-0.8) -| (p1);
+  \path [line] (s1) -- (p2);
+  \path [line] (p2) -- (d);
+  \path [line] (d) -- (wsk+1);
+\end{tikzpicture}
