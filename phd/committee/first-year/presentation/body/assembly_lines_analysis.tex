@@ -3,6 +3,448 @@
 % !TeX spellcheck = en_GB
 
 \section{Analysis of assembly lines}
-  \begin{frame}{Analysis of assembly lines}
+  \subsection{Assembly lines}
+    \begin{frame}{Assembly line}
+      \begin{center}\scalebox{0.9}{\input{img/assembly_line}}\end{center}
+      
+      \vspace{1em}
+      \begin{minipage}{0.6\textwidth}
+        $N$ sequential workstations $\pl{WS}_1, \dots, \pl{WS}_N$
+        \begin{itemize}
+          \item with transfer blocking
+          \item and no buffering capacity
+        \end{itemize}
+        
+        \vspace{1em}
+        Workstation $\pl{WS_k}$ can be in one of three states
+        \begin{itemize}
+          \item \textit{producing}: $\pl{WS_k}$ is working on a product
+          \item \textit{done}: $\pl{WS_k}$ is done working on a product
+          \item \textit{idling}: $\pl{WS_k}$ is waiting for a new product
+        \end{itemize}
+      \end{minipage}
+      \begin{minipage}{0.35\textwidth}
+        \begin{center}\scalebox{0.8}{\input{img/workstation_states.tex}}\end{center}
+    \end{minipage}
+    \end{frame}
     
-  \end{frame}
+    \begin{frame}{Workstation}
+      Each workstation $\pl{WS}_k$
+      \begin{itemize}
+        \item has no internal parallelism
+        \begin{itemize}
+          \item at most one item being processed in each workstation
+        \end{itemize}
+        \item can implement complex workflows
+        \begin{itemize}
+          \item sequential/alternative/cyclic phases with random choices
+        \end{itemize}
+        \item and has GEN phases' durations
+      \end{itemize}
+      
+      \begin{center}\scalebox{0.7}{\input{img/workstation}}\end{center}
+      
+      The last phase has no duration and encodes the \textit{done} state
+    \end{frame}
+    
+    \begin{frame}{Underlying stochastic process}
+      The underlying stochastic process of each isolated workstation\\
+      is a Semi Markov Process (SMP)
+      \begin{itemize}
+        \item due to GEN durations
+        \item and the absence of internal parallelism
+      \end{itemize}
+      
+      \vspace{1.5em}
+      The whole assembly line finds a renewal in any case where
+      \begin{itemize}
+        \item every \textit{done} station is in a queue before a bottleneck
+        \item and everything else is \textit{idling}
+      \end{itemize}
+      
+      \begin{center}\scalebox{0.8}{\input{img/assembly_line_bottleneck}}\end{center}
+    \end{frame}
+  
+  \subsection{Inspection}
+    \begin{frame}{Inspection with partial observability}
+      
+      The assembly line can be inspected by external observers
+      \begin{itemize}
+        \item the line can be considered at steady-state at inspection
+        \item there can be ambiguity about the current phase
+      \end{itemize}
+      
+      \vspace{1em}
+      An observation is a tuple $\omega=\langle \omega_0, \omega_1,\ldots, \omega_N \rangle$
+      \begin{itemize}
+        \item $\omega_0$ indicates if a new product is ready to enter the line or not
+        \item $\omega_k = \langle \sigma_k, \phi_k \rangle$ refers to $\pl{WS}_k$
+        \begin{itemize}
+          \item $\sigma_k$ indicates if $\pl{WS}_k$ is \textit{idle}/\textit{producing}/\textit{done}
+          \item $\phi_k$ identifies the set of possible current phases
+        \end{itemize}
+      \end{itemize}
+        
+      \vspace{1em}
+      \begin{minipage}{0.65\textwidth}
+        Two kinds of uncertainty
+        \begin{itemize}
+          \item about the actual current phase
+          \begin{itemize}
+            \item discrete
+          \end{itemize}
+          \item about the remaining time in the current phase%
+          \begin{itemize}
+            \item continuous
+          \end{itemize}
+        \end{itemize}
+      \end{minipage}
+      \begin{minipage}{0.3\textwidth}
+        \begin{center}\scalebox{0.65}{\input{img/workstation_observation}}\end{center}
+      \end{minipage}
+    \end{frame}
+  
+  \subsection{Performance measures}
+    \begin{frame}{Performance measures}
+      \relaxnewsetlength{\descriptionwidth}{0.6\textwidth}
+      \relaxnewsetlength{\schemawidth}{0.35\textwidth}
+      \newcommand{\schemascale}{0.45}
+      \relaxnewsetlength{\vspacegap}{1.5em}
+      
+      \begin{minipage}{\descriptionwidth}
+        \textbf{Time To Done}
+        \begin{itemize}
+          \item The remaining time until workstation $k$,\\
+            according to observation $\omega$,\\
+            reaches the \textit{done} state
+        \end{itemize}
+      \end{minipage}
+      \begin{minipage}{\schemawidth}
+        \begin{center}\scalebox{\schemascale}{\input{img/workstation_states_TTD}}\end{center}
+      \end{minipage}
+
+      \vspace{\vspacegap}
+      \begin{minipage}{\descriptionwidth}
+        \textbf{Time To Idle}
+        \begin{itemize}
+          \item The remaining time until workstation $k$,\\
+            according to observation $\omega$,\\
+            reaches the \textit{idling} state
+        \end{itemize}
+      \end{minipage}
+      \begin{minipage}{\schemawidth}
+        \begin{center}\scalebox{\schemascale}{\input{img/workstation_states_TTI}}\end{center}
+      \end{minipage}
+      
+      \vspace{\vspacegap}
+      \begin{minipage}{\descriptionwidth}
+        \textbf{Time To Start Next}
+        \begin{itemize}
+          \item The remaining time until workstation $k$,\\
+            according to observation $\omega$,\\
+            starts the production of a new product
+        \end{itemize}
+      \end{minipage}
+      \begin{minipage}{\schemawidth}
+        \begin{center}\scalebox{\schemascale}{\input{img/workstation_states_TTSN}}\end{center}
+      \end{minipage}
+    \end{frame}
+     
+  \subsection{Evaluation of performance measures}
+    \begin{frame}{Time To Done}
+      \begin{equation*}
+        \mbox{TTD}(k,\omega) := \left\{ \begin{array}{ll}
+          \displaystyle \sum_{\gamma\in \phi_k} P_{k, \gamma,\omega} \cdot (R(k,\gamma) + Z(k,\gamma)), &  \mbox{ if } \sigma_k=\mbox{\em producing}
+          \medskip\\
+          \mbox{TTD}(k-1,\omega) + V(k), & \mbox{ if } \sigma_k=\mbox{\em idling}
+          \medskip\\
+          0, & \mbox{ if } \sigma_k=\mbox{\em done}
+        \end{array} \right.
+        \label{eq:ttd}
+      \end{equation*}
+      
+      \begin{itemize}
+        \item $P_{k,\gamma,\omega}$ probability weight that $\pl{WS}_k$ is in phase $\gamma$ according to $\omega$
+        \item $R(k,\gamma)$ \textit{remaining time} in phase $\gamma$ of $\pl{WS}_k$
+        \item $Z(k,\gamma)$ \textit{execution time} of phases of $\pl{WS}_k$ that follow $\gamma$
+        \item $V(k)$ \textit{production time} of $\pl{WS}_k$
+      \end{itemize}
+      
+      \begin{center}\hspace{-0.5cm}\scalebox{0.8}{\input{img/assembly_line_TTD}}\end{center}
+      
+      Backward recursive evaluation
+    \end{frame}
+    
+    \begin{frame}{Time To Idle}
+      \begin{equation*}
+        \mbox{TTI}(k,\omega) := \left\{ \begin{array}{ll}
+          \max\{\mbox{TTD}(k,\omega),\mbox{TTI}(k+1,\omega)\}, & \mbox{ if } \sigma_k\in\{\mbox{\em producing}, \mbox{\em done}\}
+          \medskip\\
+          0, & \mbox{ if } \sigma_k=\mbox{\em idling}
+        \end{array} \right.
+        \label{eq:tti}
+      \end{equation*}
+      
+      \begin{itemize}
+        \item $\mbox{TTI}(k,\omega)=\max\{ \mbox{TTD}(k,\omega), \ldots, \mbox{TTD}(k+n,\omega) \}$
+        \begin{itemize}
+          \item $\pl{WS}_j$ producing/done $\forall j \in [k,k+n]$
+          \item either $\pl{WS}_{k+n}$ last workstation or $\pl{WS}_{k+n+1}$ idling
+        \end{itemize}
+        \item $\pl{WS}_k$ becomes idle when the bottleneck finishes its production
+      \end{itemize}
+      
+      \begin{center}\hspace{-1.5cm}\scalebox{0.8}{\input{img/assembly_line_TTI}}\end{center}
+      
+      Forward recursive evaluation
+    \end{frame}
+    
+    \begin{frame}{Time To Start Next}
+      \begin{equation*}
+        \mbox{TTSN}(k,\omega) := \max\{ \mbox{TTI}(k,\omega), \mbox{TTD}(k-1,\omega) \}
+        \label{eq:ttn}
+      \end{equation*}
+      
+      \vspace{1em}
+      \begin{center}\hspace{-1.5cm}\scalebox{0.8}{\input{img/assembly_line_TTSN}}\end{center}
+      
+      Forward and backward recursive evaluation
+    \end{frame}
+    
+    \begin{frame}{Disambiguation of observed phases}
+      Resolve observed (producing) phases' ambiguity
+      \begin{itemize}
+        \item steady-state probability that $\pl{WS}_k$ is in phase $\gamma$ according to $\omega$
+      \end{itemize}
+      Given observation $\phi_k$ for workstation $\pl{WS}_k$
+      \begin{itemize}
+        \item we compute probability $P_{k,\gamma,\omega}$
+        \item that it was actually $\gamma$ that produced $\phi_k$
+      \end{itemize}
+      
+     	\begin{equation*}
+       	P_{k,\gamma,\omega} = \frac{\tilde{\pi}(\gamma)}{\displaystyle \sum_{\gamma' \in \phi_k} \tilde{\pi}(\gamma')}
+       	\label{eq:probabilityObservation}
+     	\end{equation*}
+     	
+     	\begin{itemize}
+       	\item $\tilde{\pi}(\gamma)$ steady-state probability of phase $\gamma$ in an isolated model of $\pl{WS}_k$
+     	\end{itemize}
+    \end{frame}
+    
+    \begin{frame}{Isolated workstation model}
+      The isolated workstation model represents a workstation\\
+      repeatedly processing a product
+      \begin{itemize}
+        \item one product being processed
+        \item after its production, it's moved back to the entry point of the workstation
+      \end{itemize}
+      
+      \begin{center}\scalebox{0.6}{\input{img/isolated_workstation}}\end{center}
+      
+      It can be used for two reasons
+      \begin{itemize}
+        \item steady-state probabilities of producing phases are independent
+        \item the inspection is at steady-state
+        \begin{itemize}
+          \item arrivals and productions can be considerer in equilibrium
+        \end{itemize}
+      \end{itemize}
+    \end{frame}
+    
+    \begin{frame}{Remaining time}
+      Evaluation of $F_{R(k,\gamma)}(t) = $ CDF of $R(k,\gamma)$
+      \begin{itemize}
+        \item $R(k,\gamma)$ \textit{remaining time} in phase $\gamma$ of $\pl{WS}_k$
+      \end{itemize}
+      
+      \vspace{1em}
+      Problem!
+      \begin{itemize}
+        \item remaining times of enabled GEN transitions are \textit{dependent}
+        \item joint probabilities don't allow for a compositional approach
+      \end{itemize}
+      
+      \vspace{1em}
+      $\sfrac{1}{3}$ \textit{Immediate} approximation
+      \begin{itemize}
+        \item assume that phase $\gamma$ is inspected at its ending
+        \begin{itemize}
+          \item $\tilde{F}_{R(k, \gamma)}(t) = 1 \quad \forall t$
+        \end{itemize}
+        \item represents an \textit{upper bound}
+      \end{itemize}
+      
+      \vspace{1em}
+      $\sfrac{2}{3}$ \textit{Newly enabled} approximation
+      \begin{itemize}
+        \item assume that phase $\gamma$ is inspected at its beginning
+        \begin{itemize}
+          \item $\tilde{F}_{R(k, \gamma)}(t) = F_{\gamma}(t)$ 
+          \item $F_{\gamma}(t)$ original CDF of the duration of $\gamma$
+        \end{itemize}
+        \item represents a \textit{lower bound}
+      \end{itemize}
+    \end{frame}
+    
+    \begin{frame}{Remaining time}
+      $\sfrac{3}{3}$ \textit{Independent remaining times} approximation
+      \begin{itemize}
+        \item consider the remaining times of ongoing phases as \textit{independent}
+        \item represents a (better) \textit{lower bound}
+      \end{itemize}
+      
+      \begin{block}{Theorem: positive correlation \& stochastic order}
+        If $\hat{R}$ is an independent version of vector $R$ of positively correlated remaining times of ongoing phases, then $\hat{R} \geq_{st} R$
+      \end{block}
+      
+      \vspace{1em}
+      Steady-state distribution of $\hat{R}(k,\gamma)$\\
+      computed according to the Key Renewal Theorem\footnote{\scriptsize Serfozo, R., 2009. Basics of applied stochastic processes. Springer Science \& Business Media.}
+      \begin{equation*}
+        \tilde{F}_{R(k,\gamma)}(t) = \frac{1}{\mu} \int_{0}^{t} [1 - F_{\gamma}(s)]ds
+      \end{equation*}
+      \begin{itemize}
+        \item $\mu$ expected value of $F_{\gamma}(t)$
+      \end{itemize}
+    \end{frame}
+    
+    \begin{frame}{Execution and producing time}
+      Evaluation of $F_{Z(k,\gamma)}(t)$ and $F_{V(k)}$
+      \begin{itemize}
+        \item $Z(k,\gamma)$ \textit{execution time} of phases of $\pl{WS}_k$ that follow $\gamma$
+        \item $V(k)$ \textit{production time} of $\pl{WS}_k$
+      \end{itemize}
+    
+      \vspace{1em}
+      CDFs of $Z(k,\gamma)$ and $V(k)$ are computed as transient probabilities
+      
+      \begin{itemize}
+        \item $F_{Z(k,\gamma)}$ transient probability from phase after $\gamma$ to final phase of $\pl{WS}_k$
+        \item $F_{V(k)}$ transient probability from first phase to final phase of $\pl{WS}_k$
+      \end{itemize}
+      
+      \vspace{2em}
+      Upper/lower bounds for \textit{TTD}, \textit{TTI} and \textit{TTSN} can be evaluated
+      \begin{itemize}
+        \item \textit{convolution} and \textit{max} operations maintain stochastic order
+      \end{itemize}
+    \end{frame}
+    
+  \subsection{Experimentation}
+    \begin{frame}{Case study assembly lines}
+      Sequential, alternative and cyclic workstations
+      
+      \vspace{0.5em}
+      \begin{minipage}{0.3\textwidth}
+        \begin{center}\scalebox{0.5}{\input{img/serial_workstation}}\end{center}
+      \end{minipage}
+      \begin{minipage}{0.325\textwidth}
+        \begin{center}\scalebox{0.5}{\input{img/alternative_workstation}}\end{center}
+      \end{minipage}
+      \begin{minipage}{0.325\textwidth}
+        \begin{center}\scalebox{0.5}{\input{img/cyclic_workstation}}\end{center}
+      \end{minipage}
+      
+      \vspace{1em}
+      \begin{minipage}{0.5\textwidth}
+        \textit{Simple} assembly line
+        \begin{itemize}
+          \item two sequential workstations
+          \item both in phase $\pl{p}_1$ at inspection
+        \end{itemize}
+      \end{minipage}
+      \begin{minipage}{0.45\textwidth}
+        \begin{center}\scalebox{0.7}{\input{img/simple_assembly_line}}\end{center}
+      \end{minipage}
+      
+      \vspace{2em}
+      \begin{minipage}{0.5\textwidth}
+        \textit{Complex} assembly line
+        \begin{itemize}
+          \item three repetitions
+          \item of sequential/alternative/cyclic ws
+          \item all observed in \textit{producing}
+        \end{itemize}
+      \end{minipage}
+      \begin{minipage}{0.45\textwidth}
+        \begin{center}\scalebox{0.7}{\input{img/complex_assembly_line}}\end{center}
+      \end{minipage}
+    \end{frame}
+    
+    \begin{frame}{Simple assembly line}{TTDone, TTIdle, TTStartNext}
+      \begin{minipage}{0.3\textwidth}
+        \begin{center}
+          {\tiny $F_{TTD(1,\omega)}$}\\
+          \colorbox{white}{\includegraphics[scale=0.25]{simple_ttd_cdf}}
+        \end{center}
+      \end{minipage}
+      \begin{minipage}{0.3\textwidth}
+        \begin{center}
+          {\tiny $F_{TTI(1,\omega)}$}\\
+          \colorbox{white}{\includegraphics[scale=0.25]{simple_tti_cdf}}
+        \end{center}
+      \end{minipage}
+      \begin{minipage}{0.3\textwidth}
+        \begin{center}
+          {\tiny $F_{TTSN(2,\omega)}$}\\
+          \colorbox{white}{\includegraphics[scale=0.25]{simple_ttsn_cdf}}
+        \end{center}
+      \end{minipage}
+      
+      \begin{minipage}{0.5\textwidth}
+        \textit{TTD}, \textit{TTI} and \textit{TTSN} computed in
+        \begin{itemize}
+          \item 41/45/42 min for simulation
+          \item 0.15/0.18/0.10 s for bounds
+        \end{itemize}
+      \end{minipage}
+      \begin{minipage}{0.45\textwidth}
+        \vspace{2em}
+        Very good approximation results
+        \begin{itemize}
+          \item especially for \textit{independent remaining times}
+        \end{itemize}
+        Feasible approach
+        \begin{itemize}
+          \item very fast bounds evaluation
+          \item compared to simulation
+        \end{itemize}
+      \end{minipage}
+    \end{frame}
+    
+    \begin{frame}{Complex assembly line}{TTDone, TTIdle, TTStartNext}
+      \begin{minipage}{0.3\textwidth}
+        \begin{center}
+          {\tiny $F_{TTD(5,\omega)}$}\\
+          \colorbox{white}{\includegraphics[scale=0.25]{complex_ttd_cdf}}
+        \end{center}
+      \end{minipage}
+      \begin{minipage}{0.3\textwidth}
+        \begin{center}
+          {\tiny $F_{TTI(5,\omega)}$}\\
+          \colorbox{white}{\includegraphics[scale=0.25]{complex_tti_cdf}}
+        \end{center}
+      \end{minipage}
+      \begin{minipage}{0.3\textwidth}
+        \begin{center}
+          {\tiny $F_{TTSN(5,\omega)}$}\\
+          \colorbox{white}{\includegraphics[scale=0.25]{complex_ttsn_cdf}}
+        \end{center}
+      \end{minipage}
+      
+      \vspace{4em}
+      \begin{minipage}{0.5\textwidth}
+        \textit{TTD}, \textit{TTI} and \textit{TTSN} computed in
+        \begin{itemize}
+          \item 0.126/0.123/0.75 s for bounds
+        \end{itemize}
+      \end{minipage}
+      \begin{minipage}{0.45\textwidth}
+        Scalable solution
+        \begin{itemize}
+          \item in a complex scenario
+          \item simulation would be infeasible
+        \end{itemize}
+      \end{minipage}
+    \end{frame}

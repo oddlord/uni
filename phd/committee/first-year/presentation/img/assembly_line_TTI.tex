@@ -2,8 +2,11 @@
 \relaxnewsetlength{\nodedistance}{1.5em}
 \relaxnewsetlength{\workingnodewidth}{0.7\nodewidth}
 
-\relaxnewsetlength{\nodemeasuredistance}{0.1em}
+\relaxnewsetlength{\nodemeasuredistance}{0.15em}
 \relaxnewsetlength{\pathopdistance}{1.4em}
+\relaxnewsetlength{\extradistance}{0.25em}
+\relaxnewsetlength{\nodemeasuredistanceextra}{\nodemeasuredistance + \extradistance}
+\relaxnewsetlength{\pathopdistanceextra}{\pathopdistance + \extradistance}
 
 \tikzstyle{block} = [rectangle, draw, rounded corners, minimum height=\nodewidth, align=center, fill=white]
 \tikzstyle{line} = [draw, -latex', line width=.3mm]
@@ -23,28 +26,27 @@
   \node [right = of ws2, block, square] (ws3) {$\pl{WS}_{3}$};
   
   \node [right = of ws3, block, square, notidle] (ws4) {$\pl{WS}_{4}$};
-  \node [below = \nodemeasuredistance of ws4, align=center] (ws4-measure) {$\scriptstyle 0$};
+  \node [below = \nodemeasuredistance of ws4, align=center] (ws4-measure) {$(\scriptstyle 0,$};
   \node [above = \nodemeasuredistance of ws4, align=center] (TTI4) {$\scriptstyle TTI_4$};
   
   \node [right = of ws4, block, square] (ws5-white-background) {};
   \fill [notidlegray, draw] ($(ws5-white-background.north west) + (\workingnodewidth,0)$) {[rounded corners] -- ++(-\workingnodewidth,0) -- ++(0,-\nodewidth)} -- ++(\workingnodewidth,0) -- cycle {};
   \node [right = of ws4, block, square, fill=none] (ws5) {$\pl{WS}_{5}$};
-  \node [below = \nodemeasuredistance of ws5, align=center] (ws5-measure) {$\scriptstyle (R_5+Z_5)$};
+  \node [below = \nodemeasuredistanceextra of ws5, align=center] (ws5-measure) {$\scriptstyle (R_5+Z_5),$};
   
   \node [right = of ws5, block, square] (ws6-white-background) {};
   \fill [notidlegray, draw] ($(ws6-white-background.north west) + (\workingnodewidth,0)$) {[rounded corners] -- ++(-\workingnodewidth,0) -- ++(0,-\nodewidth)} -- ++(\workingnodewidth,0) -- cycle {};
   \node [right = of ws5, block, square, fill=none] (ws6) {$\pl{WS}_{6}$};
-  \node [below = \nodemeasuredistance of ws6, align=center] (ws6-measure) {$\scriptstyle (R_6+Z_6)$};
+  \node [below = \nodemeasuredistance of ws6, align=center] (ws6-measure) {${\scriptstyle (R_6+Z_6)})$};
   
   \node [right = of ws6, text width=1.5cm, align=center] (production) {\textit{completion}};
   % Draw edges
   \path [line] (arrival) -- (ws1);
   \path [line] (ws1) -- (ws2);
   \path [line] (ws2) -- (ws3);
-  \path [line] (ws3) -- (ws4);
-  \path [line] (ws4) -- coordinate[midway] (ws4ws5) (ws5);
-  \node [below = \pathopdistance of ws4ws5, align=center] (ws4ws5-op) {$\scriptstyle\vee$};
-  \path [line] (ws5) -- coordinate[midway] (ws5ws6) (ws6);
-  \node [below = \pathopdistance of ws5ws6, align=center] (ws5ws6-op) {$\scriptstyle\vee$};
+  \path [line] (ws3) -- coordinate[midway] (ws3ws4)  (ws4);
+  \node [below right = \pathopdistanceextra and -0.2em of ws3ws4, align=center] (ws3ws4-op) {$\scriptstyle\max$};
+  \path [line] (ws4) -- (ws5);
+  \path [line] (ws5) -- (ws6);
   \path [line] (ws6) -- (production);
 \end{tikzpicture}
