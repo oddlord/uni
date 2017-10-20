@@ -1,0 +1,97 @@
+\begin{tikzpicture}[
+    node distance=1.6cm,
+    label distance=0.05mm,
+    >=stealth',
+    bend angle=45,
+    auto,
+    font=\sffamily,
+    font=\small
+  ]
+  
+  \def\timedWidth{2mm}
+  \def\immWidth{1mm}
+  \def\transitionHeight{6mm}
+  
+  \tikzstyle{inhib}=[-o]
+  \tikzstyle{imm}=[
+    rectangle,
+    draw=black!100,
+    fill=black!100,
+    minimum height=\transitionHeight,
+    minimum width=\immWidth,
+    inner xsep=0mm
+  ]
+  
+  \tikzstyle{gen}=[
+    rectangle,
+    thick,
+    draw=black!100,
+    fill=black!80,
+    minimum height=\transitionHeight,
+    minimum width=\timedWidth
+  ]
+  
+  \tikzstyle{det}=[
+    rectangle,
+    thick,
+    draw=black!75,
+    fill=black!35,
+    minimum height=\transitionHeight,
+    minimum width=\timedWidth
+  ]
+  
+  \tikzstyle{exp}=[
+    rectangle,
+    thick,
+    draw=black!75,
+    fill=white!20,
+    minimum height=\transitionHeight,
+    minimum width=\timedWidth
+  ]
+  
+  \tikzstyle{hor}=[
+    minimum height=\timedWidth,
+    minimum width=\transitionHeight
+  ]
+  
+  \tikzstyle{immhor}=[
+    minimum height=\immWidth,
+    minimum width=\transitionHeight
+  ]
+  
+  \tikzstyle{place}=[
+    circle,
+    thick,
+    minimum size=6mm,
+    draw=black
+  ]
+  
+  \def\upperplaceheight{0}
+  \def\middleplaceheight{-1}
+  \def\lowerplaceheight{-2}
+  	
+  \begin{scope}[
+    decorate,
+    scale=1.6,
+    decoration={
+    	random steps,
+    	segment length=0.5mm,
+    	amplitude=0.15pt
+    },
+    token distance=0.75ex
+  ]
+    
+    \node [place,tokens=1] at (0,0) (G1) [label={[align=center]above:$\pl{G_1}$}] {};	
+    \node [place,tokens=0] at (1.5,0) (Restart) [label={[align=center]above:$\pl{Restart}$}] {};
+    \node [place,tokens=1] at (3.5,0) (G2) [label={[align=center]above:$E_1$}] {};
+    
+    \node [gen] at (0.75,0) (gen1) [label={[align=center]below:$\tr{gen_1}$\\\textsc{uni}[2,4]}] {} edge [pre]  (G1) edge [post] (Restart);
+    
+    \node [det] at (2.25,0) (restart) [label={[align=center]above:$\tr{restart}$\\\textsc{det}(1)}] {} edge [pre] (Restart) edge [post] (G2);
+    \draw [post] (restart) -- ++(0,-1) -- (0,-1) -- (G1);
+    
+    \node [gen] at (4.25,0) (gen2) [label={[align=center]below:$\tr{gen_2}$\\\textsc{UNI}[1,2]}] {} edge [pre] (G2);
+  
+  \end{scope}
+\end{tikzpicture}
+ 

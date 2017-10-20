@@ -2,7 +2,66 @@
 % !TeX encoding = UTF-8
 % !TeX spellcheck = en_GB
 
-\section{A hybrid technique for transient analysis}
-  \begin{frame}{A hybrid technique for transient analysis}
+\section{A hybrid technique for MRP transient analysis}
+  \begin{frame}{A hybrid technique for MRP transient analysis}
+    Transient analysis of Markov Regenerative Processes (MRP)\\
+    employing different techniques for different epochs
     
+    \vspace{1em}
+    The basics:
+    \begin{itemize}
+      \item Exact techniques require specific conditions to be met
+      \begin{itemize}
+        \item different techniques require different conditions
+      \end{itemize}
+      \item Kernel rows of different epochs can be evaluated independently
+    \end{itemize}
+    
+    \vspace{1em}
+    The idea:
+    \begin{itemize}
+      \item Evaluate each kernel row with a different technique
+      \begin{itemize}
+        \item corresponding to the condition enabled in that epoch
+        \item eventually with an approximate technique, if no conditions are met
+      \end{itemize}
+      \item Compute transient probabilities with Markov Renewal Equations
+    \end{itemize}
+  \end{frame}
+  
+  \begin{frame}{Analysis under enabling restriction\footnote{German, R., Logothetis, D., \& Trivedi, K. S. (1995, October). Transient analysis of Markov regenerative stochastic Petri nets: A comparison of approaches. In Petri Nets and Performance Models, 1995., Proceedings of the Sixth International Workshop on (pp. 103-112). IEEE.}}
+    \textbf{Enabling restriction}
+    \begin{itemize}
+      \item at most one GEN enabled in each state
+    \end{itemize}
+    
+    \vspace{1em}
+    \begin{center}\scalebox{0.8}{\input{img/pn_enabling_restriction}}\end{center}
+  \end{frame}
+  
+  \begin{frame}{Analysis with stochastic state classes\footnote{Horváth, A., Paolieri, M., Ridi, L., \& Vicario, E. (2012). Transient analysis of non-Markovian models using stochastic state classes. Performance Evaluation, 69(7), 315-335.}}
+    \textbf{Bounded regeneration restriction}
+    \begin{itemize}
+      \item a regeneration is always reached within a bounded number of events
+      \item i.e. there are no cycles without regenerations
+    \end{itemize}
+    
+    \vspace{1em}
+    \begin{center}\scalebox{0.8}{\input{img/pn_bounded_regeneration}}\end{center}
+  \end{frame}
+  
+  \begin{frame}{Approximate analysis with stochastic state classes}
+    \textbf{No restriction}
+    \begin{itemize}
+      \item usable when no conditions are met
+    \end{itemize}
+    
+     \vspace{1em}
+    Based on analysis with stochastic state classes
+    \begin{itemize}
+      \item truncated after enough precision is met
+    \end{itemize}
+    
+    \vspace{1em}
+    \begin{center}\scalebox{0.8}{\input{img/pn_no_restriction}}\end{center}
   \end{frame}
