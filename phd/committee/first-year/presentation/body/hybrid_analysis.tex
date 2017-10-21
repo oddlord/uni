@@ -35,8 +35,13 @@
       \item at most one GEN enabled in each state
     \end{itemize}
     
-    \vspace{1em}
-    \begin{center}\scalebox{0.8}{\input{img/pn_enabling_restriction}}\end{center}
+    \begin{center}\scalebox{0.7}{\input{img/pn_enabling_restriction}}\end{center}
+    
+    Kernel rows computed by
+    \begin{itemize}
+      \item analysing the CTMC
+      \item subordinated to the activity of the GEN
+    \end{itemize}
   \end{frame}
   
   \begin{frame}{Analysis with stochastic state classes\footnote{Horváth, A., Paolieri, M., Ridi, L., \& Vicario, E. (2012). Transient analysis of non-Markovian models using stochastic state classes. Performance Evaluation, 69(7), 315-335.}}
@@ -46,8 +51,14 @@
       \item i.e. there are no cycles without regenerations
     \end{itemize}
     
-    \vspace{1em}
-    \begin{center}\scalebox{0.8}{\input{img/pn_bounded_regeneration}}\end{center}
+    \begin{center}\scalebox{0.7}{\input{img/pn_bounded_regeneration}}\end{center}
+    
+    Kernel rows computed by
+    \begin{itemize}
+      \item enumerating stochastic transient trees
+      \item of reached classes
+      \item between two regenerations
+    \end{itemize}
   \end{frame}
   
   \begin{frame}{Approximate analysis with stochastic state classes}
@@ -56,12 +67,10 @@
       \item usable when no conditions are met
     \end{itemize}
     
-     \vspace{1em}
+    \begin{center}\scalebox{0.7}{\input{img/pn_no_restriction}}\end{center}
+    
     Based on analysis with stochastic state classes
     \begin{itemize}
       \item truncated after enough precision is met
     \end{itemize}
-    
-    \vspace{1em}
-    \begin{center}\scalebox{0.8}{\input{img/pn_no_restriction}}\end{center}
   \end{frame}
