@@ -5,7 +5,7 @@
 \section{A hybrid technique for MRP transient analysis}
   \begin{frame}{A hybrid technique for MRP transient analysis}
     Transient analysis of Markov Regenerative Processes (MRP)\\
-    employing different techniques for different epochs
+    employing different techniques for different regenerative epochs
     
     \vspace{1em}
     The basics:
@@ -29,48 +29,90 @@
     \end{itemize}
   \end{frame}
   
-  \begin{frame}{Analysis under enabling restriction\footnote{German, R., Logothetis, D., \& Trivedi, K. S. (1995, October). Transient analysis of Markov regenerative stochastic Petri nets: A comparison of approaches. In Petri Nets and Performance Models, 1995., Proceedings of the Sixth International Workshop on (pp. 103-112). IEEE.}}
-    \textbf{Enabling restriction}
-    \begin{itemize}
-      \item at most one GEN enabled in each state
-    \end{itemize}
-    
-    \begin{center}\scalebox{0.7}{\input{img/pn_enabling_restriction}}\end{center}
-    
-    Kernel rows computed by
-    \begin{itemize}
-      \item analysing the CTMC
-      \item subordinated to the activity of the GEN
-    \end{itemize}
-  \end{frame}
+  \subsection{Techniques for MRP transient analysis}
+    \begin{frame}{Techniques for MRP transient analysis}
+      \begin{minipage}{0.6\textwidth}
+        \textbf{Analysis under enabling restriction}\footnotemark
+        \begin{itemize}
+          \item at most one GEN enabled in each state
+        \end{itemize}
+      \end{minipage}
+      \begin{minipage}{0.35\textwidth}
+        \begin{center}\scalebox{0.45}{\input{img/pn_enabling_restriction}}\end{center}
+      \end{minipage}
+      
+      \begin{minipage}{0.6\textwidth}
+        \textbf{Analysis with stochastic state classes}\footnotemark
+        \begin{itemize}
+          \item a regeneration is always reached\\
+            within a bounded number of events
+          \begin{itemize}
+            \item i.e. no cycles without regenerations
+          \end{itemize}
+          \item a.k.a. bounded regeneration
+        \end{itemize}
+      \end{minipage}
+      \begin{minipage}{0.35\textwidth}
+        \begin{center}\scalebox{0.45}{\input{img/pn_bounded_regeneration}}\end{center}
+      \end{minipage}
+      
+      \begin{minipage}{0.6\textwidth}
+        \textbf{Approximate analysis}
+        \begin{itemize}
+          \item usable when no conditions are met
+        \end{itemize}
+      \end{minipage}
+      \begin{minipage}{0.35\textwidth}
+        \begin{center}\scalebox{0.45}{\input{img/pn_no_restriction}}\end{center}
+      \end{minipage}
+      
+      \addtocounter{footnote}{-1}
+      \footnotetext{German, R., Logothetis, D., \& Trivedi, K. S. (1995, October). Transient analysis of Markov regenerative stochastic Petri nets: A comparison of approaches. In Petri Nets and Performance Models, 1995., Proceedings of the Sixth International Workshop on (pp. 103-112). IEEE.}
+      \stepcounter{footnote}
+      \footnotetext{Horváth, A., Paolieri, M., Ridi, L., \& Vicario, E. (2012). Transient analysis of non-Markovian models using stochastic state classes. Performance Evaluation, 69(7), 315-335.}
+    \end{frame}
   
-  \begin{frame}{Analysis with stochastic state classes\footnote{Horváth, A., Paolieri, M., Ridi, L., \& Vicario, E. (2012). Transient analysis of non-Markovian models using stochastic state classes. Performance Evaluation, 69(7), 315-335.}}
-    \textbf{Bounded regeneration restriction}
-    \begin{itemize}
-      \item a regeneration is always reached within a bounded number of events
-      \item i.e. there are no cycles without regenerations
-    \end{itemize}
+  \subsection{Classification of epochs}
+    \begin{frame}{Classification of epochs}
+      Through \textbf{non-deterministic analysis}
+      \begin{itemize}
+        \item State Class Graphs (SCG) are built
+        \item for each regenerative epoch
+      \end{itemize}
+      
+      \vspace{2em}
+      By visiting each SCG, epochs are classified
+      \begin{itemize}
+        \item enabling restriction
+        \begin{itemize}
+          \item if at most one GEN is enabled in any state
+        \end{itemize}
+        \item bounded regeneration
+        \begin{itemize}
+          \item if no cycle is present
+        \end{itemize}
+      \end{itemize}
+    \end{frame}
     
-    \begin{center}\scalebox{0.7}{\input{img/pn_bounded_regeneration}}\end{center}
-    
-    Kernel rows computed by
-    \begin{itemize}
-      \item enumerating stochastic transient trees
-      \item of reached classes
-      \item between two regenerations
-    \end{itemize}
-  \end{frame}
-  
-  \begin{frame}{Approximate analysis with stochastic state classes}
-    \textbf{No restriction}
-    \begin{itemize}
-      \item usable when no conditions are met
-    \end{itemize}
-    
-    \begin{center}\scalebox{0.7}{\input{img/pn_no_restriction}}\end{center}
-    
-    Based on analysis with stochastic state classes
-    \begin{itemize}
-      \item truncated after enough precision is met
-    \end{itemize}
-  \end{frame}
+  \subsection{Iterative approximate technique}
+    \begin{frame}{Iterative approximate technique}
+      Based on analysis with stochastic state classes
+      \begin{itemize}
+        \item truncated after enough precision is met
+      \end{itemize}
+      
+      \vspace{2em}
+      Improvement with heuristics
+      \begin{enumerate}
+        \item expand at most $\nu_{start}$ nodes for non restricted epochs
+        \item identify the truncated node $\Phi$ with highest reaching probability
+        \begin{itemize}
+          \item based on steady-state analysis of the embedded DTMC
+        \end{itemize}
+        \item expand at most $\nu_{iter}$ nodes from $\Phi$
+        \item if at least $\nu_{max}$ nodes expanded, stop
+        \begin{itemize}
+          \item otherwise, return to step 2
+        \end{itemize}
+      \end{enumerate}
+    \end{frame}
