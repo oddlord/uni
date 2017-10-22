@@ -6,7 +6,7 @@
 \relaxnewsetlength{\pathopdistance}{1.4em}
 \relaxnewsetlength{\extradistance}{0.25em}
 \relaxnewsetlength{\nodemeasuredistanceextra}{\nodemeasuredistance + \extradistance}
-\relaxnewsetlength{\pathopdistanceextra}{\pathopdistance + \extradistance}
+\relaxnewsetlength{\pathopdistanceextra}{\pathopdistance + \extradistance + 0.2em}
 
 \tikzstyle{block} = [rectangle, draw, rounded corners, minimum height=\nodewidth, align=center, fill=white]
 \tikzstyle{line} = [draw, -latex', line width=.3mm]
@@ -45,7 +45,7 @@
   \path [line] (ws1) -- (ws2);
   \path [line] (ws2) -- (ws3);
   \path [line] (ws3) -- coordinate[midway] (ws3ws4)  (ws4);
-  \node [below right = \pathopdistanceextra and -0.2em of ws3ws4, align=center] (ws3ws4-op) {$\scriptstyle\max$};
+  \node [below right = \pathopdistanceextra and -0.4em of ws3ws4, align=center] (ws3ws4-op) {$\scriptstyle\max$};
   \path [line] (ws4) -- (ws5);
   \path [line] (ws5) -- (ws6);
   \path [line] (ws6) -- (production);

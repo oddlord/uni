@@ -1,0 +1,44 @@
+% !TeX root = ../phd-1st-year-presentation.tex
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_GB
+
+\section{The LINFA project}
+  \begin{frame}{The LINFA project}
+    Smart drug restocking for hospital wards
+    \begin{itemize}
+      \item minimise overall cost of ordering and stocking drugs
+      \item predict drug usage and possible shortages
+    \end{itemize}
+    
+    \vspace{2em}
+    The idea:
+    \begin{itemize}
+      \item Build and solve a Markov Decision Process (MDP) model of the ward
+      \begin{itemize}
+        \item actualised at runtime with the current state of the ward
+      \end{itemize}
+      \item suggest the optimal strategy top the user
+    \end{itemize}
+  \end{frame}
+  
+  \subsection{Solution architecture}
+    \begin{frame}{Solution architecture}
+      At the end of the current day
+      \begin{itemize}
+        \item a new PRISM MDP model is instantiated
+        \begin{itemize}
+          \item through a Java module
+          \item with the ward's current state
+        \end{itemize}
+      \end{itemize}
+      
+      \vspace{1em}
+      The MDP model models:
+      \begin{itemize}
+        \item stochastic evolution of the ward during each day
+        \item non-deterministic choices (i.e. drug orders)
+      \end{itemize}
+
+      \begin{center}\scalebox{0.8}{\input{img/mdp_model_structure}}\end{center}
+
+    \end{frame}

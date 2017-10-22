@@ -1,0 +1,22 @@
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{block} = [rectangle, draw, rounded corners, minimum height=5em, align=center]
+
+\begin{tikzpicture}[node distance = 2cm, auto]
+  % Place nodes
+  \node [block, circle, draw=none] at (0,0) (current) [] {Current\\day};
+  \node [block, circle] at (2.5,0) (d1) [] {Day 1};
+  \node [block, circle] at (5,0) (d2) [] {Day 2};
+  \node [block, circle] at (7.5,0) (d3) [] {Day 3};
+  % Draw edges
+  \path [line] (current) to [out=40,in=140] node {\scriptsize 0} (d1);
+  \path [line] (current) -- node {\scriptsize 10} (d1);
+  \path [line] (current) to [out=-40,in=-140] node {\scriptsize 20} (d1);
+  
+  \path [line] (d1) to [out=40,in=140] node {\scriptsize 0} (d2);
+  \path [line] (d1) -- node {\scriptsize 10} (d2);
+  \path [line] (d1) to [out=-40,in=-140] node {\scriptsize 20} (d2);
+  
+  \path [line] (d2) to [out=40,in=140] node {\scriptsize 0} (d3);
+  \path [line] (d2) -- node {\scriptsize 10} (d3);
+  \path [line] (d2) to [out=-40,in=-140] node {\scriptsize 20} (d3);
+\end{tikzpicture}
