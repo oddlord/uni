@@ -17,7 +17,7 @@
       \begin{itemize}
         \item actualised at runtime with the current state of the ward
       \end{itemize}
-      \item suggest the optimal strategy top the user
+      \item suggest the optimal strategy to the user
     \end{itemize}
   \end{frame}
   
@@ -25,14 +25,13 @@
     \begin{frame}{Solution architecture}
       At the end of the current day
       \begin{itemize}
-        \item a new PRISM MDP model is instantiated
+        \item a new PRISM\footnote{Kwiatkowska, M., Norman, G., \& Parker, D. (2011). PRISM 4.0: Verification of probabilistic real-time systems. In Computer aided verification (pp. 585-591). Springer Berlin/Heidelberg.} MDP model is instantiated
         \begin{itemize}
-          \item through a Java module
-          \item with the ward's current state
+          \item through a Java module, with the ward's current state
         \end{itemize}
       \end{itemize}
       
-      \vspace{1em}
+      \vspace{0.5em}
       The MDP model models:
       \begin{itemize}
         \item stochastic evolution of the ward during each day
@@ -40,5 +39,40 @@
       \end{itemize}
 
       \begin{center}\scalebox{0.8}{\input{img/mdp_model_structure}}\end{center}
-
+      
+      Evaluate the optimal choice for the current day
+      \begin{itemize}
+        \item i.e. the choice that, \textit{on average},\\
+          minimises the \textit{overall cost} after three days
+      \end{itemize}
+    \end{frame}
+    
+  \subsection{Specifications and restrictions}
+    \begin{frame}{Specifications and restrictions}
+      Ward
+      \begin{itemize}
+        \item one ward with fixed posology
+        \item fixed ward capacity
+        \item fixed drug storage capacity
+      \end{itemize}
+      Drug
+      \begin{itemize}
+        \item only one kind of drug
+      \end{itemize}
+      Stochastic characterisation
+      \begin{itemize}
+        \item arriving patients (scheduled/emergency)
+        \item leaving patients
+        \item drug consumption for each patient
+      \end{itemize}
+      Non-deterministic choices
+      \begin{itemize}
+        \item if and how much drugs to reorder $\{0, 10, 20, 30, 40\}$
+      \end{itemize}
+      Cost function
+      \begin{itemize}
+        \item cost of reordering each drug unit
+        \item stocking cost for each drug
+        \item cost for emergency reorders
+      \end{itemize}
     \end{frame}
