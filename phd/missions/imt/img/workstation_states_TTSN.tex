@@ -1,0 +1,19 @@
+%Components styles
+\tikzstyle{component state}=[draw, ellipse, minimum height = 0.5cm, minimum width = 2cm, thick, fill=white]
+\tikzstyle{arc label}=[draw, align=left, fill=white, font={\scriptsize, \itshape}]
+\tikzstyle{line} = [draw, -latex']
+
+\begin{tikzpicture}
+	%Workstation
+	\node [component state] at (5,0) (WIdle) {idling};
+	\node [component state] at (8,0) (WProducing) {producing};
+	\node [component state] at (6.5,-2) (WDone) {done};
+	
+	\path [black,line,out=45,in=135] (WIdle) edge (WProducing);
+	\path [black,line,out=270,in=0] (WProducing) edge (WDone);
+	\path [black,line,out=180,in=270] (WDone) edge (WIdle);
+	
+	\node[arc label, align=center, fill=black!25] at (6.5,1) {a product has arrived\\from workstation $\pl{WS}_{k-1}$};
+	\node[arc label, align=center] at (8,-1.1) {production\\has finished};
+	\node[arc label, align=center] at (5,-1.1) {workstation $\pl{WS}_{k+1}$\\has received\\the product};
+\end{tikzpicture}

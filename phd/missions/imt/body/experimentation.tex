@@ -1,0 +1,178 @@
+% !TeX root = ../assembly-lines-analysis-presentation.tex
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_GB
+
+\section{Experimentation}
+
+  \begin{frame}{Experimentation}
+    Models and analyses implemented through the Oris tool\footnote{\scriptsize http://www.oris-tool.org/}\footnote{\scriptsize L. Carnevali, L. Ridi, and E. Vicario, "A Framework for Simulation and Symbolic State Space Analysis of Non-Markovian Models", inInternational Conference on Computer Safety, Reliability, and Security (SAFECOMP), Lecture Notes in Computer Science, pp. 409-422,Springer Berlin Heidelberg, 2011.} APIs
+    \begin{itemize}
+      \item modelled through \textit{PO-sTPN}
+      \begin{itemize}
+        \item Partially Observable - stochastic Time Petri Nets
+        \item workstations are \textit{state machine PNs} and \textit{1-safe}
+      \end{itemize}
+    \end{itemize}
+    
+    \begin{center}\scalebox{0.8}{\input{img/serial_workstation_PN}}\end{center}
+    
+    Experiments performed on a
+    \begin{itemize}
+      \item single core of an Intel Core i5-6600K processor
+      \item with 16GB of RAM
+    \end{itemize}
+  \end{frame}
+
+  \begin{frame}{Case study assembly lines}
+    Sequential, alternative and cyclic workstations
+    
+    \vspace{0.5em}
+    \begin{minipage}{0.3\textwidth}
+      \begin{center}\scalebox{0.5}{\input{img/serial_workstation}}\end{center}
+    \end{minipage}
+    \begin{minipage}{0.325\textwidth}
+      \begin{center}\scalebox{0.5}{\input{img/alternative_workstation}}\end{center}
+    \end{minipage}
+    \begin{minipage}{0.325\textwidth}
+      \begin{center}\scalebox{0.5}{\input{img/cyclic_workstation}}\end{center}
+    \end{minipage}
+    
+    \vspace{1em}
+    \begin{minipage}{0.5\textwidth}
+      \textit{Simple} assembly line
+      \begin{itemize}
+        \item two sequential workstations
+        \item both in phase $\pl{p}_1$ at inspection
+      \end{itemize}
+    \end{minipage}
+    \begin{minipage}{0.45\textwidth}
+      \begin{center}\scalebox{0.7}{\input{img/simple_assembly_line}}\end{center}
+    \end{minipage}
+    
+    \vspace{2em}
+    \begin{minipage}{0.5\textwidth}
+      \textit{Complex} assembly line
+      \begin{itemize}
+        \item three repetitions
+        \item of sequential/alternative/cyclic ws
+        \item all observed in \textit{producing}
+      \end{itemize}
+    \end{minipage}
+    \begin{minipage}{0.45\textwidth}
+      \begin{center}\scalebox{0.7}{\input{img/complex_assembly_line}}\end{center}
+    \end{minipage}
+  \end{frame}
+  
+  \subsection{Simple assembly line}
+    \begin{frame}{Simple assembly line}{TTIdle}
+      \begin{center}
+        $F_{TTI(1,\omega)}$\\
+        \colorbox{white}{\includegraphics[scale=0.6]{simple_tti_cdf}}
+      \end{center}
+      
+      \begin{minipage}{0.45\textwidth}
+        \textit{TTIdle} computed in
+        \begin{itemize}
+          \item 45 min for simulation
+          \item 0.18 s for bounds
+        \end{itemize}
+      \end{minipage}
+      \begin{minipage}{0.5\textwidth}
+        Due to steady-state probabilities
+        \begin{itemize}
+          \item steady-state probability of $0.208$
+          \item $79.2\%$ of runs are discarded
+        \end{itemize}
+      \end{minipage}
+    \end{frame}
+    
+    \begin{frame}{Simple assembly line}{TTDone, TTIdle, TTStartNext}
+      \begin{minipage}{0.3\textwidth}
+        \begin{center}
+          {\tiny $F_{TTD(1,\omega)}$}\\
+          \colorbox{white}{\includegraphics[scale=0.25]{simple_ttd_cdf}}
+        \end{center}
+      \end{minipage}
+      \begin{minipage}{0.3\textwidth}
+        \begin{center}
+          {\tiny $F_{TTI(1,\omega)}$}\\
+          \colorbox{white}{\includegraphics[scale=0.25]{simple_tti_cdf}}
+        \end{center}
+      \end{minipage}
+      \begin{minipage}{0.3\textwidth}
+        \begin{center}
+          {\tiny $F_{TTSN(2,\omega)}$}\\
+          \colorbox{white}{\includegraphics[scale=0.25]{simple_ttsn_cdf}}
+        \end{center}
+      \end{minipage}
+      
+      \begin{minipage}{0.5\textwidth}
+        \textit{TTD}, \textit{TTI} and \textit{TTSN} computed in
+        \begin{itemize}
+          \item 41/45/42 min for simulation
+          \item 0.15/0.18/0.10 s for bounds
+        \end{itemize}
+      \end{minipage}
+      \begin{minipage}{0.45\textwidth}
+        \vspace{2em}
+        Very good approximation results
+        \begin{itemize}
+          \item especially for \textit{independent remaining times}
+        \end{itemize}
+        Feasible approach
+        \begin{itemize}
+          \item very fast bounds evaluation
+          \item compared to simulation
+        \end{itemize}
+      \end{minipage}
+    \end{frame}
+  
+  \subsection{Complex assembly line}
+    \begin{frame}{Complex assembly line}{TTIdle}
+        \begin{center}
+          $F_{TTI(5,\omega)}$\\
+          \colorbox{white}{\includegraphics[scale=0.6]{complex_tti_cdf}}
+        \end{center}
+        
+        \textit{TTIdle} computed in
+        \begin{itemize}
+          \item 0.123 s for bounds
+        \end{itemize}
+        Simulation would be too computationally expensive
+    \end{frame}
+  
+    \begin{frame}{Complex assembly line}{TTDone, TTIdle, TTStartNext}
+      \begin{minipage}{0.3\textwidth}
+        \begin{center}
+          {\tiny $F_{TTD(5,\omega)}$}\\
+          \colorbox{white}{\includegraphics[scale=0.25]{complex_ttd_cdf}}
+        \end{center}
+      \end{minipage}
+      \begin{minipage}{0.3\textwidth}
+        \begin{center}
+          {\tiny $F_{TTI(5,\omega)}$}\\
+          \colorbox{white}{\includegraphics[scale=0.25]{complex_tti_cdf}}
+        \end{center}
+      \end{minipage}
+      \begin{minipage}{0.3\textwidth}
+        \begin{center}
+          {\tiny $F_{TTSN(5,\omega)}$}\\
+          \colorbox{white}{\includegraphics[scale=0.25]{complex_ttsn_cdf}}
+        \end{center}
+      \end{minipage}
+      
+      \vspace{4em}
+      \begin{minipage}{0.5\textwidth}
+        \textit{TTD}, \textit{TTI} and \textit{TTSN} computed in
+        \begin{itemize}
+          \item 0.126/0.123/0.75 s for bounds
+        \end{itemize}
+      \end{minipage}
+      \begin{minipage}{0.45\textwidth}
+        Scalable solution
+        \begin{itemize}
+          \item in a complex scenario
+          \item simulation would be infeasible
+        \end{itemize}
+      \end{minipage}
+    \end{frame}

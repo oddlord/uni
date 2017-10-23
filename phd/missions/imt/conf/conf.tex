@@ -1,0 +1,66 @@
+% !TeX root = ../assembly-lines-analysis-presentation.tex
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_GB
+
+%********************************************************************
+% Packages
+%********************************************************************
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{calligra}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata,shapes,calc,backgrounds,positioning,patterns,fit,snakes,petri}
+\usepackage{times}
+\usepackage[most]{tcolorbox}
+\usepackage{calc}
+\usepackage{xfrac}
+
+\input{pkg/tikzutils}
+
+\graphicspath{{img/}}
+
+%********************************************************************
+% Beamer styles
+%********************************************************************
+
+\usetheme{Montpellier}
+\usecolortheme{default}
+\setbeamercovered{dynamic}
+\newcommand{\nologo}{\setbeamertemplate{logo}{}} % command to set the logo to nothing
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+
+\setbeamertemplate{footline}[frame number]
+\setbeamertemplate{navigation symbols}{}
+
+\usebackgroundtemplate{
+  \begin{tikzpicture}
+    \node[opacity=0.05] {\includegraphics[]{logoUnifi.png}};
+  \end{tikzpicture}
+}
+
+%********************************************************************
+% New commands
+%********************************************************************
+
+\newcommand{\todo}[1]{
+  \begin{center}
+    \bfseries\color{red}TODO: #1
+  \end{center}
+}
+\newcommand{\tbd}[1]{
+  \begin{center}
+    \bfseries\color{orange}TBD: #1
+  \end{center}
+}
+
+\newcommand{\tr}[1]{\mathtt{#1}}
+\newcommand{\pl}[1]{\mathtt{#1}}

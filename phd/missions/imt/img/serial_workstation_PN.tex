@@ -1,0 +1,96 @@
+\begin{tikzpicture}[
+    node distance=1.6cm,
+    label distance=0.05mm,
+    >=stealth',
+    bend angle=45,
+    auto,
+    font=\sffamily,
+    font=\small
+  ]
+  
+  \def\timedWidth{2mm}
+  \def\immWidth{1mm}
+  \def\transitionHeight{6mm}
+  
+  \tikzstyle{inhib}=[-o]
+  \tikzstyle{imm}=[
+    rectangle,
+    draw=black!100,
+    fill=black!100,
+    minimum height=\transitionHeight,
+    minimum width=\immWidth,
+    inner xsep=0mm
+  ]
+  
+  \tikzstyle{gen}=[
+    rectangle,
+    thick,
+    draw=black!100,
+    fill=black!80,
+    minimum height=\transitionHeight,
+    minimum width=\timedWidth
+  ]
+  
+  \tikzstyle{det}=[
+    rectangle,
+    thick,
+    draw=black!75,
+    fill=black!35,
+    minimum height=\transitionHeight,
+    minimum width=\timedWidth
+  ]
+  
+  \tikzstyle{exp}=[
+    rectangle,
+    thick,
+    draw=black!75,
+    fill=white!20,
+    minimum height=\transitionHeight,
+    minimum width=\timedWidth
+  ]
+  
+  \tikzstyle{hor}=[
+    minimum height=\timedWidth,
+    minimum width=\transitionHeight
+  ]
+  
+  \tikzstyle{immhor}=[
+    minimum height=\immWidth,
+    minimum width=\transitionHeight
+  ]
+  
+  \tikzstyle{place}=[
+    circle,
+    thick,
+    minimum size=6mm,
+    draw=black
+  ]
+  
+  \def\upperplaceheight{0}
+  \def\middleplaceheight{-1}
+  \def\lowerplaceheight{-2}
+  	
+  \begin{scope}[
+    decorate,
+    scale=1.6,
+    decoration={
+    	random steps,
+    	segment length=0.5mm,
+    	amplitude=0.15pt
+    },
+    token distance=0.75ex
+  ]
+  
+  % WS
+  
+  \node [place,tokens=0] at (0,\middleplaceheight) (WS1Start) [label={[align=center]below:$\pl{WS_kStart}$\\ $obs=o_{k,1}$}] {};	
+  \node [place,tokens=0] at (1.5,\middleplaceheight) (Phase2) [label={[align=center]below:$\pl{Phase2_k}$\\ $obs=o_{k,2}$}] {};	
+  \node [place,tokens=0] at (3,\middleplaceheight) (Done1) [label={[align=center]below:$\pl{Done_k}$\\ $obs=o_{k,D}$}] {};			
+  
+  \node [gen] at (0.75,\middleplaceheight) (duration1) [label={[align=center]above:$\tr{duration1_k}$\\\textsc{uni}[1,4]}] {} edge [pre]  (WS1Start) edge [post] (Phase2);
+  
+  \node [gen] at (2.25,\middleplaceheight) (duration1) [label={[align=center]above:$\tr{duration2_k}$\\\textsc{uni}[2,3]}] {} edge [pre]  (Phase2) edge [post] (Done1);
+  
+  \end{scope}
+\end{tikzpicture}
+ 

@@ -1,0 +1,157 @@
+% !TeX root = ../assembly-lines-analysis-presentation.tex
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_GB
+
+\section{Analysis of assembly lines}
+
+  \begin{frame}{Why analyse assembly lines?}
+    \begin{itemize}
+      \setlength\itemsep{1em}
+      \item Maximize throughput and efficiency
+      \begin{itemize}
+        \item speeding-up/slowing-down workstations in order to balance throughput
+        \item identify bottlenecks and focus resources on them
+      \end{itemize}
+      \item Minimize resources and energy consumption
+      \begin{itemize}
+        \item lower power consumption before bottlenecks
+      \end{itemize}
+      \item Adapt production during runtime
+      \begin{itemize}
+        \item Industrie 4.0
+        \item e.g. schedule personnel/resources in a tactic perspective
+      \end{itemize}
+    \end{itemize}
+  \end{frame}
+  
+  \subsection{Assembly lines}
+    \begin{frame}{Assembly line}
+      \begin{center}\scalebox{0.9}{\input{img/assembly_line}}\end{center}
+      
+      \vspace{1em}
+      \begin{minipage}{0.6\textwidth}
+        $N$ sequential workstations $\pl{WS}_1, \dots, \pl{WS}_N$
+        \begin{itemize}
+          \item with transfer blocking
+          \item and no buffering capacity
+        \end{itemize}
+        
+        \vspace{1em}
+        Workstation $\pl{WS_k}$ can be in one of three states
+        \begin{itemize}
+          \item \textit{producing}: $\pl{WS_k}$ is working on a product
+          \item \textit{done}: $\pl{WS_k}$ is done working on a product
+          \item \textit{idling}: $\pl{WS_k}$ is waiting for a new product
+        \end{itemize}
+      \end{minipage}
+      \begin{minipage}{0.35\textwidth}
+        \begin{center}\scalebox{0.8}{\input{img/workstation_states.tex}}\end{center}
+    \end{minipage}
+    \end{frame}
+    
+    \begin{frame}{Workstation}
+      Each workstation $\pl{WS}_k$
+      \begin{itemize}
+        \item has no internal parallelism
+        \begin{itemize}
+          \item at most one item being processed in each workstation
+        \end{itemize}
+        \item can implement complex workflows
+        \begin{itemize}
+          \item sequential/alternative/cyclic phases with random choices
+        \end{itemize}
+        \item and has GEN phases' durations
+      \end{itemize}
+      
+      \begin{center}\scalebox{0.7}{\input{img/workstation}}\end{center}
+      
+      The last phase has no duration and encodes the \textit{done} state
+    \end{frame}
+    
+    \begin{frame}{Underlying stochastic process}
+      The underlying stochastic process of each isolated workstation\\
+      is a Semi Markov Process (SMP)
+      \begin{itemize}
+        \item due to GEN durations
+        \item and the absence of internal parallelism
+      \end{itemize}
+      
+      \vspace{1.5em}
+      The whole assembly line finds a renewal in any case where
+      \begin{itemize}
+        \item every \textit{done} station is in a queue before a bottleneck
+        \item and everything else is \textit{idling}
+      \end{itemize}
+      
+      \begin{center}\scalebox{0.8}{\input{img/assembly_line_bottleneck}}\end{center}
+    \end{frame}
+  
+  \subsection{Inspection}
+    \begin{frame}{Inspection with partial observability}
+      
+      The assembly line can be inspected by external observers
+      \begin{itemize}
+        \item the line can be considered at steady-state at inspection
+        \item there can be ambiguity about the current phase
+      \end{itemize}
+      
+      \vspace{1em}
+      An observation is a tuple $\omega=\langle \omega_0, \omega_1,\ldots, \omega_N \rangle$
+      \begin{itemize}
+        \item $\omega_0$ indicates if a new product is ready to enter the line or not
+        \item $\omega_k = \langle \sigma_k, \phi_k \rangle$ refers to $\pl{WS}_k$
+        \begin{itemize}
+          \item $\sigma_k$ indicates if $\pl{WS}_k$ is \textit{idle}/\textit{producing}/\textit{done}
+          \item $\phi_k$ identifies the set of possible current phases
+        \end{itemize}
+      \end{itemize}
+        
+      \vspace{1em}
+      \begin{minipage}{0.65\textwidth}
+        Two kinds of uncertainty
+        \begin{itemize}
+          \item about the actual current phase
+          \begin{itemize}
+            \item discrete
+          \end{itemize}
+          \item about the remaining time in the current phase%
+          \begin{itemize}
+            \item continuous
+          \end{itemize}
+        \end{itemize}
+      \end{minipage}
+      \begin{minipage}{0.3\textwidth}
+        \begin{center}\scalebox{0.65}{\input{img/workstation_observation}}\end{center}
+      \end{minipage}
+    \end{frame}
+  
+  \subsection{Performance measures}
+    \begin{frame}{Performance measures}{Time To Done}
+      \begin{center}
+        The remaining time until workstation $k$,\\
+        according to observation $\omega$, reaches the \textit{done} state
+      \end{center}
+      
+      \vspace{1em}
+      \begin{center}\scalebox{0.9}{\input{img/workstation_states_TTD}}\end{center}
+    \end{frame}
+    
+    \begin{frame}{Performance measures}{Time To Idle}
+      \begin{center}
+        The remaining time until workstation $k$,\\
+        according to observation $\omega$, reaches the \textit{idling} state
+      \end{center}
+      
+      \vspace{1em}
+      \begin{center}\scalebox{0.9}{\input{img/workstation_states_TTI}}\end{center}
+    \end{frame}
+    
+    \begin{frame}{Performance measures}{Time To Start Next}
+      \begin{center}
+        The remaining time until workstation $k$,\\
+        according to observation $\omega$, starts the production of a new product
+      \end{center}
+      
+      \vspace{1em}
+      \begin{center}\scalebox{0.9}{\input{img/workstation_states_TTSN}}\end{center}
+    \end{frame}

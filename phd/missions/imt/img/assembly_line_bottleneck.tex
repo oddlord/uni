@@ -1,0 +1,30 @@
+\relaxnewsetlength{\nodewidth}{2.5em}
+\relaxnewsetlength{\nodedistance}{1.5em}
+\relaxnewsetlength{\workingnodewidth}{0.7\nodewidth}
+
+\tikzstyle{block} = [rectangle, draw, rounded corners, minimum height=\nodewidth, align=center, fill=white]
+\tikzstyle{line} = [draw, -latex', line width=.3mm]
+\definecolor{notidlegray}{gray}{0.8}
+\tikzstyle{notidle} = [fill=notidlegray]
+
+\begin{tikzpicture}[node distance = \nodedistance, auto]
+  % Place nodes
+  \node [text width=1cm, align=center] at (0,0) (arrival) {\textit{arrival}};
+  \node [right = of arrival, block, square] (ws1) {$\pl{WS}_1$};
+  \node [right = of ws1, block, square, notidle] (ws2) {$\pl{WS}_{2}$};
+  \node [right = of ws2, block, square, notidle] (ws3) {$\pl{WS}_{3}$};
+  \node [right = of ws3, block, square] (ws4-white-background) {};
+  \fill [notidlegray, draw] ($(ws4-white-background.north west) + (\workingnodewidth,0)$) {[rounded corners] -- ++(-\workingnodewidth,0) -- ++(0,-\nodewidth)} -- ++(\workingnodewidth,0) -- cycle {};
+  \node [right = of ws3, block, square, fill=none] (ws4) {$\pl{WS}_{4}$};
+  \node [right = of ws4, block, square] (ws5) {$\pl{WS}_{5}$};
+  \node [right = of ws5, block, square] (ws6) {$\pl{WS}_{6}$};
+  \node [right = of ws6, text width=1.5cm, align=center] (production) {\textit{completion}};
+  % Draw edges
+  \path [line] (arrival) -- (ws1);
+  \path [line] (ws1) -- (ws2);
+  \path [line] (ws2) -- (ws3);
+  \path [line] (ws3) -- (ws4);
+  \path [line] (ws4) -- (ws5);
+  \path [line] (ws5) -- (ws6);
+  \path [line] (ws6) -- (production);
+\end{tikzpicture}

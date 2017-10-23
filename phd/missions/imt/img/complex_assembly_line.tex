@@ -1,0 +1,28 @@
+\tikzstyle{block} = [rectangle, draw, rounded corners, minimum height=2.5em, align=center, fill=white]
+\tikzstyle{line} = [draw, -latex', line width=.3mm]
+
+\begin{tikzpicture}[node distance = 1.5em, auto]
+  % Place nodes
+  \node [text width=1cm, align=center] at (0,0) (arrival) {\textit{arrival}};
+  \node [right = of arrival, block, square] (s1) {$\pl{S}_1$};
+  \node [right = of s1, block, square] (a1) {$\pl{A}_1$};
+  \node [right = of a1, block, square] (c1) {$\pl{C}_1$};
+  \node [below = of s1, block, square] (s2) {$\pl{S}_2$};
+  \node [right = of s2, block, square] (a2) {$\pl{A}_2$};
+  \node [right = of a2, block, square] (c2) {$\pl{C}_2$};
+  \node [below = of s2, block, square] (s3) {$\pl{S}_3$};
+  \node [right = of s3, block, square] (a3) {$\pl{A}_3$};
+  \node [right = of a3, block, square] (c3) {$\pl{C}_3$};
+  \node [right = of c3, text width=1.5cm, align=center] (production) {\textit{completion}};
+  % Draw edges
+  \path [line] (arrival) -- (s1);
+  \path [line] (s1) -- (a1);
+  \path [line] (a1) -- (c1);
+  \path [line] (c1) -| ++(0.75,-0.65) -| ($(s2) + (-0.8,0)$) -- (s2);
+  \path [line] (s2) -- (a2);
+  \path [line] (a2) -- (c2);
+  \path [line] (c2) -| ++(0.75,-0.65) -| ($(s3) + (-0.8,0)$) -- (s3);
+  \path [line] (s3) -- (a3);
+  \path [line] (a3) -- (c3);
+  \path [line] (c3) -- (production);
+\end{tikzpicture}
