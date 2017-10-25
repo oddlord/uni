@@ -110,6 +110,8 @@
 % New commands
 %********************************************************************
 
+\newboolean{trivialAnswers}
+\setboolean{trivialAnswers}{false}
 \newcommand{\question}[1]{%
   \quad%
   \begin{wrapfigure}{l}{0.1\textwidth}%
@@ -133,6 +135,11 @@
     \end{flushright}%
   \end{addmargin}%
   \vspace{10pt}
+}%
+\newcommand{\trivialanswer}[1]{%
+  \ifthenelse{\boolean{trivialAnswers}}{%
+    \answer{#1}%
+  }{}%
 }%
 
 \definecolor{light-gray}{gray}{0.95}

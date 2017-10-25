@@ -6,7 +6,7 @@
 
   \subsection*{Dynamic power management}
 
-    In this section will be described the modelization through PRISM of a \textit{DPM} (\textit{Dynamic Power Management}) system, following the PRISM tutorial found at \cite{prism-tutorial3}. DPMs are used to apply different power usages to some computing device, according to a predefined strategy that takes into account the current state of the device. This kind of systems have been studied largely in literature, for example in \cite{qiu2001stochastic} where a DPM for a Fujitsu disk drive has been studied.
+    In this section will be described the modelisation through PRISM \cite{KNP11} of a \textit{DPM} (\textit{Dynamic Power Management}) system, following the PRISM tutorial found at \cite{prism-tutorial3}. DPMs are used to apply different power usages to some computing device, according to a predefined strategy that takes into account the current state of the device. This kind of systems have been studied largely in literature, for example in \cite{qiu2001stochastic} where a DPM for a Fujitsu disk drive has been studied.
     
     A generic DPM system is made of three distinct components:
     
@@ -50,7 +50,7 @@
     }
     
     \question{Download the model file \bash{power.sm} from above and load it into PRISM.\\}
-    \answer{
+    \trivialanswer{
       The model \bash{power.sm} loaded into PRISM is shown in Figure \ref{fig:loaded_model}.
     	\begin{figure}[h!]
     		\begin{center}
@@ -114,7 +114,7 @@
       
       \lstinputlisting[language=prism, numbers=none]{code/q_max_P.pctl}
     }
-    \answer{
+    \trivialanswer{
       The property regarding the full queue added through the PRISM interface is shown in Figure \ref{fig:q_max_property}.
     	\begin{figure}[h!]
     		\begin{center}
@@ -166,7 +166,7 @@
       
       \lstinputlisting[language=prism, numbers=none]{code/queue_size.pctl}
     }
-    \answer{
+    \trivialanswer{
       The properties regarding the queue size added through the PRISM interface are shown in Figure \ref{fig:queue_size_properties}.
       
     	\begin{figure}[h!]
@@ -296,7 +296,7 @@
       
       \lstinputlisting[language=prism, numbers=none]{code/PM_stochastic_policy.sm}
     }
-    \answer{
+    \trivialanswer{
       The model with stochastic policy loaded into PRISM is shown in Figure \ref{fig:loaded_model_stochastic_policy}.
     	\begin{figure}[h!]
     		\begin{center}
@@ -324,7 +324,7 @@
     
     \question{Can you think of any ways of improving these power management strategies? Implement them in the PRISM model and see how well they perform.}
     \answer{
-      A possible way of minimising even further the energy consumption is to reverse idea behind the stochastic policy introduced previously. In particular, we now want to always put the \textit{SP} to sleep when the queue has been emptied and wake it up only when the queue is full but only with a certain probability. This policy is implemented by the following code for the \prism{PM} module:
+      A possible way of minimising even further the energy consumption is to reverse the idea behind the stochastic policy introduced previously. In particular, we now want to always put the \textit{SP} to sleep when the queue has been emptied and wake it up only when the queue is full but only with a certain probability. This policy is implemented by the following code for the \prism{PM} module:
       
       \lstinputlisting[language=prism, numbers=none]{code/PM_custom_policy.sm}
       

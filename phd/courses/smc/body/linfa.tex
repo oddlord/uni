@@ -14,15 +14,29 @@
     
     \begin{itemize}
       \item a single ward is present;
-      \item the ward has a fixed number of beds and a fixed maximum storage capacity;
+      \item the ward has a fixed number of beds (40) and a fixed maximum storage capacity (40);
       \item patients are indistinguishable;
       \item there is only one type of drug;
       \item patients can arrive through emergencies (i.e. according to a random variable) or scheduled examinations (i.e. according to a fixed constant);
       \item each day, patients can leave the ward with a certain probability;
+      \item each day, patients can consume up to 3 units of drug;
+      \item for each missing drug, an urgent order is issued, which arrives immediately;
       \item restock orders are issued at the end of each day and arrive immediately.
     \end{itemize}
     
-    \question{Try to build a model of a ward taking into consideration the previous assumptions. Consider maximum 40 beds in the ward and a stock capacity of 40 drugs units. Model the restock orders to be either of 0, 10, 20, 30 or 40 drug's units and with a uniform distribution. Consider also that each day each patient consumes a drug's unit.}
+    The model in Code \ref{lst:ward} models a generic ward with the above specifications and 3 days of lookahead. The arrival of patients and the consumption of drugs have been modelled through custom distributions, while drug restock orders have been modelled through non-deterministic choices, effectively representing the user's choice.
+    
+    \begin{center}
+      \lstinputlisting[language=prism, caption={PRISM code for the model of a hospital ward.}, label={lst:ward}]{code/ward.sm}
+    \end{center}
+    
+    \question{Look at the model in Code \ref{lst:ward} and describe how it works.\\}
     \answer{
+      The first thing that can be seen about the model is that it is defined as a Markov Decision Process (MDP). This is due the presence of non-deterministic choices at the end of each day, representing drug orders.
+      
+      In the first part of the code, before the beginning of the main module (lines 3-27), constants and custom distributions are defined. In particular, it can be seen that the probability for each patient to leave the hospital at the end of each day is set to $0.6$, meaning that the sojourn time of each patient in the hospital is distributed as a geometric distribution. The other two distributions, regarding the patients arrival from emergencies and the drugs consumption, are instead manually defined in the ranges of $[0,4]$ (lines 19-23) and $[0,3]$ (lines 9-12) respectively. Arrivals of scheduled patients for the three subsequent days of lookahead are defined as fixed variables (lines 25-27). Also, cost weights are defined for the order cost of a single drug unit, the cost for urgent drug reorders and the stocking cost for keeping each drug unit in stock in the right conditions.
+      
+      The main module \prism{hospitalWard} firstly defines several internal variables (lines 30-35), such as the number of hospitalised patients \prism{n}, the number of current drugs in stock \prism{stockDrugs}, the current day \prism{day}, or support variables, such as \prism{s} or \prism{tmp}. In particular \prism{s} will be used to describe the internal state for each day of the ward.
+      
       
     }
