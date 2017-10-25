@@ -64,3 +64,14 @@
 
 \newcommand{\tr}[1]{\mathtt{#1}}
 \newcommand{\pl}[1]{\mathtt{#1}}
+
+\AtBeginSection[]{
+  \begin{frame}
+  \vfill
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+    \usebeamerfont{title}\huge\insertsectionhead\par%
+  \end{beamercolorbox}
+  \vfill
+  \end{frame}
+}
