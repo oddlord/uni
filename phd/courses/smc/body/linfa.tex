@@ -21,10 +21,11 @@
       \item each day, patients can leave the ward with a certain probability;
       \item each day, patients can consume up to 3 units of drug;
       \item for each missing drug, an urgent order is issued, which arrives immediately;
-      \item restock orders are issued at the end of each day and arrive immediately.
+      \item restock orders are issued at the end of each day and arrive immediately;
+      \item the drug can be restocked in quantities of 0 (i.e. no order), 10, 20, 30 or 40.
     \end{itemize}
     
-    The model in Code \ref{lst:ward} models a generic ward with the above specifications and 3 days of lookahead. The arrival of patients and the consumption of drugs have been modelled through custom distributions, while drug restock orders have been modelled through non-deterministic choices, effectively representing the user's choice.
+    The model in Code \ref{lst:ward} models a generic ward with the above specifications and 3 days of lookahead. The model is used to support decision to the restock order of the current day, so it starts at the end of the current day (i.e. after patients arrival/discharge and drug consumption, but before the restock order). The arrival of patients and the consumption of drugs have been modelled through custom distributions, while drug restock orders have been modelled through non-deterministic choices, effectively representing the user's choice.
     
     \begin{center}
       \lstinputlisting[language=prism, caption={PRISM code for the model of a hospital ward.}, label={lst:ward}]{code/ward.sm}
@@ -38,5 +39,7 @@
       
       The main module \prism{hospitalWard} firstly defines several internal variables (lines 30-35), such as the number of hospitalised patients \prism{n}, the number of current drugs in stock \prism{stockDrugs}, the current day \prism{day}, or support variables, such as \prism{s} or \prism{tmp}. In particular \prism{s} will be used to describe the internal state for each day of the ward.
       
+      States from \prism{s=0} to \prism{s=2} (lines 38-47) are used to model the drug order for the current day (i.e. day 0). In particular, lines 43-47 represents all the possible orders that can be issued, modelled through non-deterministic choices. Also, each choice has a label associated, that will be used in the cost reward computation.
       
+      Subsequent states
     }
