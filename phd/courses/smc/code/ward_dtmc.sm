@@ -1,4 +1,4 @@
-mdp
+dtmc
 
 const int maxPat = 40; // maximum number of patients that can be hosted in the hospital ward
 const int maxDrugs = 40; // maximum number of drugs that can be hold in the hospital ward
@@ -16,11 +16,18 @@ const int costUrgentOrder = 100; // the cost to be paid for urgent orders
 const double costStorage = 5; // the cost to be paid for drugs that remain in hospital ward
 
 // distribution of the arrivals from the ER (everyday)
-const double probER_0 = 0.1;
-const double probER_1 = 0.2;
-const double probER_2 = 0.4;
-const double probER_3 = 0.2;
-const double probER_4 = 0.1;
+const double probER0 = 0.1;
+const double probER1 = 0.2;
+const double probER2 = 0.4;
+const double probER3 = 0.2;
+const double probER4 = 0.1;
+
+// distribution of drug consumption
+const double probOrder0 = 0.1;
+const double probOrder1 = 0.25;
+const double probOrder2 = 0.3;
+const double probOrder3 = 0.25;
+const double probOrder4 = 0.1;
 
 const int patSched1 = 2; // scheduled patients for day 1
 const int patSched2 = 3; // scheduled patients for day 2
@@ -33,16 +40,22 @@ module hospitalWard
 	day : [0..3] init 0;
 	tmp : [0..maxPat] init 0; // support variable
 	missingDrugs: [0..3] init 0; // support variable indicating missing drugs
+    
+    // decide how many drugs must be ordered
+	[] s=0 -> 	probOrder0 : (s'=1) +
+		probOrder1 : (s'=2) +
+		probOrder2 : (s'=3) +
+		probOrder3 : (s'=4) +
+		probOrder4 : (s'=5);
 
-	// decide how many drugs must be ordered
-	[doNotOrder] s=0 -> (s'=1); // not order
-	[order10] s=0 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+10))) & (s'=1); // order 10 drugs
-	[order20] s=0 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+20))) & (s'=1); // order 20 drugs
-	[order30] s=0 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+30))) & (s'=1); // order 30 drugs
-	[order40] s=0 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+40))) & (s'=1); // order 40 drugs
+	[noOrder] s=1 -> (s'=6); // do not order
+	[order10] s=2 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+10))) & (s'=6); // order 10 drugs
+	[order20] s=3 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+20))) & (s'=6); // order 20 drugs
+	[order30] s=4 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+30))) & (s'=6); // order 30 drugs
+	[order40] s=5 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+40))) & (s'=6); // order 40 drugs
 
 	// day 1, 2, 3
-	[] s=1 -> (s'=10) & (tmp'=n) & (day'=day+1);
+	[] s=6 -> (s'=10) & (tmp'=n) & (day'=day+1);
 
 	// moving patients out of the hospital ward
 	[] s=10 & tmp>0 & (n>0) -> (1-probExit) : (n'=n) & (tmp'=tmp-1) + probExit : (n'=n-1) & (tmp'=tmp-1);
@@ -55,10 +68,10 @@ module hospitalWard
 
 	// ER arrivals
 	[] s=12 -> 	probER_0 : (s'=13) +
-		probER_1 : (s'=13) & (n'=n+min(maxPat-n,1)) +
-		probER_2 : (s'=13) & (n'=n+min(maxPat-n,2)) +
-		probER_3 : (s'=13) & (n'=n+min(maxPat-n,3)) +
-		probER_4 : (s'=13) & (n'=n+min(maxPat-n,4));
+		probER1 : (s'=13) & (n'=n+min(maxPat-n,1)) +
+		probER2 : (s'=13) & (n'=n+min(maxPat-n,2)) +
+		probER3 : (s'=13) & (n'=n+min(maxPat-n,3)) +
+		probER4 : (s'=13) & (n'=n+min(maxPat-n,4));
 
 	[] s=13 -> (s'=20) & (tmp'=n);
 
@@ -87,7 +100,7 @@ rewards "totalCost"
 
 	[missingDrugs] true : costUrgentOrder*missingDrugs;
 
-	[doNotOrder] true : 0;
+	[noOrder] true : 0;
 	[order10] true : 10*costOrder;
 	[order20] true : 20*costOrder;
 	[order30] true : 30*costOrder;
