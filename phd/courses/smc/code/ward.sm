@@ -11,20 +11,20 @@ const double consume1 = 0.4;
 const double consume2 = 0.3; 
 const double consume3 = 0.1;
 
-const int drugCost = 1; // the cost to be paid to order a single drug
-const int weightMissingDrugs = 100; // the cost to be paid for urgent orders
-const double weightStorageDrugs = 5; // the cost to be paid for drugs that remain in hospital ward
+const int costOrder = 1; // the cost to be paid to order a single drug
+const int costUrgentOrder = 100; // the cost to be paid for urgent orders
+const double costStorage = 5; // the cost to be paid for drugs that remain in hospital ward
 
 // distribution of the arrivals from the ER (everyday)
-const double ProbER_0 = 0.1;
-const double ProbER_1 = 0.2;
-const double ProbER_2 = 0.4;
-const double ProbER_3 = 0.2;
-const double ProbER_4 = 0.1;
+const double probER_0 = 0.1;
+const double probER_1 = 0.2;
+const double probER_2 = 0.4;
+const double probER_3 = 0.2;
+const double probER_4 = 0.1;
 
-const int patProgDay1 = 2; // scheduled patients for day 1
-const int patProgDay2 = 3; // scheduled patients for day 2
-const int patProgDay3 = 2; // scheduled patients for day 3
+const int patSched1 = 2; // scheduled patients for day 1
+const int patSched2 = 3; // scheduled patients for day 2
+const int patSched3 = 2; // scheduled patients for day 3
 
 module hospitalWard
 	s : [0..30] init 0; // state variable
@@ -32,69 +32,49 @@ module hospitalWard
 	n : [0..maxPat] init 0;
 	day : [0..3] init 0;
 	tmp : [0..maxPat] init 0; // support variable
-	drugsMissed: [0..3] init 0; // support variable
-
-	// day 0
-	[] s=0 -> (s'=1);
-
-	[] s=1 & (maxPat-n)>=0 -> (s'=2);
+	missingDrugs: [0..3] init 0; // support variable indicating missing drugs
 
 	// decide how many drugs must be ordered
-	[doNotOrder] s=2 -> (s'=3); // not order
-	[order10] s=2 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+10))) & (s'=3); // order 10 drugs
-	[order20] s=2 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+20))) & (s'=3); // order 20 drugs
-	[order30] s=2 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+30))) & (s'=3); // order 30 drugs
-	[order40] s=2 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+40))) & (s'=3); // order 40 drugs
-
-	// end day 0
+	[doNotOrder] s=0 -> (s'=1); // not order
+	[order10] s=0 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+10))) & (s'=1); // order 10 drugs
+	[order20] s=0 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+20))) & (s'=1); // order 20 drugs
+	[order30] s=0 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+30))) & (s'=1); // order 30 drugs
+	[order40] s=0 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+40))) & (s'=1); // order 40 drugs
 
 	// day 1, 2, 3
-	[] s=3 & (day<3) -> (s'=4) & (tmp'=n) & (day'=day+1);
+	[] s=1 -> (s'=10) & (tmp'=n) & (day'=day+1);
 
-	// moving patients from the hospital ward
-	[] s=4 & tmp>0 & (n>0) -> (1-probExit) : (n'=n) & (tmp'=tmp-1) + probExit : (n'=n-1) & (tmp'=tmp-1);
-	[] s=4 & tmp=0 -> (s'=10);
+	// moving patients out of the hospital ward
+	[] s=10 & tmp>0 & (n>0) -> (1-probExit) : (n'=n) & (tmp'=tmp-1) + probExit : (n'=n-1) & (tmp'=tmp-1);
+	[] s=10 & tmp=0 -> (s'=11);
 
-	// programmed arrivals
-	[] s=10 & day=1 -> (s'=11) & (n'=min(maxPat,n+patProgDay1)); // day1
-	[] s=10 & day=2 -> (s'=11) & (n'=min(maxPat,n+patProgDay2)); // day2
-	[] s=10 & day=3 -> (s'=11) & (n'=min(maxPat,n+patProgDay3)); // day3
+	// scheduled arrivals
+	[] s=11 & day=1 -> (s'=12) & (n'=min(maxPat,n+patSched1)); // day1
+	[] s=11 & day=2 -> (s'=12) & (n'=min(maxPat,n+patSched2)); // day2
+	[] s=11 & day=3 -> (s'=12) & (n'=min(maxPat,n+patSched3)); // day3
 
 	// ER arrivals
-	[] s=11 -> 	ProbER_0 : (s'=12) +
-		ProbER_1 : (s'=12) & (n'=n+min(maxPat-n,1)) +
-		ProbER_2 : (s'=12) & (n'=n+min(maxPat-n,2)) +
-		ProbER_3 : (s'=12) & (n'=n+min(maxPat-n,3)) +
-		ProbER_4 : (s'=12) & (n'=n+min(maxPat-n,4));
+	[] s=12 -> 	probER_0 : (s'=13) +
+		probER_1 : (s'=13) & (n'=n+min(maxPat-n,1)) +
+		probER_2 : (s'=13) & (n'=n+min(maxPat-n,2)) +
+		probER_3 : (s'=13) & (n'=n+min(maxPat-n,3)) +
+		probER_4 : (s'=13) & (n'=n+min(maxPat-n,4));
 
-	[] s=12 -> (s'=20) & (tmp'=n);
+	[] s=13 -> (s'=20) & (tmp'=n);
 
-	// consume drugs
+	// drugs consumption
+	[] s=20 & tmp>0 -> consume0: (tmp'=tmp-1) + 
+		consume1: (missingDrugs'=max(0,-(stockDrugs-1))) & (stockDrugs'=max(0,stockDrugs-1)) & (tmp'=tmp-1) +
+		consume2: (missingDrugs'=max(0,-(stockDrugs-2))) & (stockDrugs'=max(0,stockDrugs-2)) & (tmp'=tmp-1) +
+		consume3: (missingDrugs'=max(0,-(stockDrugs-3))) & (stockDrugs'=max(0,stockDrugs-3)) & (tmp'=tmp-1);
 
-	[] s=20 & tmp>0 & (stockDrugs>0) -> consume0: (tmp'=tmp-1) + 
-		consume1: (drugsMissed'=max(0,-(stockDrugs-1))) & (stockDrugs'=max(0,stockDrugs-1)) & (tmp'=tmp-1) +
-		consume2: (drugsMissed'=max(0,-(stockDrugs-2))) & (stockDrugs'=max(0,stockDrugs-2)) & (tmp'=tmp-1) +
-		consume3: (drugsMissed'=max(0,-(stockDrugs-3))) & (stockDrugs'=max(0,stockDrugs-3)) & (tmp'=tmp-1);
+	[missingDrugs] s=20 & missingDrugs>0 -> missingDrugs'=0;
 
-	[missingDrugs] s=20 & (stockDrugs=0) & drugsMissed>0 -> (s'=20) & (drugsMissed'=0);
-
-	[] s=20 & tmp>0 & (stockDrugs=0) & drugsMissed=0 -> consume0: (tmp'=tmp-1) +
-		consume1: (drugsMissed'=1) & (tmp'=tmp-1) + 
-		consume2: (drugsMissed'=2) & (tmp'=tmp-1) + 
-		consume3: (drugsMissed'=3) & (tmp'=tmp-1);
-
-	[consumeAchivied] s=20 & tmp=0 & drugsMissed=0 -> (s'=21);
-
-	// decide how many drugs must be ordered
-	[doNotOrder] s=21 -> (s'=22); // not order
-	[order10] s=21 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+10))) & (s'=22); // order 10 drugs
-	[order20] s=21 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+20))) & (s'=22); // order 20 drugs
-	[order30] s=21 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+30))) & (s'=22); // order 30 drugs
-	[order40] s=21 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+40))) & (s'=22); // order 40 drugs
+	[consumptionDone] s=20 & tmp=0 -> (s'=21);
 
 	// end of the day
-	[] (s=22) & (day<3) -> (s'=3) ; // end of the day 1 or 2
-	[] (s=22) & (day=3) -> (s'=30); // end of the day 3
+	[] (s=21) & (day<3) -> (s'=0) ; // end of the day 1 or 2
+	[] (s=21) & (day=3) -> (s'=30); // end of the day 3
 
 	[]s=30 -> (s'=30);
 
@@ -102,22 +82,14 @@ endmodule
 
 //----------------------//
 
-rewards "orderCost"
-	[consumeAchivied] true: (weightStorageDrugs)*stockDrugs;
+rewards "totalCost"
+	[consumptionDone] true: costStorage*stockDrugs;
 
-	[missingDrugs] true : weightMissingDrugs*drugsMissed;
+	[missingDrugs] true : costUrgentOrder*missingDrugs;
 
 	[doNotOrder] true : 0;
-
-	[order10] true : (10*drugCost);
-	[order20] true : (20*drugCost);
-	[order30] true : (30*drugCost);
-	[order40] true : (40*drugCost);
+	[order10] true : 10*costOrder;
+	[order20] true : 20*costOrder;
+	[order30] true : 30*costOrder;
+	[order40] true : 40*costOrder;
 endrewards
-
-rewards "day"
-	[] s=0 : 1;
-endrewards
-
-label "Full_hospital_ward" = n=maxPat;
-label "endOfTheDays" = s=30;
