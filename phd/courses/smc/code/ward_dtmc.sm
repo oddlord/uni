@@ -6,13 +6,13 @@ const int maxER = 4; // maximum emergency arrivals per day
 const int maxConsume = 3; // maximum drugs consumable per patient per day
 
 const double probExit; // probability of leaving the hospital ward
-const double probER = 0.4; // probability of an emergency arrival
+const double probER; // probability of an emergency arrival
 const double probConsume; // probability of consuming a drug
 const double probOrder; // probability of ordering a drug
 
-const double costOrder; // the cost to be paid to order a single drug
-const double costUrgentOrder; // the cost to be paid for urgent orders
-const double costStorage; // the cost to be paid for drugs that remain in hospital ward
+const double costOrder = 1; // the cost to be paid to order a single drug
+const double costUrgentOrder = 100; // the cost to be paid for urgent orders
+const double costStorage = 5; // the cost to be paid for drugs that remain in hospital ward
 
 const int patSched1 = 2; // scheduled patients for day 1
 const int patSched2 = 3; // scheduled patients for day 2

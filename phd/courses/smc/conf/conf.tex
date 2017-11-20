@@ -48,7 +48,7 @@
 \definecolor{darkgray}{rgb}{.4,.4,.4}
 \definecolor{purple}{rgb}{0.65, 0.12, 0.82}
 \lstset{
-  basicstyle=\small\sffamily,
+  basicstyle=\small\ttfamily,
   numbers=left,
   numberstyle=\tiny,
   numbersep=3pt,
@@ -145,20 +145,18 @@
 \definecolor{light-gray}{gray}{0.95}
 \newboolean{inlineCodeBackground}
 \setboolean{inlineCodeBackground}{false}
-\newcommand{\prism}[1]{%
-  \ifthenelse{\boolean{inlineCodeBackground}}{%
-    \colorbox{light-gray}{\lstinline[language=prism]{#1}}%
-  }{%
-    \lstinline[language=prism]{#1}%
-  }%
-}%
-\newcommand{\bash}[1]{%
-  \ifthenelse{\boolean{inlineCodeBackground}}{%
-    \colorbox{light-gray}{\lstinline[language=bash]{#1}}%
-  }{%
-    \lstinline[language=bash]{#1}%
-  }%
-}%
+\newcommand{\prism}[1]{}
+\ifthenelse{\boolean{inlineCodeBackground}}{
+  \renewcommand{\prism}[1]{\colorbox{light-gray}{\lstinline[language=prism]{#1}}}
+}{
+  \renewcommand{\prism}[1]{\lstinline[language=prism]{#1}}
+}
+\newcommand{\bash}[1]{}
+\ifthenelse{\boolean{inlineCodeBackground}}{
+  \renewcommand{\bash}[1]{\colorbox{light-gray}{\lstinline[language=bash]{#1}}}
+}{
+  \renewcommand{\bash}[1]{\lstinline[language=bash]{#1}}
+}
 
 \newcommand{\dashedrule}{%
   \noindent\hdashrule{\textwidth}{1pt}{1.5mm}%
