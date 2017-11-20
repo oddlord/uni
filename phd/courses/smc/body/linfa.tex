@@ -102,4 +102,9 @@
   \dashedrule
   
   \subsection*{Adding non-determinism}
+    One of the most useful features of PRISM is the optimal strategy extraction of an MDP model. \textit{MDPs} (\textit{Markov Decision Process}) are probabilistic models that also include non-deterministic choices, in order to model transitions between states with no probabilistic information attached to them. A strategy, for an MDP, is a set of specific actions for all the non-deterministic choices that resolve the non-determinism of the model, turning it into a fully probabilistic model. Among all the possible strategies, the optimal one is the strategy that minimises/maximises a certain reward function.
     
+    \question{Modify the model in Code \ref{lst:ward} in order to make the drug reorder choice non-deterministic.}
+    \answer{
+      \lstinputlisting[language=prism, numbers=none]{code/ward_mdp_update.sm}
+    }

@@ -1,0 +1,87 @@
+mdp
+
+const int maxPat = 40; // maximum number of patients that can be hosted in the hospital ward
+const int maxDrugs = 40; // maximum number of drugs that can be hold in the hospital ward
+const int maxER = 4; // maximum emergency arrivals per day
+const int maxConsume = 3; // maximum drugs consumable per patient per day
+
+const double probExit; // probability of leaving the hospital ward
+const double probER; // probability of an emergency arrival
+const double probConsume; // probability of consuming a drug
+
+const double costOrder = 1; // the cost to be paid to order a single drug
+const double costUrgentOrder = 100; // the cost to be paid for urgent orders
+const double costStorage = 5; // the cost to be paid for drugs that remain in hospital ward
+
+const int patSched1 = 2; // scheduled patients for day 1
+const int patSched2 = 3; // scheduled patients for day 2
+const int patSched3 = 2; // scheduled patients for day 3
+
+module hospitalWard
+	s : [0..30] init 0; // state variable
+	stockDrugs : [0..maxDrugs];
+	n : [0..maxPat];
+	day : [0..3] init 0;
+	tmp : [0..maxPat] init 0; // support variable for patient loop
+	tmp2 : [0..max(maxER,maxConsume,4)] init 0; // support variable for other loops
+	missingDrug: [0..1] init 0; // support variable indicating missing drugs
+    
+	[] s=0 -> (tmp2'=4) & (s'=1);
+
+	[noOrder] s=1 -> (s'=2);
+	[order10] s=1 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+10))) & (s'=2);
+	[order20] s=1 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+20))) & (s'=2);
+	[order30] s=1 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+30))) & (s'=2);
+	[order40] s=1 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+40))) & (s'=2);
+
+	// day 1, 2, 3
+	[] s=2 & day<3 -> 1 : (s'=10) & (tmp'=n) & (day'=day+1);
+
+	// moving patients out of the hospital ward
+	[] s=10 & tmp>0 & n>0 ->
+		probExit : (n'=n-1) & (tmp'=tmp-1) +
+		(1-probExit) : (n'=n) & (tmp'=tmp-1);
+	[] s=10 & (tmp=0 | n=0) -> (s'=11);
+
+	// scheduled arrivals
+	[] s=11 & day=1 -> (s'=12) & (n'=min(maxPat,n+patSched1)) & (tmp2'=maxER); // day1
+	[] s=11 & day=2 -> (s'=12) & (n'=min(maxPat,n+patSched2)) & (tmp2'=maxER); // day2
+	[] s=11 & day=3 -> (s'=12) & (n'=min(maxPat,n+patSched3)) & (tmp2'=maxER); // day3
+
+	// ER arrivals
+	[] s=12 & tmp2>0 ->
+		probER : (n'=n+min(maxPat-n,1)) & (tmp2'=tmp2-1) +
+		(1-probER) : (n'=n) & (tmp2'=tmp2-1);
+	[] s=12 & tmp2=0 -> (s'=20) & (tmp'=n) & (tmp2'=maxConsume);
+
+	// drugs consumption
+	[] s=20 & missingDrug=0 & tmp>0 & tmp2>0 ->
+		probConsume : (missingDrug'=max(0,-(stockDrugs-1))) & (stockDrugs'=max(0,stockDrugs-1)) & (tmp2'=tmp2-1) +
+		(1-probConsume) : (tmp2'=tmp2-1);
+	[] s=20 & missingDrug=0 & tmp>0 & tmp2=0 -> (tmp'=tmp-1) & (tmp2'=maxConsume);
+
+	[missingDrug] s=20 & missingDrug>0 -> (missingDrug'=0);
+
+	[consumptionDone] s=20 & tmp=0 -> (s'=21);
+
+	// end of the day
+	[] (s=21) & (day<3) -> (s'=0) ; // end of the day 1 or 2
+	[] (s=21) & (day=3) -> (s'=30); // end of the day 3
+
+	[]s=30 -> (s'=30);
+
+endmodule
+
+//------------------------------------------------------//
+
+rewards "totalCost"
+	[consumptionDone] true: costStorage*stockDrugs;
+
+	[missingDrug] true : costUrgentOrder;
+
+	[noOrder] true : 0;
+	[order10] true : 10*costOrder;
+	[order20] true : 20*costOrder;
+	[order30] true : 30*costOrder;
+	[order40] true : 40*costOrder;
+endrewards
