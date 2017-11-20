@@ -25,19 +25,19 @@
       \item the drug can be restocked in quantities of 0 (i.e. no order), 10, 20, 30 or 40.
     \end{itemize}
     
-    \question{Build a model of a generic ward with the above specifications and 3 days of lookahead, in order to support decision to the restock order of the current day. The arrival of patients and the consumption of drugs can  modelled through custom distributions, as well as drug restock order choices.}
-    \answer{
-      The model in Code \ref{lst:ward} represents a generic ward, fully described through probabilistic behaviours.
-      
-      \begin{center}
-        \lstinputlisting[language=prism, caption={PRISM code for the model of a hospital ward.}, label={lst:ward}]{code/ward_dtmc.sm}
-      \end{center}
+    The model in Code \ref{lst:ward} models a generic ward with the above specifications and three days of lookahead. The model is intended to characterise the evolution of the ward for the three subsequent days in order to support decision to the restock order of the current day, so it starts at the end of the current day (i.e. after patients arrival/discharge and drug consumption, but before the restock order). The arrival of patients and the consumption of drugs have been modelled through custom distributions, as well as drug restock order choices.
     
-      The first thing that can be seen about the model is that it is defined as a DTMC. This is due the fact that the model is fully probabilistic (i.e. there is no non-determinism) and that the time is divided into discrete steps.
+    \begin{center}
+      \lstinputlisting[language=prism, caption={PRISM code of the probabilistic model of a hospital ward.}, label={lst:ward}]{code/ward_dtmc.sm}
+    \end{center}
+    
+    \question{Look at the model in Code \ref{lst:ward} and describe how it works.\\}
+    \answer{
+      The first thing that can be notice about the model is that it is defined as a DTMC. This is due the fact that the model is fully probabilistic (i.e. there is no non-determinism) and that the time is divided into discrete steps.
       
       In the first part of the code, before the beginning of the main module (lines 3-34), constants and custom distributions are defined. In particular, it can be seen that the probability for each patient to leave the hospital at the end of each day is set to $0.6$, meaning that the sojourn time of each patient in the hospital is distributed as a geometric distribution. The other three distributions, regarding the patients arrival from emergencies, the drug consumption and the drug restock orders, are instead manually defined in the ranges of $[0,4]$ (lines 19-23), $[0,3]$ (lines 9-12) and $[0,4]$ (lines 26-30), respectively. Arrivals of scheduled patients for the three subsequent days of lookahead are defined as fixed variables (lines 32-34). Also, cost weights are defined for the order cost of a single drug unit, the cost for urgent drug reorders and the stocking cost for keeping each drug unit in stock in the right conditions each day.
       
-      The main module \prism{hospitalWard} firstly defines several internal variables (lines 37-42), such as the number of hospitalised patients \prism{n}, the number of current drugs in stock \prism{stockDrugs}, the current day \prism{day}, or support variables, such as \prism{s} or \prism{tmp}. In particular \prism{s} will be used to describe the internal state for each day of the ward.
+      The main module \prism{hospitalWard} firstly defines several internal variables (lines 37-42), such as the number of hospitalised patients \prism{n}, the number of current drugs in stock \prism{stockDrugs}, the current day \prism{day}, or support variables, such as \prism{s} or \prism{tmp}. In particular \prism{s} is used to describe the internal state for each day of the ward.
       
       States from \prism{s=0} to \prism{s=6} (lines 45-58) are used to model the drug order for the current day and for the first and second following days. The module starts at the end of the current day (i.e. after patients arrival/discharge and drug consumption, but before the restock order) in order to include as much real information as possible from the real ward when deciding how to reorder. Lines 45-49 are used to chose probabilistically which kind of order to issue, according to the custom distribution defined. Lines 51-55 are then used to execute the corresponding order, effectively increasing the stocked drugs. Also, each order has a label associated, that will be used in the cost reward computation. After the order choice has been made, the \prism{day} variable is incremented and the \prism{tmp} support variable is set to the number of patients currently hospitalised, \prism{n}.
       
