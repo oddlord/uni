@@ -20,46 +20,6 @@ public class Utils {
 		return allLines.get(lineIndex);
 	}
 
-	private static String OS = System.getProperty("os.name").toLowerCase();
-
-	public static boolean isUnix() {
-		return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0);
-	}
-
-	public static boolean isMac() {
-		return (OS.indexOf("mac") >= 0);
-	}
-
-	public static boolean isWindows() {
-		return (OS.indexOf("win") >= 0);
-	}
-
-	public static void gnuPlot(String outputFolder, String gnuName) throws IOException {
-		Runtime rt = Runtime.getRuntime();
-
-		String gnuFile = gnuName + ".gnu";
-
-		String command;
-		if (isMac()) {
-			command = "/usr/local/bin/gnuplot " + outputFolder + gnuFile;
-		} else if (isUnix()) {
-			command = "gnuplot " + outputFolder + gnuFile;
-		} else if (isWindows()) {
-			command = "\"C:\\Program Files (x86)\\gnuplot\\bin\\gnuplot\" " + outputFolder + gnuFile;
-		} else {
-			throw new RuntimeException("Unsupported operative system!");
-		}
-
-		Process exec = rt.exec(command);
-		try {
-			exec.waitFor();
-			System.out.println("Plot written in " + gnuName + ".pdf");
-		} catch (InterruptedException e) {
-			System.out.println("gnuplot error!");
-			e.printStackTrace();
-		}
-	}
-
 	public static int runPrism(int initialSD, int initialN) throws IOException, InterruptedException {
 		Runtime rt = Runtime.getRuntime();
 

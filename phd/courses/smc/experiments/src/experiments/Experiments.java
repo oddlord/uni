@@ -11,9 +11,11 @@ public class Experiments {
 	private static final StandardOpenOption TRUNC = StandardOpenOption.TRUNCATE_EXISTING;
 	private static final StandardOpenOption APP = StandardOpenOption.APPEND;
 
-	public static void main(String[] args) throws IOException, InterruptedException {
-		String plotsPath = "src/plots/";
-		String dataPath = plotsPath + "data/";
+	private static final String PLOTS_PATH = "src/plots/";
+
+	private static void sdNExperiment() throws IOException, InterruptedException {
+		String experimentPath = PLOTS_PATH + "sd_n";
+		String dataPath = experimentPath + "data/";
 
 		String header = "# stockDrugs order\n";
 
@@ -31,5 +33,9 @@ public class Experiments {
 			System.out.println("\tExperiment N=" + n + " finished");
 		}
 		System.out.println("Experiments finished");
+	}
+
+	public static void main(String[] args) throws IOException, InterruptedException {
+		sdNExperiment();
 	}
 }
