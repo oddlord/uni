@@ -20,7 +20,7 @@ public class Utils {
 		return allLines.get(lineIndex);
 	}
 
-	public static int runPrism(int initialSD, int initialN) throws IOException, InterruptedException {
+	public static int runPrism(int costStorage, int initialSD, int initialN) throws IOException, InterruptedException {
 		Runtime rt = Runtime.getRuntime();
 
 		String experimentsPath = "src/experiments/";
@@ -29,10 +29,11 @@ public class Utils {
 		String advStaPath = experimentsPath + "adv.sta";
 		String advLabPath = experimentsPath + "adv.lab";
 
-		String command = "\"C:\\Program Files\\prism-4.3.1\\bin\\prism.bat\" " + modelPath
-				+ " -pf \"R{\\\"totalCost\\\"}min=? [ F day=3 ]\"" + " -exportadvmdp " + advTraPath + " -exportstates "
-				+ advStaPath + " -exportlabels " + advLabPath + " -const initialSD=" + initialSD + ",initialN="
-				+ initialN;
+		String prismCommand = "\"C:\\Program Files\\prism-4.3.1\\bin\\prism.bat\"";
+
+		String command = prismCommand + " " + modelPath + " -pf \"R{\\\"totalCost\\\"}min=? [ F day=3 ]\""
+				+ " -exportadvmdp " + advTraPath + " -exportstates " + advStaPath + " -exportlabels " + advLabPath
+				+ " -const costStorage=" + costStorage + ",initialSD=" + initialSD + ",initialN=" + initialN;
 
 		Process exec = rt.exec(command);
 		exec.waitFor();

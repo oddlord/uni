@@ -1,0 +1,14 @@
+reset
+set terminal pdf
+set key box right center
+set xlabel 'stock drugs'
+set ylabel 'optimal reorder'
+set style data linespoint
+set pointsize 0.6
+set grid xtics ytics;
+set output "sd_costStorage_0-40.pdf"
+plot "data/costStorage0.dat" using 1:2 title 'costStorage=0' pointtype 5, \
+     "data/costStorage10.dat" using 1:2 title 'costStorage=10' pointtype 7, \
+     "data/costStorage20.dat" using 1:2 title 'costStorage=20' pointtype 9, \
+     "data/costStorage30.dat" using 1:2 title 'costStorage=30', \
+     "data/costStorage40.dat" using 1:2 title 'costStorage=40'

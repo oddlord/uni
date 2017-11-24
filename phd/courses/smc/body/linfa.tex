@@ -144,3 +144,18 @@
     	
     	The experiment have been conducted through a simple custom script, used to speed up the experimentation\footnote{The script source code can be found at the following link:\\ \url{https://github.com/oddlord/uni/tree/master/phd/courses/smc/experiments}.}.
     }
+    
+    \question{Perform a similar experiment, this time varying \prism{stockDrugs} and \prism{costStorage}, while keeping the initial value of \prism{n} fixed to $20$.}
+    \answer{
+      The results of the experiment are shown in Figure \ref{fig:sd_costStorage_0-40_plot}.
+      
+    	\begin{figure}[h!]
+    		\begin{center}
+    			\includegraphics[scale=1]{sd_costStorage_0-40_plot.pdf}
+    		\end{center}
+    		\caption{Experiment plot of the optimal reorder strategy as \prism{stockDrugs} varies for different values of \prism{costStorage}.}
+    		\label{fig:sd_costStorage_0-40_plot}
+    	\end{figure}
+      
+      The results in Figure \ref{fig:sd_costStorage_0-40_plot} show that, similarly to the results of the previous experiment, the suggested optimal reorder amount decreases as the amount of drugs in stock increases. Also, it can be observed how, with the increase of the storage cost for each drug for each day, the suggested amount decreases: this is due the fact that, when the cost is low (or even zero) the system tends to suggest to completely refill the storage, in order to cope even with extreme emergency situation; on the other hand, if the storage cost weights more, PRISM is forced to find a more suitable trade-off between the storage cost and the actual need for drugs. An interesting detail is also that the gap between two subsequent curves seems to get smaller and smaller as \prism{costStorage} increases: this remarks the fact that, as \prism{costStorage} increases, the suggested optimal reorder amount tends to a limit, representing the best trade-off between the need to store as less drugs as possible (due to the high storage cost) and the need to also store as much drugs as possible (in order to avoid urgent orders).
+    }
