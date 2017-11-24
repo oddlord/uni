@@ -1,0 +1,14 @@
+reset
+set terminal pdf
+set key box right center
+set xlabel 'stock drugs'
+set ylabel 'optimal reorder'
+set style data linespoint
+set pointsize 0.6
+set grid xtics ytics;
+set output "sd_n.pdf"
+plot "data/n0.dat" using 1:2 title 'n=0' pointtype 5, \
+     "data/n10.dat" using 1:2 title 'n=10' pointtype 7, \
+     "data/n20.dat" using 1:2 title 'n=20' pointtype 9, \
+     "data/n30.dat" using 1:2 title 'n=30', \
+     "data/n40.dat" using 1:2 title 'n=40'

@@ -1,0 +1,1 @@
+prism ward_mdp.sm -pf "R{\"totalCost\"}min=? [ F day=3 ]" -exportadvmdp adv.tra -exportstates adv.sta -exportlabels adv.lab

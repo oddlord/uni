@@ -1,10 +1,8 @@
-[] s=0 -> (tmp2'=4) & (s'=1);
-
-[noOrder] s=1 -> (s'=2);
-[order10] s=1 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+10))) & (s'=2);
-[order20] s=1 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+20))) & (s'=2);
-[order30] s=1 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+30))) & (s'=2);
-[order40] s=1 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+40))) & (s'=2);
+[noOrder] s=0 -> (s'=1);
+[order10] s=0 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+10))) & (s'=1);
+[order20] s=0 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+20))) & (s'=1);
+[order30] s=0 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+30))) & (s'=1);
+[order40] s=0 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+40))) & (s'=1);
 
 // day 1, 2, 3
-[] s=2 & day<3 -> 1 : (s'=10) & (tmp'=n) & (day'=day+1);
+[] s=1 & day<3 -> 1 : (s'=10) & (tmp'=n) & (day'=day+1);

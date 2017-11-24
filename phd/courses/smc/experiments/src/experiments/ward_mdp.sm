@@ -5,9 +5,9 @@ const int maxDrugs = 40; // maximum number of drugs that can be hold in the hosp
 const int maxER = 4; // maximum emergency arrivals per day
 const int maxConsume = 3; // maximum drugs consumable per patient per day
 
-const double probExit; // probability of leaving the hospital ward
-const double probER; // probability of an emergency arrival
-const double probConsume; // probability of consuming a drug
+const double probExit = 0.5; // probability of leaving the hospital ward
+const double probER = 0.3; // probability of an emergency arrival
+const double probConsume = 0.6; // probability of consuming a drug
 
 const double costOrder = 1; // the cost to be paid to order a single drug
 const double costUrgentOrder = 100; // the cost to be paid for urgent orders
@@ -17,25 +17,26 @@ const int patSched1 = 2; // scheduled patients for day 1
 const int patSched2 = 3; // scheduled patients for day 2
 const int patSched3 = 2; // scheduled patients for day 3
 
+const int initialSD;
+const int initialN;
+
 module hospitalWard
 	s : [0..30] init 0; // state variable
-	stockDrugs : [0..maxDrugs];
-	n : [0..maxPat];
+	stockDrugs : [0..maxDrugs] init initialSD;
+	n : [0..maxPat] init initialN;
 	day : [0..3] init 0;
 	tmp : [0..maxPat] init 0; // support variable for patient loop
 	tmp2 : [0..max(maxER,maxConsume,4)] init 0; // support variable for other loops
 	missingDrug: [0..1] init 0; // support variable indicating missing drugs
-    
-	[] s=0 -> (tmp2'=4) & (s'=1);
 
-	[noOrder] s=1 -> (s'=2);
-	[order10] s=1 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+10))) & (s'=2);
-	[order20] s=1 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+20))) & (s'=2);
-	[order30] s=1 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+30))) & (s'=2);
-	[order40] s=1 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+40))) & (s'=2);
+	[noOrder] s=0 -> (s'=1);
+	[order10] s=0 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+10))) & (s'=1);
+	[order20] s=0 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+20))) & (s'=1);
+	[order30] s=0 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+30))) & (s'=1);
+	[order40] s=0 -> (stockDrugs'=max(0,min(maxDrugs,stockDrugs+40))) & (s'=1);
 
 	// day 1, 2, 3
-	[] s=2 & day<3 -> 1 : (s'=10) & (tmp'=n) & (day'=day+1);
+	[] s=1 & day<3 -> 1 : (s'=10) & (tmp'=n) & (day'=day+1);
 
 	// moving patients out of the hospital ward
 	[] s=10 & tmp>0 & n>0 ->

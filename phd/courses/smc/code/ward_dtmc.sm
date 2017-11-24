@@ -20,8 +20,8 @@ const int patSched3 = 2; // scheduled patients for day 3
 
 module hospitalWard
 	s : [0..30] init 0; // state variable
-	stockDrugs : [0..maxDrugs];
-	n : [0..maxPat];
+	stockDrugs : [0..maxDrugs] init 0;
+	n : [0..maxPat] init 0;
 	day : [0..3] init 0;
 	tmp : [0..maxPat] init 0; // support variable for patient loop
 	tmp2 : [0..max(maxER,maxConsume,4)] init 0; // support variable for other loops

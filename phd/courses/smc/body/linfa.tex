@@ -106,5 +106,41 @@
     
     \question{Modify the model in Code \ref{lst:ward} in order to make the drug reorder choice non-deterministic.}
     \answer{
+      Changing the reorder choice in Code \ref{lst:ward} from a probabilistic choice to a non-deterministic one is quite straightforward. The first thing do is, clearly, to change the keyword \prism{dtmc} in line 1 to \prism{mdp}, so that the model is correctly built as an MDP. Then, it's simply necessary to replace the lines 31-46 in Code \ref{lst:ward} with the following code:
+      
       \lstinputlisting[language=prism, numbers=none]{code/ward_mdp_update.sm}
+      
+      The above code allows all the reorder choices to be enabled at the same time with no probability information attached to them, thus making the reorder choice non-deterministic. Also, the constant \prism{probOrder} (line 11) and the variable \prism{drugsToOrder} (line 28) can be removed from the code, as they are not used any more.
+    }
+    
+    \question{
+      Save the new MDP model as \bash{ward\_mdp.sm}, setting \prism{probExit}, \prism{probER} and \prism{probConsume} to be $0.5$, $0.3$ and $0.6$ respectively. Then execute the following command to \href{http://www.prismmodelchecker.org/manual/RunningPRISM/Adversaries}{extract the optimal adversary}, states and labels:
+      
+      \lstinputlisting[numbers=none]{code/extractadv.bat}
+      
+      Following the PRISM manual, determine which is the optimal strategy for the current day reorder with the initial setting of \prism{stockDrugs}$=10$ and \prism{n}$=10$.
+    }
+    \answer{
+      According to the manual, once the suggested command have been executed, the file \bash{adv.lab} indicates which is the ID of the initial state, in this case $370$. By exploring, then, the \bash{adv.tra} file, the following line can be found:
+      
+      \lstinputlisting[numbers=none]{code/adv_tra_example.tra}
+      
+      The above line indicates that, when in the state with ID $370$ (i.e. the initial state, which in this case represents the scenario with 10 patients and 10 stocked drugs), the best strategy to follow, in order to minimise on average the total cost after three days, is to order 10 units, as indicated by the label of the action \prism{order10}. The above line indicates also that, by taking this action, the model will move to the state with ID $2191$, which, according to the file \bash{adv.sta}, corresponds to the scenario with 10 patients, 20 stocked drugs and variable \prism{s}$=1$, as expected.
+    }
+    
+    \question{Perform now an experiment, either manually or through a custom script, varying the initial state for both \prism{n} and \prism{stockDrugs}. Show and comment the results.}
+    \answer{
+      The results of the experiment are shown in Figure \ref{fig:sd_n_plot}.
+      
+    	\begin{figure}[h!]
+    		\begin{center}
+    			\includegraphics[scale=1]{sd_n_plot.pdf}
+    		\end{center}
+    		\caption{Experiment plot of the optimal reorder strategy as \prism{stockDrugs} varies for different values of \prism{n}.}
+    		\label{fig:sd_n_plot}
+    	\end{figure}
+    	
+    	From Figure \ref{fig:sd_n_plot} it can be seen that, as the value of \prism{stockDrugs} increases, the suggested optimal reorder amount decreases, as with higher amounts of drugs already in stock, the need for even more drugs gets weaker and weaker. When the number of hospitalised patients \prism{n}, instead, is increased, the suggested optimal amount results also increased, because, as expected, with more patients in the hospital more drug consumptions are expected, thus requiring a fuller stock. In Figure \ref{fig:sd_n_plot} the curves \prism{n}$=30$ and \prism{n}$=40$ overlaps.
+    	
+    	The experiment have been conducted through a simple custom script, used to speed up the experimentation.
     }
