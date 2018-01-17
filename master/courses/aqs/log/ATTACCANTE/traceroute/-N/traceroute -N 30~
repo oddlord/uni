@@ -1,0 +1,32 @@
+sudo traceroute -N 30 192.168. 
+traceroute to 192.168.137.180 (192.168.137.180), 30 hops max, 60 byte packets
+ 1  sony-VPCY11V9E.mshome.net (192.168.137.180)  11.527 ms  10.989 ms  10.825 ms
+
+11 Jul 12:04:29 ntpdate[7496]: ntpdate 4.2.6p3@1.2290-o Mon Aug 20 14:49:17 UTC 2012 (1)
+Looking for host ntp1.inrim.it and service ntp
+host found : ntp1.inrim.it
+transmit(193.204.114.232)
+receive(193.204.114.232)
+transmit(193.204.114.232)
+receive(193.204.114.232)
+transmit(193.204.114.232)
+receive(193.204.114.232)
+transmit(193.204.114.232)
+receive(193.204.114.232)
+transmit(193.204.114.232)
+server 193.204.114.232, port 123
+stratum 1, precision -22, leap 00, trust 000
+refid [CTD], delay 0.10872, dispersion 0.01457
+transmitted 4, in filter 4
+reference time:    d5890177.f01f4c12  Thu, Jul 11 2013 12:03:35.937
+originate timestamp: d58901b4.339ce67b  Thu, Jul 11 2013 12:04:36.201
+transmit timestamp:  d58901b4.a9c95b60  Thu, Jul 11 2013 12:04:36.663
+filter delay:  0.10872  0.14098  0.14714  0.14331 
+         0.00000  0.00000  0.00000  0.00000 
+filter offset: -0.53755 -0.52174 -0.51797 -0.52057
+         0.000000 0.000000 0.000000 0.000000
+delay 0.10872, dispersion 0.01457
+offset -0.537551
+
+11 Jul 12:04:38 ntpdate[7496]: step time server 193.204.114.232 offset -0.537551 sec
+

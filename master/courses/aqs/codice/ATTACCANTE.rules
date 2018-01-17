@@ -1,0 +1,1 @@
+alert 192.168.137.170 any -> any any (msg:"PACKET SENT"; sid:50002;)

@@ -1,0 +1,85 @@
+\documentclass[twoside,openright,titlepage,fleqn,headinclude,11pt,a4paper,BCOR5mm,footinclude]{book}
+
+%---------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage[Lenny]{fncychap}
+\usepackage[unicode]{hyperref}
+\usepackage[pdftex]{graphicx}
+\usepackage{amsfonts,amsmath,geometry, listings, xcolor, url}
+
+%---------------------------------------------------------------------
+
+%\makeatletter
+%\def\@makechapterhead#1{%
+%  \vspace*{50\p@}%
+%  {\parindent \z@ \raggedright \normalfont
+%    \vskip 20\p@
+%    \interlinepenalty\@M
+%    \Huge \bfseries #1\par\nobreak
+%    \vskip 40\p@
+%  }}
+%\makeatother
+
+%---------------------------------------------------------------------
+
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+
+%-------------------------------------------------------------------
+
+\renewcommand*{\lstlistingname}{Codice}
+\renewcommand*{\lstlistlistingname}{Elenco dei codici}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\lstset{
+	language = Java,
+	keywordstyle = \color{blue}\bfseries,
+	commentstyle = \color{dkgreen},
+	stringstyle = \color{mauve},
+	frameround = fttt,
+	frame = TRBl,
+	numbers = left,
+	stepnumber = 2,
+	breaklines = true,
+	numberstyle=\tiny\color{gray},
+}
+
+%--------------------------------------------------------------------
+
+\begin{document}
+
+	\frenchspacing
+	\raggedbottom
+	\pagenumbering{roman}
+	\pagestyle{plain}
+	
+	\include{titolo}
+	
+	\tableofcontents
+	
+	\cleardoublepage \pagenumbering{arabic}
+	
+	\include{testo}
+	\include{introduzione}
+	\include{problema_sincronizzazione}
+	\include{installazione}
+	\include{nmap}
+	\include{ping}
+	\include{metasploit}
+	\include{traceroute}
+	\include{protocol}
+	\include{alert}
+	\include{conclusioni}
+	\include{appendice}
+
+\end{document}
+
+
