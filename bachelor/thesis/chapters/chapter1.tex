@@ -1,0 +1,394 @@
+\chapter{Visualizzazione di algoritmi}
+	\label{chap:visualizzazioneAlgoritmi}
+	\begin{center}
+		``\textit{La visualizzazione (o animazione) di algoritmi è il processo di astrazione di dati, operazioni e semantica e della creazione di visualizzazioni grafiche dinamiche di queste astrazioni}'' \cite{stasko90}.
+	\end{center}
+	Quindi la visualizzazione di algoritmi consiste nel rendere l'esecuzione di un dato algoritmo il più intuitiva possibile, da un punto di vista grafico, mostrando, tramite l'utilizzo di figure o etichette minimali, l'evoluzione dell'esecuzione dell'algoritmo e dei dati da esso gestiti.\\
+	\\
+	Le tecniche di visualizzazione di algoritmi sono nate e si sono sviluppate al fine di agevolare l'insegnamento e la comprensione della maggior parte degli algoritmi. Infatti, la rappresentazione grafica e dinamica delle strutture dati gestite da un algoritmo e la loro evoluzione durante l'esecuzione di quest'ultimo, forniscono un importante strumento educativo in fase di comprensione e analisi di un algoritmo.\\
+	Inoltre, la visualizzazione di un algoritmo, risulta molto utile anche in fase di test e di debug, in quanto un possibile errore, se presente, risulterà immediatamente visibile al programmatore, che non dovrà quindi ricercare il problema analizzando i dati risultanti in formato alfanumerico o, in caso peggiore, il codice stesso.\\
+	\\
+	Uno dei primissimi esempi di visualizzazione di algoritmi risale al 1966 quando Ken Knowlton produsse, per conto della Bell Telephone Laboratories, un video animato di circa 15 minuti in cui veniva mostrato il funzionamento del linguaggio \textit{L6} \cite{bell}. Il linguaggio \textit{L6} era un linguaggio di basso livello orientato a liste concatenate creato dai ricercatori dei Laboratori della Bell Telephone Company. Infatti la denominazione \textit{L6} del linguaggio è in realtà un'abbreviazione che sta per \textit{(Bell Telephone) Laboratories' Low-Level Linked List Language}, ovvero \textit{Linguaggio di basso livello orientato a liste concatenate dei Laboratori Bell}.
+	
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[scale=0.5]{L6.png}
+		\end{center}
+		\caption[Linguaggio L6]{Uno snapshot preso dal video esemplificativo del linguaggio L6 di Ken Knowlton.}
+	\end{figure}
+	
+	\section{Sorting Out Sorting}
+		Anche se, come abbiamo visto, i primi video di visualizzazione di algoritmi risalgono addirittura agli anni '60, quello che convenzionalmente viene considerato il primo ad aver introdotto la nozione di visualizzazione di algoritmi è un video del 1981, creato da Ronald Baecker presso l'Università di Toronto, che prende il nome di \textit{Sorting Out Sorting}, inteso come \textit{Capire gli Algoritmi di Ordinamento} \cite{baecker98}. Questo filmato, infatti, ispirò moltissimi insegnanti ad adottare tecniche di visualizzazione di algoritmi per l'insegnamento di quest'ultimi e permise, di conseguenza, lo sviluppo e la ricerca per queste tecniche.\\
+		\\
+		Questo video di 30 minuti mostrava, graficamente, il funzionamento di nove diversi algoritmi di ordinamento, operanti su diversi insiemi di dati, e ne comparava l'esecuzione.\\
+		\\
+		Dopo la pubblicazione del video Sorting Out Sorting, ed in particolare tra gli anni '80 e i primi del '90, si svilupparono due importanti sistemi nel campo della visualizzazione di algoritmi che influenzarono largamente tutti i sistemi successivi: i sistemi \textit{BALSA} e \textit{TANGO}.
+		\begin{figure}[h!]
+			\begin{center}
+				\subfloat[][InsertionSort]{
+					\includegraphics[scale=0.4]{insertionSort.png}} ~
+				\subfloat[][BubbleSort]{
+						\includegraphics[scale=0.4]{bubbleSort.png}}\\
+			\end{center}
+			\begin{center}
+				\subfloat[][HeapSort]{\includegraphics[scale=0.4]{heapSort.png}}~
+				\subfloat[][Una comparazione di tre algoritmi di ordinamento\label{fig:comparazioneSOS}]{\includegraphics[scale=0.4]{sortingsCompared.png}}
+			\end{center}
+			\caption[Sorting Out Sorting: alcuni esempi]{Alcune immagini tratte dal video Sorting Out Sorting}
+		\end{figure}
+	\section{La famiglia BALSA}
+		\subsection{BALSA}
+			BALSA (\textit{Brown ALgorithm Simulator and Animator}, ovvero \textit{Simulatore e Animatore di Algoritmi di Brown}) è stato il primo sistema di visualizzazione di algoritmi largamente conosciuto. BALSA fu sviluppato da Marc Brown e da Robert Sedgewick presso la Brown University e permetteva la visualizzazione interattiva di programmi, con tanto di visualizzazione multipla di algoritmi e strutture dati \cite{brown84}. Inizialmente venne utilizzato nei laboratori informatici della Brown University (Brown's electronic classroom) come strumento interattivo per l'insegnamento degli algoritmi.\\
+			\\
+			Il concetto chiave attorno al quale si sviluppa il sistema BALSA era quello degli \textit{eventi interessanti} (dall'inglese, \textit{interesting events}): l'esecuzione dell'algoritmo in ambiente BALSA produceva una serie di eventi, che venivano poi visualizzati in una finestra in formato grafico. Per eventi interessanti si intendono quindi operazioni, effettuate dall'algoritmo stesso, come la modifica del valore di una variabile, uno scambio di valori, l'allocazione o la liberazione di memoria, ecc.\\
+			\\
+			Uno dei problemi principali del sistema BALSA era l'estrema complessità in fase di preparazione di un'animazione: erano richieste in media dalle 15 alle 25 ore per scrivere il codice relativo all'algoritmo e alle visualizzazioni di ogni suo passo \cite{survey}.\\
+			Un altro limite ascrivibile a BALSA, era poi quello di trovare una concettualizzazione, o modello, appropriata per le strutture dati e l'algoritmo, come anche di determinare una giusta ``scala'' per rappresentare i dati della visualizzazione corrente. Un albero, ad esempio, poteva crescere in maniera esagerata in alcuni algoritmi: ad ogni passo esso veniva ridisegnato dal sistema BALSA e questo si traduceva, la maggior parte delle volte, in un aumento della complessità dell'intero sistema, nonché in una lettura più difficoltosa da parte dell'utente.
+			\begin{figure}[ht]
+				\begin{minipage}[t]{0.45\textwidth}
+					\centering
+					\includegraphics[width=\textwidth]{balsa.png}
+					\caption[BALSA: alberi binari e bilanciati]{L'immagine di un'animazione in BALSA mentre vengono mostrati vari esempi di alberi binari e bilanciati.}
+				\end{minipage} \hspace{0.1\textwidth}
+				\begin{minipage}[t]{0.45\textwidth}
+					\centering
+					\includegraphics[width=\textwidth]{brown.png}
+					\caption{La \textit{electronic classroom} della Brown University.}
+				\end{minipage}
+			\end{figure}
+		\subsection{BALSA II}
+			BALSA II fu il successore del sistema BALSA, anch'esso sviluppato da Marc Brown \cite{brown88}, che, come il predecessore, era orientato al concetto di ``eventi interessanti'' e di visualizzazioni multiple di algoritmi e/o strutture dati.\\
+			\\
+			Il modello di animazione in BALSA II consisteva in un algoritmo, un generatore di input ed una o più visualizzazioni.\\
+			L'utente aveva la possibilità di visualizzare simultaneamente più algoritmi operanti sullo stesso input set, per poterne effettuare una comparazione, oppure cambiare, con pochi click, l'input dell'algoritmo, per effettuare test successivi. Inoltre questo sistema permetteva una, seppur minima, interazione con l'utente, che poteva, ad esempio, cambiare il valore di una variabile o la posizione di un oggetto grafico durante la simulazione dell'algoritmo \cite{survey}.\\
+			\\
+			Il limite principale che accomunava BALSA II al suo predecessore era la scarsa elasticità e maneggevolezza del linguaggio di programmazione supportato, Pascal. L'utente infatti si ritrovava spesso in difficoltà a dover implementare il proprio codice in ambiente BALSA II.\\
+			Inoltre, il sistema BALSA II mancava sia di un editor grafico che di appropriate librerie grafiche, il che obbligava il programmatore a dover definire gli oggetti e le animazioni utilizzando primitive grafiche che risultavano molto scomode, specialmente per visualizzazioni complesse.
+		\subsection{Zeus}
+			Il sistema Zeus, sviluppato da Brown nel 1991 presso il Digital Equipment Research Center \cite{brown91}, segnò la fine del sistema BALSA II.\\
+			Zeus fu ideato prendendo in considerazione gli emergenti linguaggi di programmazione orientati agli oggetti. Tuttavia il linguaggio scelto da Brown per il sistema Zeus, Modula 3, non riscosse un gran successo, facendo rimanere il progetto Zeus un semplice prototipo di ricerca, senza mai trovare reale applicazione in ambito educativo. Inoltre Zeus fu implementato in un ambiente multi-processore e multi-thread, permettendo quindi l'esecuzione di programmi paralleli \cite{survey}.\\
+			\\
+			Come nei sistemi precedenti appartenenti alla famiglia BALSA, anche Zeus era orientato agli eventi: l'esecuzione dell'algoritmo in ambiente Zeus produceva una lista ordinata di eventi, ognuno dei quali implicava un aggiornamento della visualizzazione da parte del gestore grafico. In questo caso vennero inclusi anche eventi di tipo sonoro, che permisero di accentuare ulteriormente alcuni cambiamenti o animazioni particolarmente interessanti.\\
+			\\
+			Questo sistema permise, rispetto ai suoi predecessori, non soltanto visualizzazioni a colori, ma anche visualizzazioni 3D.\\
+			Infatti la programmazione della visualizzazione avveniva utilizzando funzioni ad alto livello definite da librerie grafiche 2D o 3D utilizzando un linguaggio chiamato Obliq. La grafica veniva eseguita e gestita su un sistema X-Windows.\\
+			\\
+			Un'altra importante novità di Zeus è l'introduzione dello pseudocodice all'interno delle visualizzazioni. Lo pseudocodice è il codice dell'algoritmo da eseguire, scritto in un linguaggio di programmazione fittizio, riportandone soltanto le operazioni principali o comunque di interesse. Lo pseudocodice è quindi un oggetto grafico di tipo testuale le cui righe vengono evidenziate durante l'esecuzione dell'algoritmo a seconda di quale operazione viene eseguita in quel preciso step.\\
+			Questo forniva all'utente una visione immediata della corrispondenza tra visualizzazione ed esecuzione dell'algoritmo, aiutando ulteriormente la comprensione di quest'ultimo.
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[scale=0.7]{zeus.png}
+				\caption[Zeus: dimostrazione del Teorema di Pitagora]{Un'immagine del sistema Zeus durante la visualizzazione della dimostrazione del Teorema di Pitagora.}
+			\end{figure}
+	\section{La famiglia TANGO}
+		\subsection{TANGO}
+			L'acronimo TANGO sta per \textit{Transition-based Animation GeneratiOn}, ovvero \textit{Generazione di Animazioni orientata alle Transizioni}, e fu sviluppato da John Thomas Stasko verso la fine degli anni '80.\\
+			\\
+			Il sistema TANGO presentava degli spiccati miglioramenti in quanto a grafica ed animazioni: le figure erano colorate e potevano essere evidenziate a seconda della loro importanza; le animazioni invece furono rese più fluide e standardizzate, utilizzando per esse un modello formale che prese il nome di \textit{Path-Transition Paradigm}.\\
+			Inoltre venne ampiamente semplificata, rispetto al sistema BALSA, la fase di sviluppo di un algoritmo e della relativa visualizzazione.\\
+			\\
+			Fu inoltre sviluppata una versione X-Windows di TANGO, denominata \textit{XTANGO} \cite{stasko92}, che permette al programmatore di utilizzare funzioni di alto livello, definite dal sistema X-Windows, per la parte grafica della visualizzazione, evitandogli quindi di dover programmare utilizzando primitive grafiche di basso livello.\\
+			\begin{figure}[h!]
+				\begin{center}
+					\includegraphics[scale=0.7]{xtango.png}
+				\end{center}
+				\caption[XTANGO: BubbleSort]{Un passo dell'esecuzione dell'algoritmo del BubbleSort in ambiente XTANGO che mostra l'utilizzo di più frames nella visualizzazione.}
+			\end{figure}
+			Entrambe le versioni, TANGO e XTANGO, implementavano due processi separati comunicanti: uno per l'esecuzione dell'algoritmo ed uno per la gestione delle animazioni. Questo impediva la visualizzazione di programmi paralleli, e per farlo fu necessario modificare la struttura del sistema TANGO.
+		\subsection{POLKA}
+			In base alle considerazioni fatte nella Sezione precedente, per poter visualizzare programmi paralleli si rese necessario modificare la struttura dei sistemi di visualizzazione TANGO e XTANGO: fu così che venne sviluppato POLKA\cite{survey}.\\
+			Il sistema POLKA nacque quindi per  superare i limiti insiti nei sistemi di visualizzazione TANGO e XTANGO, e per poter rendere possibile la visualizzazione di programmi paralleli.\\
+			\\
+			Una delle principali differenze con POLKA e XTANGO è che POLKA risulta essere più elegante, in quanto il sistema utilizzava il linguaggio C++, orientato agli oggetti, mentre XTANGO utilizzava il C.\\
+			Inoltre viene modificato il paradigma utilizzato per le animazioni: mentre in XTANGO il movimento di un oggetto grafico viene definito come un'azione atomica, nel sistema POLKA era presente una sorta di clock globale interno che permetteva di visualizzare il frame corrispondente ad ogni visualizzazione in quell'istante.\\
+			\\
+			Come in XTANGO, i comandi grafici vengono generati per un sistema X-Windows. Vengono inoltre forniti dei comandi specifici per poter mettere in pausa la visualizzazione corrente, riavvolgerla o cambiare la velocità con cui vengono mostrati i vari frame.\\
+			Nella versione di base di POLKA le animazioni erano unicamente in 2D, ma venne successivamente distribuita una versione, denominata POLKA 3D, che mise a disposizione visualizzazioni 3D e primitive 3D come sfere, coni, cubi e altro \cite{yung}.
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[scale=0.8]{polka.png}
+				\caption[POLKA: thread concorrenti in esecuzione]{Visualizzazione di thread concorrenti in esecuzione in ambiente POLKA.}
+			\end{figure}
+		\subsection{SAMBA}
+			Venne sviluppato, per essere utilizzato in coppia con il sistema POLKA, un'interfaccia di front-end, denominata SAMBA, per la programmazione della parte grafica della visualizzazione.\\
+			\\
+			Samba metteva a disposizione un insieme di comandi molto semplici che l'utente poteva utilizzare per costruire l'animazione. L'utente doveva generare un file ASCII contenente i comandi relativi all'animazione, il quale veniva passato all'interprete grafico di POLKA, che si preoccupava di generare l'animazione.\\
+			\\
+			L'approccio introdotto con SAMBA, ovvero quello di separare il motore grafico dal codice dell'algoritmo, viene detto \textit{animation scripting}.
+	\section{Altri sistemi di visualizzazione di algoritmi}
+		Vediamo in questa Sezione altri sistemi per la visualizzazione di algoritmi che, pur non appartenendo alle famiglie dei sistemi BALSA o TANGO, presentano innovazioni interessanti rispetto ai sistemi già analizzati.
+		\subsection{ANIM}
+			ANIM è un insieme di comandi messi a disposizione nei sistemi operativi di tipo UNIX per la produzione di animazioni, o anche solo ``snapshot'', dell'esecuzione di un algoritmo.\\
+			\\
+			Per generare la visualizzazione basta inserire all'interno del codice dell'algoritmo degli speciali comandi di output che produrranno il file di visualizzazione. In alternativa, il programma in esecuzione e gli strumenti di visualizzazione di ANIM possono essere collegati da un \textit{pipe}, in modo da rendere la visualizzazione pressoché simultanea all'esecuzione dell'algoritmo.\\
+			ANIM permette la visualizzazione di programmi scritti in qualsiasi linguaggio.\\
+			\\
+			La struttura di ANIM è molto semplice. Esso prevede quattro comandi per la visualizzazione di oggetti geometrici, che sono \textit{text}, \textit{line}, \textit{box} e \textit{circle}, e quattro comandi di controllo: \textit{view}, \textit{click}, \textit{erase} e \textit{clear}. Gli ultimi due eliminano, rispettivamente, un oggetto già disegnato in precedenza o tutti gli oggetti presenti nella visualizzazione. Il comando ``view nome\_finestra'' seleziona una determinata finestra di visualizzazione, in  modo tale che tutti i comandi successivi a quel determinato ``view'' vengano applicati alla finestra specificata. Infine il comando ``click nome'' serve a impostare all'interno del codice dei punti di controllo dai quali è possibile, ad esempio, dividere la visualizzazione in più visualizzazioni o generare uno snapshot.\\
+			\\
+			Una mancanza del sistema ANIM è, forse, l'assenza di transizioni, ovvero di animazioni fluide, cosa che invece costituiva il punto di forza dei sistemi della famiglia TANGO (si ricordi il sopra citato \textit{Path-Transition Paradigm}). In ANIM, infatti, come si può dedurre dai comandi presenti, un'animazione è prodotta cancellando l'oggetto del passo precedente e ridisegnando totalmente l'oggetto nella nuova posizione (o con nuovi colori o dimensioni).
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[scale=0.8]{anim.png}
+				\caption[ANIM: InsertionSort e QuickSort a confronto]{Snapshot presi a diverse iterazioni dell'InsertionSort e del QuickSort utilizzando gli strumenti ANIM per la visualizzazione grafica.}
+			\end{figure}
+		\subsection{Mocha}
+			Mocha fu il primo sistema di visualizzazione di algoritmi distribuito. Mocha era quindi stato pensato come sistema di visualizzazione di algoritmi da utilizzare attraverso il Web.\\
+			Un client inviava al server Mocha una richiesta di visualizzazione, selezionando l'algoritmo da visualizzare ed altre opzioni come i valori di input, quindi il server Mocha eseguiva l'algoritmo e generava i comandi di visualizzazione, che sarebbero poi stati eseguiti da un Applet sulla macchina client \cite{survey} \cite{yung}.\\
+			\\
+			Il punto di forza di Mocha erano quindi rappresentato dal fatto che la pesantezza dell'esecuzione dell'algoritmo gravava totalmente sul server ed esso poteva essere raggiungibile da qualsiasi macchina dotata di connessione alla rete Internet. Nonostante questo, il progetto Mocha non venne portato avanti e non superò mai la fase di prototipo.
+		\subsection{Leonardo}
+			Leonardo è un sistema per lo sviluppo e la visualizzazione di programmi in linguaggio C \cite{leonardo}. Essendo un ambiente di sviluppo è dotato di editor e di compilatore.\\
+			\\
+			Una delle funzioni più interessanti di Leonardo era la ``CPU virtuale invertibile'': tutte le operazioni venivano eseguite su una CPU virtuale, che teneva traccia di tutte le operazioni eseguite e che poteva essere ``riavvolta'', annullando operazioni già eseguite. Questa funzione di Leonardo, combinata con la capacità di generare animazioni, risultava essere molto utile nella fase di debug di un programma.\\
+			\\
+			Speciali comandi globali, detti \textit{predicati}, del sistema Leonardo (scritti in linguaggio C) venivano messi a disposizione per produrre la visualizzazione. I predicati definiscono oggetti grafici, i loro parametri e la loro variabile corrispondente nel codice del programma stesso. La modifica del valore di una variabile causa quindi, in modo automatico, l'aggiornamento di tutti gli oggetti grafici ad essa correlati.
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[scale=0.8]{leonardo.png}
+				\caption[Leonardo: algoritmo di Kamada-Kawai]{Sistema Leonardo durante l'esecuzione dell'algoritmo di tracciamento dei grafi di Kamada-Kawai.}
+			\end{figure}
+		\subsection{GAWAIN}
+			GAWAIN (\textit{Geometric Algorithms Web-based AnImatioN}, ovvero \textit{Animazione di algoritmi geometrici orientata al web}) era un sistema di visualizzazione di algoritmi sviluppato da Alejo Hausner presso Princeton nel 1998 con un concetto di base molto simile a quello del sistema Mocha: un Applet Java riceveva gli eventi generati dall'esecuzione dell'algoritmo sul server e produceva l'animazione sul client richiedente.\\
+			Come suggerisce il nome, GAWAIN era fortemente improntato alla visualizzazione di algoritmi di tipo geometrico, anche se poteva essere utilizzato come sistema di simulazione \textit{general purpose} su altri tipi di algoritmo \cite{hausner98}.\\
+			\\
+			GAWAIN forniva, inoltre, all'utente un generatore di input, come nel sistema BALSA II, o anche la possibilità di inserire manualmente i valori dell'input dell'algoritmo da simulare.\\
+			La visualizzazione dell'algoritmo poteva essere eseguita sia in avanti che a ritroso e a differenti velocità (la velocità di visualizzazione viene misurata in eventi al secondo). Inoltre veniva supportata anche la visualizzazione di oggetti 3D, anche se le librerie utilizzate non erano perfettamente supportate. Erano supportati invece vari tipi di zoom, come in XTANGO, e la possibilità di impostare un diverso numero di eventi per ogni step, in modo che ad ogni passo della visualizzazione venissero saltati in modo automatico eventi ritenuti meno importanti.
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[scale=0.4]{gawain.png}
+				\caption[GAWAIN: MergeSort]{L'esecuzione dell'algoritmo del MergeSort in ambiente GAWAIN.}
+			\end{figure}
+		\subsection{Pavane}
+			Il sistema Pavane si discostava dagli altri sistemi di visualizzazione di algoritmi finora analizzati in quanto esso era basato su programmazione dichiarativa e non imperativa. In Pavane l'esecuzione del codice dell'algoritmo non produceva il codice relativo alla visualizzazione tramite un compilatore: era presente, infatti, un interprete che, durante l'esecuzione dell'algoritmo, riconosceva le variabili interessate alla visualizzazione \cite{roman91}.\\
+			\\
+			Il programmatore che volesse visualizzare un algoritmo utilizzando Pavane doveva definire delle apposite formule logiche che definissero quando un determinato oggetto doveva essere visualizzato sullo schermo.\\
+			Quindi l'idea principale di Pavane era quella di visualizzare lo stato interno del programma sotto forma di immagini: ogni volta che un determinato stato veniva raggiunto, l'animazione veniva aggiornata.\\
+			\\
+			Il gestore grafico di Pavane osservava, all'inizio della simulazione, lo stato delle variabili interessate per la visualizzazione. Ogni volta, poi, che all'interno del codice veniva richiamata la funzione \textit{VisualUpdate()} (che è l'unico comando imperativo presente), esso comparava l'ultimo stato analizzato con quello corrente ed aggiornava l'animazione di conseguenza.\\
+			Per avere una simulazione completamente dichiarativa, era necessario eseguire il programma su una macchina virtuale o utilizzare un qualche tipo di segnale che indicasse quando lo stato di una variabile osservata era cambiato. Questo approccio risultava essere molto costoso, per questo veniva utilizzata la funzione \textit{VisualUpdate()}, che rendeva quindi Pavane un sistema ibrido: apposite formule logiche avevano il compito di controllare quali aspetti dello stato del programma erano cambiati rispetto all'ultimo controllo, ma era il programmatore stesso che decideva, tramite l'inserzione dei comandi \textit{VisualUpdate()}, quando erano da effettuare tali controlli sullo stato del programma.\\
+			Infine Pavane supportava anche le visualizzazioni 3D, fornendo al programmatore maggiori possibilità di personalizzazione e miglioramento delle visualizzazioni.
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[scale=0.8]{pavane.png}
+				\caption[Pavane: il QuickSort in 3D]{Visualizzazione a colori e 3D dell'esecuzione dell'algoritmo del QuickSort in Pavane.}
+			\end{figure}
+		\subsection{CATAI}
+			CATAI (\textit{Concurrent Algorithm and data Types Animation over the Internet}, ovvero \textit{Animazione su Internet di Algoritmi Concorrenti e Tipi di dato}) era un sistema di animazione che visualizzava programmi scritti in linguaggio C++ utilizzando una struttura distribuita e quindi permettendo l'esecuzione di algoritmi concorrenti e la visualizzazione da parte di più utenti di una stessa visualizzazione \cite{yung}. Le animazioni erano quindi visualizzate in un client Java.\\
+			\\
+			CATAI offriva numerose possibilità d'interazione come, ad esempio, la possibilità di inserimento manuale dell'input tramite un'apposita interfaccia grafica.\\
+			Inoltre CATAI implementava le visualizzazioni ad un alto livello di aderenza tra animazione e codice dell'algoritmo. Normalmente, infatti, negli altri sistemi di visualizzazione di algoritmi, si utilizzano tecniche di visualizzazione orientate agli eventi, ovvero in cui era il programmatore che doveva inserire nel codice dell'algoritmo, in concomitanza con parti interessanti del codice, le funzioni grafiche che dovevano generare la visualizzazione. In CATAI invece la generazione dell'animazione veniva fatta in automatico, in modo da evitare possibili errori da parte del programmatore e da garantire una più stretta aderenza tra esecuzione e visualizzazione dell'algoritmo. Questo veniva fatto da CATAI utilizzando delle specifiche strutture dati che incorporavano il collegamento con la parte grafica, in modo che ogni modifica alla struttura dati stessa producesse in modo automatico l'aggiornamento corrispettivo nell'animazione.
+	\section{Sistemi di visualizzazione di algoritmi recenti}
+		Fino ad ora abbiamo parlato dei sistemi di visualizzazione di algoritmi che hanno fatto la storia in questo settore. Vedremo adesso quali sono i sistemi di visualizzazione di algoritmi più recenti e promettenti.
+		\subsection{JHAVÉ}
+			JHAVÉ (\textit{Java-Hosted Algorithm Visualization Enviroment}, ovvero \textit{Ambiente di Visualizzazione di Algoritmi implementato in Java}) è un sistema di visualizzazione di algoritmi implementato in Java che realizza il modello architetturale del client-server. Il sistema è ottimizzato quindi per la visualizzazione via Web.\\
+			Il modello client-server di JHAVÉ funziona con una macchina client, che rappresenta l'utente, che invia al server la richiesta di visualizzazione dopo aver indicato l'algoritmo da visualizzare, i valori di input ed i valori dei parametri specifici dell'algoritmo (se presenti); la macchina server, quindi, esegue l'algoritmo con le impostazioni richieste ed invia al client, come risposta, lo script della visualizzazione che il client potrà mostrare.\\
+			\\
+			JHAVÉ è fortemente improntato all'aspetto pedagogico della visualizzazione di algoritmi: infatti, oltre a fornire un'alta interattività tramite l'inserimento manuale degli input, un generatore di input o la gestione della velocità e della direzione (avanti o a ritroso) della visualizzazione, esso permette al docente di inserire, in punti specifici dell'esecuzione dell'algoritmo, le cosiddette \textit{stop-and-think questions}, ovvero domande non estremamente complesse riguardanti il funzionamento dell'algoritmo in quel preciso momento.\\
+			\\
+			Un'utile funzione di JHAVÉ è quella di raggruppare gli algoritmi, disponibili all'interno del suo database, secondo il tipo dei dati di input. È infatti ragionevole pensare che, dopo aver eseguito e visualizzato un algoritmo con un determinato input set, si possa voler eseguire e visualizzare, a scopi comparativi, un algoritmo diverso sullo stesso data set (un esempio possono essere i vari algoritmi di ordinamento).\\
+			\\
+			Infine un punto di forza di JHAVÉ è la portabilità: i programmi da visualizzare possono, infatti, essere scritti in qualsiasi linguaggio di programmazione (purché essi richiamino le specifiche funzioni per la produzione degli script di visualizzazione, utilizzando o il motore grafico di SAMBA sviluppato da Stasko, o il motore GAIGS sviluppato da Naps). Una volta inviato il programma da visualizzare, esso verrà eseguito dall'applicazione Java sul server, indipendentemente dal linguaggio di programmazione utilizzato.\\
+			Un docente può quindi utilizzare gli algoritmi scritti in qualsiasi linguaggio egli desideri, senza essere costretto ad utilizzare Java.
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[scale=0.6]{jhave.png}
+				\caption[JHAVÉ: QuickSort]{Un passo dell'esecuzione dell'algoritmo del QuickSort su JHAVÉ: sulla destra si possono notare lo pseudocodice, i valori degli indici utilizzati nell'algoritmo e una domanda sul prossimo passo.}
+			\end{figure}
+		\subsection{Trakla}
+			Il sistema Trakla è un sistema, sviluppato presso la Helsinki University of Technology, che permette agli studenti di risolvere svariati esercizi nel campo dell'algoritmica e di ottenere una risposta in modo automatico. Viene messo a disposizione, oltre al sistema di generazione e correzione degli esercizi, anche un editor grafico scritto in Java, denominato \textit{TraklaEdit}, che permette di interagire con le strutture dati presenti nell'algoritmo in modo diretto, ad esempio trascinando con il mouse l'elemento di un vettore nella giusta posizione. Il sistema Trakla, assieme a TraklaEdit, può essere usato anche tramite una pagina Web, per permettere a chiunque di accedere al servizio ed ottenere le correzioni agli esercizi. L'intero sistema operante sul Web viene detto \textit{WWW-Trakla}.\\
+			\\
+			Il sistema è dotato quindi di un server, detto \textit{Trakla-server}. Inizialmente si poteva comunicare (inviare esercizi, ricevere correzioni, ecc.) soltanto attraverso una mail-box presente sul server. Più recentemente invece è stato implementato il sistema WWW-Trakla sopra citato che, assieme al TraklaEdit, risulta molto più comodo e immediato.\\
+			Un utente che utilizzi il sistema Trakla può scegliere di registrarsi sul server in modo da avere, da qualsiasi posto egli effettui il login, i propri esercizi e correzioni salvati ed una graduatoria con le votazioni precedenti.
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[scale=0.6]{trakla.png}
+				\caption[Trakla: un esercizio sul QuickSort]{Un esercizio in Trakla in cui si deve determinare il perno nell'algoritmo del QuickSort.}
+			\end{figure}
+		\subsection{OpenDSA}
+			OpenDSA (dove la sigla \textit{DSA} sta per \textit{Data Structure and Algorithms}, ovvero \textit{Algoritmi e Strutture Dati}) è un progetto finalizzato a fornire agli studenti importanti risorse per lo studio e la comprensione di algoritmi e strutture dati.\\
+			Il progetto OpenDSA viene anche definito con il termine \textit{Active-eBook}, ovvero ``libro digitale interattivo''. Infatti OpenDSA punta a creare un percorso disciplinare semplice e lineare, improntato allo studio di algoritmi e strutture dati, fornendo spiegazioni e definizioni, in formato testuale, ma anche esempi ed esercizi, in formato grafico e interattivo.\\
+			\\
+			Questo corso virtuale è quindi suddiviso in moduli, come ad esempio ``Algoritmi di ordinamento'' oppure ``Alberi di ricerca'': in ogni modulo saranno presenti diverse pagine di spiegazioni riguardanti l'argomento del modulo, esempi sugli algoritmi trattati (con la possibilità di personalizzare i valori di input e i parametri specifici dell'algoritmo) ed infine una grande quantità di esercizi, con cui lo studente potrà mettersi alla prova e verificare le proprie conoscenze, ottenendo in maniera immediata ed automatica una valutazione sulla risoluzione dell'esercizio.\\
+			\\
+			OpenDSA è, come suggerisce il prefisso \textit{Open}, un progetto Open Source, nel senso che non soltanto i corsi virtuali messi a disposizione sono utilizzabili da chiunque, ma anche nel senso che il codice sorgente è visualizzabile e modificabile da chiunque voglia farlo: un professore può, ad esempio, creare i propri moduli, modificare le spiegazioni o aggiungere algoritmi o esercizi.\\
+			Inoltre viene messa a disposizione una particolare infrastruttura per permettere la registrazione di utenti al corso virtuale in modo che sia essi che un eventuale docente, possano seguire e monitorare i propri progressi durante lo studio dei moduli.
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[scale=0.6]{openDSA.png}
+				\caption[OpenDSA: InsertionSort]{Un passo dell'esecuzione dell'algoritmo dell'InsertionSort con OpenDSA.}
+			\end{figure}
+	\section{Tassonomia dei sistemi di visualizzazione di algoritmi}
+		La tassonomia è la disciplina che si occupa della classificazione gerarchica, ed eventualmente della nomenclatura, di elementi appartenenti ad uno stesso ambito. Una tassonomia risulta quindi molto utile per la comprensione di un ambito, o gruppo di elementi, in quanto tramite la classificazione strutturata di quest'ultimi sarà possibile realizzare analisi e comparazioni di questi elementi. Una tassonomia è inoltre utile a prevedere in quali direzioni avverranno (o dovrebbero avvenire) nuove scoperte. Infine una tassonomia dev'essere strutturata in maniera gerarchica, ovvero suddividendo gli elementi in categorie, sotto-categorie, sotto-sotto-categorie, ecc., e in modo che eventuali nuove scoperte possano essere incluse nella tassonomia senza dover cambiare o sconvolgere radicalmente l'impostazione precedente \cite{taxonomy}.\\
+		\\
+		Proponiamo in questa Sezione una tassonomia per i sistemi di visualizzazione di algoritmi, indicando le categorie principali in cui essi possono essere suddivisi e alcune sotto-categorie minori. Inoltre indicheremo, per ogni categoria, quali dei sistemi visti all'interno di questo Capitolo vi appartiene o meno oppure un valore approssimativo dell'efficacia di ogni sistema in quell'area.\\
+		Si osservi che, dal momento che ogni sistema è un insieme di più caratteristiche, non è possibile inserire in maniera assoluta un sistema in una specifica categoria (come solitamente viene fatto per gli esseri viventi nelle tassonomie biologiche).\\
+		\\
+		\begin{figure}[h!]
+			\centering
+			\includegraphics[scale=0.6]{tassonomia.png}
+			\caption[Il primo livello gerarchico della tassonomia]{Il primo livello gerarchico della tassonomia dei sistemi di visualizzazione di algoritmi.}
+			\label{fig:tassonomia}
+		\end{figure}
+		Come si può osservare dalla Figura \ref{fig:tassonomia}, sono state definite cinque categorie principali in cui articolare la classificazione dei sistemi di visualizzazione di algoritmi. Esse sono:
+		\begin{itemize}
+			\item Portata:\\
+				\textit{qual è la gamma di programmi che il sistema può prendere in input per la visualizzazione?}
+			\item Contenuto:\\
+				\textit{quale sottoinsieme delle informazioni gestite dal software sono visualizzate dal sistema?}
+			\item Forma:\\
+				\textit{quali sono le caratteristiche delle visualizzazioni?}
+			\item Metodo:\\
+				\textit{come viene specificata la visualizzazione?}
+			\item Interazione:\\
+				\textit{come interagisce l'utente con il sistema di visualizzazione di algoritmi?}
+		\end{itemize}
+		\subsection{Portata}
+			La Portata risponde alla domanda ``qual è la gamma di programmi che il sistema può prendere in input per la visualizzazione?'', ovvero si occupa di classificare i sistemi di visualizzazione di algoritmi in base alla \textit{generalità} e alla \textit{scalabilità} dei programmi passati come input per la visualizzazione.\\
+			\\
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[scale=0.6]{portata.png}
+				\caption[Tassonomia della Portata]{La struttura tassonomica della categoria della Portata, indicandone alcune sottocategorie.}
+			\end{figure}
+			Vediamo di seguito a quali domande risponde ogni sottocategoria appartenente alla Portata:
+			\begin{itemize}
+				\item Generalità: \textit{il sistema generalizza sulla gamma di programmi visualizzabili o accetta soltanto un sottoinsieme ristretto di essi?}
+					\begin{itemize}
+						\item Hardware: \textit{che hardware è richiesto per utilizzare il sistema?}
+						\item Sistema Operativo: \textit{che Sistema Operativo è richiesto per utilizzare il sistema?}
+						\item Linguaggio: \textit{in che linguaggio di programmazione è necessario scrivere i programmi da visualizzare?}
+						\item Tipo di applicazione: \textit{quali sono le restrizioni sul tipo di programma che può essere visualizzato?}
+					\end{itemize}
+				\item Scalabilità: \textit{qual è il grado di adattamento del sistema per esempi di grandi dimensioni?}
+					\begin{itemize}
+						\item Programma: \textit{qual è il più grande programma visualizzabile?}
+						\item Dati: \textit{qual è il più grande insieme di dati visualizzabile?}
+					\end{itemize}
+			\end{itemize}
+		I video presentati all'inizio del Capitolo, L6 e Sorting Out Sorting, risultano molto carenti per generalità in quanto, essendo video preregistrati, non è possibile personalizzare la visualizzazione su nuovi esempi. I primi sistemi BALSA erano stati progettati per essere eseguiti soltanto sulle macchine delle \textit{electronic classroom} della Brown University. Il sistema ANIM è un insieme di strumenti di grafica dei sistemi UNIX, quindi non utilizzabile al di fuori di essi. I sistemi operativi più recenti, invece, operano tutti sul web, permettendo quindi un'esecuzione su qualsiasi coppia macchina/sistema operativo.\\
+		Anche se più o meno tutti i sistemi analizzati permettono la visualizzazione di qualsiasi programma (previamente scritto in un linguaggio comprensibile al sistema) è da osservarsi che alcuni sistemi sono specializzati in determinati tipi di applicazioni: i sistemi della famiglia BALSA, ad esempio, visualizzano molto bene gli algoritmi che utilizzano vettori o grafi, mentre GAWAIN è specializzato in algoritmi di tipo geometrico.\\
+		Per quanto riguarda il linguaggio di programmazione in cui è necessario scrivere l'algoritmo da visualizzare, tra i primi sistemi, ANIM divenne famoso proprio per la possibilità di poter scrivere i programmi da visualizzare in qualsiasi linguaggio di programmazione. Tutti i sistemi della famiglia BALSA e TANGO, invece, richiedevano l'utilizzo di un particolare linguaggio di programmazione, che spesso rendeva difficile il compito di implementare uno specifico algoritmo per ottenerne la visualizzazione. Anche altri sistemi indipendenti richiedevano l'utilizzo di un particolare linguaggio di programmazione, come ad esempio Leonardo, che supportava il C, o Pavane, che supportava soltanto la programmazione dichiarativa (contrariamente a tutti gli altri sistemi che supportavano la programmazione imperativa). Tra i sistemi più recenti si distacca JHAVÉ, che permette la scrittura dei programmi in un qualsiasi linguaggio di programmazione scelto dall'utente.\\
+		\\
+		Tecnicamente tutti i sistemi analizzati sono in grado di gestire programmi ed insiemi di dati arbitrariamente grandi, anche se pochi di essi forniscono esempi in questo senso. Il video Sorting Out Sorting, ad esempio, mostra visualizzazioni che gestiscono grandi quantità di dati.\\
+		Si presti attenzione al fatto che la scalabilità, ed in particolare la scalabilità sui dati da gestire, non risponde alla domanda ``quanto il sistema visualizza bene grandi quantità di dati?'', ma si occupa soltanto di stabilire i limiti effettivi di visualizzazione per grandi quantità di dati gestiti.
+		\subsection{Contenuto}
+			La categoria del Contenuto si occupa di classificare i sistemi di visualizzazione di algoritmi in base a cosa essi visualizzino e a come questa visualizzazione venga generata, comparando, nella maggior parte dei casi, la visualizzazione prodotta con l'algoritmo e i dati effettivi.\\
+			\\
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[scale=0.25]{contenuto.png}
+				\caption[Tassonomia del Contenuto]{La struttura tassonomica della categoria del Contenuto, indicandone alcune sottocategorie.}
+			\end{figure}
+			Vediamo nel dettaglio le sottocategorie appartenenti al Contenuto e come vengono classificati in base a esse i sistemi studiati:
+			\begin{itemize}
+				\item Programma: \textit{con che grado di aderenza il sistema visualizza il programma?}
+					\begin{itemize}
+						\item Codice: \textit{con che grado di aderenza il sistema visualizza le istruzioni del codice sorgente del programma?}
+						\item Dati: \textit{con che grado di aderenza il sistema visualizza le strutture dati gestite dal programma?}
+					\end{itemize}
+				\item Algoritmo: \textit{con che grado di aderenza il sistema visualizza l'algoritmo?}
+					\begin{itemize}
+						\item Istruzioni: \textit{con che grado di aderenza il sistema visualizza le istruzioni dell'algoritmo?}
+						\item Dati: \textit{con che grado di aderenza il sistema visualizza le strutture dati dell'algoritmo?}
+					\end{itemize}
+				\item Fedeltà e Completezza: \textit{le rappresentazioni grafiche rispecchiano l'attuale ed il completo comportamento del programma?}
+				\item Raccolta dei dati: \textit{i dati necessari per la visualizzazione vengono raccolti in fase di compilazione o di esecuzione?}
+					\begin{itemize}
+						\item Mappatura temporale: \textit{che corrispondenza sussiste tra il tempo del programma ed il tempo della visualizzazione?}
+						\item Generazione della visualizzazione: \textit{la visualizzazione viene generata dopo aver eseguito il programma (batch) o durante la sua esecuzione?}
+					\end{itemize}
+			\end{itemize}
+			La visualizzazione del programma è attualmente implementata da pochi sistemi e più in particolare da nessuno di quelli elencati in questo Capitolo, che sono fortemente orientati all'algoritmo, piuttosto che al programma. Ad ogni modo esistono sistemi che visualizzano, con un certo grado di aderenza, le istruzioni eseguite dal programma (per esteso o avvalendosi di uno pseudocodice), il flusso di controllo al momento dell'esecuzione (come ad esempio mostrando chiamate ricorsive) e le strutture dati gestite dal programma.\\
+			\\
+			Come appena accennato, i sistemi studiati in questo Capitolo sono orientati alla visualizzazione di algoritmi, piuttosto che di programmi. Alcuni di essi, come Zeus, JHAVÉ o Leonardo forniscono il supporto allo pseudocodice, ovvero codice semplificato che rappresenta le effettive istruzioni dell'algoritmo che viene evidenziato a seconda dell'azione effettuata ad un certo passo della visualizzazione.\\
+			Per quanto riguarda la visualizzazione delle strutture dati, più o meno tutti i sistemi visualizzano le strutture dati principali di ogni algoritmo (o lasciano la scelta al programmatore), tralasciando in alcuni casi dettagli come indici o strutture dati di supporto o temporanee.\\
+			\\
+			Come già accennato per la sottocategoria degli Algoritmi, non sempre vengono visualizzate tutte le strutture dati e le istruzioni dell'algoritmo. In generale i sistemi sviluppati per scopi ingegneristici, come debugging, risultano essere molto più fedeli e completi rispetto ai sistemi a stampo pedagogico, che solitamente propongono una versione semplificata e minimalista dell'algoritmo, mentre per il debugging o l'analisi delle prestazioni è necessario che siano visualizzati anche dettagli implementativi, come variabili di supporto o chiamate di sistema. In questo senso, i sistemi più recenti che abbiamo studiato, ovvero JHAVÉ, Trakla ed OpenDSA, assieme a tutta la famiglia TANGO, non presentano un'alta fedeltà e completezza rispetto all'algoritmo passato come input. Tra i sistemi studiati, POLKA è forse quello più fedele e completo, in quanto mostra dettagli come lo storico delle chiamate o il numero di thread attivi.\\
+			\\
+			La mappatura temporale si differenzia in base al momento in cui vengono raccolti dati necessari alla visualizzazione e al tipo di animazione: se le informazioni raccolte sono corrispondenti ad istanti specifici dell'esecuzione e la visualizzazione generata è statica, allora la mappatura è ``da statico a statico'', mentre se la visualizzazione è animata, allora si parla di mappatura ``da statico a dinamico''; se invece vengono raccolte informazioni in maniera continuativa entro certi intervalli temporali e la visualizzazione risulta essere statica, allora la mappatura è ``da dinamico a statico'' (come si può vedere in ANIM), mentre se l'animazione è dinamica, allora la mappatura è ``da dinamico a dinamico'', come per tutti i sistemi della famiglia TANGO.\\
+			Per quanto riguarda invece il tempo dedicato alla generazione della visualizzazione, la maggior parte dei sistemi analizzati, ed in particolare i sistemi distribuiti con architettura client-server, genera la visualizzazione \textit{post-mortem}, ovvero raccoglie informazioni durante l'esecuzione e, una volta terminata quest'ultima, si dedica alla produzione della visualizzazione. Nel sistema ANIM, la produzione della visualizzazione può essere effettuata in concomitanza con l'esecuzione dell'algoritmo tramite l'utilizzo di \textit{pipes}. Tra i sistemi studiati in questo Capitolo, Pavane è forse l'unico che presenta una completa aderenza temporale tra l'esecuzione dell'algoritmo e la produzione della visualizzazione.
+		\subsection{Forma}
+			Ci occuperemo adesso di come classificare i sistemi operativi secondo la Forma, ovvero secondo le caratteristiche della visualizzazione prodotta dal sistema.\\
+			\\
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[scale=0.45]{forma.png}
+				\caption[Tassonomia della Forma]{La struttura tassonomica della categoria della Forma, indicandone alcune sottocategorie.}
+			\end{figure}
+			Vediamo di seguito le sottocategorie in cui si articola la Forma, per ottenere un'ulteriore classificazione dei sistemi di visualizzazione di algoritmi:
+			\begin{itemize}
+				\item Mezzo: \textit{qual è il mezzo di destinazione della visualizzazione?}
+				\item Stile: \textit{con che stile si presenta la visualizzazione?}
+					\begin{itemize}
+						\item Vocabolario grafico: \textit{quali elementi grafici compongono la visualizzazione?}
+						\item Animazione: \textit{qual è il grado di animazione della visualizzazione?}
+						\item Suono: \textit{quanto viene utilizzato il suono nella visualizzazione per trasmettere informazioni utili?}
+					\end{itemize}
+				\item Granularità: \textit{come vengono presentati dettagli a grana fine/larga?}
+				\item Prospettive multiple: \textit{come vengono gestite dal sistema prospettive sincronizzate di diversi aspetti del programma?}
+				\item Sincronizzazione di programmi: \textit{il sistema può generare visualizzazioni sincronizzate su più programmi contemporaneamente?}
+			\end{itemize}
+			I principali mezzi di destinazione per una visualizzazione sono carta, pellicola, video o monitor. I primi esempi, ovvero L6 e Sorting Out Sorting, erano stati progettati per essere visualizzati su pellicola, utilizzando un apposito proiettore. Gli altri sistemi sono principalmente indirizzati verso un generico monitor, anche se è da osservare che i primi sistemi studiati erano logicamente pensati per poter lavorare su monitor in bianco e nero, mentre soltanto sistemi più recenti, come Zeus, Pavane o Leonardo, furono sviluppati tenendo conto delle possibilità offerte dai più moderni monitor a colori.\\
+			\\
+			Il vocabolario grafico definisce l'insieme di oggetti grafici che un sistema ha a disposizione per costruire la visualizzazione, ma anche aspetti come il colore o il 3D. In generale, un sistema può essere caratterizzato dalla dimensione del suo vocabolario grafico. Oggetti molto comuni sono figure geometriche elementari, come quadrati, linee, cerchi e rettangoli. I primi sistemi non utilizzavano una grafica a colori, fatta eccezione per il video Sorting Out Sorting: i primi sistemi in grado di produrre visualizzazioni a colori furono Leonardo, i sistemi della famiglia TANGO e GAWAIN. Ovviamente con l'evolversi della tecnologia, tutti i sistemi hanno implementato la grafica a colori, in quanto di gran lunga superiore, ai fini comunicativi, di quella in bianco e nero. Per quanto riguarda la grafica 3D troviamo, tra i sistemi che abbiamo studiato, Zeus, POLKA-3D, ANIM, Pavane, JHAVÉ, GAWAIN (quest'ultimo soltanto tramite l'utilizzo di apposite librerie 3D).\\
+			Riguardo alla distinzione tra animazione o visualizzazione statica, il primo sistema degno di nota in questo senso è TANGO che, implementando il cosiddetto \textit{Path-transition paradigm}, riusciva a produrre animazioni fluide. Anche sistemi successivi, come Pavane, o i più recenti JHAVÉ e OpenDSA, generano animazioni fluide e molto gradevoli alla vista. È bene osservare che con il termine ``visualizzazione statica'' non si intende l'assenza di animazioni fluide, ma l'assenza totale di animazione, che si riduce alla semplice produzione di snapshot. In questo senso tutti i sistemi visti implementano una forma, seppure spesso molto rigida, di animazione (in sistemi come ANIM viene messa a disposizione la scelta tra la produzione di un'animazione, non fluida, o di snapshot).\\
+			Per quanto riguarda l'utilizzo di segnali sonori all'interno delle visualizzazioni, i primi sistemi implementavano soltanto dei semplici ``beep'' in particolari momenti dell'esecuzione, o non prevedevano affatto alcuna forma di output sonoro. Il primo sistema ad implementare input sonori personalizzati fu Zeus, della famiglia BALSA, che permetteva appunto di associare dei suoni a determinati eventi dell'esecuzione dell'algoritmo.\\
+			\\
+			Visualizzare dettagli a grana fine dell'algoritmo è spesso importante in un sistema di visualizzazione, specialmente se utilizzato ai fini del debugging. D'altra parte è molto importante anche che essi possano fornire una visione d'insieme del programma visualizzato, in modo da guadagnare in fatto di semplicità ed immediatezza: si parla in questo caso di rappresentazione a grana larga. Alcuni sistemi, come ad esempio POLKA, forniscono alcuni dettagli a grana fine dell'esecuzione del programma, ma i restanti sistemi sono fortemente indirizzati alla rappresentazione di informazioni a grana larga. In generale, non è possibile stabilire a priori se sia meglio utilizzare una rappresentazione a grana larga o fine: la scelta dipende strettamente dall'utilizzo che si vuol fare del sistema di visualizzazione.\\
+			\\
+			Con ``prospettive multiple'' si intende la capacità di un sistema di poter visualizzare, in modo simultaneo e sincronizzato, diversi aspetti o parti di un programma, come la combinazione di prospettive a grana fine e a grana larga, o la rappresentazione di strutture dati dinamiche unita allo pseudocodice. Zeus fu uno dei primi ad implementare le prospettive multiple, seguito da POLKA, ANIM, Leonardo ed i più recenti JHAVÉ e OpenDSA.\\
+			\\
+			Differentemente dalle Prospettive multiple, la Sincronizzazione di programmi valuta se e come un programma può visualizzare, contemporaneamente ed in maniera sincronizzata, più programmi, a scopi principalmente comparativi. Il video Sorting Out Sorting è il primissimo esempio di sincronizzazione di programmi: esso mostra in vari punti (vedi Figura \ref{fig:comparazioneSOS}) delle vere e proprie ``gare'' tra algoritmi di ordinamento diversi operanti sullo stesso input set. Tra gli altri sistemi analizzati, forniscono la sincronizzazione di programmi i sistemi della famiglia BALSA, ANIM e CATAI.
+		\subsection{Metodo}
+			Il Metodo classifica i sistemi operativi in base a come viene creata la visualizzazione, ovvero in base alla sua \textit{specifica} e alla \textit{tecnica di connessione} utilizzata tra visualizzazione e codice sorgente.\\
+			\\
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[scale=0.6]{metodo.png}
+				\caption[Tassonomia del Metodo]{La struttura tassonomica della categoria del Metodo, indicandone alcune sottocategorie.}
+			\end{figure}
+			Vediamo in dettaglio le sottocategorie presenti:
+			\begin{itemize}
+				\item Specifica della visualizzazione: \textit{come viene specificata la visualizzazione?}
+					\begin{itemize}
+						\item Intelligenza: \textit{se la visualizzazione è automatica, quant'è avanzata l'intelligenza artificiale del sistema?}
+						\item Personalizzazione: \textit{quanto è personalizzabile una visualizzazione dall'utente?}
+					\end{itemize}
+				\item Tecnica di connessione: \textit{come viene effettuata la connessione tra la visualizzazione ed il programma da visualizzare?}
+					\begin{itemize}
+						\item Conoscenza necessaria: \textit{se la visualizzazione non è completamente automatica, quali conoscenze di programmazione sono richieste all'utente per produrre la visualizzazione?}
+						\item Accoppiamento sistema-codice: \textit{quanto strettamente è accoppiato il sistema con il codice del programma?}
+					\end{itemize}
+			\end{itemize}
+			Per ``specifica della visualizzazione'' si intende il modo in cui viene specificata, a livello di codice, la visualizzazione. Essa può essere quindi: \textit{scritta da zero}, ovvero scrivendo il codice della parte grafica utilizzando soltanto le primitive grafiche messe a disposizione dal sistema, scritta utilizzando delle apposite \textit{librerie grafiche}, che standardizzano la grafica e ne semplificano la programmazione, oppure \textit{automatica}, con il sistema dotato di un'intelligenza artificiale che decide quali strutture visualizzare e come. Solitamente sono quest'ultimo tipo di sistemi ad essere destinati al debugging, perché mostrano spesso dettagli a grana fine liberando il programmatore dall'onere di doversi occupare della parte grafica. Per quanto riguarda i sistemi studiati in questo capitolo, SAMBA è forse l'unico che mostra un certo grado di automazione nel processo di visualizzazione, seppur in modo non completo. I primi sistemi, come BALSA, BALSA II, TANGO, richiedevano una specifica scritta da zero, utilizzando le primitive grafiche del sistema, che risultavano spesso molto scomode. Già con i sistemi Zeus, per la famiglia BALSA, e XTANGO, per la famiglia TANGO, si videro implementate le prime librerie grafiche, presto seguite da librerie 3D.\\
+			In generale, si può dire che un sistema completamente automatico che visualizza tutto ciò che il programma gestisce e tutte le istruzioni che esegue, viene classificato come di ``bassa intelligenza''; se invece il sistema automatico riesce da solo a riconoscere l'algoritmo e ad astrarre strutture dati di alto livello, allora si parla di sistema ad ``alta intelligenza''. Di conseguenza non avrebbe senso parlare di intelligenza in relazione ai sistemi trattati in questo Capitolo, in quanto tutti presentano una specifica della visualizzazione scritta da zero o si avvalgono di librerie grafiche.\\
+			La personalizzazione della visualizzazione è una caratteristica presente più o meno in tutti i sistemi, fatta eccezione per i due video di cui abbiamo parlato all'inizio di questo Capitolo, L6 e Sorting Out Sorting, che non permettevano alcun tipo di personalizzazione e vengono perciò detti \textit{fissi}. I primi sistemi delle famiglie BALSA e TANGO proponevano una personalizzazione minima, che si riduceva alle dimensioni della finestra e allo zoom. Per sistemi successivi si ha un grado di personalizzazione maggiore, come la possibilità di scegliere colori, suoni, o anche di creare apposite interfacce tramite le quali l'utente possa inserire dati e manipolare la visualizzazione senza dover cambiare il codice.\\
+			\\
+			La maggior parte delle tecniche di connessione richiede l'inserimento all'interno del codice sorgente di particolari istruzioni grafiche, che produrranno la visualizzazione: queste tecniche si dicono \textit{invasive}. Esistono tecniche \textit{non invasive} che prevedono l'utilizzo di particolari ``sonde'', utilizzando un linguaggio dichiarativo, o di ``monitor''. In questo senso, tutti i sistemi che abbiamo visto utilizzano delle tecniche di connessione invasive, in quanto richiedo la modifica, seppur minima, del codice sorgente. Leonardo rappresenta l'unica eccezione, dal momento che i comandi relativi alla visualizzazione vengono inseriti nel codice sorgente come commenti: è quindi possibile generare una visualizzazione con Leonardo e, successivamente, compilare lo stesso codice al di fuori dell'ambiente Leonardo, ottenendo gli stessi risultati (visualizzazione esclusa). Il sistema Pavane, essendo a stampo fortemente dichiarativo, mette a disposizione la possibilità di scegliere tra una tecnica di connessione invasiva, tramite l'utilizzo di funzioni \textit{VisualUpdate()}, o una non invasiva.\\
+			Tutti i sistemi automatici non richiedono alcun tipo di conoscenze di programmazione, dal momento che essi possono produrre visualizzazioni senza che l'utente si preoccupi di aggiungere o modificare istruzioni. Ne consegue che tutti i sistemi visti richiedono la seppur minima conoscenza in fatto di programmazione: i sistemi che richiedono conoscenze più alte sono quelli che non implementano alcun tipo di libreria grafica, in quanto il programmatore dovrà specificare la visualizzazione da zero. Strumenti come librerie grafiche o, ancor meglio, editor grafici, semplificano ampiamente il lavoro di specifica della visualizzazione, richiedendo all'utente una minor conoscenza di programmazione. In ogni caso, quando si parla di sistemi non automatici, è necessaria anche un'intima comprensione del programma che si ha intenzione di visualizzare, dal momento che le istruzioni grafiche devono essere inserite in punti chiave dell'esecuzione del programma.\\
+			L'Accoppiamento sistema-codice ci dice infine quanto il sistema di visualizzazione ed il programma da visualizzare siano legati l'un l'altro. In sistemi come BALSA, ad esempio, si ha un altissimo accoppiamento sistema-codice, in quanto è richiesto dal sistema che il programma venga eseguito e visualizzato all'interno dell'ambiente BALSA. Altri sistemi, come ANIM, non presentano alcun tipo di accoppiamento, in quanto leggono da un file generato dal programma le specifiche della visualizzazione.
+		\subsection{Interazione}
+			L'ultima categoria di questa tassonomia, l'Interazione, si occupa di classificare i sistemi di visualizzazione di algoritmi in base al grado di interazione che sussiste tra l'utente ed il sistema.\\
+			\\
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[scale=0.6]{interazione.png}
+				\caption[Tassonomia dell'Interazione]{La struttura tassonomica della categoria dell'Interazione, indicandone alcune sottocategorie.}
+			\end{figure}
+			Come per le categoria precedenti, vediamo di seguito quali sottocategorie sono state individuate:
+			\begin{itemize}
+				\item Stile: \textit{con che metodo l'utente dà istruzioni al sistema?}
+				\item Navigazione: \textit{come può navigare l'utente all'interno del sistema?}
+					\begin{itemize}
+						\item Occultazione: \textit{come può l'utente occultare parti superflue della visualizzazione?}
+						\item Controllo temporale: \textit{come controlla l'utente lo scorrere dell'esecuzione del programma e della visualizzazione?}
+					\end{itemize}
+			\end{itemize}
+			Gli stili di interazione più comuni sono bottoni, menu o caselle di input testuale. Sotto questo punto di vista il sistema più evoluto è senz'altro JHAVÉ, in quanto mette a disposizione menu costruiti su misura per la scelta dell'input e dei parametri dell'algoritmo, ma anche risposte a scelta multipla per le domande che possono essere inserite nella visualizzazione. Altri sistemi forniscono generatori di input o inserimento manuale dell'input, come si vede nei sistemi CATAI, GAWAIN, JHAVÉ e OpenDSA.\\
+			\\
+			L'occultazione risulta essere molto importante quando il sistema fornisce così tante informazioni da pregiudicarne la chiarezza. È quindi essenziale poter escludere o nascondere dettagli della visualizzazione che non interessano e che non fanno altro che disturbare l'utente. In questo senso Leonardo, Zeus e JHAVÉ sono i sistemi che meglio implementano questo concetto, in quanto sono formati da finestre multiple, ognuna contenente una prospettiva diversa del programma.\\
+			Infine, il controllo temporale indica se un sistema sia in grado di selezionare la \textit{velocità} e la \textit{direzione} di riproduzione della visualizzazione. Quasi tutti i sistemi analizzati forniscono il controllo della direzione della visualizzazione, permettendo di riprodurla in avanti o a ritroso. Il controllo sulla velocità, invece, non viene implementato in tutti i sistemi, in quanto non tutti permettono la riproduzione della visualizzazione come filmato, bensì come una successione di passi statici. Nel primo caso, tuttavia, è necessario avere a disposizione un controllo della velocità di riproduzione, per poter saltare parti della visualizzazione superflue e invece soffermarsi su parti interessanti. in questo senso, i sistemi che si avvalgono di controllo della velocità di riproduzione sono tutti i sistemi delle famiglie BALSA e TANGO ed i sistemi GAWAIN e JHAVÉ.
+	\section{Conclusioni}
+		Concludiamo questo Capitolo dicendo che, tra i sistemi analizzati, i più recenti risultano essere molto promettenti e destinati ad interessanti sviluppi futuri. In particolare il sistema JHAVÉ risulta essere completo sotto tutti i punti di vista, fornendo strumenti utili sia per il debugging, che per l'apprendimento e la comprensione di algoritmi e strutture dati in ambiente scolastico. L'unica mancanza di questo sistema risiede, forse, in alcuni piccoli dettagli, come l'impossibilità di esportare la visualizzazione generata in formati video o HTML.\\
+		\\
+		In generale, negli ultimi 30 anni si è potuto assistere ad una strabiliante evoluzione dei sistemi di visualizzazione di algoritmi, che si stanno sempre più affermando sia in ambito scolastico che lavorativo, specialmente grazie all'avvento di Internet, che ha permesso la nascita di sistemi più evoluti ed oggettivamente superiori rispetto ai loro antenati.

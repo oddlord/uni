@@ -1,0 +1,28 @@
+<html>
+	<head>
+		<script language="Javascript">
+
+			function start(){
+				var canvas = document.getElementById("canvas");
+				var contesto = canvas.getContext("2d");
+				
+				contesto.beginPath();
+				contesto.arc(75, 75, 20, 0, Math.PI*2, true);
+				contesto.arc(75, 50, 10, 0, Math.PI*2, true);
+				contesto.arc(70, 42, 5, 0, Math.PI*2, true);
+				contesto.arc(80, 42, 5, 0, Math.PI*2, true);
+				contesto.fill();
+				contesto.endPath();
+			}
+
+		</script>
+
+	</head>
+
+	<body onLoad="start();">
+
+		<canvas id="canvas" width="600" height="450"></canvas>
+
+	</body>
+
+</html>

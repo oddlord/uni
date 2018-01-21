@@ -1,0 +1,123 @@
+\chapter{HTML5}
+	\label{chap:HTML5}
+	\textbf{HTML5} è un \textit{linguaggio di markup} utilizzato nella strutturazione delle pagine \textit{web}. Esso rappresenta la quinta versione dello standard \textit{HTML} (un acronimo che sta per \textit{HyperText Markup Language}), creato nel 1990 e la cui quarta versione, \textit{HTML4}, venne standardizzata nel 1997.\\
+	\\
+	\section{La nascita di HTML5}
+		HTML5 nasce da una scissione del W3C (World Wide Web Consortium) avvenuta dopo un convegno del 2004, durante il quale, per una manciata di voti, prevalse la linea orientata alle specifiche XHTML2. Dopo questo episodio, Ian Hickson fondò il gruppo di ricerca indipendente WHAT (\textit{Web Hypertext Application Technology}, ovvero \textit{Tecnologie per le Applicazioni orientate ad HTML}), il cui principale obiettivo era quello di garantire uno sviluppo del Web orientato più alle applicazioni che ai documenti \cite{html.it}.\\
+		Infatti HTML era stato sviluppato, inizialmente, per la stesura di semplici documenti testuali collegati tra loro tramite link. Questo era dovuto principalmente al fatto che durante la sua stesura (anni '90) le connessioni Internet erano ancora molto lente e le tecnologie per la produzione di immagini o video erano ancora piuttosto arretrate e costose. Era quindi raro vedere applicazioni sul Web, che risultavano a quei tempi costose ed esigenti in termini di banda. Tuttavia negli anni successivi le tecnologie subirono una brusca accelerazione, aprendo nuove possibilità di navigazione all'utente medio. Per questo motivo, si rese necessario sviluppare una specifica per le pagine Web che definisse una struttura solida e comoda per l'implementazione di applicazioni e servizi multimediali.\\
+		WHAT aveva quindi lo specifico intento di contrastare la linea di pensiero adottata dal W3C, in particolare riguardo all'abbandono delle specifiche HTML in favore di tecnologie orientate ad XML (eXtensible Markup Language).
+		\subsection{XHTML2}
+			XHTML2 (\textit{eXtensible HyperText Markup Language}) è la seconda versione della specifica XHTML. Essa è formata dalla sintassi di HTML, costretto nelle regole ferree di XML, come l'obbligo della chiusura di tutti i tag. In questo modo, oltre ad utilizzare un linguaggio molto più rigido, risultava che il parser XML che analizzava la pagina si sarebbe bloccato al primo errore riscontrato, annullando di fatto la visualizzazione dell'intera pagina (contrariamente a quanto accadeva con le specifiche HTML).\\
+			Inoltre, non veniva offerto alcun tipo di retrocompatibilità con la precedente versione 1.1.\\
+			\\
+			Dovettero passare cinque anni dalla scissione del W3C prima che, finalmente, nel Luglio 2009 Tim Berners-Lee (inventore del World Wide Web e direttore del W3C) annullasse il progetto XHTML2, preferendo la strada intrapresa dal WHAT. Venne quindi formato un gruppo di ricerca unendo membri del W3C e del WHAT, sotto la guida di Ian Hickson, dal quale prese vita la specifica HTML5.
+	\section{Da HTML4 ad HTML5}
+		HTML5 rappresenta quindi un sostanziale passo in avanti rispetto alla versione precedente, HTML4, che si sta lentamente avviando verso la sua fine.\\
+		Al momento le specifiche HTML5 sono ancora in fase di studio e di sviluppo, ma ci sono buone ragioni per credere venga riconosciuto come standard ufficiale dal W3C già nel 2014, mentre la versione HTML5.1 dovrà attendere fino al 2016 affinché venga riconosciuta come standard.\\
+		\\
+		Come già accennato nella Sezione precedente, una della ragioni per cui è nato HTML5 è per avere pagine Web orientate ad applicazioni multimediali, piuttosto che a semplici documenti testuali. Fino ad HTML4, infatti, era necessario ricorrere, per poter eseguire o visualizzare applicazioni all'interno di una pagina Web, di appositi plug-in (ovvero software aggiuntivi di dimensioni ragionevoli) che, unitamente al browser di navigazione, permettevano la corretta visualizzazione di tutti i contenuti della pagina. L'esempio più famoso di questi plug-in è sicuramente Adobe Flash, che permette sia di creare animazioni interattive che di riprodurre streaming (cioè flussi) audio/video.\\
+		Con l'avvento di HTML5, invece, non ha più molto senso parlare di plug-in in quanto la maggior parte delle funzioni offerte da questi software aggiuntivi viene adesso supportata nativamente dalla stessa specifica HTML5.\\
+		\\
+		Le principali novità introdotte dalla specifica HTML5 rispetto alla precedente versione sono:
+		\begin{itemize}
+			\item controllo di flussi multimediali (audio/video);
+			\item produzione di grafica 2D e 3D in tempo reale;
+			\item controllo dello storico di navigazione;
+			\item marcatura unica e semplificata del \textit{DOCTYPE};
+			\item aggiunta di nuovi tag;
+			\item eliminazione di tag obsoleti;
+			\item scrittura semplificata di formule matematiche;
+			\item gestione degli errori;
+			\item accesso ad applicazioni Web anche in assenza di connessione Internet;
+			\item API per implementare funzioni come il drag-and-drop o la possibilità di modificare il testo;
+			\item controllo su informazioni generate dell'utente tramite device come un microfono o una webcam.
+		\end{itemize}
+		In HTML5 lo streaming di audio e video è implementato nativamente grazie ai nuovi tag \lstinline{<audio>} e \lstinline{<video>}. Con questi nuovi tag risulta semplicissimo inserire audio e video nella pagina Web: basta specificare il file da riprodurre (in un qualsiasi formato audio o video), mentre altri campi, come il tipo di file o il codec necessario per la riproduzione, sono opzionali.\\
+		\\
+		La produzione di grafica 2D (vettoriale oppure bitmap) e 3D in tempo reale è un'altra importante novità di HTML5. Il tag corrispondente alla grafica bitmap (o raster) è \lstinline{<canvas>}, ma parleremo di Canvas in modo più approfondito nella prossima sezione, dato che esso costituisce il cuore del lavoro di espansione di AlViE al Web. Per la costruzione di figure 2D in grafica vettoriale viene invece utilizzata la tecnologia SVG (\textit{Scalable Vector Graphics}, ovvero \textit{Grafica Vettoriale Scalabile}), ovvero una particolare specifica XML che permette di definire forme, linee e curve per la costruzione di immagini perfettamente scalabili senza perdita di definizione.\\
+		Per quanto riguarda la grafica 3D, non esiste un vero e proprio supporto esplicito per la costruzione di oggetti 3D. Tuttavia, è stato mostrato \cite{voxels} che risulta essere piuttosto semplice definire un motore grafico 3D utilizzando lo stesso tag \lstinline{<canvas>} della grafica in 2D.\\
+		\\
+		Il DOCTYPE è uno standard (viene messo come tag all'inizio del codice della pagina Web) che in sostanza dice al browser di navigazione a quale tipo di documento appartiene la pagina che si vuole visualizzare. Fino alla versione 4 di HTML, i DOCTYPE erano molto diversificati e composti da molti elementi. Un esempio di vecchio DOCTYPE può essere il seguente:
+		\begin{center}
+			\lstinline{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3c.org/TR/html4/strict.dtd">}.
+		\end{center}
+		In HTML5 il discorso del DOCTYPE viene ampiamente semplificato, lasciando che sia in gran parte il browser ad accorgersi da solo di che tipo di documento si tratti. A titolo di esempio, il precedente DOCTYPE può essere sostituito, in HTML5, dal seguente tag:
+		\begin{center}
+			\lstinline{<!DOCTYPE html>}.\\
+		\end{center}
+		Parlando dei tag in generale, si nota subito che con l'arrivo di HTML5, molte cose sono cambiate: molti nuovi tag sono stati affiancati a quelli già conosciuti, mentre altri, che erano ormai deprecati, sono stati eliminati del tutto dalla nuova specifica.
+		La maggior parte dei tag eliminati sono tag che sono stati sostituiti da nuove versioni più comode o che non permettevano di avere un'adeguata pulizia del codice HTML. Alcuni esempi possono essere i tag \lstinline{<font>} o \lstinline{<centre>}, che vengono completamente sostituiti dall'utilizzo di CSS (\textit{Cascading Style Sheet}, ovvero \textit{Fogli di Stile a Cascata}), come anche i tag \lstinline{<frame>}, \lstinline{<frameset>} o \lstinline{<strike>}.\\
+		Tra i nuovi tag troviamo ovviamente \lstinline{<audio>} e \lstinline{<video>}, per la riproduzione di file multimediali, il tag \lstinline{<canvas>}, per la produzione di grafica 2D e 3D in tempo reale, i tag \lstinline{<section>} e \lstinline{<article>}, per la suddivisione della pagina in sezioni e sottosezioni in modo semplice ed immediato (facilitando anche l'uso dei CSS), ed altri tag come \lstinline{<nav>}, \lstinline{<header>}, \lstinline{<footer>}, \lstinline{<aside>}.\\
+		\\
+		Come accennato nella Sezione precedente, parlando della nascita di HTML5, questo nuovo standard è il risultato degli studi del gruppo di ricerca che ha visto lavorare assieme membri del W3C e membri del WHAT. HTML5 presenta quindi due diverse facce: una che mostra la sua natura improntata alle tecnologie e alla semantica di XML, l'altra che indica l'orientamento di HTML5 verso le applicazioni ed il campo dei multimedia. Come tutte le specifiche basate su XML, prevede quindi regole ferree per quanto concerne la sintassi. Allo stesso tempo, HTML5 rimane una specifica molto flessibile, permettendo di definire le proprie regole di parsing (ovvero l'analisi ed il riconoscimento degli elementi della pagina) e di gestione degli errori: in questo modo si avrà la certezza che, in caso di errori di sintassi, tutti i browser producano lo stesso risultato sulla pagina, cosa che non era affatto garantita in HTML4, dove non esistevano regole precise da applicare in caso di errore ed ogni browser poteva implementare la gestione di tali errori in maniera diversa.\\
+		\\
+		HTML5 fornisce anche il supporto alla scrittura di formule e simboli matematici grazie al linguaggio MathML (\textit{Mathematical Markup Language}, ovvero \textit{Linguaggio Matematico di Marcatura}). Questo linguaggio risulta essere molto semplice e conta poco più di 30 elementi. Una caratteristica interessante è che MathML non si occupa soltanto dello stile di una formula, cioè di come essa appare nella pagina, ma anche del suo significato matematico, cosicché una stessa formula possa essere rappresentata in diversi modi, o tramite diversi dispositivi, a discrezione dell'utente.
+		\subsection{Canvas}
+			Canvas (\textit{tela}, in inglese) è un elemento di HTML5 per la produzione in tempo reale di figure 2D e la creazione di immagini bitmap. Canvas consiste in un'area della pagina, dotata di attributi altezza e larghezza, in cui si possono disegnare figure geometriche tramite l'invocazione di determinate funzioni in ambiente JavaScript.\\
+			\\
+			A prima vista lo standard SVG, a cui abbiamo accennato brevemente prima, può sembrare superiore a Canvas: SVG, infatti, è una tecnologia per generare grafica vettoriale, il che significa che utilizzando SVG verrà memorizzato dal browser non soltanto l'immagine disegnata, ma anche ``come'' essa è stata disegnata. Più in particolare SVG definisce una serie di figure geometriche, linee e curve, facendo in modo che venga memorizzato come è stata creata ogni forma. In questo modo, tentando di ingrandire l'immagine, essa scalerà perfettamente, senza alcuna perdita di qualità. Questo è dovuto al fatto che, ricordando le forme originarie che hanno poi costruito l'immagine, se viene richiesta l'immagine in una scala diversa, il browser ricalcolerà nuovamente l'immagine partendo dalle forme che la definiscono (scalandone le dimensioni).\\
+			Canvas, al contrario, è uno strumento per la grafica bitmap (detta anche \textit{raster}), il che significa che una volta generata l'immagine, viene ``dimenticato'' tramite quali forme primitive essa era stata costruita. Si avrà quindi, in caso di scalatura, una perdita di qualità, in quanto verrà ricordata soltanto l'immagine finale, intesa come matrice di pixel.\\
+			Questa principale mancanza di Canvas rispetto a SVG è compensata da una maggior semplicità del codice Canvas rispetto alla controparte SVG: l'esecuzione del codice Canvas, e la relativa renderizzazione dell'immagine, risultano essere estremamente veloci e molto leggeri in quanto ad occupazione di memoria \cite{svgVScanvas}. Inoltre, l'implementazione in una pagina Web di grafica vettoriale tramite SVG, richiede un file .svg corrispondente, oltre al file .html della pagina stessa. Quindi più immagini distinte, o una serie di immagini, richiedono un file .svg cadauna, mentre con Canvas tutto il codice relativo alla produzione dell'immagine può essere scritto nel codice della pagina, essendo basato su JavaScript.\\
+			Questi vantaggi, appena illustrati, di Canvas rispetto ad SVG, ci hanno condotti verso la scelta del primo dei due metodi per portare a termine l'obiettivo principale di AlViE4, ovvero l'esportazione di una visualizzazione in una pagina HTML. Come vedremo infatti nel Capitolo \ref{chap:alvieHTML5}, per la generazione di visualizzazioni in HTML, verrà definito un apposito compilatore. Per questo motivo, dover scrivere su un unico file i comandi per la costruzione delle immagini della visualizzazione, è risultato essere molto comodo, senza contare il fatto che le proprietà di scalabilità offerte da SVG risultano essere pressoché inutili in questo tipo di progetto. Inoltre, con questa soluzione, si può esportare una visualizzazione completa in un'unica pagina HTML, che risulta sicuramente molto più comoda per nel caso in cui un utente voglia utilizzare la stessa visualizzazione nel proprio sito Web.
+			\paragraph{Utilizzo del Canvas.}Entriamo adesso nel dettaglio dei comandi messi a disposizione da Canvas, mostrando alcuni semplici esempi.\\
+				\\
+				Innanzitutto dev'essere creato il Canvas stesso, ovvero l'area su cui andremo a disegnare tramite funzioni JavaScript. La creazione del canvas si ottiene semplicemente come:
+				\lstinputlisting{code/creazione.html}
+				Il Canvas viene quindi creato semplicemente con l'apertura e la chiusura del tag corrispondente. Eventualmente, può essere inserito, come in quest'esempio, un messaggio all'interno del tag \lstinline{<canvas>}, che verrà mostrato a video nel caso in cui Canvas non sia supportato dal browser scelto per la navigazione. L'attributo \lstinline{id} serve a identificare, successivamente il canvas: il nome dell'id è del tutto arbitrario. I campi \lstinline{width} e \lstinline{height} rappresentano, rispettivamente, larghezza ed altezza della tela di disegno in pixel.\\
+				La mera creazione dell'oggetto Canvas non è, tuttavia, sufficiente per iniziare a disegnare. Per fare ciò, c'è bisogno di ottenere un oggetto, detto \textit{contesto del disegno}, tramite le seguenti due linee di codice HTML in ambiente JavaScript:
+				\lstinputlisting{code/contesto.html}
+				Possiamo, a questo punto, invocare le funzioni JavaScript di Canvas sul contesto appena definito e, quindi, iniziare di fatto a disegnare.\\
+				Vediamo, come primo esempio, il seguente codice:
+				\lstinputlisting{code/esempio1.html}
+				Si nota innanzitutto che tutti i comandi per il disegno, in Canvas, devono essere racchiusi tra \lstinline{contesto.beginPath()} e \lstinline{contesto.endPath()}. L'attributo \lstinline{fillStyle} del contesto indica che colore utilizzare per riempire le figure geometriche che andremo a definire, utilizzando la codifica RGB (\textit{Red Green Blue}, ovvero \textit{Rosso Verde Blu}) esadecimale: in questo caso viene quindi selezionato il colore rosso. Con il comando \lstinline{contesto.rect(75, 75, 50, 50)} si definisce, finalmente, la prima figura da disegnare: in questo caso si è definito un rettangolo, con l'angolo superiore sinistro (detto \textit{origine}) nel punto (75, 75) e con larghezza ed altezza pari a 50 (ovvero, un quadrato). Si osservi che in Canvas l'origine delle coordinate viene identificata con l'angolo superiore sinistro: valori alti delle ascisse si trovano sulla destra, mentre valori alti delle ordinate si trovano in basso al Canvas. Infine, il comando \lstinline{contesto.fill()} indica che tutte le figure precedentemente definite (in questo caso, soltanto il quadrato) debbano essere riempite (\textit{fill}, in inglese) del colore definito dall'attributo \lstinline{fillStyle}, che come valore di default contiene il colore nero. Aggiungendo il codice appena descritto si ottiene l'immagine in Figura \ref{fig:esempio1}.\\
+				\\
+				\begin{figure}
+					\centering
+					\includegraphics[scale=0.6]{esempio1.png}
+					\caption[Canvas: un quadrato rosso]{Un quadrato rosso costruito utilizzando Canvas}
+					\label{fig:esempio1}
+				\end{figure}
+				Proviamo adesso ad inserire le seguenti tre istruzioni tra i comandi \lstinline{rect()} e \lstinline{fill()} del codice precedente:
+				\lstinputlisting{code/esempio2a.html}
+				L'istruzione \lstinline{moveTo()} sposta il cursore del Canvas nelle coordinate indicate, senza però disegnare niente: un po' come muovere una matita sopra un foglio staccando la punta dalla superficie di disegno. Le due istruzioni \lstinline{lineTo()}, invece, spostano il cursore verso la posizione indicata ma tracciando una linea sul Canvas. Quello che si ottiene, quindi, è di aver aggiunto un triangolo, sempre di colore rosso, sopra al quadrato di prima.\\
+				Facciamo un'ulteriore modifica, aggiungendo le seguenti due linee subito prima del comando \lstinline{endPath()}:
+				\lstinputlisting{code/esempio2b.html}
+				In questo modo indichiamo al Canvas di tracciare (e non riempire) le forme precedentemente definite, con una linea larga 5 pixel. Il colore delle linee è nero di default, ma può essere cambiato, così come per il colore di riempimento, impostando opportunamente il campo \lstinline{strokeStyle}. Il risultato ottenuto da queste due modifiche è mostrato in Figura \ref{fig:esempio2}.\\
+				\\
+				\begin{figure}
+					\centering
+					\includegraphics[scale=0.6]{esempio2.png}
+					\caption[Canvas: una casetta rossa]{Una casetta rossa costruita utilizzando i comandi di Canvas}
+					\label{fig:esempio2}
+				\end{figure}
+				Aggiungiamo adesso la linea
+				\begin{center}
+					\lstinline{contesto.fillText("Hello World!", 70, 145);}
+				\end{center}
+				subito dopo \lstinline{beginPath()}, per ottenere la scritta ``Hello World!'' sotto alla figura precedente, come mostrato in Figura \ref{fig:esempio3}.
+				\begin{figure}
+					\centering
+					\includegraphics[scale=0.6]{esempio3.png}
+					\caption[Canvas: casetta rossa con testo]{Una casetta rossa con messaggio costruita utilizzando i comandi di Canvas}
+					\label{fig:esempio3}
+				\end{figure}
+			\paragraph{Altri comandi e attributi.} Analizzeremo adesso, per concludere questo approfondimento su Canvas, altri importanti comandi grafici.\\
+				\\
+				Un comando Canvas molto utilizzato è \lstinline{contesto.clearRect(x, y, larghezza, altezza)} che ripulisce tutta l'area rettangolare del Canvas che ha origine in (x,y) e di larghezza ed altezza specificate. Questo comando risulta essere molto utile quando si deve visualizzare una successione di immagini, eventualmente con determinate immagini che compaiono al verificarsi di un certo evento, come il click su un bottone. Per il progetto AlViE4, questo comando è risultato essenziale: esso viene utilizzato all'inizio di ogni passo dell'algoritmo per ripulire l'intera tela del Canvas dalle strutture dati del passo precedente e poter quindi disegnare quelle al passo corrente.\\
+				\\
+				L'attributo \lstinline{font} del contesto grafico gestisce l'aspetto delle scritte disegnate sul Canvas. Quest'attributo è una stringa della forma
+				\begin{center}
+					\lstinline{[punti]pt [font] [STILE]},
+				\end{center}
+				dove \lstinline{[punti]} rappresenta la grandezza dei caratteri, \lstinline{[font]} indica quale font utilizzare e \lstinline{[STILE]} definisce, appunto, lo stile di scrittura, come ad esempio corsivo o grassetto. Un esempio può quindi essere:
+				\begin{center}
+					\lstinline{14pt Courier PLAIN}.
+				\end{center}
+				È bene far presente che, per la gestione del colore dei testi, ci si rifà allo stesso attributo di riempimento, \lstinline{fillStyle}, visto negli esempi precedenti.\\
+				\\
+				Vediamo adesso nello specifico alcuni comandi particolari detti \textit{modificatori}: \lstinline{scale()}, \lstinline{rotate()} e \lstinline{translate()} e l'attributo \lstinline{globalAlpha}.\\
+				Il primo comando citato, \lstinline{contesto.scale(x, y)}, è utilizzato per scalare i disegni sulla tela del Canvas. I valori x ed y rappresentano i fattori di scalamento del Canvas rispetto agli assi delle ascisse e delle ordinate. Qualsiasi valore reale positivo può essere assegnato ad x e y: in particolare 1 indica di non scalare quell'asse, 0.5 indica il dimezzamento delle dimensioni e 2 il raddoppiamento.\\
+				Il comando \lstinline{contesto.rotate(a)} serve a ruotare l'intero Canvas. L'unico parametro presente, \lstinline{a}, indica l'angolo di rotazione in radianti.\\
+				Come si può intuire dal nome, il comando \lstinline{contesto.translate(x, y)} permette di traslare tutta l'area del Canvas di x ed y, con x ed y che si riferiscono rispettivamente agli assi delle ascisse e delle ordinate.\\
+				Infine, l'attributo \lstinline{globalAlpha} controlla la trasparenza del Canvas: esso assume valori reali da 0 a 1, con 0 che indica una trasparenza totale ed 1 una completa opacità del disegno (o assenza di trasparenza). Il valore di default per l'attributo \lstinline{globalAlpha} è 1, quindi a meno che non venga assegnato esplicitamente un altro valore, i disegni in Canvas saranno inizialmente sempre opachi.
+				

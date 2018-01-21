@@ -1,0 +1,103 @@
+\documentclass[twoside, openright, titlepage, fleqn, headinclude, 11pt, a4paper, BCOR5mm, footinclude]{scrbook}
+
+%--------------------------------------------------------------
+
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage[square, numbers]{natbib}
+\usepackage[fleqn]{amsmath}
+\usepackage{dia-classicthesis-ldpkg}
+\usepackage[eulerchapternumbers, subfig, beramono, eulermath, parts, subfigure]{classicthesis}
+\usepackage[nottoc, notlof]{tocbibind}
+\usepackage{doi, listings, geometry}
+
+%--------------------------------------------------------------
+
+\newcommand{\myTitle}{Visualizzazione grafica di algoritmi in HTML5\xspace}
+\newcommand{\myDegree}{Corso di Laurea in Informatica\xspace}
+\newcommand{\myName}{Tommaso Papini\xspace}
+\newcommand{\myProf}{Pierluigi Crescenzi\xspace}
+\newcommand{\myFaculty}{Facoltà di Scienze Matematiche, Fisiche e Naturali\xspace}
+\newcommand{\myDepartment}{Dipartimento di Sistemi e Informatica\xspace}
+\newcommand{\myUni}{\protect{Università degli Studi di Firenze}\xspace}
+\newcommand{\myLocation}{Firenze\xspace}
+\newcommand{\myTime}{Anno Accademico 2011-2012\xspace}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\newcommand{\myfloatalign}{\centering}
+\newlength{\abcd}
+\setlength{\extrarowheight}{3pt}
+\captionsetup{format=hang,font=small}
+\graphicspath{{img/}}
+
+%--------------------------------------------------------------
+
+\geometry{
+	a4paper,
+	ignoremp,
+	bindingoffset = 1cm, 
+	textwidth     = 13.5cm,
+	textheight    = 21.5cm,
+	lmargin       = 3.5cm,
+	tmargin       = 4cm
+}
+
+%--------------------------------------------------------------
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\lstset{
+	language = HTML,
+	basicstyle = \scriptsize\ttfamily,
+	keywordstyle = \color{blue}\bfseries,
+	commentstyle = \color{dkgreen},
+	stringstyle = \color{mauve},
+	showstringspaces = false,
+	numbers = left,
+	%framexleftmargin = 5mm,
+	numberstyle = \tiny\ttfamily,
+	breaklines = true,
+	stepnumber = 0,
+	frame = trbl
+}
+
+%--------------------------------------------------------------
+
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+
+%--------------------------------------------------------------
+
+\begin{document}
+
+	\frenchspacing
+	\raggedbottom
+	\pagenumbering{roman}
+	\pagestyle{plain}
+
+	\input{chapters/title}
+	
+	\pagestyle{scrheadings}
+	
+	\input{chapters/thanks}
+	
+	\tableofcontents
+	\listoffigures
+	
+	\input{chapters/introduction}
+	\input{chapters/chapter1}
+	\input{chapters/chapter2}
+	\input{chapters/chapter3}
+	\input{chapters/chapter4_senza_parser_comparazione}
+	\input{chapters/conclusion}
+	
+	\nocite{*}
+	\bibliographystyle{plainnat}
+	\bibliography{bibliography}
+
+\end{document}

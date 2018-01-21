@@ -1,0 +1,32 @@
+<html>
+	<head>
+		<script language="Javascript">
+
+			function start(){
+				var canvas = document.getElementById("canvas");
+				var contesto = canvas.getContext("2d");
+				
+				contesto.beginPath();
+				contesto.fillText("Hello World!", 70, 145);
+				contesto.fillStyle = "FF0000";
+				contesto.rect(75, 75, 50, 50);
+				contesto.moveTo(75, 75);
+				contesto.lineTo(100, 50);
+				contesto.lineTo(125, 75);
+				contesto.fill();
+				contesto.lineWidth = 5;
+				contesto.stroke();
+				contesto.endPath();
+			}
+
+		</script>
+
+	</head>
+
+	<body onLoad="start();">
+
+		<canvas id="canvas" width="600" height="450"></canvas>
+
+	</body>
+
+</html>
