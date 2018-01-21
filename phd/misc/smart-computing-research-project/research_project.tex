@@ -1,0 +1,75 @@
+% !TeX spellcheck = en_GB
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+\graphicspath{{img/}}
+
+\begin{document}
+    \pagenumbering{gobble}
+    
+    \begin{center}
+        \includegraphics[scale=0.2]{logo_unifi.jpg}\\[4cm]
+        \textit{Research Project for Smart Computing PhD Programme}\\[0.3cm]
+        {\Huge Model-based quantitative analysis for on-line diagnosis, prediction, scheduling and compliance evaluation in partially observable systems}
+    \end{center}
+    
+    \vfill
+    
+    \textbf{Applicant}: Tommaso \textsc{Papini}
+    
+    \clearpage
+    
+    \section*{Introduction}
+    
+        More and more every year is seen all around the world an increasing use of \textit{smart systems}, i.e. systems that incorporate the functions of sensing, actuation and control in order to describe and analyse a situation and make decisions based on the available data in a predictive and adaptive manner (i.e. performing \textit{smart actions}).
+        
+        Smart systems can differ much from one another, as they are used in many distinct fields. Smart systems range from sensor networks to smart buildings, from cyber-physical systems to smart cities, and also have many different applications, like healthcare, security, entertainment or transportation \cite{akhras2000smart, smartcomp}.
+        
+        In this sense, \textit{smart computing} is a multidisciplinary area that mainly aims to study how to design and build smart systems and how to use them in order to improve human life.
+        
+        A notable example is the area of study of \textit{Ambient Assisted Living} (AAL) which refers to the integration of electronic devices (made of sensors and actuators) into a habitation in order to improve the quality of everyday life by making mundane tasks easier \cite{wadhawan2005smart, cook2009ambient}. Special projects are being developed in order to create smart buildings for people with difficulties, such as people with handicaps or old people. These smart buildings consist of a series of sensors, through which an application can recognize which action the subject is performing, and some actuators, like a display that shows important information based on the data gathered, for example a reminder to take some pills at a certain time \cite{carnevali2015continuous, epew16}.
+        
+        Industrial Monitoring \cite{chiang2001fault}, which aims to recognize faults and anomalies during the production process of an industrial plant in order to solve the problem as soon as possible, represents another application area for smart systems. Further on, Industrial Monitoring is also very useful for predicting future faults, so to repair the faulty component even before the damage will happen, and scheduling the best time to perform maintenance, implementing for example a maintenance protocol.
+        
+    \section*{Goals}
+    
+        The main objective of this research project is to investigate model-based methods to perform diagnosis, prediction, action scheduling and compliance evaluation for real-time partially observable systems. This research project will especially focus on partially observable systems because most real systems and applications cannot be correctly modelled through fully observable systems, thus the need for partially observable ones. These systems, as the name suggests, are composed of a series of non-observable (or \textit{hidden}) states and some other observable (or \textit{visible}) states. As the system evolves from one hidden state to another it can also generate different observable events (also called \textit{emissions}). The challenge here is to be able to perform quantitative analysis on the model of the system by taking into account just the observable data and, for example, trying to infer the non-observable part. On top of that, more complex models, such as mixed stochastic/non-deterministic models, will be taken into account, in order to model and analyse more realistic systems.
+        
+        The first problem that has to be solved is the \textit{diagnosis} problem. The term diagnosis refers to the act of inferring the current system state taking into account only the observed events. In AAL, for example, diagnosis is crucial in order to understand, through only the data registered from the sensors, which action is the subject actually performing (also known as Activity Recognition, AR) \cite{carnevali2015continuous}. In Industrial Monitoring, performing diagnosis would allow to detect a fault or an error before they produce a system failure, giving the chance to repair or patch the faulty component before irreparable damage is made, thus reducing maintenance costs.
+        
+        A very interesting application of diagnosis is the evaluation of \textit{compliance}. Compliance represent the likelihood that a certain path, or protocol, for the system is being correctly followed or applied. Real case examples are the two POR FESR 2014-2020 projects, namely the RACE and the DIGA projects. These two projects implement, respectively, a clinical and a maintenance protocol. For this two projects it has been suggested, as a future development, to include the evaluation of compliance in order to check whether a certain clinical or industrial protocol is being applied in a compliant way, in respect to the formal specification of the protocol, or not.
+        
+        Once diagnosis for a system is done, it can be used to address a new problem, called \textit{prediction}. As diagnosis means estimating the current state given present and past observations, prediction means estimating the evolution of the system's state taking into account the current diagnosis. In AAL, for example, prediction can be used to estimate the most probable future actions of the subject in order to display some advice/warning or start preparations for certain activities \cite{epew16}.
+        
+        Both diagnosis and prediction are known to be achievable through the modelization of a partially observable system using a Hidden Markov Model (HMM). HMMs are statistical Markov models where the system being modelled is assumed to be a Discrete Time Markov Chain (DTMC) with hidden states that generates an observable state after each step of the process \cite{rabiner1986introduction}. For this case, classical algorithms exist, such as the Viterbi algorithm, used for diagnosis to estimate the current system state. A viable alternative to HMM are Conditional Random Fields (CRF), which represent the discriminative counterpart of HMM and for which algorithms for diagnosis and prediction have already been studied \cite{lafferty2001conditional}. If the underlying process is more complex than a DTMC, it might then be taken into consideration either a Continuous Time Markov Chain (CTMC), in case a continuous time representation is needed, or a Hidden non-Markov Model (HnMM), when the Markov condition (i.e. \textit{memorylessness}) cannot be always guaranteed: for example the model can be a Semi Markov Process (SMP) \cite{lipsky2009semi} or a Markov Regenerative Process (MRP) \cite{logothetis1995markov}. These non-Markov type of processes are generally harder to analyse but allow to study a wider class of problems.
+        
+        As prediction is performed on a certain system, it can be used as input to solve a third problem, called \textit{scheduling}. Scheduling means calculating the best action to take and the best time (in the future) to take it, taking into account the results of the prediction on the future states of system. In the context of AAL it could be some kind of message or warning being displayed, for example a remainder to take some pills, or suggestions related to the next activities that the subject is (most likely) going to perform. In the Industrial Monitoring context, action scheduling is crucial for different purposes, as in the case of maintenance interventions driven by early system failure estimation. Scheduling problems are usually modelled through the use of Markov Decision Processes (MDP) \cite{puterman2014markov, baier2005efficient}. As HMMs (along with CRFs) are the de facto standard for activity recognition in markovian models, MDPs represent the standard for the action scheduling problem. In literature MDPs have extensively been studied in the case of fully observable systems, but extensions to partially observable systems have been proposed, namely POMDP (i.e. Partially Observable Markov Decision Process) \cite{monahan1982state}.
+        
+        A particularly interesting case of study is the one of on-line analysis. On-line analysis involves performing diagnosis, prediction and action scheduling as the process itself is evolving and changing state, as opposed to off-line analysis where all these actions are performed on a second time and not in parallel with the process. On-line analysis is crucial in many real case problem, such as AAL, where there is the need to recognize certain states of the system and take certain actions as the process evolves (and usually before a certain time limit).
+    
+    \section*{Approach}
+        
+        This research project is aimed to study the problems of on-line diagnosis, prediction and action scheduling for partially observable systems through model-based quantitative analysis. In particular, this research project will address the analysis of mixed models that combine both stochastic and non-deterministic elements and the evaluation of a compliance likelihood for such models in order to estimate whether a certain protocol, described as a series of time-stamped observable events, is being applied correctly or not.
+        
+        Model-based quantitative analysis means that the goal is to first create a model of the system we want to analyse in order to be able to apply a series of algorithms for diagnosis and prediction, such as transient or steady-state evaluations. The model representing a certain system can be build either by hand, if the system is relatively simple, or through an automated process called \textit{process mining} \cite{van2004workflow}. Process mining is composed by three main steps. The first step is called \textit{process discovery} and it allows to generate the structure of the model (i.e. places, transitions, etc\dots) given a series of logged events. The next step is called \textit{process enhancement} and is needed to fill the model with the statistical data collected inside the logs (for example, transition durations, or probability density functions). The last step is known as \textit{conformance checking} and is used to check if the model keeps being a good approximation of the system as new events are observed.
+        
+        Another interesting concept that would be studied is that of \textit{models@runtime} \cite{blair2009models}. Models@runtime refers to a kind of models that are able to automatically adapt themselves, changing their structure and behaviour, in response to new observed events. This allow the model to be dynamic and adaptable with respect to the system being modelled. In \cite{epew16} both process enhancement and the concept of models@runtime are implemented in order to achieve prediction and action scheduling in an AAL scenario.
+        
+        Once a model of the system has been built, diagnosis, prediction, scheduling and compliance evaluation can be achieved by performing both transient and steady-state analysis using well documented methods for markovian models, such as DTMC or CTMC, but especially for non-markovian ones, such as SMP or MRP \cite{logothetis1995markov, horvath2012transient}. In particular it would be interesting to study how logged temporal information of events, such as inter-time between events, can be exploited in order to analyse both non-markovian and partially observable models. Another very interesting, and as of today still open, theoretical problem is how to use steady-state analysis of MRPs to estimate average compliance of a protocol as time goes to infinity. In this regard, in \cite{mascots16} we presented a use case of an algorithm that evaluates the steady-state probabilities for an MRP, as shown in \cite{logothetis1995markov}.
+        
+        The actual quantitative analysis of models will make use of quantitative analysis tools, such as Oris \cite{bucci2010oris}.
+        
+        Lastly, this research project is intended to cover both research and software development aspects of the problems presented. It is expected from this research project to produce new research and theoretical material but also to implement and test the new ideas presented.
+    
+    \clearpage
+    
+	\bibliographystyle{IEEEtran}
+	\bibliography{bibliography}
+\end{document}
