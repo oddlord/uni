@@ -1,0 +1,103 @@
+\documentclass[twoside, openright, titlepage, fleqn, headinclude, 11pt, a4paper, BCOR5mm, footinclude]{book}
+
+%--------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage[pdftex]{graphicx}
+\usepackage[square, numbers]{natbib}
+\usepackage[Lenny]{fncychap}
+\usepackage[nottoc, notlof, notlot]{tocbibind}
+\usepackage[unicode]{hyperref}
+\usepackage[fixlanguage]{babelbib}
+\usepackage{color, caption, geometry, datetime, url, perpage, afterpage, xfrac, lettrine, yfonts, multirow, wrapfig}
+
+%--------------------------------------------------------------
+
+\newcommand{\mylettrine}[2]{\lettrine[lines=3]{\gothfamily\fontsize{50}{60}\scalebox{2}{#1}}{#2}}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\newdateformat{monthyear}{\monthname[\THEMONTH] \THEYEAR}
+
+\newtheorem{defi}{Definizione}[chapter]
+\newtheorem{teo}{Teorema}[chapter]
+
+\captionsetup{format=hang,font=small}
+
+\MakePerPage{footnote}
+
+\graphicspath{{img/}}
+
+\selectbiblanguage{italian}
+
+
+
+%--------------------------------------------------------------
+
+%elimina il numero dalla pagina iniziale delle parti
+\makeatletter
+\renewcommand{\part}{
+	\if@openright
+		\cleardoublepage
+	\else
+		\clearpage
+	\fi
+	\thispagestyle{empty}	% Original »plain« replaced by »empty«
+	\if@twocolumn
+		\onecolumn
+		\@tempswatrue
+	\else
+		\@tempswafalse
+	\fi
+	\null\vfil
+	\secdef\@part\@spart
+}
+\makeatother
+
+%--------------------------------------------------------------
+
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=blue
+}
+
+%--------------------------------------------------------------
+
+\begin{document}
+
+	\frenchspacing
+	\raggedbottom
+	\pagenumbering{roman}
+	\pagestyle{plain}
+	
+	\include{chapters/title}
+	
+	\tableofcontents
+	\listoffigures
+	\listoftables
+	
+	\cleardoublepage
+	\pagenumbering{arabic}
+	\pagestyle{headings}
+	
+	\include{chapters/abstract}
+	\part{Breve storia e introduzione} \label{part:intro}
+	\include{chapters/introduzione}
+	\include{chapters/teoria_suono}
+	\include{chapters/storia}
+	\part{MP3} \label{part:mp3}
+	\include{chapters/introduzione_mp3}
+	\include{chapters/struttura_file_mp3}
+	\include{chapters/codifica}
+	\include{chapters/decodifica}
+	\include{chapters/conclusioni}
+	
+	\nocite{*}
+	\bibliographystyle{plainnat}
+	\bibliography{biblio}
+	
+\end{document}

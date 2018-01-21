@@ -1,0 +1,73 @@
+\chapter{Storia: dal PCM all'MP3} \label{chap:storia}
+	\mylettrine{A}{vevamo} detto, nel capitolo introduttivo, che l'MP3 è sì un formato di file audio, ma anche che con MP3 si intende principalmente un algoritmo di compressione audio (di tipo lossy). Viene allora spontaneo chiedersi a che tipo di formato audio si applichi la compressione MP3, ovvero che formato audio era predominante prima dell'arrivo dell'MP3.
+	
+	\section{PCM} \label{sec:pcm}
+		La risposta a queste domande è racchiusa nella sigla \textit{PCM}. \textit{PCM}, che sta per \textit{\textbf{P}ulse \textbf{C}ode \textbf{M}odulation} (ovvero \textit{Modulazione a Codice di Impulsi}), è sostanzialmente il metodo di campionamento descritto nel Capitolo \ref{chap:teoria_suono}: per registrare e memorizzare un segnale audio esterno si eseguono delle misure a intervalli di tempo regolari (dettati dalla sampling frequency), quindi si quantizzano i sample ottenuti (ovvero si mappano in valori discreti) ed infine si digitalizzano (ovvero si codifica ogni campione in codice binario).\\
+		In sostanza, il metodo PCM tende a catturare un segnale audio esterno registrandone e memorizzandone una serie di valori, in modo da poter approssimare e ricostruire l'onda caratteristica ogni qual volta si voglia riprodurre quel suono.
+		
+		\subsection{Il problema delle dimensioni} \label{subsec:dimensioni}
+			Ovviamente la PCM può operare a diversi valori di sampling frequency e di bit depth, anche se l'accoppiata più famosa è quella relativa alla qualità CD, ovvero 44.1 \textit{kHz} di sampling frequency e 16 bit come bit depth.\\
+			Questo significa che ogni secondo vengono registrati 44100 campioni, ognuno dei quali grande 16 bit, ovvero 88200 byte al secondo \footnote{Calcolato come: $(44100\cdot 16)/8=88200\mbox{ byte }$.}. Questo valore raddoppia se l'audio registrato è stereo (una registrazione per il canale sinistro ed una per il canale destro). Con queste premesse, è facile vedere che un minuto di audio stereo in PCM occupa poco più di 10 MB. Quindi un normale CD da 700 MB può contenere soltanto 70 minuti di audio in questo formato, che corrispondono a circa 20 canzoni \footnote{Considerando una durata media per canzone di 3.5 minuti.}\\
+			\\
+			Fintanto che si parla di CD audio, queste limitazioni non presentano un vero problema. Tuttavia quando si parla di applicazioni, che registrano su computer grandi quantità di audio, e specialmente di applicazioni su Web, per le quali è necessario scambiare file audio a grande velocità, le dimensioni dei file iniziano a pesare e a diventare un problema non indifferente.\\
+			\\
+			Un primo approccio per diminuire le dimensioni dei file audio è quello di diminuire la sampling frequency: meno campioni significa meno spazio necessario. Se dimezziamo la frequenza di campionamento, allora avremo esattamente la metà dei campioni e quindi un file grande la metà rispetto all'originale. Tuttavia, per il Teorema di Shannon-Nyquist (Teorema \ref{teo:shannon_nyquist} a pagina \pageref{teo:shannon_nyquist}), sappiamo che il limite superiore delle frequenze riproducibili è dato dalla metà della sampling frequency, quindi dimezzando quest'ultima dimezzeremo di fatto anche il limite di Nyquist, scartando metà frequenze di quelle che prima venivano registrate. Se ad esempio dimezziamo la sampling frequency della qualità CD, da 44.1 \textit{kHz} a 22.05 \textit{kHz}, avremo che verranno scartate non più le frequenze maggiori di 22.05 \textit{kHz}, ma tutte quelle maggiori di 11.025 \textit{kHz}. Mentre quelle maggiori di 22 \textit{kHz} non ci interessano più di tanto (per via del range di udibilità umano 20 \textit{Hz} - 20 \textit{kHz}) quelle comprese tra 11.025 e 22.05 \textit{kHz} invece sono frequenze importanti, in quanto udibili dall'uomo. Perdere queste frequenze risulterebbe, inevitabilmente in una perdita di qualità del segnale audio.\\
+			\\
+			Un secondo approccio è invece quello di diminuire la bit depth, ovvero di assegnare meno bit ad ogni campione registrato. Diminuendo i bit per ogni sample ovviamente diminuiscono anche le dimensioni totali, ma aumenta anche l'errore di quantizzazione, in quanto meno bit devono essere usati per approssimare una grandezza continua. In questo frangente, tuttavia, le perdite relative alla diminuzione di bit depth sono molto più gravi rispetto alla diminuzione della sampling frequency. Infatti, dimezzando la bit depth di ogni sample le dimensioni totali saranno sì dimezzate, tuttavia la qualità del suono risultante sarà più che dimezzata. Se pensiamo ad un campionamento a 16 bit, ricaviamo che ogni sample può assumere uno di 65536 ($2^{16}$) diversi valori, che è come dire che la misura ottenuta può essere rappresentata utilizzando 65536 ``sfumature'' diverse. Tuttavia utilizzando 8 bit per ogni sample, abbiamo che ogni campione potrà assumere uno di 256 ($2^8$) possibili valori, che è molto meno della metà.\\
+			Diminuire la bit depth porta quindi ad un aumento esponenziale degli errori di quantizzazione, diminuendo il cosiddetto \textit{rapporto segnale/rumore}.
+			
+	\section{MP3}
+		Con queste premesse, la \textit{ISO} (\textit{International Standards Organization}) e la \textit{IEC} (\textit{International Electrothecnical Commision}) formarono il gruppo \textit{MPEG} (ovvero \textit{Moving Picture Experts Group}), nella speranza di definire uno standard mondiale per la codifica di video e audio di alta qualità. In particolare, si erano proposti come obiettivo quello di definire un metodo di codifica audio e video che permettesse la scrittura e la lettura da un generico dispositivo capace di fornire 1.5 Mbit al secondo (come i ben noti CD).\\
+		Un punto cruciale divenne allora la compressione di questi dati, in quanto la lettura e scrittura di dati audio e video non compressi richiederebbe molto di più di 1.5 Mbit al secondo, infatti il solo audio codificato tramite PCM richiede un bitrate di 1.4 \textit{Mbps} per la sua riproduzione \footnote{Calcolato come $44.1\mbox{ \textit{kHz}}\cdot 16\mbox{ \textit{bit}}\approx 0.7\mbox{ \textit{Mbps}}$ per audio mono, $1.4\mbox{ \textit{Mbps}}$ per audio stereo (il doppio).}.
+		
+		\subsection{Lo standard MPEG 1} \label{subsec:mpeg1}
+		
+			Lo standard \textit{MPEG 1}, riguardante appunto la compressione di video e dell'audio associato, fu pubblicato dal gruppo MPEG nel 1993, sotto il nome di \textit{ISO/IEC 11172}. La parte relativa alla compressione audio dell'MPEG 1 fu suddivisa in tre \textit{Layer}, o \textit{livelli}: questi livelli aggiungono, ognuno, nuovi meccanismi di compressione audio, rendendo la compressione stessa più complessa ed efficiente ad ogni livello. Inoltre questi layer sono retrocompatibili, ovvero un decoder costruito per il Layer 3 riesce a decodificare anche file codificati con il Layer 2 e con il Layer 1. Quello che noi oggi chiamiamo MP3 è, di fatto, tutto l'algoritmo di compressione dell'MPEG 1 Layer 3.\\
+			Successivamente, nel 1995, una seconda versione dello standard MPEG venne pubblicata, chiamata comunemente \textit{MPEG 2} e formalmente \textit{ISO/IEC 13818}. Ai fini delle tecniche caratteristiche dell'MP3 è indifferente parlare di MPEG 1 o 2, infatti spesso ci si riferisce all'MP3 come \textit{MPEG 1/2 Layer 3}.\\
+			\\
+			Ogni layer dello standard MP3 aggiunge complessità all'algoritmo, riuscendo ad ottenere una compressione sempre più efficace. In Tabella \ref{tab:bitrate} possiamo vedere i fattori di compressione MPEG 1 rispetto alla codifica PCM e il bitrate richiesto per la riproduzione di un file audio all'aumentare della complessità di compressione.
+			
+			\begin{table}[h!]
+				\centering
+				\begin{tabular}{|c|c|c|}
+					\multicolumn{1}{c}{\textbf{Codifica}} & \multicolumn{1}{c}{\textbf{Rapporto}} & \multicolumn{1}{c}{\textbf{Bitrate richiesto}}\\
+					\hline
+					PCM (qualità CD) & 1:1 & 1.4 \textit{Mbps}\\
+					\hline
+					Layer 1 & 4:1 & 384 \textit{kbps}\\
+					\hline
+					Layer 2 & 8:1 & 192 \textit{kbps}\\
+					\hline
+					Layer 3 & 12:1 & 128 \textit{kbps}\\
+					\hline
+				\end{tabular}
+				\caption{Bitrate richiesti per le codifiche MPEG 1.}
+				\label{tab:bitrate}
+			\end{table}
+			
+			Si ha quindi che la codifica MP3 riesce a diminuire le dimensioni di un file audio, codificato con la PCM, di un fattore 12, diminuendo notevolmente le dimensioni originali, senza tuttavia intaccarne notevolmente la qualità, grazie ai principi della psicoacustica che vedremo più avanti.
+			
+		\subsection{Libertà d'implementazione} \label{subsec:libertà_implementazione}
+			
+			Le specifiche dello standard ISO 11172-3 (ovvero dell'MP3) definiscono come dev'essere strutturato e interpretato un file \texttt{.mp3} e come deve avvenire la decodifica di quest'ultimo. Questo è ciò che rende l'MP3 uno standard internazionale: un file \texttt{.mp3}, infatti, potrà essere decodificato da qualsiasi decoder MP3.\\
+			Tuttavia, molte fasi di codifica e dettagli implementativi non sono specificati nello standard ISO, lasciando agli sviluppatori una discreta libertà di scelta per quanto riguarda le varie parti dell'encoder. In altre parole, lo standard definisce soltanto cosa si deve ottenere dalla codifica, ma non come eseguire la codifica stessa: diversi sviluppatori possono utilizzare tecniche diverse per ottenere lo stesso risultato, o addirittura impiegare nuove tecniche che migliorano/velocizzano il processo di codifica.\\
+			Il processo di decodifica è invece già più standardizzato, anche se molti dettagli implementativi vengono lasciati allo sviluppatore finale.
+			
+		\subsection{Alcuni dettagli tecnici} \label{subsec:dettagli_tecnici} 
+			
+			Concludiamo esponendo alcuni dettagli tecnici dello standard MP3.\\
+			\\
+			Innanzitutto parliamo di \textit{bitrate}. Il \textit{bitrate} (letteralmente \textit{tasso di bit}) indica quanti bit di memoria sono dedicati ad ogni secondo del segnale audio, ovvero quanti bit al secondo devono essere letti per la sua riproduzione. Ovviamente più bit al secondo implica una maggior qualità del suono ma anche maggiori dimensioni del file. Lo standard MP3 prevede bitrate dagli 8 \textit{kbps} fino ai 320 \textit{kbps}, anche se il valore più utilizzato è 128 \textit{kbps}.\\
+			In linea di massima, lo standard MPEG 1 Layer 3 definisce due tipologie di bitrate: il \textit{bitrate costante} (\textit{Constant BitRate}, \textit{CBR}) e il \textit{bitrate variabile} (\textit{Variable BitRate}, \textit{VBR}). Con il \textbf{bitrate costante} si assegna lo stesso numero di bit a ogni secondo del file audio. Tuttavia molte registrazioni (ad esempio canzoni) variano spesso di complessità, passando da momenti in cui suonano molti strumenti (e quindi più bit sono richiesti per avere una buona fedeltà) ad altri più semplici (in cui basterebbero pochi bit al secondo). Con il \textbf{bitrate variabile} si possono invece assegnare a diverse parti della canzone (dette \textit{frame}, come vedremo più avanti) una quantità diversa di bit, a seconda della complessità del segnale.\\
+			\\
+			La qualità finale del file \texttt{.mp3} è anche data dalla sampling frequency (come già avevamo visto per la PCM): più campioni al secondo significa una più alta qualità audio, ma anche un file più voluminoso. Lo standard MP3 prevede la codifica a 32, 44.1 o 48 \textit{kHz}.\\
+			\\
+			Infine, un file \texttt{.mp3} avrà una delle seguenti \textit{modalità di canale} (\textit{channel mode}):
+			\begin{itemize}
+				\item canale singolo (mono);
+				\item canale doppio;
+				\item stereo;
+				\item joint stereo.
+			\end{itemize}
+			Il \textit{canale singolo} (o \textit{mono}) è il più semplice di tutti e prevede un singolo flusso di dati audio. Il \textit{canale doppio} prevede invece due canali singoli indipendenti (uno destro ed uno sinistro). La modalità \textit{stereo} prevede invece due canali non indipendenti, in quanto i bit per ogni canale posso essere ripartiti tra i due (se ad esempio in un certo momento il segnale sinistro è più complesso di quello destro, si possono prendere alcuni bit di quest'ultimo). Con \textit{joint stereo} si intende invece una modalità che tenta di ottimizzare la codifica dei due canali eliminando le ridondanze tra questi. Esistono due tecniche per il joint stereo: \textit{mid/side stereo} (o \textit{MS stereo}) e \textit{intensity stereo}. Mid/side stereo è composto da due canali: \textit{mid}, che rappresenta le parti in comune tra canale destro e sinistro, e \textit{side}, che rappresenta le differenze tra canale destro e sinistro. In intensity stereo invece le frequenze più alte vengono sommate tra loro, in modo da riuscire a trasmettere tutto in un unico canale. MS stereo è una tecnica loosless, mentre intensity stereo è una tecnica lossy, anche se le inconsistenze introdotte sono spesso non percepibili all'orecchio umano.
+			
