@@ -1,0 +1,25 @@
+\section*{Implementazione}
+
+Il codice dello script è suddiviso in quattro file python:
+
+\begin{itemize}
+    \item pred.py
+    \item features.py
+    \item utils.py
+    \item config.py
+\end{itemize}
+
+Il file di configurazione \textbf{config.py} serve semplicemente per permettere all'utente di specificare in modo rapido i percorsi dei vari dataset utilizzati per l'addestramento e la predizione, senza dover utilizzare ogni volta opzioni da linea di comando.\\
+Il file \textbf{utils.py} raccoglie tutte le funzioni di svariata utilità, come le funzioni per fare il parsing delle opzioni da linea di comando (e controllarne la validità) o per il calcolo dell'errore \textit{RMSPE} o per il logging del tempo di esecuzione delle varie attività dello script.\\
+\textbf{features.py} raccoglie tutte le funzioni necessarie ad estrarre i vari campi dai vari dataset. In particolare viene definito un grande dizionario \textit{fields} dove si definisce, per ogni campo, in che posizione si trova nei vari dataset (dato che stessi campi possono avere posizioni diverse all'interno di dataset diversi) e con che funzione eseguire il parsing di tale campo (infatti noi andiamo a leggere una stringa dal dataset ma in generale vogliamo ottenere un valore numerico).\\
+Infine il file \textbf{pred.py} è il file principale dello script. In questo file viene eseguita innanzitutto una fase di estrazione delle feature (a seconda delle feature scelte, si veda la sezione precedente), seguita da una fase di addestramento e quindi una fase finale di predizione.\\
+\\
+Per lanciare lo script basta eseguire il file \textit{pred.py} (specificando opportunamente l'interprete python), seguito dalle eventuali opzioni. Per una descrizione dettagliata delle opzioni basta eseguire \textit{pred.py -h} ma a grandi linee esse permettono di specificare file alternativi a quelli indicati in \textit{config.py}, di attivare la compressione dei risultati o di attivare la fase di validazione (eventualmente visualizzando un grafico).\\
+\\
+Nella fase di \textbf{estrazione delle feature} vengono chiamate delle funzioni apposite per estrarre le feature delle istanze dei dataset di train e di test (eventualmente di validation) e restituirle sotto forma di liste \textit{X} e \textit{Y} (per train e validation) o soltanto \textit{X} (per il testset). Tutte e tre le funzioni che creano le liste sopracitate richiamano, al loro interno, una funzione \textit{extract\_instance} che si occupa di estrarre le feature di una particolare istanza (di train o di test) sotto forma di lista di valori numerici. Questo è fatto per ragioni di comodità e consistenza: in questo modo saremo sempre sicuri di andare a estrarre le stesse feature (e posizionarle nello stesso ordine) per i vari dataset. Si deve precisare il fatto che,  nel caso del trainset, la \textit{X} e la \textit{Y} non sono esattamente liste, ma piuttosto dizionari di liste indicizzati secondo lo store id: in questo modo si tengono separate le istanze dei vari store per permettere il training suddiviso per store (ogni elemento del dizionario sarà una lista di istanze relative ad un particolare store). Per ragioni analoghe, negli elementi delle liste per i dataset di validation e di test, si inseriscono dati a contorno delle feature, in modo, ad esempio, da poter recuperare immediatamente lo store id corrispondente o lo stato di chiusura di ogni istanza.\\
+\\
+Successivamente, durante la fase di \textbf{training} si scorrono tutti gli indici degli store e per ognuno di essi si crea un nuovo modello e lo si addestra (\textit{fit}) passandogli le corrispondenti liste di input e di target.\\
+\\
+Dopo il training si ha la fase, opzionale, di \textbf{validation} in cui si prendono gli ultimi due mesi del trainset (se la validation è attiva questi due mesi sono esclusi dal training!) e si calcola il valore \textit{rmspe} sui valori predetti dai vari modelli su questi dati. Dopo si può anche scegliere di plottare un semplice grafico relativo alle date di validation per capire dove/come/perché si era sbagliato.\\
+\\
+Infine si ha la fase di \textbf{predizione} in cui, in modo del tutto analogo a quanto visto per la fase di validation, si calcolano i valori predetti di vendite per i vari store e per ognuno di questi si inserisce una voce (indicizzata univocamente con l'id dell'istanza) in un nuovo file, chiamato di default \textit{predictions.csv}. Se l'utente lo desidera, si può decidere di comprimere tale file utilizzando la tecnica GZip.

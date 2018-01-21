@@ -1,0 +1,44 @@
+%********************************************************************
+% Packages
+%********************************************************************
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{multirow}
+\usepackage{titlesec}
+
+%********************************************************************
+% Packages options
+%********************************************************************
+
+% geometry
+\usepackage{geometry}
+\geometry{
+	a4paper,
+	ignoremp,
+	bindingoffset = 1cm, 
+	textwidth     = 13.5cm,
+	textheight    = 21.5cm,
+	lmargin       = 1cm,
+	rmargin		  = 1cm,
+	tmargin       = 2cm,
+	bmargin       = 3cm
+}
+
+% graphicx
+\graphicspath{{img/}}
+
+%********************************************************************
+% (Re)new commands & styles
+%********************************************************************
+
+% fixed classicthesis chapter number (right-aligned)
+\titleformat{\section}[display]
+    {\bfseries\Large}
+    {\thesection.}
+    {-5pt}
+    {\raggedright}
+    [\normalsize\vspace*{.8\baselineskip}\titlerule]
