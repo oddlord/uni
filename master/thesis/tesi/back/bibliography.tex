@@ -1,0 +1,17 @@
+%********************************************************************
+% Bibliography
+%********************************************************************
+
+\cleardoublepage
+
+\manualmark
+\markboth{\spacedlowsmallcaps{\bibname}}{\spacedlowsmallcaps{\bibname}} 
+
+\refstepcounter{dummy}
+\addtocontents{toc}{\protect\vspace{\beforebibskip}}
+\addcontentsline{toc}{chapter}{\tocEntry{\bibname}}
+
+\nocite{*}
+\bibliographystyle{plainnat}
+\label{app:bibliography} 
+\bibliography{back/bibliography}
